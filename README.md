@@ -4,7 +4,7 @@ Hi 👉👈
 
 ## Backend (`/backend`)
 
-Gradle, SpringBoot.
+Java, Gradle, SpringBoot.
 
 ### Requirements
 
@@ -18,22 +18,24 @@ Gradle, SpringBoot.
 
 ## Frontend (`/frontend`)
 
-SvelteKit with TailwindCSS, Prettier and Eslint.
+TypeScript
+SvelteKit with TailwindCSS and Skeleton
+Prettier and Eslint
 
 ### Requirements
 
 - NodeJS
-- npm (`npm i`) to install dependencies
 
 ### Scripts
 
+- `npm i` to install dependencies
 - `npm run dev` to start a local development server
 - `npm run lint` to lint check
 - `npm run format` to format with prettier (your IDE can do this automatically)
 
-## LiteLLM (`/litellm`)
+## AI (`/ai`)
 
-LiteLLM so we can easily switch between different AI models during development.
+LiteLLM: so we can easily switch between different AI models during development.
 
 ### Requirements
 
@@ -42,4 +44,8 @@ LiteLLM so we can easily switch between different AI models during development.
 
 ### Scripts
 
-- `docker compose up` (for older versions: `docker-compose up`) to start 
+- `docker compose up` (for older versions: `docker-compose up`) to start
+
+## Persistency
+
+### SQLite

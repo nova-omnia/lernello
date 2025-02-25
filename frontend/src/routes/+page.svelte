@@ -42,3 +42,30 @@
 		</Accordion.Item>
 	</Accordion>
 </div>
+<div class="mx-auto max-w-lg p-8">
+	<h2 class="mb-4 text-2xl font-bold">Here are some form elements</h2>
+	<form class="mx-auto w-full max-w-md space-y-4">
+		<!-- Search -->
+		<input class="input" type="search" placeholder="Search..." />
+		<!-- Date Picker -->
+		<label class="label">
+			<span class="label-text">Date</span>
+			<input class="input" type="date" />
+		</label>
+		<!-- File Input -->
+		<label class="label">
+			<span class="label-text">File Input</span>
+			<input class="input" type="file" />
+		</label>
+		<!-- Range -->
+		<label class="label">
+			<span class="label-text">Range</span>
+			<input class="input" type="range" value="75" max="100" />
+		</label>
+		<!-- Progress -->
+		<label class="label">
+			<span class="label-text">Progress</span>
+			<progress class="progress" value="25" max="100"></progress>
+		</label>
+	</form>
+</div>

@@ -18,9 +18,7 @@ Java, Gradle, SpringBoot.
 
 ## Frontend (`/frontend`)
 
-TypeScript
-SvelteKit with TailwindCSS and Skeleton
-Prettier and Eslint
+SvelteKit, TypeScript, Skeleton, TailwindCSS, Prettier, Eslint.
 
 ### Requirements
 
@@ -33,7 +31,7 @@ Prettier and Eslint
 - `npm run lint` to lint check
 - `npm run format` to format with prettier (your IDE can do this automatically)
 
-## AI (`/ai`)
+## LiteLLM (`/litellm`)
 
 LiteLLM: so we can easily switch between different AI models during development.
 
@@ -45,7 +43,3 @@ LiteLLM: so we can easily switch between different AI models during development.
 ### Scripts
 
 - `docker compose up` (for older versions: `docker-compose up`) to start
-
-## Persistency
-
-### SQLite

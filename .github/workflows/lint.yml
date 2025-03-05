@@ -25,6 +25,10 @@ jobs:
         run: npm install -g npm@latest
         working-directory: frontend
 
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+
       - name: Frontend Lint & Prettier check
         working-directory: frontend
         run: npm run lint

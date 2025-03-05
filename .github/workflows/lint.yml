@@ -33,6 +33,12 @@ jobs:
         working-directory: frontend
         run: npm run lint
 
+      - name: Setup Java (Oracle)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '23'
+
       - name: Backend Lint check
         working-directory: backend
         run: ./gradlew check

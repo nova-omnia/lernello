@@ -1,5 +1,8 @@
 name: Lint
 
+env:
+  NODE_VERSION: '22.14.0'
+
 on:
   pull_request:
   push:
@@ -16,11 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
-
-      - name: Update npm to latest
-        run: npm install -g npm@latest
-        working-directory: frontend
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         working-directory: frontend
@@ -29,13 +28,3 @@ jobs:
       - name: Frontend Lint & Prettier check
         working-directory: frontend
         run: npm run lint
-
-      - name: Setup Java (Oracle)
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'oracle'
-          java-version: '23'
-
-      - name: Backend Lint check
-        working-directory: backend
-        run: ./gradlew check

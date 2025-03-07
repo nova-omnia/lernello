@@ -43,3 +43,8 @@ LiteLLM: so we can easily switch between different AI models during development.
 ### Scripts
 
 - `docker compose up` (for older versions: `docker-compose up`) to start
+
+## Swagger
+If you want to see what API endpoints are available...
+
+- http://localhost:8080/swagger-ui/index.html

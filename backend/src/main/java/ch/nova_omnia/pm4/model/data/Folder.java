@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Folder is an entity class that represents a folder in the system.
+ * It extends {@link AbstractEntity} and contains additional properties
+ * and methods specific to folders.
+ */
 @Entity
 @Table(name = "folders")
-public class Folder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
+public class Folder extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id", nullable = false)
@@ -28,61 +27,89 @@ public class Folder {
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LearningUnit> learningUnits;
 
-    // Getters and setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Returns the instructor associated with the folder.
+     * 
+     * @return the instructor
+     */
     public Instructor getInstructor() {
         return instructor;
     }
 
+    /**
+     * Sets the instructor associated with the folder.
+     * 
+     * @param instructor the instructor to set
+     */
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
     }
 
+    /**
+     * Returns the parent folder of this folder.
+     * 
+     * @return the parent folder
+     */
     public Folder getParentFolder() {
         return parentFolder;
     }
 
+    /**
+     * Sets the parent folder of this folder.
+     * 
+     * @param parentFolder the parent folder to set
+     */
     public void setParentFolder(Folder parentFolder) {
         this.parentFolder = parentFolder;
     }
 
+    /**
+     * Returns the list of subfolders contained within this folder.
+     * 
+     * @return the list of subfolders
+     */
     public List<Folder> getSubFolders() {
         return subFolders;
     }
 
+    /**
+     * Sets the list of subfolders contained within this folder.
+     * 
+     * @param subFolders the list of subfolders to set
+     */
     public void setSubFolders(List<Folder> subFolders) {
         this.subFolders = subFolders;
     }
 
+    /**
+     * Returns the list of learning units contained within this folder.
+     * 
+     * @return the list of learning units
+     */
     public List<LearningUnit> getLearningUnits() {
         return learningUnits;
     }
 
+    /**
+     * Sets the list of learning units contained within this folder.
+     * 
+     * @param learningUnits the list of learning units to set
+     */
     public void setLearningUnits(List<LearningUnit> learningUnits) {
         this.learningUnits = learningUnits;
     }
 
+    /**
+     * Converts this folder entity to a {@link FolderDTO} object.
+     * 
+     * @param depth the depth of subfolder and learning unit conversion
+     * @return the folder DTO
+     */
     public FolderDTO toDTO(int depth) {
         FolderDTO dto = new FolderDTO();
-        dto.setId(this.id);
-        dto.setName(this.name);
-        dto.setInstructor(this.instructor.getUsername());
+        dto.setId(this.getId());
+        dto.setName(this.getName());
+        dto.setInstructor(this.instructor.getName());
         dto.setParentFolder(this.parentFolder != null ? this.parentFolder.getId() : null);
         if (depth > 0) {
             dto.setSubFolders(this.subFolders.stream()

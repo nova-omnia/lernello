@@ -1,10 +1,10 @@
 package ch.nova_omnia.pm4.model.data;
 
 /**
- * LearningUnitDTO is a Data Transfer Object (DTO) that represents a learning unit in the system.
+ * InstructorDTO is a Data Transfer Object (DTO) that represents an instructor in the system.
  * It extends {@link AbstractDTO} and can be extended with additional properties and methods
- * specific to learning units in the future if needed.
+ * specific to instructors in the future if needed.
  */
-public class LearningUnitDTO extends AbstractDTO {
+public class InstructorDTO extends AbstractDTO {
     // empty so far. might be extended in the future if needed
 }

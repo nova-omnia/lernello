@@ -4,41 +4,33 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Instructor is an entity class that represents an instructor in the system.
+ * It extends {@link AbstractEntity} and contains additional properties and methods
+ * specific to instructors.
+ */
 @Entity
 @Table(name = "instructors")
 @JsonIgnoreProperties({"folders"})
-public class Instructor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
+public class Instructor extends AbstractEntity {
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Folder> folders;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    /**
+     * Returns the list of folders associated with the instructor.
+     * 
+     * @return the list of folders
+     */
     public List<Folder> getFolders() {
         return folders;
     }
 
+    /**
+     * Sets the list of folders associated with the instructor.
+     * 
+     * @param folders the list of folders to set
+     */
     public void setFolders(List<Folder> folders) {
         this.folders = folders;
     }

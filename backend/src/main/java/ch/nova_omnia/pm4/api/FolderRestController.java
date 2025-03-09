@@ -23,8 +23,8 @@ public class FolderRestController {
     }
 
     @GetMapping
-    public List<FolderDTO> getAllFolders(@RequestParam(defaultValue = "1") int depth) {
-        List<Folder> folders = folderService.getAllFolders();
+    public List<FolderDTO> getAllRootFolders(@RequestParam(defaultValue = "1") int depth) {
+        List<Folder> folders = folderService.getAllRootFolders();
         return folders.stream()
                 .map(folder -> folder.toDTO(depth))
                 .collect(Collectors.toList());
@@ -43,5 +43,10 @@ public class FolderRestController {
     @DeleteMapping("/{id}")
     public void deleteFolder(@PathVariable Long id) {
         folderService.deleteFolder(id);
+    }
+
+    @PutMapping("/{id}/parent/{parentId}")
+    public Folder setParentFolder(@PathVariable Long id, @PathVariable Long parentId) {
+        return folderService.setParentFolder(id, parentId);
     }
 }

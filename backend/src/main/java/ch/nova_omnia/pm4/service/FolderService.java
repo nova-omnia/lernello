@@ -2,10 +2,11 @@ package ch.nova_omnia.pm4.service;
 
 import ch.nova_omnia.pm4.model.data.Folder;
 import ch.nova_omnia.pm4.repository.FolderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * FolderService is a service class that provides business logic for managing {@link Folder} entities.
@@ -23,15 +24,6 @@ public class FolderService {
      */
     public FolderService(FolderRepository folderRepository) {
         this.folderRepository = folderRepository;
-    }
-
-    /**
-     * Retrieves all root folders (folders with no parent folder).
-     * 
-     * @return a list of root folders
-     */
-    public List<Folder> getAllRootFolders() {
-        return folderRepository.findByParentFolderIsNull();
     }
 
     /**
@@ -97,5 +89,9 @@ public class FolderService {
         Folder parentFolder = folderRepository.findById(parentFolderId).orElseThrow(() -> new RuntimeException("Parent folder not found"));
         folder.setParentFolder(parentFolder);
         return folderRepository.save(folder);
+    }
+
+    public List<Folder> getAllFolders() {
+        return (List<Folder>) folderRepository.findAll();
     }
 }

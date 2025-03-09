@@ -4,6 +4,9 @@ import ch.nova_omnia.pm4.model.data.Folder;
 import ch.nova_omnia.pm4.model.data.LearningUnit;
 import ch.nova_omnia.pm4.repository.FolderRepository;
 import ch.nova_omnia.pm4.repository.LearningUnitRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +34,11 @@ public class LearningUnitService {
         LearningUnit newLearningUnit = new LearningUnit();
         newLearningUnit.setName(name);
         Folder folder = folderRepository.findById(folderId).orElseThrow(() -> new RuntimeException("Folder not found"));
-        newLearningUnit.setFolder(folder);
+        newLearningUnit.setParentFolder(folder);
         return learningUnitRepository.save(newLearningUnit);
+    }
+
+    public List<LearningUnit> getAllLearningUnits() {
+        return (List<LearningUnit>) learningUnitRepository.findAll();
     }
 }

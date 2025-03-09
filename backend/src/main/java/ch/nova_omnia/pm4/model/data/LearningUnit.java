@@ -1,5 +1,6 @@
 package ch.nova_omnia.pm4.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 /**
@@ -12,36 +13,15 @@ import jakarta.persistence.*;
 public class LearningUnit extends AbstractEntity {
 
     @ManyToOne
-    @JoinColumn(name = "folder_id", nullable = false)
-    private Folder folder;
+    @JoinColumn(name = "parent_folder_id", nullable = false)
+    @JsonIgnore
+    private Folder parentFolder;
 
-    /**
-     * Returns the folder associated with the learning unit.
-     * 
-     * @return the folder
-     */
-    public Folder getFolder() {
-        return folder;
+    public Folder getParentFolder() {
+        return parentFolder;
     }
 
-    /**
-     * Sets the folder associated with the learning unit.
-     * 
-     * @param folder the folder to set
-     */
-    public void setFolder(Folder folder) {
-        this.folder = folder;
-    }
-
-    /**
-     * Converts this learning unit entity to a {@link LearningUnitDTO} object.
-     * 
-     * @return the learning unit DTO
-     */
-    public LearningUnitDTO toDTO() {
-        LearningUnitDTO dto = new LearningUnitDTO();
-        dto.setId(this.getId());
-        dto.setName(this.getName());
-        return dto;
+    public void setParentFolder(Folder parentFolder) {
+        this.parentFolder = parentFolder;
     }
 }

@@ -1,13 +1,11 @@
 package ch.nova_omnia.pm4.api;
 
 import ch.nova_omnia.pm4.model.data.Folder;
-import ch.nova_omnia.pm4.model.data.FolderDTO;
 import ch.nova_omnia.pm4.service.FolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/folders")
@@ -17,17 +15,13 @@ public class FolderRestController {
     private FolderService folderService;
 
     @GetMapping("/{id}")
-    public FolderDTO getFolder(@PathVariable Long id, @RequestParam(defaultValue = "1") int depth) {
-        Folder folder = folderService.getFolderById(id);
-        return folder.toDTO(depth);
+    public Folder getFolder(@PathVariable Long id) {
+        return folderService.getFolderById(id);
     }
 
     @GetMapping
-    public List<FolderDTO> getAllRootFolders(@RequestParam(defaultValue = "1") int depth) {
-        List<Folder> folders = folderService.getAllRootFolders();
-        return folders.stream()
-                .map(folder -> folder.toDTO(depth))
-                .collect(Collectors.toList());
+    public List<Folder> getAllFolders() {
+        return folderService.getAllFolders();
     }
 
     @PostMapping

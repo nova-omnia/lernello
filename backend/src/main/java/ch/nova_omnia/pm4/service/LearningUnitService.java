@@ -41,4 +41,25 @@ public class LearningUnitService {
     public List<LearningUnit> getAllLearningUnits() {
         return (List<LearningUnit>) learningUnitRepository.findAll();
     }
+
+    public LearningUnit getLearningUnitById(Long id) {
+        return learningUnitRepository.findById(id).orElseThrow(() -> new RuntimeException("Learning unit not found"));
+    }
+
+    public LearningUnit updateLearningUnit(Long id, LearningUnit learningUnit) {
+        LearningUnit existingLearningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new RuntimeException("Learning unit not found"));
+        existingLearningUnit.setName(learningUnit.getName());
+        return learningUnitRepository.save(existingLearningUnit);
+    }
+
+    public void deleteLearningUnit(Long id) {
+        learningUnitRepository.deleteById(id);
+    }
+
+    public LearningUnit setParentFolder(Long id, Long parentId) {
+        LearningUnit learningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new RuntimeException("Learning unit not found"));
+        Folder parentFolder = folderRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Folder not found"));
+        learningUnit.setParentFolder(parentFolder);
+        return learningUnitRepository.save(learningUnit);
+    }
 }

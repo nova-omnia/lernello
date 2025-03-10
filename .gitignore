@@ -2,12 +2,3 @@
 
 # Macos
 .DS_Store
-
-# VSC
-.vscode
-
-# IntelliJ
-.idea
-
-# asdf version manager
-.tool-versions

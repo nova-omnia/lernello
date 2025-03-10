@@ -1,6 +1,5 @@
 package ch.nova_omnia.pm4.model.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,18 +18,13 @@ public class Folder extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_folder_id")
-    @JsonIgnore
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Folder> subFolders;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<LearningUnit> learningUnits;
-
-    // Getters and setters...
 
     public Instructor getInstructor() {
         return instructor;
@@ -63,4 +57,5 @@ public class Folder extends AbstractEntity {
     public void setLearningUnits(List<LearningUnit> learningUnits) {
         this.learningUnits = learningUnits;
     }
+
 }

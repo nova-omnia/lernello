@@ -40,4 +40,19 @@ public class InstructorService {
     public Instructor createInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
+
+    /**
+     * Retrieves an instructor by its ID.
+     * 
+     * @param id the ID of the instructor to retrieve
+     * @return the instructor with the specified ID
+     * @throws RuntimeException if the instructor is not found
+     */
+    public Instructor getInstructorById(Long id) {
+        return instructorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Instructor not found"));
+    }
+
+    
+    
 }

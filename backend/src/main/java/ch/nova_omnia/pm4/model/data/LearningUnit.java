@@ -1,7 +1,5 @@
 package ch.nova_omnia.pm4.model.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -10,7 +8,6 @@ public class LearningUnit extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_learning_kit_id", nullable = false)
-    @JsonIgnore
     private LearningKit parentLearningKit;
 
     @Transient

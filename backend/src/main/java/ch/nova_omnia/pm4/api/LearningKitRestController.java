@@ -1,8 +1,13 @@
 package ch.nova_omnia.pm4.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import ch.nova_omnia.pm4.service.LearningKitService;
+import ch.nova_omnia.pm4.dto.LearningKitDTO;
+import ch.nova_omnia.pm4.mapper.LearningKitMapper;
 import ch.nova_omnia.pm4.model.data.LearningKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,34 +23,25 @@ public class LearningKitRestController {
     @Autowired
     private LearningKitService learningKitService;
 
+    @Autowired
+    private LearningKitMapper learningKitMapper;
+
     @PostMapping
-    public LearningKit createLearningKit(@RequestBody LearningKitRequest request) {
-        return learningKitService.createLearningKit(request.getName(), request.getFolderId());
+    public LearningKitDTO createLearningKit(@Valid @RequestBody LearningKitDTO learningKitDTO) {
+
+        LearningKit learningKit = learningKitMapper.toEntity(learningKitDTO);
+
+        LearningKit createdKit = learningKitService.createLearningKit(
+                learningKit.getName(), learningKitDTO.getParentFolderId());
+
+        return learningKitMapper.toDto(createdKit);
     }
 
     @GetMapping
-    public List<LearningKit> getAllLearningKits() {
-        return learningKitService.getAllLearningKits();
-    }
-
-    public static class LearningKitRequest {
-        private String name;
-        private Long folderId;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Long getFolderId() {
-            return folderId;
-        }
-
-        public void setFolderId(Long folderId) {
-            this.folderId = folderId;
-        }
+    public List<LearningKitDTO> getAllLearningKits() {
+        List<LearningKit> learningKits = learningKitService.getAllLearningKits();
+        return learningKits.stream()
+                .map(learningKitMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

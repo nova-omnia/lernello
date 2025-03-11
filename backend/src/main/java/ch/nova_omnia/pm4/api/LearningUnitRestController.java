@@ -1,6 +1,7 @@
 package ch.nova_omnia.pm4.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import javax.validation.Valid;
 
+import ch.nova_omnia.pm4.dto.LearningUnitDTO;
+import ch.nova_omnia.pm4.mapper.LearningUnitMapper;
 import ch.nova_omnia.pm4.model.data.LearningUnit;
 import ch.nova_omnia.pm4.service.LearningUnitService;
 
@@ -19,35 +23,25 @@ public class LearningUnitRestController {
     @Autowired
     private LearningUnitService learningUnitService;
 
+    @Autowired
+    private LearningUnitMapper learningUnitMapper;
+
     @PostMapping
-    public LearningUnit createLearningUnit(@RequestBody LearningUnitRequest request) {
-        return learningUnitService.createLearningUnit(request.getName(), request.getLearningKitId());
+    public LearningUnitDTO createLearningUnit(@Valid @RequestBody LearningUnitDTO learningUnitDTO) {
+
+        LearningUnit learningUnit = learningUnitMapper.toEntity(learningUnitDTO);
+
+        LearningUnit createdUnit = learningUnitService.createLearningUnit(
+                learningUnit.getName(), learningUnitDTO.getLearningKitId());
+
+        return learningUnitMapper.toDto(createdUnit);
     }
 
     @GetMapping
-    public List<LearningUnit> getAllLearningUnits() {
-        return learningUnitService.getAllLearningUnits();
+    public List<LearningUnitDTO> getAllLearningUnits() {
+        List<LearningUnit> learningUnits = learningUnitService.getAllLearningUnits();
+        return learningUnits.stream()
+                .map(learningUnitMapper::toDto)
+                .collect(Collectors.toList());
     }
-
-    public static class LearningUnitRequest {
-        private String name;
-        private Long learningKitId;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Long getLearningKitId() {
-            return learningKitId;
-        }
-
-        public void setLearningKitId(Long learningKitId) {
-            this.learningKitId = learningKitId;
-        }
-    }
-
 }

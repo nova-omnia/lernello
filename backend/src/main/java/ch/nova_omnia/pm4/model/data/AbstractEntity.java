@@ -1,6 +1,10 @@
 package ch.nova_omnia.pm4.model.data;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * AbstractEntity is an abstract class that serves as a base class for entities

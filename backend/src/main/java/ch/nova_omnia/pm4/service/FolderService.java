@@ -63,7 +63,7 @@ public class FolderService {
         existingFolder.setInstructor(folder.getInstructor());
         existingFolder.setParentFolder(folder.getParentFolder());
         existingFolder.setSubFolders(folder.getSubFolders());
-        existingFolder.setLearningUnits(folder.getLearningUnits());
+        existingFolder.setLearningKits(folder.getLearningKits());
         return folderRepository.save(existingFolder);
     }
 

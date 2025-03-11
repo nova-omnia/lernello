@@ -2,13 +2,12 @@ package ch.nova_omnia.pm4.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import ch.nova_omnia.pm4.model.data.LearningUnit;
+import ch.nova_omnia.pm4.model.data.LearningKit;
 
 /**
- * LearningUnitRepository is a repository interface for managing {@link LearningUnit} entities.
+ * LearningKitRepository is a repository interface for managing {@link LearningKit} entities.
  * It extends {@link CrudRepository} to provide CRUD operations.
  */
 @Repository
-public interface LearningUnitRepository extends CrudRepository<LearningUnit, Long> {
+public interface LearningKitRepository extends CrudRepository<LearningKit, Long> {
 }

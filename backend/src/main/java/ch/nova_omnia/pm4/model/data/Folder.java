@@ -1,7 +1,13 @@
 package ch.nova_omnia.pm4.model.data;
 
-import jakarta.persistence.*;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 /**
  * Folder is an entity class that represents a folder in the system.
@@ -24,7 +30,7 @@ public class Folder extends AbstractEntity {
     private List<Folder> subFolders;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LearningUnit> learningUnits;
+    private List<LearningKit> learningKits;
 
     public Instructor getInstructor() {
         return instructor;
@@ -50,12 +56,12 @@ public class Folder extends AbstractEntity {
         this.subFolders = subFolders;
     }
 
-    public List<LearningUnit> getLearningUnits() {
-        return learningUnits;
+    public List<LearningKit> getLearningKits() {
+        return learningKits;
     }
 
-    public void setLearningUnits(List<LearningUnit> learningUnits) {
-        this.learningUnits = learningUnits;
+    public void setLearningKits(List<LearningKit> learningKits) {
+        this.learningKits = learningKits;
     }
 
 }

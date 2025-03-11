@@ -2,14 +2,15 @@ package ch.nova_omnia.pm4.api;
 
 import java.util.List;
 
-import ch.nova_omnia.pm4.service.LearningUnitService;
-import ch.nova_omnia.pm4.model.data.LearningUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import ch.nova_omnia.pm4.model.data.LearningUnit;
+import ch.nova_omnia.pm4.service.LearningUnitService;
 
 @RestController
 @RequestMapping("/api/learning-units")
@@ -20,7 +21,7 @@ public class LearningUnitRestController {
 
     @PostMapping
     public LearningUnit createLearningUnit(@RequestBody LearningUnitRequest request) {
-        return learningUnitService.createLearningUnit(request.getName(), request.getFolderId());
+        return learningUnitService.createLearningUnit(request.getName(), request.getLearningKitId());
     }
 
     @GetMapping
@@ -30,7 +31,7 @@ public class LearningUnitRestController {
 
     public static class LearningUnitRequest {
         private String name;
-        private Long folderId;
+        private Long learningKitId;
 
         public String getName() {
             return name;
@@ -40,12 +41,13 @@ public class LearningUnitRestController {
             this.name = name;
         }
 
-        public Long getFolderId() {
-            return folderId;
+        public Long getLearningKitId() {
+            return learningKitId;
         }
 
-        public void setFolderId(Long folderId) {
-            this.folderId = folderId;
+        public void setLearningKitId(Long learningKitId) {
+            this.learningKitId = learningKitId;
         }
     }
+
 }

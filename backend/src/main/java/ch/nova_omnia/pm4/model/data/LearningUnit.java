@@ -7,17 +7,18 @@ import jakarta.persistence.*;
 public class LearningUnit extends AbstractEntity {
 
     @ManyToOne
-    @JoinColumn(name = "parent_learning_kit_id", nullable = false)
-    private LearningKit parentLearningKit;
+    @JoinColumn(name = "learning_kit_id", nullable = false)
+    private LearningKit learningKit;
 
-    @Transient
-    private Long parentLearningKitId;
-
-    public LearningKit getParentLearningKit() {
-        return parentLearningKit;
+    public LearningKit getLearningKit() {
+        return learningKit;
     }
 
-    public void setParentLearningKit(LearningKit parentLearningKit) {
-        this.parentLearningKit = parentLearningKit;
+    public void setLearningKit(LearningKit learningKit) {
+        this.learningKit = learningKit;
+    }
+
+    public Long getLearningKitId() {
+        return learningKit.getId();
     }
 }

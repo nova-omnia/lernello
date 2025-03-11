@@ -1,13 +1,13 @@
 package ch.nova_omnia.pm4.dto;
 
-public class LearningUnitDTO extends AbstractDTO {
-    private Long learningKitId;
+public class LearningUnitDto extends BaseDto {
+    private BaseDto parent;
 
-    public Long getLearningKitId() {
-        return learningKitId;
+    public BaseDto getParent() {
+        return parent;
     }
 
-    public void setLearningKitId(Long learningKitId) {
-        this.learningKitId = learningKitId;
+    public void setParent(BaseDto parent) {
+        this.parent = parent;
     }
 }

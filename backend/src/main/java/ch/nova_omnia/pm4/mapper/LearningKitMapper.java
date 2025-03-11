@@ -1,23 +1,15 @@
 package ch.nova_omnia.pm4.mapper;
 
+import ch.nova_omnia.pm4.dto.LearningKitDto;
+import ch.nova_omnia.pm4.model.data.LearningKit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ch.nova_omnia.pm4.dto.LearningKitDTO;
-import ch.nova_omnia.pm4.model.data.LearningKit;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
-public interface LearningKitMapper {
+@Mapper(componentModel = "spring", uses = {LearningUnitMapper.class})
+public interface LearningKitMapper  extends GenericMapper<LearningKit, LearningKitDto> {
+    LearningKitMapper INSTANCE = Mappers.getMapper(LearningKitMapper.class);
 
-    // Map the parentFolder.id field to parentFolderId in the DTO.
-    @Mapping(source = "parentFolder.id", target = "parentFolderId")
-    LearningKitDTO toDto(LearningKit learningKit);
-
-    // When mapping from DTO to entity, ignore the association.
-    // You can set it later in your service after retrieving the Folder entity.
-    @Mapping(target = "parentFolder", ignore = true)
-    LearningKit toEntity(LearningKitDTO dto);
-
-
-
-
+    @Mapping(target = "parent", expression = "java(DtoUtil.toSimpleDto(learningKit.getParentFolder()))")
+    LearningKitDto toDto(LearningKit learningKit);
 }

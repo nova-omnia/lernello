@@ -1,5 +1,7 @@
 package ch.nova_omnia.pm4.model.data;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +12,8 @@ public class LearningKit extends AbstractEntity {
     @JoinColumn(name = "parent_folder_id", nullable = false)
     private Folder parentFolder;
 
-    @Transient
-    private Long parentFolderId;
+    @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LearningUnit> learningUnits;
 
     public Folder getParentFolder() {
         return parentFolder;
@@ -19,5 +21,17 @@ public class LearningKit extends AbstractEntity {
 
     public void setParentFolder(Folder parentFolder) {
         this.parentFolder = parentFolder;
+    }
+
+    public Long getParentFolderId() {
+        return parentFolder != null ? parentFolder.getId() : null;
+    }
+
+    public List<LearningUnit> getLearningUnits() {
+        return learningUnits;
+    }
+
+    public void setLearningUnits(List<LearningUnit> learningUnits) {
+        this.learningUnits = learningUnits;
     }
 }

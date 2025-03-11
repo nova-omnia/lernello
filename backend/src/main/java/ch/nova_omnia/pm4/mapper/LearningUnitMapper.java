@@ -1,19 +1,15 @@
 package ch.nova_omnia.pm4.mapper;
 
+import ch.nova_omnia.pm4.dto.LearningUnitDto;
+import ch.nova_omnia.pm4.model.data.LearningUnit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ch.nova_omnia.pm4.dto.LearningUnitDTO;
-import ch.nova_omnia.pm4.model.data.LearningUnit;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface LearningUnitMapper {
+public interface LearningUnitMapper extends GenericMapper<LearningUnit, LearningUnitDto> {
+    LearningUnitMapper INSTANCE = Mappers.getMapper(LearningUnitMapper.class);
 
-    // Map the parentLearningKit.id field to learningKitId in the DTO.
-    @Mapping(source = "parentLearningKit.id", target = "learningKitId")
-    LearningUnitDTO toDto(LearningUnit learningUnit);
-
-    // When mapping from DTO to entity, ignore the association.
-    // You can set it later in your service after retrieving the LearningKit entity.
-    @Mapping(target = "parentLearningKit", ignore = true)
-    LearningUnit toEntity(LearningUnitDTO dto);
+    @Mapping(target = "parent", expression = "java(DtoUtil.toSimpleDto(learningUnit.getLearningKit()))")
+    LearningUnitDto toDto(LearningUnit learningUnit);
 }

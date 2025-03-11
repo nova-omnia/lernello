@@ -1,14 +1,24 @@
 package ch.nova_omnia.pm4.dto;
 
-public class LearningKitDTO extends AbstractDTO {
-    private Long parentFolderId;
+import java.util.List;
 
-    public Long getParentFolderId() {
-        return parentFolderId;
+public class LearningKitDto extends BaseDto {
+    private BaseDto parent;
+    private List<LearningUnitDto> learningUnits;
+
+    public BaseDto getParent() {
+        return parent;
     }
 
-    public void setParentFolderId(Long parentFolderId) {
-        this.parentFolderId = parentFolderId;
+    public void setParent(BaseDto parent) {
+        this.parent = parent;
     }
 
+    public List<LearningUnitDto> getLearningUnits() {
+        return learningUnits;
+    }
+
+    public void setLearningUnits(List<LearningUnitDto> learningUnits) {
+        this.learningUnits = learningUnits;
+    }
 }

@@ -1,6 +1,9 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
+@import 'tailwindcss';
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton/optional/presets';
 @import '@skeletonlabs/skeleton/themes/cerberus';
+@import './styles/lernello-theme.css';
+
+@plugin '@tailwindcss/forms';

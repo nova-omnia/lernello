@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {LearningKitMapper.class})
+@Mapper(componentModel = "spring", uses = { LearningKitMapper.class })
 public interface FolderMapper extends GenericMapper<Folder, FolderDto> {
     FolderMapper INSTANCE = Mappers.getMapper(FolderMapper.class);
 

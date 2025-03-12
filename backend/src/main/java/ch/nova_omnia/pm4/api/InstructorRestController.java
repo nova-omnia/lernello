@@ -1,11 +1,13 @@
 package ch.nova_omnia.pm4.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import ch.nova_omnia.pm4.service.InstructorService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ch.nova_omnia.pm4.dto.InstructorDto;
 import ch.nova_omnia.pm4.mapper.InstructorMapper;
 import ch.nova_omnia.pm4.model.data.Instructor;
+import ch.nova_omnia.pm4.service.InstructorService;
 
 @RestController
 @RequestMapping("/api/instructors")

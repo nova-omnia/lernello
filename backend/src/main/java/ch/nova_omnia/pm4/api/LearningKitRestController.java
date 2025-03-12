@@ -1,12 +1,13 @@
 package ch.nova_omnia.pm4.api;
 
-import ch.nova_omnia.pm4.service.LearningKitService;
-import ch.nova_omnia.pm4.dto.LearningKitDto;
-import ch.nova_omnia.pm4.mapper.LearningKitMapper;
-import ch.nova_omnia.pm4.model.data.LearningKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import ch.nova_omnia.pm4.dto.LearningKitDto;
+import ch.nova_omnia.pm4.mapper.LearningKitMapper;
+import ch.nova_omnia.pm4.model.data.LearningKit;
+import ch.nova_omnia.pm4.service.LearningKitService;
 
 @RestController
 @RequestMapping("/api/learning-kits")

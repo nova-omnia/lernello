@@ -15,7 +15,7 @@ public abstract class AbstractCrudService<T, ID> {
 
     public T findById(ID id) {
         return getRepository().findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Entity not found. ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found. ID: " + id));
     }
 
     public T create(T entity) {

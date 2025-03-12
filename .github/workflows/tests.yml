@@ -1,7 +1,7 @@
 name: Tests
 
 env:
-  JAVA_VERSION: '23.0.2'
+  JAVA_VERSION: "23.0.2"
 
 on:
   pull_request:
@@ -19,9 +19,8 @@ jobs:
       - name: Setup Java (Oracle)
         uses: actions/setup-java@v3
         with:
-          distribution: 'oracle'
+          distribution: "oracle"
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Backend Tests
-        working-directory: backend
         run: ./gradlew check

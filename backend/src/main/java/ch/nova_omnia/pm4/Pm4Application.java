@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class Pm4Application {
-	private static Logger log = LoggerFactory.getLogger(Pm4Application.class);
+    private static Logger log = LoggerFactory.getLogger(Pm4Application.class);
 
-	public static void main(String[] args) {
-		log.info("Starting PM4 application");
-		SpringApplication.run(Pm4Application.class, args);
-	}
+    public static void main(String[] args) {
+        log.info("Starting PM4 application");
+        SpringApplication.run(Pm4Application.class, args);
+    }
 
 }

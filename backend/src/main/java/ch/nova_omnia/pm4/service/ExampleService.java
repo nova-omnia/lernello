@@ -18,8 +18,8 @@ public class ExampleService {
 
     public List<ExampleEntity> createOneThenFindAll() {
         // create one first for fon
-        ExampleEntity newEntitty = new ExampleEntity("example");
-        exampleRepository.save(newEntitty);
+        ExampleEntity newEntity = new ExampleEntity("example");
+        exampleRepository.save(newEntity);
 
         return exampleRepository.findAll();
     }

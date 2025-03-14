@@ -1,0 +1,30 @@
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+nav a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #007bff;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+.search-bar input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    color: #000; /* Ensure text color is black */
+    background-color: #fff; /* Ensure background color is white */
+}
+

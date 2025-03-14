@@ -48,3 +48,9 @@ LiteLLM: so we can easily switch between different AI models during development.
 If you want to see what API endpoints are available...
 
 - http://localhost:8080/swagger-ui/index.html
+
+## H2 Database
+- To start and connect the DB run the `gradle bootRun` script.
+- To test and show the DB, go to the console
+  - http://localhost:8080/h2-console
+  - Connect with the url: `jdbc:h2:./data/mydb`   

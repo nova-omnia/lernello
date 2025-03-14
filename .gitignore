@@ -1,5 +1,7 @@
 .env
 
+/.idea
+
 # Compiled output / build
 .gradle
 build/

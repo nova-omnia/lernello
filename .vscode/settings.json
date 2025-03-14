@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["DTOs", "omnia"],
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "[java]": {
+    "editor.detectIndentation": false
+  },
+  "java.compile.nullAnalysis.mode": "automatic"
+}

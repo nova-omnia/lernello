@@ -1,17 +1,18 @@
-package ch.nova_omnia.pm4.model.users;
+package ch.nova_omnia.pm4.model.auth.user;
 
+import ch.nova_omnia.pm4.model.auth.role.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "e_mail", nullable = false, unique = true)
     private String email;

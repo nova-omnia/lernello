@@ -1,5 +1,6 @@
-package ch.nova_omnia.pm4.model;
+package ch.nova_omnia.pm4.model.auth.role;
 
+import ch.nova_omnia.pm4.model.auth.permission.Permission;
 import jakarta.persistence.*;
 
 @Entity

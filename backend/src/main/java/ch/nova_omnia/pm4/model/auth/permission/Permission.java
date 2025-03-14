@@ -1,16 +1,17 @@
-package ch.nova_omnia.pm4.model;
+package ch.nova_omnia.pm4.model.auth.permission;
 
+import ch.nova_omnia.pm4.model.auth.role.Role;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "permission")
 public class Permission {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String name;

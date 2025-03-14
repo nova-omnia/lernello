@@ -1,4 +1,4 @@
-package ch.nova_omnia.pm4.model.users;
+package ch.nova_omnia.pm4.model.auth.user;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +9,8 @@ import java.util.UUID;
 public class UserSession {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "jwt_token", length = 512, nullable = false)
     private String jwtToken;

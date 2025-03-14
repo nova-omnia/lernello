@@ -1,6 +1,7 @@
 <script lang="ts">
     import '../app.css';
 	import './nav.css';
+	import './dashboard.css';
     let { children } = $props();
 	let searchQuery = '';
 	async function handleSearch(event: Event) {
@@ -26,11 +27,10 @@
 	<nav>
 		<div>
 			<a href="/">Dashboard</a>
-			<a href="/learningkit">Learning kit</a>
+			<a href="/learningkit">Learning Kits</a>
 		</div>
 		<form method="POST" class="search-bar" onsubmit={handleSearch}>
 			<input type="text" bind:value={searchQuery} placeholder="Search..." >
-			<button type="submit">Search</button>
 		</form>
 	</nav>
 

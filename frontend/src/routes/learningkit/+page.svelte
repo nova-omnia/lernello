@@ -1,4 +1,15 @@
-<h1>Learning Kit</h1>
+<div>
+    <h1>LK1</h1>
+    <p>Description</p>
+    <p></p>
+</div>
+<style>
+    h1 {
+        font-weight: bold; 
+    }
+   
+    div {
 
-<p>this is the learning kit edit page</p>
-<p> TODO</p>
+        margin-left: 1cm; 
+    }
+</style>

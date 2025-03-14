@@ -1,16 +1,16 @@
 <div class="dashboard">
 	<p class="dashboard-title">Dashboard</p>
     <div class="greeting">Good morning ...!</div>
-    <a href="/manage-kits">Manage Learning Kits</a>
+    <a href="/learningkit">Manage Learning Kits</a>
     <div class="kit-container">
         <div class="kit-card">
-            <h3>Chrome</h3>
-            <p>How does the WWW work?</p>
+            <h3>LK1</h3>
+            <p>Description</p>
             <button>Edit</button>
         </div>
         <div class="kit-card">
-            <h3>Figma</h3>
-            <p>Get to know Figma better!</p>
+            <h3>LK2</h3>
+            <p>Description</p>
             <button>Edit</button>
         </div>
     </div>

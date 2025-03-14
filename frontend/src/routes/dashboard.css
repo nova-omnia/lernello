@@ -1,3 +1,6 @@
+.dashboard {
+    margin-left: 1cm; /* Add a 1cm margin to the left */
+}
 .dashboard-title {
     font-size: 2em; /* Larger font size */
     font-weight: bold; /* Bold text */

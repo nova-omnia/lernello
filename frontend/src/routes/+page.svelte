@@ -11,11 +11,21 @@
 		<div class="space-y-4">
 			<label class="label">
 				<span class="label-text">Email</span>
-				<input class="input preset-filled-surface-200-800" type="text" placeholder="email" />
+				<input
+					class="input preset-filled-surface-200-800"
+					name="email"
+					type="text"
+					placeholder="email"
+				/>
 			</label>
 			<label class="label">
 				<span class="label-text">Passwort</span>
-				<input class="input preset-filled-surface-200-800" type="password" placeholder="password" />
+				<input
+					class="input preset-filled-surface-200-800"
+					name="password"
+					type="password"
+					placeholder="password"
+				/>
 			</label>
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">Sign in</button>

@@ -1,12 +1,15 @@
-import {requestLoginUser} from "$lib/api/loginApi";
-import type { Actions } from './$types';
-import {LoginUser} from "$lib/models/LoginUser";
+import { parseLoginUser } from '$lib/models/LoginUser';
+import { requestLoginUser } from '$lib/api/loginApi';
+import type { Actions } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
-export const actions = {
-    loginUser: async ({ request }) => {
-        const data = await request.formData();
-        const user = new LoginUser(data);
+export const actions: Actions = {
+	loginUser: async ({ request }) => {
+		const data = await request.formData();
+		const user = parseLoginUser(data);
 
-        return requestLoginUser(user);
+		await requestLoginUser(user);
+
+		throw redirect(303, '/dashboard');
 	}
-} satisfies Actions;
+};

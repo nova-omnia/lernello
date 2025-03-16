@@ -1,13 +1,14 @@
 package ch.nova_omnia.lernello.dto.response;
 
-import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public record InstructorResDTO(
-                               UUID uuid,
-                               String firstName,
-                               String lastName,
-                               List<LearningUnitResDTO> learningUnits
+                               @NotNull UUID uuid,
+                               @NotNull @Size(min = 3, max = 40) String firstName,
+                               @NotNull @Size(min = 3, max = 40) String lastName
 ) {
 
 }

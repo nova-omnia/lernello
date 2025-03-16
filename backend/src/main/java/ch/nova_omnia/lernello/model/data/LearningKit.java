@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "learning_kits")
@@ -27,6 +28,7 @@ public class LearningKit {
 
     @Column(name = "name", nullable = false)
     @NotNull
+    @Size(min = 3, max = 40)
     @NotBlank
     private String name;
 
@@ -42,7 +44,7 @@ public class LearningKit {
     public LearningKit() {
     }
 
-    public LearningKit(@NotNull @NotBlank String name, @NotNull Folder folder, @NotNull List<LearningUnit> learningUnits) {
+    public LearningKit(String name, Folder folder, List<LearningUnit> learningUnits) {
         this.name = name;
         this.folder = folder;
         this.learningUnits = learningUnits;
@@ -52,7 +54,7 @@ public class LearningKit {
         return uuid;
     }
 
-    public void setUuid(@NotNull UUID uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -60,7 +62,7 @@ public class LearningKit {
         return name;
     }
 
-    public void setName(@NotNull @NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -68,7 +70,7 @@ public class LearningKit {
         return folder;
     }
 
-    public void setParentFolder(@NotNull Folder folder) {
+    public void setParentFolder(Folder folder) {
         this.folder = folder;
     }
 

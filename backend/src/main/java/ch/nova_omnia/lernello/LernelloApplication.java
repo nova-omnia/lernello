@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LernelloApplication {
-    private static Logger log = LoggerFactory.getLogger(LernelloApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(LernelloApplication.class);
 
     public static void main(String[] args) {
         log.info("Starting PM4 application");

@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "learning_units")
@@ -28,13 +29,14 @@ public class LearningUnit {
 
     @Column(name = "name", nullable = false)
     @NotNull
+    @Size(min = 3, max = 40)
     @NotBlank
     private String name;
 
     public LearningUnit() {
     }
 
-    public LearningUnit(@NotNull @NotBlank String name, @NotNull LearningKit learningKit) {
+    public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;
         this.learningKit = learningKit;
     }
@@ -43,7 +45,7 @@ public class LearningUnit {
         return uuid;
     }
 
-    public void setUuid(@NotNull UUID uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -51,7 +53,7 @@ public class LearningUnit {
         return name;
     }
 
-    public void setName(@NotNull @NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -59,7 +61,7 @@ public class LearningUnit {
         return learningKit;
     }
 
-    public void setLearningKit(@NotNull LearningKit learningKit) {
+    public void setLearningKit(LearningKit learningKit) {
         this.learningKit = learningKit;
     }
 

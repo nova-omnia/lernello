@@ -23,7 +23,7 @@ public class LoadDatabase {
         frodo.setParentFolder(bilbo);
         bilbo.setParentFolder(bungo);
 
-        return (args) -> {
+        return (_) -> {
             log.info("Preloading folders");
             repository.save(bungo);
             repository.save(bilbo);

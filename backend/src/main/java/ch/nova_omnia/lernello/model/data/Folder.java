@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * Folder is an entity class that represents a folder in the system.
@@ -33,6 +34,7 @@ public class Folder {
     @Column(name = "name", nullable = false)
     @NotNull
     @NotBlank
+    @Size(min = 3, max = 40)
     private String name;
 
     @ManyToOne
@@ -40,17 +42,15 @@ public class Folder {
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotNull
     private List<Folder> subFolders;
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotNull
     private List<LearningKit> learningKits;
 
     public Folder() {
     }
 
-    public Folder(@NotBlank @NotNull String name) {
+    public Folder(String name) {
         this.name = name;
     }
 
@@ -58,7 +58,7 @@ public class Folder {
         return uuid;
     }
 
-    public void setUuid(@NotNull UUID uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -66,7 +66,7 @@ public class Folder {
         return name;
     }
 
-    public void setName(@NotNull @NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.nova_omnia.lernello.dto.FolderDTO;
+import ch.nova_omnia.lernello.dto.response.FolderResDTO;
 import ch.nova_omnia.lernello.mapper.FolderMapper;
 import ch.nova_omnia.lernello.repository.FolderRepository;
 
@@ -17,7 +17,6 @@ import ch.nova_omnia.lernello.repository.FolderRepository;
 @RestController
 @RequestMapping("/api/folders")
 public class FolderRestController {
-
     private final FolderRepository repository;
     private final FolderMapper folderMapper;
 
@@ -28,12 +27,12 @@ public class FolderRestController {
 
 
     @GetMapping()
-    public List<FolderDTO> loadAll() {
+    public List<FolderResDTO> loadAll() {
         return repository.findAll().stream().map(folderMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public Optional<FolderDTO> getById(@PathVariable UUID id) {
+    public Optional<FolderResDTO> getById(@PathVariable UUID id) {
         return repository.findById(id).map(folderMapper::toDTO);
     }
 }

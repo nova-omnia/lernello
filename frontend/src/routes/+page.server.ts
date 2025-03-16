@@ -1,15 +1,27 @@
 import { parseLoginUser } from '$lib/models/LoginUser';
 import { requestLoginUser } from '$lib/api/loginApi';
 import type { Actions } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import { ApiError, type ApiErrorResponse } from '$lib/api/ApiError';
 
-export const actions: Actions = {
+export const actions = {
 	loginUser: async ({ request }) => {
-		const data = await request.formData();
-		const user = parseLoginUser(data);
+		try {
+			const data = await request.formData();
+			const user = parseLoginUser(data);
 
-		await requestLoginUser(user);
+			await requestLoginUser(user);
 
-		throw redirect(303, '/dashboard');
+			redirect(303, '/dashboard');
+		} catch (error) {
+			if (error instanceof ApiError) {
+				return fail(error.status, error.toApiErrorResponse());
+			}
+			return fail(500, {
+				status: 500,
+				message: 'An unexpected error occurred',
+				error: 'Internal Server Error'
+			} satisfies ApiErrorResponse);
+		}
 	}
-};
+} satisfies Actions;

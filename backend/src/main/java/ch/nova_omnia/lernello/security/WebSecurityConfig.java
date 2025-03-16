@@ -1,4 +1,4 @@
-package ch.nova_omnia.pm4.security;
+package ch.nova_omnia.lernello.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

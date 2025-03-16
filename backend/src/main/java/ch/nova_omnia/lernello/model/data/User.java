@@ -1,4 +1,4 @@
-package ch.nova_omnia.pm4.model.data;
+package ch.nova_omnia.lernello.model.data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//TODO Check if user class will be used in the future
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,7 +1,7 @@
-package ch.nova_omnia.pm4.service;
+package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.pm4.model.data.User;
-import ch.nova_omnia.pm4.repository.UserRepository;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package ch.nova_omnia.pm4.security;
+package ch.nova_omnia.lernello.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

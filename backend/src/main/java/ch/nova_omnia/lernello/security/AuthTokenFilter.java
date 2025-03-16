@@ -1,6 +1,6 @@
-package ch.nova_omnia.pm4.security;
+package ch.nova_omnia.lernello.security;
 
-import ch.nova_omnia.pm4.service.CustomUserDetailsService;
+import ch.nova_omnia.lernello.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

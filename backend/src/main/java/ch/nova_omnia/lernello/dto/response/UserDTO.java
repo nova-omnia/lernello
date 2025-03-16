@@ -1,4 +1,4 @@
-package ch.nova_omnia.pm4.payload;
+package ch.nova_omnia.lernello.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

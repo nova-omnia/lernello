@@ -1,7 +1,15 @@
 <script lang="ts">
+	const { form } = $props();
 </script>
 
 <main class="flex h-full flex-col items-center justify-center">
+	{#if form?.error}
+		<div class="card preset-filled-error-100-900 border-surface-200-800 mb-4 p-4">
+			<p class="error">{form.error}</p>
+			<p class="error">{form.message}</p>
+		</div>
+	{/if}
+
 	<form
 		method="POST"
 		action="?/loginUser"

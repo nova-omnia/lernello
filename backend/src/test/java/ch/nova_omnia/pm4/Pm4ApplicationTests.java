@@ -1,8 +1,8 @@
-package ch.nova_omnia.pm4;
+package ch.nova_omnia.lernello;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Pm4ApplicationTests {
+class LernelloApplicationTests {
 
 }

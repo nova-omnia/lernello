@@ -1,33 +1,37 @@
 package ch.nova_omnia.pm4.api;
 
 import ch.nova_omnia.pm4.model.data.User;
-import ch.nova_omnia.pm4.repository.UserRepository;
+import ch.nova_omnia.pm4.payload.UserDTO;
 import ch.nova_omnia.pm4.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for handling authentication requests.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder encoder;
-    @Autowired
     JwtUtil jwtUtils;
 
+    /**
+     * Authenticates a user and returns a JWT token.
+     *
+     * @param user The user to authenticate.
+     * @return The JWT token.
+     */
     @PostMapping("/signin")
-    public String authenticateUser(@RequestBody User user) {
+    public UserDTO authenticateUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
@@ -35,22 +39,6 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtils.generateToken(userDetails.getUsername());
-    }
-
-    // TODO registerUser method
-    @PostMapping("/signup")
-    public String registerUser(@RequestBody User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            return "Error: Username is already taken!";
-        }
-        // Create new user's account
-        User newUser = new User(
-                null,
-                user.getUsername(),
-                encoder.encode(user.getPassword())
-        );
-        userRepository.save(newUser);
-        return "User registered successfully!";
+        return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()));
     }
 }

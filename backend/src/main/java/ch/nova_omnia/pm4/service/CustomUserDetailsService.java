@@ -10,11 +10,21 @@ import org.springframework.security.core.userdetails.*;
 
 import java.util.Collections;
 
+/**
+ * Service from Spring Security for handling user details and authentication easily.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Loads a user by username.
+     *
+     * @param username The username of the user to load.
+     * @return The user details.
+     * @throws UsernameNotFoundException If the user is not found.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
@@ -24,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.emptyList()
+                Collections.emptyList() // TODO: Add authorities
         );
     }
 }

@@ -1,9 +1,5 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.dto.response.UserDTO;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.nova_omnia.lernello.dto.response.UserDTO;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.security.JwtUtil;
+
 /**
  * Controller for handling authentication requests.
  */
@@ -25,8 +25,6 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtUtil jwtUtils;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     PasswordEncoder encoder;
 
@@ -40,27 +38,10 @@ public class AuthController {
     public UserDTO authenticateUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        user.getPassword()
+                        user.getUsername(), user.getPassword()
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()));
-    }
-
-    //TODO maybe remove in future if no registration is needed. Good for testing right now
-    @PostMapping("/signup")
-    public String registerUser(@RequestBody User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            return "Error: Username is already taken!";
-        }
-        // Create new user's account
-        User newUser = new User(
-                null,
-                user.getUsername(),
-                encoder.encode(user.getPassword())
-        );
-        userRepository.save(newUser);
-        return "User registered successfully!";
     }
 }

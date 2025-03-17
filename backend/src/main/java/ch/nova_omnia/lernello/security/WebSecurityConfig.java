@@ -1,10 +1,14 @@
 package ch.nova_omnia.lernello.security;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,42 +19,35 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Configuration for the web security.
  */
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig {
 
-    public static final String[] WHITELIST_URLS = {
-            "/api/auth/**",
-            "/error",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/webjars/**"
+    public static final String[] WHITELIST_URLS = {"/api/auth/**", "/error", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**"
     };
 
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
+    AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
+    AuthenticationManager authenticationManager(
+                                                AuthenticationConfiguration authenticationConfiguration
     ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
@@ -75,17 +72,14 @@ public class WebSecurityConfig {
      * @throws Exception if an error occurs during the configuration process
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .cors(AbstractHttpConfigurer::disable) // Disable CORS (or configure if needed)
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Configure the authorization of requests
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers(WHITELIST_URLS)
-                                .permitAll() // Allow all requests to /api/auth/**
-                                .anyRequest()
-                                .authenticated() // All other requests require authentication
+                        auth -> auth.requestMatchers(WHITELIST_URLS).permitAll() // Allow all requests to /api/auth/**
+                                .anyRequest().authenticated() // All other requests require authentication
                 );
         // Add the JWT Token filter before the UsernamePasswordAuthenticationFilter
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

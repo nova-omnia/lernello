@@ -1,71 +1,41 @@
 <script lang="ts">
-	import { Accordion } from '@skeletonlabs/skeleton-svelte';
-	// Icons
-	import Club from 'lucide-svelte/icons/club';
-	import Diamond from 'lucide-svelte/icons/diamond';
-	import Heart from 'lucide-svelte/icons/heart';
-	import Spade from 'lucide-svelte/icons/spade';
-
-	const lorem =
-		'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit esse nisi eligendi fuga! Quas nisi repellat adipisci animi repellendus incidunt laborum sunt qui nesciunt, ducimus saepe sapiente sed ut labore. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit esse nisi eligendi fuga! Quas nisi repellat adipisci animi repellendus incidunt laborum sunt qui nesciunt, ducimus saepe sapiente sed ut labore.';
-
-	const value = $state(['club']);
+	const { form } = $props();
 </script>
 
-<div class="mx-auto max-w-lg p-8">
-	<h1 class="mb-4 text-4xl font-bold">This is Skeleton!</h1>
-	<Accordion {value}>
-		<Accordion.Item value="club">
-			<!-- Control -->
-			{#snippet lead()}<Club size={24} />{/snippet}
-			{#snippet control()}Club{/snippet}
-			<!-- Panel -->
-			{#snippet panel()}{lorem}{/snippet}
-		</Accordion.Item>
-		<hr class="hr" />
-		<Accordion.Item value="diamond">
-			{#snippet lead()}<Diamond size={24} />{/snippet}
-			{#snippet control()}Diamond{/snippet}
-			{#snippet panel()}{lorem}{/snippet}
-		</Accordion.Item>
-		<hr class="hr" />
-		<Accordion.Item value="heart" disabled>
-			{#snippet lead()}<Heart size={24} />{/snippet}
-			{#snippet control()}Heart (disabled){/snippet}
-			{#snippet panel()}{lorem}{/snippet}
-		</Accordion.Item>
-		<hr class="hr" />
-		<Accordion.Item value="spade">
-			{#snippet lead()}<Spade size={24} />{/snippet}
-			{#snippet control()}Spade{/snippet}
-			{#snippet panel()}{lorem}{/snippet}
-		</Accordion.Item>
-	</Accordion>
-</div>
-<div class="mx-auto max-w-lg p-8">
-	<h2 class="mb-4 text-2xl font-bold">Here are some form elements</h2>
-	<form class="mx-auto w-full max-w-md space-y-4">
-		<!-- Search -->
-		<input class="input" type="search" placeholder="Search..." />
-		<!-- Date Picker -->
-		<label class="label">
-			<span class="label-text">Date</span>
-			<input class="input" type="date" />
-		</label>
-		<!-- File Input -->
-		<label class="label">
-			<span class="label-text">File Input</span>
-			<input class="input" type="file" />
-		</label>
-		<!-- Range -->
-		<label class="label">
-			<span class="label-text">Range</span>
-			<input class="input" type="range" value="75" max="100" />
-		</label>
-		<!-- Progress -->
-		<label class="label">
-			<span class="label-text">Progress</span>
-			<progress class="progress" value="25" max="100"></progress>
-		</label>
+<main class="flex h-full flex-col items-center justify-center">
+	{#if form?.error}
+		<div class="card preset-filled-error-100-900 border-surface-200-800 mb-4 p-4">
+			<p class="error">{form.error}</p>
+			<p class="error">{form.message}</p>
+		</div>
+	{/if}
+
+	<form
+		method="POST"
+		action="?/loginUser"
+		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+	>
+		<h1 class="h2">Login</h1>
+		<div class="space-y-4">
+			<label class="label">
+				<span class="label-text">Email</span>
+				<input
+					class="input preset-filled-surface-200-800"
+					name="email"
+					type="text"
+					placeholder="email"
+				/>
+			</label>
+			<label class="label">
+				<span class="label-text">Passwort</span>
+				<input
+					class="input preset-filled-surface-200-800"
+					name="password"
+					type="password"
+					placeholder="password"
+				/>
+			</label>
+		</div>
+		<button class="btn preset-filled-primary-500 w-full">Sign in</button>
 	</form>
-</div>
+</main>

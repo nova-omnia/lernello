@@ -1,6 +1,5 @@
 package ch.nova_omnia.lernello.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Configuration for the web security.
@@ -19,14 +24,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig {
 
-    public static final String[] WHITELIST_URLS = { //
-            "/api/auth/**", // Allow all requests to /api/auth/**
-            "/error", // Allow all requests to /error
+    public static final String[] WHITELIST_URLS = {
+            "/api/auth/**",
+            "/error",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/webjars/**"
     };
-
-
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -35,7 +39,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-                                                       AuthenticationConfiguration authenticationConfiguration
+            AuthenticationConfiguration authenticationConfiguration
     ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -43,6 +47,17 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     /**
@@ -67,13 +82,12 @@ public class WebSecurityConfig {
                 )
                 // Configure the authorization of requests
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers(
-                                WHITELIST_URLS
-                        ).permitAll() // Allow all requests to /api/auth/**
-                                .anyRequest().authenticated() // All other requests require authentication
+                        auth -> auth.requestMatchers(WHITELIST_URLS)
+                                .permitAll() // Allow all requests to /api/auth/**
+                                .anyRequest()
+                                .authenticated() // All other requests require authentication
                 );
         // Add the JWT Token filter before the UsernamePasswordAuthenticationFilter
-        // This calls the AuthTokenFilter for each request
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

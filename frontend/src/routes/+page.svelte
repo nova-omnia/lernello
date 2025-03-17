@@ -21,7 +21,7 @@
 				<span class="label-text">Email</span>
 				<input
 					class="input preset-filled-surface-200-800"
-					name="email"
+					name="username"
 					type="text"
 					placeholder="email"
 				/>

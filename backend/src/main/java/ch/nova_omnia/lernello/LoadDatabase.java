@@ -20,7 +20,6 @@ public class LoadDatabase {
     @Autowired
     PasswordEncoder encoder;
 
-
     @Bean
     CommandLineRunner initDatabase(FolderRepository folderRepository, UserRepository userRepository) {
         Folder bungo = new Folder("Bungo Baggins");
@@ -28,7 +27,6 @@ public class LoadDatabase {
         bilbo.setParentFolder(bungo);
 
         User frodo = new User(null, "frodo@gmail.com", encoder.encode("password"));
-
 
         return (_) -> {
             log.info("Preloading folders");

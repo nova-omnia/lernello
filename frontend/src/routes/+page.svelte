@@ -1,20 +1,41 @@
-<div class="ml-10">
-    <p class="text-2xl font-bold mb-2.5">Dashboard</p>
-    <div class="text-xl mb-2.5">Good morning ...!</div>
-    <a href="/learningkit" class="text-blue-500 no-underline hover:underline">Manage Learning Kits</a>
-    <div class="flex gap-5 mt-5">
-        <div class="border border-gray-300 rounded-lg p-5 w-52 text-center">
-            <h3 class="my-2.5">LK1</h3>
-            <p class="text-gray-600">Description</p>
-            <button class="bg-blue-500 text-white border-none py-2 px-5 rounded cursor-pointer hover:bg-blue-700">Edit</button>
-        </div>
-        <div class="border border-gray-300 rounded-lg p-5 w-52 text-center">
-            <h3 class="my-2.5">LK2</h3>
-            <p class="text-gray-600">Description</p>
-            <button class="bg-blue-500 text-white border-none py-2 px-5 rounded cursor-pointer hover:bg-blue-700">Edit</button>
-        </div>
-    </div>
-    <div class="mt-5">
-        <button class="bg-gray-200 border border-gray-300 py-2 px-5 rounded cursor-pointer hover:bg-gray-300">+ Create new Learning Kit</button>
-    </div>
-</div>
+<script lang="ts">
+	const { form } = $props();
+</script>
+
+<main class="flex h-full flex-col items-center justify-center">
+	{#if form?.error}
+		<div class="card preset-filled-error-100-900 border-surface-200-800 mb-4 p-4">
+			<p class="error">{form.error}</p>
+			<p class="error">{form.message}</p>
+		</div>
+	{/if}
+
+	<form
+		method="POST"
+		action="?/loginUser"
+		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+	>
+		<h1 class="h2">Login</h1>
+		<div class="space-y-4">
+			<label class="label">
+				<span class="label-text">Email</span>
+				<input
+					class="input preset-filled-surface-200-800"
+					name="email"
+					type="text"
+					placeholder="email"
+				/>
+			</label>
+			<label class="label">
+				<span class="label-text">Passwort</span>
+				<input
+					class="input preset-filled-surface-200-800"
+					name="password"
+					type="password"
+					placeholder="password"
+				/>
+			</label>
+		</div>
+		<button class="btn preset-filled-primary-500 w-full">Sign in</button>
+	</form>
+</main>

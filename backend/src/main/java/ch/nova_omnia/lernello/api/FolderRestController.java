@@ -1,0 +1,52 @@
+package ch.nova_omnia.lernello.api;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ch.nova_omnia.lernello.dto.request.CreateFolderDTO;
+import ch.nova_omnia.lernello.dto.response.FolderResDTO;
+import ch.nova_omnia.lernello.mapper.FolderMapper;
+import ch.nova_omnia.lernello.repository.FolderRepository;
+import jakarta.validation.Valid;
+
+
+@RestController
+@RequestMapping("/api/folders")
+@Validated
+public class FolderRestController {
+    private final FolderRepository repository;
+    private final FolderMapper folderMapper;
+
+    FolderRestController(FolderRepository repository, FolderMapper folderMapper) {
+        this.repository = repository;
+        this.folderMapper = folderMapper;
+    }
+
+
+    @GetMapping()
+    public List<@Valid FolderResDTO> loadAll() {
+        return repository.findAll().stream().map(folderMapper::toDTO).toList();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<FolderResDTO> getById(@PathVariable UUID id) {
+        return repository.findById(id).map(folderMapper::toDTO);
+    }
+
+    @PostMapping()
+    public @Valid FolderResDTO create(@Valid @RequestBody CreateFolderDTO folder) {
+        var entity = folderMapper.toEntity(folder);
+        var savedEntity = repository.save(entity);
+        return folderMapper.toDTO(savedEntity);
+    }
+
+}

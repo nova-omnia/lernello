@@ -17,6 +17,7 @@ export const actions = {
 			if (error instanceof ApiError) {
 				return fail(error.status, error.toApiErrorResponse());
 			}
+			console.error('An unexpected error occurred:', error);
 			return fail(500, {
 				status: 500,
 				message: 'An unexpected error occurred',

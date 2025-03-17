@@ -18,6 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 public class WebSecurityConfig {
+
+    public static final String[] WHITELIST_URLS = { //
+            "/api/auth/**", // Allow all requests to /api/auth/**
+            "/error", // Allow all requests to /error
+    };
+
+
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
@@ -28,7 +35,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
+                                                       AuthenticationConfiguration authenticationConfiguration
     ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -54,20 +61,16 @@ public class WebSecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
+        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .cors(AbstractHttpConfigurer::disable) // Disable CORS (or configure if needed)
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(unauthorizedHandler)
-                )
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 // Configure the authorization of requests
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll() // Permit all requests to /api/auth/**
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(
+                        auth -> auth.requestMatchers(
+                                WHITELIST_URLS
+                        ).permitAll() // Allow all requests to /api/auth/**
+                                .anyRequest().authenticated() // All other requests require authentication
                 );
         // Add the JWT Token filter before the UsernamePasswordAuthenticationFilter
         // This calls the AuthTokenFilter for each request

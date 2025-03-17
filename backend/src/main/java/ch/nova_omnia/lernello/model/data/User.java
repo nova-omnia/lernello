@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.model.data;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,10 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid", nullable = false)
+    @NotNull
+    private UUID uuid;
     @Column(unique = true)
     private String username;
     private String password;

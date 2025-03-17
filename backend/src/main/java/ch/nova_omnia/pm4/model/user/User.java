@@ -1,7 +1,8 @@
-package ch.nova_omnia.pm4.model.auth.user;
+package ch.nova_omnia.pm4.model.user;
 
-import ch.nova_omnia.pm4.model.auth.role.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "e_mail", nullable = false, unique = true)
@@ -20,16 +22,17 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false)
+    @Column(name = "language", nullable = false)
     private String language;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "create_date", nullable = false)
+    @Column(name = "create_date", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     @Column(name = "update_date")
@@ -38,16 +41,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserSession> sessions = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
-
     public User() {
-        this.createDate = LocalDateTime.now();
     }
 
     // Getter & Setter

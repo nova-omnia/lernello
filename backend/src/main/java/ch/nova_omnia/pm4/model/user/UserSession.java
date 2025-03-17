@@ -1,8 +1,9 @@
-package ch.nova_omnia.pm4.model.auth.user;
+package ch.nova_omnia.pm4.model.user;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "user_session")
@@ -10,15 +11,17 @@ public class UserSession {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "jwt_token", length = 512, nullable = false)
     private String jwtToken;
 
-    @Column(name = "create_date", nullable = false)
+    @Column(name = "create_date", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createDate;
 
-    @Column(name = "expiration_data", nullable = false)
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
     @ManyToOne
@@ -26,7 +29,6 @@ public class UserSession {
     private User user;
 
     public UserSession() {
-        this.createDate = LocalDateTime.now();
     }
 
     // Getter & Setter

@@ -1,34 +1,16 @@
 <script lang="ts">
     import '../app.css';
     let { children } = $props();
-    let searchQuery = $state('');
-	async function handleSearch(event: Event) {
-        event.preventDefault();
-        const response = await fetch('/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: searchQuery })
-        });
-		if (!response.ok) {
-            console.error('Search request failed:', response.statusText);
-            return;
-        }
-        const result = await response.json();
-        console.log('Search results:', result);
-        // Handle the search results here
-    }
 </script>
 
 <div>
 	<nav class="flex justify-between items-center p-2.5 bg-gray-100 border-b border-gray-300">
         <div>
-            <a href="/" class="mr-5 text-blue-500 no-underline hover:underline">Dashboard</a>
+            <a href="/dashboard" class="mr-5 text-blue-500 no-underline hover:underline">Dashboard</a>
             <a href="/learningkit" class="mr-5 text-blue-500 no-underline hover:underline">Learning Kits</a>
         </div>
-        <form method="POST" class="flex items-center" onsubmit={handleSearch}>
-            <input type="text" bind:value={searchQuery} placeholder="Search..." class="p-1 border border-gray-300 rounded mr-2.5 text-black bg-white">
+        <form method="POST" class="flex items-center opacity-50 pointer-events-none">
+            <input type="text" placeholder="Search..." class="p-1 border border-gray-300 rounded mr-2.5 text-black bg-white">
         </form>
     </nav>
     <div class="flex ">

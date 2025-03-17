@@ -1,7 +1,7 @@
 <div class="ml-10">
 	<p class="mb-2.5 text-2xl font-bold">Dashboard</p>
 	<div class="mb-2.5 text-xl">Good morning ...!</div>
-	<a href="/learningkit" class="text-blue-500 no-underline hover:underline">Manage Learning Kits</a>
+	<a href="/learningkit" class="card preset-filled-surface-100-900 no-underline hover:underline">Manage Learning Kits</a>
 	<div class="mt-5 flex gap-5">
 		<div class="w-52 rounded-lg border border-gray-300 p-5 text-center">
 			<h3 class="my-2.5">LK1</h3>

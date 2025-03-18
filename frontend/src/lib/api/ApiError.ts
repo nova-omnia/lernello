@@ -75,10 +75,7 @@ export function handleApiError<TRes, TArgs extends unknown[]>(handler: (...args:
 				error(err.status, err.toApiErrorResponse());
 			}
 
-			console.error(err);
-			error(500, {
-				message: 'An unexpected error occurred'
-			});
+			throw err;
 		}
 	};
 }

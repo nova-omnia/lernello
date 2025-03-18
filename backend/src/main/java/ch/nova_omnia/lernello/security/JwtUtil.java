@@ -1,14 +1,20 @@
 package ch.nova_omnia.lernello.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 /**
  * Utility class for JWT operations for generating and validating tokens.
@@ -17,9 +23,9 @@ import java.util.Date;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
+    private SecretKey key;
     @Value("${jwt.expiration}")
     private int jwtExpirationMs;
-    private SecretKey key;
 
     /**
      * Initializes the key for the JWT operations.
@@ -30,18 +36,22 @@ public class JwtUtil {
     }
 
     /**
+     * Returns the expiration time of the JWT token.
+     *
+     * @return The expiration time in milliseconds.
+     */
+    public int getExpirationTime() {
+        return jwtExpirationMs;
+    }
+
+    /**
      * Generates a JWT token for a user.
      *
      * @param username The username of the user.
      * @return The generated token.
      */
     public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().setSubject(username).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
     /**
@@ -51,11 +61,7 @@ public class JwtUtil {
      * @return The username.
      */
     public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key).build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     /**

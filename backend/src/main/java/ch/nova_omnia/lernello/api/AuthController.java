@@ -42,6 +42,6 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()));
+        return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()), userDetails.getUsername(), jwtUtils.getExpirationTime());
     }
 }

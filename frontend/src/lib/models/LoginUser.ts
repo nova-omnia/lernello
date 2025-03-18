@@ -6,9 +6,9 @@ export const LoginUserSchema = z.object({
 });
 
 export const UserTokenSchema = z.object({
-	email: z.string().email().nonempty(),
-	password: z.string().min(8).nonempty(),
-	token: z.string().nonempty()
+	username: z.string().nonempty(),
+	token: z.string().nonempty(),
+	expires: z.number().int().nonnegative()
 });
 
 export type LoginUser = z.infer<typeof LoginUserSchema>;

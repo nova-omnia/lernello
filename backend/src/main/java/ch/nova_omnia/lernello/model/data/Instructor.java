@@ -11,52 +11,33 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "instructors")
+@Data
+@NoArgsConstructor
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
+    @Column(name = "uuid", nullable = false)
     @NotNull
     private UUID uuid;
 
 
     @Column(name = "last_name", nullable = false)
-    @NotNull
-    @Size(min = 3, max = 40)
     @NotBlank
+    @Size(min = 3, max = 40)
     private String lastName;
 
     @Column(name = "first_name", nullable = false)
-    @NotNull
-    @Size(min = 3, max = 40)
     @NotBlank
+    @Size(min = 3, max = 40)
     private String firstName;
 
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
+    public Instructor(String lastName, String firstName) {
         this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(@NotNull @NotBlank String firstName) {
         this.firstName = firstName;
     }
-
 }

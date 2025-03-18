@@ -17,13 +17,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * Folder is an entity class that represents a folder in the system.
- * It extends {@link AbstractEntity} and contains additional properties
- * and methods specific to folders.
- */
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "folders")
+@Data
+@NoArgsConstructor
 public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,13 +32,12 @@ public class Folder {
     private UUID uuid;
 
     @Column(name = "name", nullable = false)
-    @NotNull
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "parent_folder_id")
+    @JoinColumn(name = "parent_folder")
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,51 +46,12 @@ public class Folder {
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LearningKit> learningKits;
 
-    public Folder() {
-    }
-
     public Folder(String name) {
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Folder(String name, Folder parentFolder) {
         this.name = name;
-    }
-
-    public Folder getParentFolder() {
-        return parentFolder;
-    }
-
-    public void setParentFolder(Folder parentFolder) {
         this.parentFolder = parentFolder;
     }
-
-    public List<Folder> getSubFolders() {
-        return subFolders;
-    }
-
-    public void setSubFolders(List<Folder> subFolders) {
-        this.subFolders = subFolders;
-    }
-
-    public List<LearningKit> getLearningKits() {
-        return learningKits;
-    }
-
-    public void setLearningKits(List<LearningKit> learningKits) {
-        this.learningKits = learningKits;
-    }
-
 }

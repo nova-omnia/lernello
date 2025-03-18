@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { form } = $props();
+	// const { form } = $props();
 </script>
 
 <main class="flex h-full flex-col items-center justify-center">

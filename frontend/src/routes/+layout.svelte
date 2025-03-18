@@ -29,35 +29,35 @@
         </button>
         <div>
             <!-- Logo -->
-            <a class="flex items-center mt-3" href="#" aria-label="Lernello">
+            <p class="flex items-center mt-3" aria-label="Lernello">
                 <GraduationCap size={24}/>
                 {#if $isExpanded}<span class="ml-3">Lernello</span>{/if}
-            </a>
+            </p>
             <!-- Buttons Section -->
             <div class="flex flex-col items-center mt-3 border-t border-gray-300">
-                <a class="flex items-center w-full h-12 mt-2 rounded" href="#"
+                <a class="flex items-center w-full h-12 mt-2 rounded" href="/home"
                    aria-label="Home">
                     <House size={24}/>
                     {#if $isExpanded}<span class="ml-3">Home</span>{/if}
                 </a>
-                <a class="flex items-center w-full h-12 mt-2 rounded" href="#"
+                <a class="flex items-center w-full h-12 mt-2 rounded" href="/learning-kits"
                    aria-label="Learning Kit">
                     <Files size={24}/>
                     {#if $isExpanded}<span class="ml-3">Learning Kits</span>{/if}
                 </a>
-                <a class="flex items-center w-full h-12 mt-2 rounded" href="#"
+                <a class="flex items-center w-full h-12 mt-2 rounded" href="/statistics"
                    aria-label="Statistics">
                     <ChartLine size={24}/>
                     {#if $isExpanded}<span class="ml-3">Statistics</span>{/if}
                 </a>
             </div>
             <div class="flex flex-col items-center mt-2 border-t border-gray-300">
-                <a class="flex items-center w-full h-12 mt-2 rounded" href="#"
+                <a class="flex items-center w-full h-12 mt-2 rounded" href="/settings"
                    aria-label="Settings">
                     <Settings size={24}/>
                     {#if $isExpanded}<span class="ml-3">Settings</span>{/if}
                 </a>
-                <a class="relative flex items-center justify-center w-full h-12 mt-2 rounded" href="#"
+                <a class="relative flex items-center justify-center w-full h-12 mt-2 rounded" href="/notifications"
                    aria-label="Notifications">
                     <MessageSquare size={24}/>
                     <span class="absolute top-0.5 left-2.5 w-2 h-2 mt-2 ml-2 bg-indigo-500 rounded-full"></span>
@@ -65,7 +65,7 @@
                 </a>
             </div>
         </div>
-        <a class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200" href="#"
+        <a class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200" href="/profile"
            aria-label="Profile">
             <User size={24}/>
             {#if $isExpanded}<span class="ml-3">Profile</span>{/if}

@@ -2,6 +2,8 @@
 
 Hi 👉👈
 
+If you're interested in our project-sketch, you can find it under [Lernello_krea_Projektskizze_PM4_FS25.pdf](documentation/Lernello_krea_Projektskizze_PM4_FS25.pdf).
+
 ## Backend (`/backend`)
 
 Java, Gradle, SpringBoot.

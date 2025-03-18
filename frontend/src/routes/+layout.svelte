@@ -8,19 +8,15 @@
 	<nav class="flex items-center justify-between border-b border-gray-300 bg-gray-100 p-2.5">
 		<div>
 			<a href="/dashboard" class="mr-5 text-blue-500 no-underline hover:underline">Dashboard</a>
-			<a href="/learningkit" class="mr-5 text-blue-500 no-underline hover:underline"
-				>Learning Kits</a
-			>
+			<a href="/learningkit" class="mr-5 text-blue-500 no-underline hover:underline">Learning Kits</a>
 		</div>
 		<form method="POST" class="pointer-events-none flex items-center opacity-50">
 			<input
 				type="text"
 				placeholder="Search..."
-				class="mr-2.5 rounded border border-gray-300 bg-white p-1 text-black"
-			/>
+				class="mr-2.5 rounded border border-gray-300 bg-white p-1 text-black"/>
 		</form>
 	</nav>
-	<div class="flex items-center justify-center w-screen h-screen p-10 space-x-6">
 		<div class="flex flex-col items-center w-16 h-full overflow-hidden text-gray-700 bg-gray-100 rounded">
 			<a class="flex items-center justify-center mt-3" href="#" aria-label="Lernello">
 				<svg class="w-8 h-8 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"

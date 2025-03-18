@@ -81,7 +81,7 @@
 					aria-label="Notifications"
 				>
 					<MessageSquare size={24} />
-					<span class="absolute left-2.5 top-0.5 ml-2 mt-2 h-2 w-2 rounded-full bg-indigo-500"
+					<span class="absolute top-0.5 left-2.5 mt-2 ml-2 h-2 w-2 rounded-full bg-indigo-500"
 					></span>
 					{#if $isExpanded}<span class="ml-3">Notifications</span>{/if}
 				</a>

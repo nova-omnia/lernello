@@ -1,6 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 
-import type { UserToken } from '$lib/models/LoginUser';
+import type { UserToken } from '$lib/models/user';
 
 // for information about these interfaces
 declare global {

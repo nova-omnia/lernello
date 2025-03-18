@@ -1,7 +1,7 @@
-import { UserTokenSchema, type LoginUser, type UserToken } from '$lib/models/LoginUser';
+import { UserTokenSchema, type UserLogin, type UserToken } from '$lib/models/user';
 import { request } from '$lib/api/apiClient';
 
-export async function requestLoginUser(user: LoginUser): Promise<UserToken> {
+export async function login(user: UserLogin): Promise<UserToken> {
 	const loginUserRes = await request(`/api/auth/signin`, 'POST', {
 		body: JSON.stringify(user)
 	});

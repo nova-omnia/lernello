@@ -1,4 +1,4 @@
-import { ApiError, isApiErrorResponse } from './ApiError';
+import { ApiError, isApiErrorResponse } from './apiError';
 
 //TODO change BASE_URL
 const BASE_URL = 'http://localhost:8080';
@@ -11,27 +11,21 @@ export async function request<T>(
 	request?: RequestInit
 ): Promise<T> {
 	const url = new URL(endpoint, BASE_URL).toString();
-	try {
-		const response = await fetch(url, {
-			method: method,
-			headers: {
-				'Content-Type': 'application/json',
-				...request?.headers
-			},
-			...request
-		});
-		if (!response.ok) {
-			const errorData = await response.json();
-			if (isApiErrorResponse(errorData)) {
-				throw ApiError.fromApiErrorResponse(errorData);
-			}
+	const response = await fetch(url, {
+		method: method,
+		headers: {
+			'Content-Type': 'application/json',
+			...request?.headers
+		},
+		...request
+	});
+
+	if (!response.ok) {
+		const errorData = await response.json();
+		if (isApiErrorResponse(errorData)) {
+			throw ApiError.fromApiErrorResponse(errorData);
 		}
-		return (await response.json()) as Promise<T>;
-	} catch (e: unknown) {
-		if (e instanceof ApiError) {
-			throw e;
-		}
-		console.error('Error fetching API:', e);
-		throw new Error(`An unexpected error occurred fetching: ${endpoint}`);
 	}
+
+	return (await response.json()) as Promise<T>;
 }

@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
-import { UserTokenSchema } from '$lib/models/LoginUser';
+import { UserTokenSchema } from '$lib/models/user';
 
 export function requireLogin() {
 	const { locals, url, cookies } = getRequestEvent();

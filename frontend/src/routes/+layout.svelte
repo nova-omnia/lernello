@@ -24,7 +24,7 @@
         <!-- Expand/Collapse Button -->
         <button
                 class="flex items-center justify-center w-12 h-12 mt-3 text-gray-800 rounded"
-                on:click={toggleSidebar} aria-label="Toggle sidebar" class:rotate-180={$isExpanded}>
+                onclick={toggleSidebar} aria-label="Toggle sidebar" class:rotate-180={$isExpanded}>
             <ChevronRight size={24}/>
         </button>
         <div>

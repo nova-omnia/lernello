@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,16 +34,19 @@ public class FolderRestController {
 
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('SCOPE_folders:read')")
     public List<@Valid FolderResDTO> loadAll() {
         return repository.findAll().stream().map(folderMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_folders:read')")
     public Optional<FolderResDTO> getById(@PathVariable UUID id) {
         return repository.findById(id).map(folderMapper::toDTO);
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('SCOPE_folders:write')")
     public @Valid FolderResDTO create(@Valid @RequestBody CreateFolderDTO folder) {
         var entity = folderMapper.toEntity(folder);
         var savedEntity = repository.save(entity);

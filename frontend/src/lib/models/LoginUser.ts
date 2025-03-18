@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const LoginUserSchema = z.object({
-	email: z.string().email().nonempty(),
+	username: z.string().email().nonempty(),
 	password: z.string().min(8).nonempty()
 });
 
@@ -16,7 +16,7 @@ export type UserToken = z.infer<typeof UserTokenSchema>;
 
 export function parseLoginUser(data: FormData): LoginUser {
 	const rawData = {
-		email: data.get('email'),
+		username: data.get('username'),
 		password: data.get('password')
 	};
 

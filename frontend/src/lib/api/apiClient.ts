@@ -1,7 +1,7 @@
 import { ApiError, isApiErrorResponse } from './ApiError';
 
 //TODO change BASE_URL
-const BASE_URL = 'https://api.example.com';
+const BASE_URL = 'http://localhost:8080';
 
 type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 

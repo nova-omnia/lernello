@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class="flex h-screen w-screen items-center justify-center space-x-6">
+<div class="flex h-screen w-full items-start justify-start space-x-6">
 	<!-- Sidebar -->
 	<div
 		class="flex h-full flex-col items-center overflow-hidden rounded bg-gray-100 text-gray-700 transition-all duration-300"

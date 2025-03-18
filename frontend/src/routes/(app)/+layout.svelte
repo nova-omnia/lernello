@@ -1,162 +1,99 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
+
+	//icons
+	import {
+		ChartLine,
+		Files,
+		MessageSquare,
+		Settings,
+		User,
+		House,
+		GraduationCap,
+		ChevronRight
+	} from 'lucide-svelte';
+
+	let isExpanded = writable(false);
 	let { children } = $props();
+
+	function toggleSidebar() {
+		isExpanded.update((value) => !value);
+	}
 </script>
 
-<div>
-	<nav class="flex items-center justify-between border-b border-gray-300 bg-gray-100 p-2.5">
-		<div>
-			<a href="/dashboard" class="mr-5 text-blue-500 no-underline hover:underline">Dashboard</a>
-			<a href="/learningkit" class="mr-5 text-blue-500 no-underline hover:underline"
-				>Learning Kits</a
-			>
-		</div>
-		<form method="POST" class="pointer-events-none flex items-center opacity-50">
-			<input
-				type="text"
-				placeholder="Search..."
-				class="mr-2.5 rounded border border-gray-300 bg-white p-1 text-black"
-			/>
-		</form>
-	</nav>
+<div class="flex h-screen w-screen items-center justify-center space-x-6">
+	<!-- Sidebar -->
 	<div
-		class="flex h-full w-16 flex-col items-center overflow-hidden rounded bg-gray-100 text-gray-700"
+		class="flex h-full flex-col items-center overflow-hidden rounded bg-gray-100 text-gray-700 transition-all duration-300"
+		class:isFullWidth={$isExpanded}
+		style="width: {$isExpanded ? '200px' : '4rem'}"
 	>
-		<a class="mt-3 flex items-center justify-center" href="#" aria-label="Lernello">
-			<svg
-				class="h-8 w-8 fill-current"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 20 20"
-				fill="currentColor"
-			>
-				<path
-					d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"
-				/>
-			</svg>
-		</a>
-		<div class="mt-3 flex flex-col items-center border-t border-gray-300">
-			<a
-				class="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-gray-300"
-				href="#"
-				aria-label="Home"
-			>
-				<svg
-					class="h-6 w-6 stroke-current"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
+		<!-- Expand/Collapse Button -->
+		<button
+			class="mt-3 flex h-12 w-12 items-center justify-center rounded text-gray-800"
+			onclick={toggleSidebar}
+			aria-label="Toggle sidebar"
+			class:rotate-180={$isExpanded}
+		>
+			<ChevronRight size={24} />
+		</button>
+		<div>
+			<!-- Logo -->
+			<p class="mt-3 flex items-center" aria-label="Lernello">
+				<GraduationCap size={24} />
+				{#if $isExpanded}<span class="ml-3">Lernello</span>{/if}
+			</p>
+			<!-- Buttons Section -->
+			<div class="mt-3 flex flex-col items-center border-t border-gray-300">
+				<a class="mt-2 flex h-12 w-full items-center rounded" href="/home" aria-label="Home">
+					<House size={24} />
+					{#if $isExpanded}<span class="ml-3">Home</span>{/if}
+				</a>
+				<a
+					class="mt-2 flex h-12 w-full items-center rounded"
+					href="/learning-kits"
+					aria-label="Learning Kit"
 				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-					/>
-				</svg>
-			</a>
-			<a
-				class="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-gray-300"
-				href="#"
-				aria-label="Learning Kit"
-			>
-				<svg
-					class="h-6 w-6 stroke-current"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
+					<Files size={24} />
+					{#if $isExpanded}<span class="ml-3">Learning Kits</span>{/if}
+				</a>
+				<a
+					class="mt-2 flex h-12 w-full items-center rounded"
+					href="/statistics"
+					aria-label="Statistics"
 				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-					/>
-				</svg>
-			</a>
-			<a
-				class="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-gray-300"
-				href="#"
-				aria-label="Statistics"
-			>
-				<svg
-					class="h-6 w-6 stroke-current"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
+					<ChartLine size={24} />
+					{#if $isExpanded}<span class="ml-3">Statistics</span>{/if}
+				</a>
+			</div>
+			<div class="mt-2 flex flex-col items-center border-t border-gray-300">
+				<a
+					class="mt-2 flex h-12 w-full items-center rounded"
+					href="/settings"
+					aria-label="Settings"
 				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-					/>
-				</svg>
-			</a>
-		</div>
-		<div class="mt-2 flex flex-col items-center border-t border-gray-300">
-			<a
-				class="mt-2 flex h-12 w-12 items-center justify-center rounded hover:bg-gray-300"
-				href="#"
-				aria-label="Settings"
-			>
-				<svg
-					class="h-6 w-6 stroke-current"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
+					<Settings size={24} />
+					{#if $isExpanded}<span class="ml-3">Settings</span>{/if}
+				</a>
+				<a
+					class="relative mt-2 flex h-12 w-full items-center justify-center rounded"
+					href="/notifications"
+					aria-label="Notifications"
 				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-					/>
-				</svg>
-			</a>
-			<a
-				class="relative mt-2 flex h-12 w-12 items-center justify-center hover:bg-gray-300"
-				href="#"
-				aria-label="Notifications"
-			>
-				<svg
-					class="h-6 w-6 stroke-current"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-					/>
-				</svg>
-				<span class="absolute left-0 top-0 ml-2 mt-2 h-2 w-2 rounded-full bg-indigo-500"></span>
-			</a>
+					<MessageSquare size={24} />
+					<span class="absolute left-2.5 top-0.5 ml-2 mt-2 h-2 w-2 rounded-full bg-indigo-500"
+					></span>
+					{#if $isExpanded}<span class="ml-3">Notifications</span>{/if}
+				</a>
+			</div>
 		</div>
 		<a
-			class="mt-auto flex h-16 w-16 items-center justify-center bg-gray-200 hover:bg-gray-300"
-			href="#"
+			class="mt-auto flex h-16 w-full items-center justify-center bg-gray-200"
+			href="/profile"
 			aria-label="Profile"
 		>
-			<svg
-				class="h-6 w-6 stroke-current"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/>
-			</svg>
+			<User size={24} />
+			{#if $isExpanded}<span class="ml-3">Profile</span>{/if}
 		</a>
 	</div>
 	{@render children()}

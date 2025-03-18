@@ -1,18 +1,19 @@
 <script lang="ts">
-	const { form } = $props();
+	import { superForm } from 'sveltekit-superforms';
+	import SuperDebug from 'sveltekit-superforms';
+
+	let { data } = $props();
+
+	const { form, errors, constraints, message, enhance } = superForm(data.form);
 </script>
 
 <main class="flex h-full flex-col items-center justify-center">
-	{#if form?.error}
-		<div class="card preset-filled-error-100-900 border-surface-200-800 mb-4 p-4">
-			<p class="error">{form.error}</p>
-			<p class="error">{form.message}</p>
-		</div>
-	{/if}
+	{#if $message}<h3>{$message}</h3>{/if}
 
 	<form
 		method="POST"
-		action="?/loginUser"
+		use:enhance
+		action="?/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
 	>
 		<h1 class="h2">Login</h1>
@@ -24,7 +25,11 @@
 					name="username"
 					type="text"
 					placeholder="email"
+					aria-invalid={$errors.username ? 'true' : undefined}
+					bind:value={$form.username}
+					{...$constraints.username}
 				/>
+				{#if $errors.username}<span class="text-error-50-950">{$errors.username}</span>{/if}
 			</label>
 			<label class="label">
 				<span class="label-text">Passwort</span>
@@ -33,9 +38,14 @@
 					name="password"
 					type="password"
 					placeholder="password"
+					aria-invalid={$errors.password ? 'true' : undefined}
+					bind:value={$form.password}
+					{...$constraints.password}
 				/>
+				{#if $errors.password}<span class="text-error-50-950">{$errors.password}</span>{/if}
 			</label>
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">Sign in</button>
 	</form>
+	<SuperDebug data={$form} />
 </main>

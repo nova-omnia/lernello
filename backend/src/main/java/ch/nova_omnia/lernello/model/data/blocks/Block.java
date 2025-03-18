@@ -1,8 +1,11 @@
-package ch.nova_omnia.pm4.model.learningUnit.blocks;
+package ch.nova_omnia.lernello.model.data.blocks;
 
-import ch.nova_omnia.pm4.model.learningUnit.LearningUnit;
+import ch.nova_omnia.lernello.model.data.LearningUnit;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -11,8 +14,9 @@ public abstract class Block {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
+    @NotNull
     private int position;
 
     @ManyToOne
@@ -21,7 +25,7 @@ public abstract class Block {
 
     // Getters and Setters
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -30,6 +34,9 @@ public abstract class Block {
     }
 
     public void setPosition(int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException("Position must be greater than or equal to 0.");
+        }
         this.position = position;
     }
 

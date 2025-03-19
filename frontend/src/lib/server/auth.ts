@@ -2,9 +2,8 @@ import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import { UserTokenSchema } from '$lib/models/user';
 
-export function requireLogin() {
-	const { locals, url, cookies } = getRequestEvent();
-
+export function recoverSession() {
+	const { locals, cookies } = getRequestEvent();
 	// Recover session
 	if (!locals.user) {
 		const sessionToken = cookies.get('sessionToken');
@@ -18,6 +17,12 @@ export function requireLogin() {
 			}
 		}
 	}
+}
+
+export function requireLogin() {
+	const { locals, url } = getRequestEvent();
+	// try to recover session
+	recoverSession();
 
 	// assume `locals.user` is populated in `handle`
 	if (!locals.user) {

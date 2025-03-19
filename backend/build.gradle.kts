@@ -20,13 +20,12 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
-    implementation("org.projectlombok:lombok:1.18.36")
     implementation("org.mapstruct:mapstruct:1.5.2.Final")
-
-    annotationProcessor("org.projectlombok:lombok:1.18.36") // lombok must be before mapstruct
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
+    implementation("org.projectlombok:lombok:1.18.36")
     runtimeOnly("com.h2database:h2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

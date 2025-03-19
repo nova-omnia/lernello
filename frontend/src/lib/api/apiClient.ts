@@ -2,7 +2,7 @@ import { ApiError, isApiErrorResponse } from './apiError';
 import { getRequestEvent } from '$app/server';
 import { recoverSession } from '$lib/server/auth';
 
-//TODO change BASE_URL
+// TODO handle different environments
 const BASE_URL = 'http://localhost:8080';
 
 type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';

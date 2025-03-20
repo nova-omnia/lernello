@@ -1,13 +1,13 @@
 meta {
   name: Login
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
   url: http://localhost:8080/api/auth/signin
   body: json
-  auth: inherit
+  auth: none
 }
 
 body:json {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isExpanded } from "$lib/stores/sidebar";
+	import { isExpanded } from '$lib/stores/sidebar';
 	import {
 		ChartLine,
 		Files,
@@ -10,7 +10,6 @@
 		LayoutDashboard
 	} from 'lucide-svelte';
 </script>
-
 
 <!-- Sidebar -->
 <div

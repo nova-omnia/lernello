@@ -30,15 +30,15 @@ public class User {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "e_mail", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     @NotNull
-    @Email(message = "Invalid email format")
-    private String email;
+    @Email(message = "Invalid username format")
+    private String username;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password", nullable = false)
     @NotNull
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    private String passwordHash;
+    private String password;
 
     @Column(name = "language", nullable = false)
     @NotNull

@@ -41,11 +41,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> getUserScopes(User user) {
         List<GrantedAuthority> scopes = new ArrayList<>();
-        // switch (user.getRole()) {
-        //     case INSTRUCTOR -> {
-        scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));
-        scopes.add(new SimpleGrantedAuthority("SCOPE_folders:write"));
-        // }
+        switch (user.getRole()) {
+            case INSTRUCTOR -> {
+                scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_folders:write"));
+            }
+            case TRAINEE -> scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));
+        }
         return scopes;
     }
 }

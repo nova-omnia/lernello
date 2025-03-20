@@ -28,7 +28,7 @@ public class LoadDatabase {
 
         User frodo = new User("frodo@gmail.com", encoder.encode("password"), "en", User.Role.INSTRUCTOR);
 
-        return (__) -> {
+        return (_) -> {
             log.info("Preloading folders");
             folderRepository.save(bungo);
             folderRepository.save(bilbo);

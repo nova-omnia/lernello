@@ -29,3 +29,9 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+
+# Database files
+*.db
+
+# Local configuration
+application-local.properties

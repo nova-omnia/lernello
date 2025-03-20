@@ -1,12 +1,14 @@
 <script lang="ts">
-	import  Sidebar from "$lib/components/sidebar.svelte";
-	import Topbar from "$lib/components/topbar.svelte";
+	import Sidebar from '$lib/components/sidebar.svelte';
+	import Topbar from '$lib/components/topbar.svelte';
 
 	let { children } = $props();
 </script>
 
-<div class="flex ">
+<div class="flex">
 	<Sidebar />
-	<Topbar />
-	{@render children()}
+	<div class="flex-1 pl-2">
+		<Topbar />
+		{@render children()}
+	</div>
 </div>

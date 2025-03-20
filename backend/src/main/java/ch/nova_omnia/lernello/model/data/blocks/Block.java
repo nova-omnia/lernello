@@ -1,7 +1,6 @@
 package ch.nova_omnia.lernello.model.data.blocks;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,11 +18,12 @@ public abstract class Block {
     @NotNull
     private int position;
 
+    @NotNull
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
-
-    // Getters and Setters
 
     public UUID getId() {
         return id;
@@ -40,6 +40,14 @@ public abstract class Block {
         this.position = position;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public LearningUnit getLearningUnit() {
         return learningUnit;
     }
@@ -48,4 +56,3 @@ public abstract class Block {
         this.learningUnit = learningUnit;
     }
 }
-

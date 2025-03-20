@@ -8,9 +8,9 @@
 </script>
 
 
-<div class="top-bar flex">
+<nav class="flex">
 	<button
-		class="mt-3 flex h-12 w-12 items-center justify-center rounded"
+		class="flex h-12 w-12 items-center justify-center rounded"
 		onclick={toggleSidebar}
 		aria-label="Toggle sidebar"
 		aria-expanded={$isExpanded}
@@ -18,4 +18,4 @@
 	>
 		<Sidebar size={24} />
 	</button>
-</div>
+</nav>

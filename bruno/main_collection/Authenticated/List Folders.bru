@@ -1,0 +1,15 @@
+meta {
+  name: List Folders
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/api/folders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{authToken}}
+}

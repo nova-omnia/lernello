@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello;
 
 
+import ch.nova_omnia.lernello.model.data.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class LoadDatabase {
         Folder bilbo = new Folder("Bilbo Baggins");
         bilbo.setParentFolder(bungo);
 
-        User frodo = new User(null, "frodo@gmail.com", encoder.encode("password"), "en");
+        User frodo = new User("frodo@gmail.com", encoder.encode("password"), "en", Role.INSTRUCTOR);
 
-        return (_) -> {
+        return (__) -> {
             log.info("Preloading folders");
             folderRepository.save(bungo);
             folderRepository.save(bilbo);

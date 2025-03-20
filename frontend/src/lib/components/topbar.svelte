@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { isExpanded } from "$lib/stores/sidebar";
+	import { isExpanded } from '$lib/stores/sidebar';
 	import { Sidebar } from 'lucide-svelte';
 
 	function toggleSidebar() {
 		isExpanded.update((value) => !value);
 	}
 </script>
-
 
 <nav class="flex">
 	<button

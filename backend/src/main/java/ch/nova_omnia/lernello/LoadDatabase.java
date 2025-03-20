@@ -26,7 +26,7 @@ public class LoadDatabase {
         Folder bilbo = new Folder("Bilbo Baggins");
         bilbo.setParentFolder(bungo);
 
-        User frodo = new User(null, "frodo@gmail.com", encoder.encode("password"));
+        User frodo = new User(null, "frodo@gmail.com", encoder.encode("password"), "en");
 
         return (_) -> {
             log.info("Preloading folders");

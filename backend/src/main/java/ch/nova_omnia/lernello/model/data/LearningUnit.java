@@ -1,15 +1,11 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import ch.nova_omnia.lernello.model.data.blocks.Block;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,10 +13,11 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "learning_units")
 public class LearningUnit {
+    @NotNull
+    @NotBlank
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid")
-    @NotNull
     private UUID uuid;
 
     @ManyToOne
@@ -29,9 +26,12 @@ public class LearningUnit {
 
     @Column(name = "name", nullable = false)
     @NotNull
-    @Size(min = 3, max = 40)
+    @Size(min = 2, max = 32)
     @NotBlank
     private String name;
+
+    @OneToMany(mappedBy = "learningUnit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Block> blocks = new ArrayList<>();
 
     public LearningUnit() {
     }
@@ -65,4 +65,17 @@ public class LearningUnit {
         this.learningKit = learningKit;
     }
 
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
+    public void addBlock(Block block) {
+        blocks.add(block);
+        block.setLearningUnit(this);
+    }
+
+    public void removeBlock(Block block) {
+        blocks.remove(block);
+        block.setLearningUnit(null);
+    }
 }

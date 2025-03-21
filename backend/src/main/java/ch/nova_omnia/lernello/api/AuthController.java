@@ -1,7 +1,7 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.UserLoginDTO;
-import ch.nova_omnia.lernello.dto.response.LoggedInUserDTO;
+import ch.nova_omnia.lernello.dto.request.user.UserLoginDTO;
+import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
 import ch.nova_omnia.lernello.security.JwtUtil;
 import ch.nova_omnia.lernello.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

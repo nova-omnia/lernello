@@ -1,11 +1,10 @@
 import { UserLoginSchema } from '$lib/models/user';
-import { login } from '$lib/api/auth';
+import { login } from '$lib/api/login/auth';
 import type { Actions } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { handleApiError } from '$lib/api/apiError';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { fail } from '@sveltejs/kit';
 
 export const load = async () => {
 	const form = await superValidate(zod(UserLoginSchema));
@@ -19,15 +18,19 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const userToken = await login(form.data);
-		cookies.set('sessionToken', JSON.stringify(userToken), {
+		const loggedInUser = await login(form.data);
+		cookies.set('sessionToken', JSON.stringify(loggedInUser), {
 			httpOnly: true,
 			path: '/',
-			maxAge: userToken.expires / 1000 // convert milliseconds to seconds
+			maxAge: loggedInUser.expires / 1000 // convert milliseconds to seconds
 		});
 
 		const url = new URL(request.url);
-		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
-		redirect(303, redirectTo);
+
+		if (loggedInUser.changedPassword) {
+			const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
+			redirect(303, redirectTo);
+		}
+		redirect(303, '/change-password');
 	})
 } satisfies Actions;

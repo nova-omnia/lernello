@@ -4,7 +4,6 @@
 
   let { data } = $props();
   const { form, errors, enhance } = superForm(data.form);
-
 </script>
 
 <form
@@ -17,10 +16,10 @@
       <label for="name">Name*:</label>
       <input
               type="text"
-              name="name" bind:value={$form.name}
+              name="name"
+              bind:value={$form.name}
               aria-invalid={$errors.name ? 'true' : 'false'} required />
-                bind:value={$form.name}
-      {#if $errors.name}
+        {#if $errors.name}
         <p class="error">{$errors.name}</p>
       {/if}
     </div>

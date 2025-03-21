@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.mapper;
 
+import ch.nova_omnia.lernello.dto.request.CreateLerningKitDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,4 +12,6 @@ public interface LearningKitMapper {
     LearningKitMapper INSTANCE = Mappers.getMapper(LearningKitMapper.class);
 
     LearningKitResDTO toDTO(LearningKit learningKit);
+
+    LearningKit toEntity(CreateLerningKitDTO learningKit);
 }

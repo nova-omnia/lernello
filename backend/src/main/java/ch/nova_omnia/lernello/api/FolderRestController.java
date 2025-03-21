@@ -16,41 +16,39 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.nova_omnia.lernello.dto.request.CreateFolderDTO;
 import ch.nova_omnia.lernello.dto.response.FolderResDTO;
 import ch.nova_omnia.lernello.mapper.FolderMapper;
-import ch.nova_omnia.lernello.repository.FolderRepository;
+import ch.nova_omnia.lernello.service.FolderService;
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api/folders")
 @Validated
 public class FolderRestController {
-    private final FolderRepository repository;
+
+    private final FolderService folderService;
     private final FolderMapper folderMapper;
 
-    FolderRestController(FolderRepository repository, FolderMapper folderMapper) {
-        this.repository = repository;
+    public FolderRestController(FolderService folderService, FolderMapper folderMapper) {
+        this.folderService = folderService;
         this.folderMapper = folderMapper;
     }
-
 
     @GetMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
     public List<@Valid FolderResDTO> loadAll() {
-        return repository.findAll().stream().map(folderMapper::toDTO).toList();
+        return folderService.findAll().stream().map(folderMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
     public Optional<FolderResDTO> getById(@PathVariable UUID id) {
-        return repository.findById(id).map(folderMapper::toDTO);
+        return folderService.findById(id).map(folderMapper::toDTO);
     }
 
     @PostMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
     public @Valid FolderResDTO create(@Valid @RequestBody CreateFolderDTO folder) {
         var entity = folderMapper.toEntity(folder);
-        var savedEntity = repository.save(entity);
+        var savedEntity = folderService.save(entity);
         return folderMapper.toDTO(savedEntity);
     }
-
 }

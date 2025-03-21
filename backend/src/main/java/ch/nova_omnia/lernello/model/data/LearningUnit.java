@@ -13,13 +13,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "learning_units")
+@Data
+@NoArgsConstructor
 public class LearningUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
+    @Column(name = "uuid", nullable = false)
     @NotNull
     private UUID uuid;
 
@@ -28,41 +32,12 @@ public class LearningUnit {
     private LearningKit learningKit;
 
     @Column(name = "name", nullable = false)
-    @NotNull
-    @Size(min = 3, max = 40)
     @NotBlank
+    @Size(min = 3, max = 40)
     private String name;
-
-    public LearningUnit() {
-    }
 
     public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;
         this.learningKit = learningKit;
     }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LearningKit getLearningKit() {
-        return learningKit;
-    }
-
-    public void setLearningKit(LearningKit learningKit) {
-        this.learningKit = learningKit;
-    }
-
 }

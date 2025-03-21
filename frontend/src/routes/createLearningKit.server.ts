@@ -1,6 +1,6 @@
 import {superValidate} from "sveltekit-superforms";
 import {zod} from "sveltekit-superforms/adapters";
-import {CreateKitSchema, UserLoginSchema} from "$lib/models/user";
+import {CreateKitSchema} from "$lib/models/user";
 import {handleApiError} from "$lib/api/apiError";
 import {type Actions, fail} from "@sveltejs/kit";
 

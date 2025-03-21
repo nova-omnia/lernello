@@ -6,9 +6,15 @@ import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/api/learning-kits") //TODO: what does this do or where do i have to implement this??
+@Validated
 public class CreateLearningKitController {
     private final LearningKitRepository repository;
     private final LearningKitMapper learningKitMapper;

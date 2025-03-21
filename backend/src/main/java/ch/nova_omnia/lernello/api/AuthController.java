@@ -1,8 +1,9 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.response.UserDTO;
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.dto.request.UserLoginDTO;
+import ch.nova_omnia.lernello.dto.response.LoggedInUserDTO;
 import ch.nova_omnia.lernello.security.JwtUtil;
+import ch.nova_omnia.lernello.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,21 +24,27 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtUtil jwtUtils;
+    @Autowired
+    UserService userService;
 
     /**
      * Authenticates a user and returns a JWT token.
      *
-     * @param user The user to authenticate.
+     * @param userLoginDTO The user to authenticate.
      * @return The JWT token.
      */
     @PostMapping("/signin")
-    public UserDTO authenticateUser(@RequestBody User user) {
+    public LoggedInUserDTO authenticateUser(@RequestBody UserLoginDTO userLoginDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getUsername(), user.getPassword()
+                        userLoginDTO.username(), userLoginDTO.password()
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()), userDetails.getUsername(), jwtUtils.getExpirationTime());
+        boolean isChangedPasswordStatus = userService.getChangedPasswordStatus(userDetails.getUsername());
+        String token = jwtUtils.generateToken(userDetails.getUsername());
+        int expirationDate = jwtUtils.getExpirationTime();
+
+        return new LoggedInUserDTO(token, userDetails.getUsername(), isChangedPasswordStatus, expirationDate);
     }
 }

@@ -34,7 +34,7 @@ export const actions = {
 			changePasswordData.confirmPassword
 		);
 		const changePasswordStatus = await changePassword(changePasswordUser);
-		changePasswordStatus ? redirect(303, '/dashboard') : fail(400, { form });
+		changePasswordStatus.success ? redirect(303, '/dashboard') : fail(400, { form });
 	})
 } satisfies Actions;
 

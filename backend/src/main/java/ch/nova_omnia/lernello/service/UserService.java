@@ -20,9 +20,10 @@ public class UserService {
         return user.getPassword();
     }
 
-    public void changePassword(String username, String password) {
-        User user = userRepository.getUserByUsername(username);
-        user.setPassword(password);
+    public void setChangedPasswordStatus(String username, String changedPassword) {
+        User user = userRepository.findByUsername(username);
+        user.setPassword(changedPassword);
+        user.setChangedPassword(true);
         userRepository.save(user);
     }
 }

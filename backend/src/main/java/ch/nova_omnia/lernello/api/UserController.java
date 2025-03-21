@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,22 +21,33 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/changePassword")
-    public @Valid PasswordStatusDTO changePassword(@Valid ChangePasswordDataDTO changePasswordDataDTO) {
-        String newPassword = changePasswordDataDTO.newPassword();
-        String confirmPassword = changePasswordDataDTO.confirmPassword();
+    @PostMapping("/change-password")
+    public @Valid PasswordStatusDTO changePassword(@RequestBody @Valid ChangePasswordDataDTO data) {
+        String currentPassword = userService.getPassword(data.username());
 
-        if (!passwordEncoder.matches(confirmPassword, newPassword)) {
+        if (!isPasswordConfirmed(data.newPassword(), data.confirmPassword())) {
             return new PasswordStatusDTO(false);
         }
-        String username = changePasswordDataDTO.username();
-        String oldPassword = userService.getPassword(username);
-        String newHashedPassword = passwordEncoder.encode(newPassword);
-
-        if (!passwordEncoder.matches(newHashedPassword, oldPassword)) {
+        if (!isOldPasswordValid(data.oldPassword(), currentPassword)) {
             return new PasswordStatusDTO(false);
         }
-        userService.changePassword(username, newHashedPassword);
+        if (isNewPasswordSameAsOld(data.newPassword(), currentPassword)) {
+            return new PasswordStatusDTO(false);
+        }
+
+        userService.setChangedPasswordStatus(data.username(), passwordEncoder.encode(data.newPassword()));
         return new PasswordStatusDTO(true);
+    }
+
+    private boolean isPasswordConfirmed(String newPassword, String confirmPassword) {
+        return newPassword.equals(confirmPassword);
+    }
+
+    private boolean isOldPasswordValid(String providedOldPassword, String storedPasswordHash) {
+        return passwordEncoder.matches(providedOldPassword, storedPasswordHash);
+    }
+
+    private boolean isNewPasswordSameAsOld(String newPassword, String storedPasswordHash) {
+        return passwordEncoder.matches(newPassword, storedPasswordHash);
     }
 }

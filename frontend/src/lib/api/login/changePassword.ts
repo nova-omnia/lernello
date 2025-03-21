@@ -1,15 +1,15 @@
 import {
-	ChangePasswordData,
+	ChangedPasswordUser,
 	ChangePasswordStatus,
 	ChangePasswordStatusSchema
 } from '$lib/models/changePasswordData';
 import { userRequest } from '$lib/api/apiClient';
 
 export async function changePassword(
-	changePasswordData: ChangePasswordData
+	changedPasswordUser: ChangedPasswordUser
 ): Promise<ChangePasswordStatus> {
-	const changePasswordRes = await userRequest(`/api/change-password`, 'POST', {
-		body: JSON.stringify(changePasswordData)
+	const changePasswordRes = await userRequest(`/api/user/change-password`, 'POST', {
+		body: JSON.stringify(changedPasswordUser)
 	});
 	return ChangePasswordStatusSchema.parse(changePasswordRes);
 }

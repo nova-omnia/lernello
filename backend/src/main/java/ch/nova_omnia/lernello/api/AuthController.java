@@ -1,19 +1,17 @@
 package ch.nova_omnia.lernello.api;
 
+import ch.nova_omnia.lernello.dto.response.UserDTO;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import ch.nova_omnia.lernello.dto.response.UserDTO;
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.security.JwtUtil;
 
 /**
  * Controller for handling authentication requests.
@@ -25,8 +23,6 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtUtil jwtUtils;
-    @Autowired
-    PasswordEncoder encoder;
 
     /**
      * Authenticates a user and returns a JWT token.

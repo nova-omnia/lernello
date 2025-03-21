@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.EmailDetails;
+import ch.nova_omnia.lernello.model.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,19 +15,21 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public String sendInvitationMail(EmailDetails details) {
+    // TODO correct parameters and message will be defined with the create learning kit issue
+    public String sendLearningKitInvitation(User user) {
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
 
             mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setText(details.getMsgBody());
-            mailMessage.setSubject(details.getSubject());
+            mailMessage.setTo(user.getUsername());
+            mailMessage.setText("Hello " + user.getUsername() + ",\n\n" +
+                    "Your password is: " + user.getPassword());
+            mailMessage.setSubject("Test Mail");
 
             javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
+            return "Test Mail Sent Successfully...";
         } catch (Exception e) {
-            return "Error while Sending Mail";
+            return "Error while Sending Test Mail";
         }
     }
 }

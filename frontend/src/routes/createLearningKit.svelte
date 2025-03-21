@@ -7,7 +7,7 @@
   let deadline = '';
   let startDate = '';
   let endDate = '';
-  let participants = '';
+  let participants = ''; //get from backend?
 
   const handleSubmit = (event: Event) => {
     event.preventDefault();
@@ -67,7 +67,6 @@
       <option value="en">English</option>
       <option value="de">German</option>
       <option value="fr">French</option>
-      <!-- Add more options as needed -->
     </select>
   </div>
   <div>

@@ -1,5 +1,10 @@
 {
-  "cSpell.words": ["DTOs", "omnia"],
+  "cSpell.words": [
+    "assertj",
+    "DTOs",
+    "lernello",
+    "omnia"
+  ],
   "java.configuration.updateBuildConfiguration": "interactive",
   "java.format.settings.url": ".vscode/java-formatter.xml",
   "[java]": {

@@ -14,4 +14,15 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         return user.isChangedPassword();
     }
+
+    public String getPassword(String username) {
+        User user = userRepository.findByUsername(username);
+        return user.getPassword();
+    }
+
+    public void changePassword(String username, String password) {
+        User user = userRepository.getUserByUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
+    }
 }

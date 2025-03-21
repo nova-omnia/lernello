@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.dto.request;
+package ch.nova_omnia.lernello.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 

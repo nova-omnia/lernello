@@ -1,21 +1,81 @@
 <script lang="ts">
   import '../styles/lernello-theme.css';
+  import SuperDebug, { superForm } from 'sveltekit-superforms';
 
-  let name = '';
-  let description = '';
-  let defaultLanguage = '';
-  let deadline = '';
-  let startDate = '';
-  let endDate = '';
-  let participants = ''; //get from backend?
+  let { data } = $props();
+  const { form, errors, enhance } = superForm(data.form);
 
-  const handleSubmit = (event: Event) => {
-    event.preventDefault();
-    const learningKit = { name, description, defaultLanguage, deadline, startDate, endDate, participants };
-    console.log('LearningKit created:', learningKit);
-    // TODO: handle learningKit creation
-  };
 </script>
+
+<form
+        method="POST"
+        use:enhance
+        action="?/CreateLearningKit"
+>
+    <h1>Create Learning Kit</h1>
+    <div>
+      <label for="name">Name*:</label>
+      <input
+              type="text"
+              name="name" bind:value={$form.name}
+              aria-invalid={$errors.name ? 'true' : 'false'} required />
+                bind:value={$form.name}
+      {#if $errors.name}
+        <p class="error">{$errors.name}</p>
+      {/if}
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea id="description"
+                name="description"
+                bind:value={$form.description}>
+      </textarea>
+    </div>
+    <div>
+      <label for="defaultLanguage">Default Language*:</label>
+      <select id="defaultLanguage"
+              name="defaultLanguage"
+              bind:value={$form.defaultLanguage}
+              aria-invalid={$errors.defaultLanguage ? 'true' : 'false'} required>
+        <option value="" disabled>Select a language</option>
+        <option value="en">English</option>
+        <option value="de">German</option>
+        <option value="fr">French</option>
+      </select>
+      {#if $errors.defaultLanguage}
+        <p class="error">{$errors.defaultLanguage}</p>
+      {/if}
+    </div>
+    <div>
+      <label for="deadline">Deadline:</label>
+      <input
+              type="date"
+              name="deadline"
+              bind:value={$form.deadline} />
+    </div>
+    <div>
+      <label for="startDate">Start Date:</label>
+      <input
+              type="date"
+              name="startDate"
+              bind:value={$form.startDate} />
+    </div>
+    <div>
+      <label for="endDate">End Date:</label>
+      <input type="date"
+             name="endDate"
+             bind:value={$form.endDate} />
+    </div>
+    <div>
+      <label for="participants">Participants:</label>
+      <textarea
+              name="participants"
+              bind:value={$form.participants}></textarea>
+    </div>
+    <button type="submit">Create LearningKit</button>
+    <p>*required fields</p>
+  <SuperDebug data={$form} />
+</form>
 
 <style>
   form {
@@ -48,42 +108,9 @@
   button:hover {
     background-color: #0056b3;
   }
-</style>
 
-<form method="POST" on:submit={handleSubmit}>
-  <h1>Create Learning Kit</h1>
-  <div>
-    <label for="name">Name (required):</label>
-    <input type="text" id="name" bind:value={name} required />
-  </div>
-  <div>
-    <label for="description">Description (optional):</label>
-    <textarea id="description" bind:value={description}></textarea>
-  </div>
-  <div>
-    <label for="defaultLanguage">Default Language (required):</label>
-    <select id="defaultLanguage" bind:value={defaultLanguage} required>
-      <option value="" disabled>Select a language</option>
-      <option value="en">English</option>
-      <option value="de">German</option>
-      <option value="fr">French</option>
-    </select>
-  </div>
-  <div>
-    <label for="deadline">Optional Deadline:</label>
-    <input type="date" id="deadline" bind:value={deadline} />
-  </div>
-  <div>
-    <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" bind:value={startDate} />
-  </div>
-  <div>
-    <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" bind:value={endDate} />
-  </div>
-  <div>
-    <label for="participants">Participants (optional):</label>
-    <textarea id="participants" bind:value={participants}></textarea>
-  </div>
-  <button type="submit">Create LearningKit</button>
-</form>
+  .error {
+    color: red;
+    font-size: 0.875rem;
+  }
+</style>

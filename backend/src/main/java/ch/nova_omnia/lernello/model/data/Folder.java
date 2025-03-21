@@ -37,7 +37,7 @@ public class Folder {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "parent_folder")
+    @JoinColumn(name = "parent_folder_id")
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)

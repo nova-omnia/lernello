@@ -37,7 +37,7 @@ public class LearningKit {
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "folder")
+    @JoinColumn(name = "folder_id")
     private Folder folder;
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)

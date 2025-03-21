@@ -28,7 +28,7 @@ public class LearningUnit {
     private UUID uuid;
 
     @ManyToOne
-    @JoinColumn(name = "learning_kit", nullable = false)
+    @JoinColumn(name = "learning_kit_id", nullable = false)
     private LearningKit learningKit;
 
     @Column(name = "name", nullable = false)

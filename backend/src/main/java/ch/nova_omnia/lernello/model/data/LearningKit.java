@@ -19,6 +19,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Entity
 @Table(name = "learning_kits")
 @Data
@@ -41,7 +43,7 @@ public class LearningKit {
     private Folder folder;
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LearningUnit> learningUnits;
+    private List<LearningUnit> learningUnits = new ArrayList<>();
 
     public LearningKit(String name, Folder folder) {
         this.name = name;

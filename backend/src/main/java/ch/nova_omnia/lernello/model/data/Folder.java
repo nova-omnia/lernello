@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,10 +42,10 @@ public class Folder {
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Folder> subFolders;
+    private List<Folder> subFolders = new ArrayList<>();
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LearningKit> learningKits;
+    private List<LearningKit> learningKits = new ArrayList<>();
 
     public Folder(String name) {
         this.name = name;
@@ -52,6 +53,24 @@ public class Folder {
 
     public Folder(String name, Folder parentFolder) {
         this.name = name;
+        setParentFolder(parentFolder);
+    }
+
+    public void setParentFolder(Folder parentFolder) {
+        if (parentFolder != null && isCircularReference(parentFolder)) {
+            throw new IllegalArgumentException("Circular reference detected: A folder cannot be its own ancestor.");
+        }
         this.parentFolder = parentFolder;
+    }
+
+    private boolean isCircularReference(Folder parentFolder) {
+        Folder current = parentFolder;
+        while (current != null) {
+            if (current.equals(this)) {
+                return true;
+            }
+            current = current.getParentFolder();
+        }
+        return false;
     }
 }

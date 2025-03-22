@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "files")
 @Data
 @NoArgsConstructor
-public class File {
+public class MediaFile {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
@@ -32,7 +32,7 @@ public class File {
     private String name;
 
 
-    public File(String name) {
+    public MediaFile(String name) {
         this.name = name;
     }
 }

@@ -70,13 +70,13 @@ public class MediaFileRestController {
     }
 
     //brauchen wir das ?
-    @GetMapping("/download/{fileName}")
+    @GetMapping("/get/{fileName}")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
         try {
             Path filePath = fileService.loadFile(fileName);
             Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
+            if (resource.exists() && resource.isReadable()) {
                 return ResponseEntity.ok().body(resource);
             } else {
                 return ResponseEntity.notFound().build();

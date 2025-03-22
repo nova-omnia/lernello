@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.model.data.MediaFile;
-import ch.nova_omnia.lernello.repository.FileRepository;
+import ch.nova_omnia.lernello.repository.MediaFileRepository;
 
 @Service
 public class MediaFileService {
-    private final FileRepository fileRepository;
+    private final MediaFileRepository fileRepository;
     private final Path fileStorageLocation;
 
-    public MediaFileService(FileRepository fileRepository) {
+    public MediaFileService(MediaFileRepository fileRepository) {
         this.fileRepository = fileRepository;
         this.fileStorageLocation = Paths.get("file_storage").toAbsolutePath().normalize();
         try {

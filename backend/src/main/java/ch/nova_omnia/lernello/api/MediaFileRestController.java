@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.nova_omnia.lernello.dto.request.UploadFileDTO;
+import ch.nova_omnia.lernello.dto.request.UploadMediaFileDTO;
 import ch.nova_omnia.lernello.dto.response.MediaFileResDTO;
 import ch.nova_omnia.lernello.mapper.MediaFileMapper;
+import ch.nova_omnia.lernello.model.data.MediaFile;
 import ch.nova_omnia.lernello.service.MediaFileService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
@@ -31,10 +32,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/media_files")
 @Validated
 public class MediaFileRestController {
-    @Autowired
-    MediaFileService fileService;
-    @Autowired
-    MediaFileMapper fileMapper;
+    private final MediaFileService fileService;
+    private final MediaFileMapper fileMapper;
 
 
     public MediaFileRestController(MediaFileService fileService, MediaFileMapper fileMapper) {
@@ -63,10 +62,10 @@ public class MediaFileRestController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public ResponseEntity<MediaFileResDTO> uploadFile(@RequestParam("file") MultipartFile file, @Valid @RequestBody UploadFileDTO fileMetadata) {
+    public ResponseEntity<MediaFileResDTO> uploadFile(@RequestParam("file") MultipartFile file, @Valid @RequestBody UploadMediaFileDTO fileMetadata) {
         fileService.storeFile(file);
-        var entity = fileMapper.toEntity(fileMetadata);
-        var savedEntity = fileService.save(entity);
+        MediaFile entity = fileMapper.toEntity(fileMetadata);
+        MediaFile savedEntity = fileService.save(entity);
         return ResponseEntity.ok(fileMapper.toDTO(savedEntity));
     }
 

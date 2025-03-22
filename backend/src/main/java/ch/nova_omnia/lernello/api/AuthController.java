@@ -1,5 +1,8 @@
 package ch.nova_omnia.lernello.api;
 
+import ch.nova_omnia.lernello.dto.response.UserDTO;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,10 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import ch.nova_omnia.lernello.dto.response.UserDTO;
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.security.JwtUtil;
 
 /**
  * Controller for handling authentication requests.
@@ -41,6 +40,7 @@ public class AuthController {
                         user.getUsername(), user.getPassword()
                 )
         );
+        User usertest = (User) authentication.getPrincipal();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new UserDTO(jwtUtils.generateToken(userDetails.getUsername()), userDetails.getUsername(), jwtUtils.getExpirationTime());
     }

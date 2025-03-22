@@ -23,8 +23,8 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'gradle'
           cache-dependency-path: |
-            sub-project/*.gradle*
-            sub-project/**/gradle-wrapper.properties
+            **/*.gradle*
+            **/gradle-wrapper.properties
 
       - name: Backend Tests
         run: ./gradlew check

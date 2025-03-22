@@ -11,7 +11,7 @@ export function getUsernameFromCookie(cookies) {
 	try {
 		parsed = UserTokenSchema.parse(JSON.parse(tokenData));
 	} catch (err) {
-		return fail(400);
+		return fail(400, err);
 	}
 
 	return parsed.username;

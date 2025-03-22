@@ -1,0 +1,91 @@
+package ch.nova_omnia.lernello.api;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import ch.nova_omnia.lernello.dto.request.UploadFileDTO;
+import ch.nova_omnia.lernello.dto.response.MediaFileResDTO;
+import ch.nova_omnia.lernello.mapper.MediaFileMapper;
+import ch.nova_omnia.lernello.service.MediaFileService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/media_files")
+@Validated
+public class MediaFileRestController {
+    @Autowired
+    MediaFileService fileService;
+    @Autowired
+    MediaFileMapper fileMapper;
+
+
+    public MediaFileRestController(MediaFileService fileService, MediaFileMapper fileMapper) {
+        this.fileService = fileService;
+        this.fileMapper = fileMapper;
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasAuthority('SCOPE_files:read')")
+    public List<@Valid MediaFileResDTO> loadAll() {
+        return fileService.findAll().stream().map(fileMapper::toDTO).toList();
+    }
+
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_files:read')")
+    public Optional<MediaFileResDTO> getById(@PathVariable UUID id) {
+        return fileService.findById(id).map(fileMapper::toDTO);
+    }
+
+    @DeleteMapping()
+    @PreAuthorize("hasAuthority('SCOPE_files:write')")
+    public void deleteById(@PathVariable UUID id) {
+        fileService.deleteById(id);
+    }
+
+    @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('SCOPE_files:write')")
+    public ResponseEntity<MediaFileResDTO> uploadFile(@RequestParam("file") MultipartFile file, @Valid @RequestBody UploadFileDTO fileMetadata) {
+        fileService.storeFile(file);
+        var entity = fileMapper.toEntity(fileMetadata);
+        var savedEntity = fileService.save(entity);
+        return ResponseEntity.ok(fileMapper.toDTO(savedEntity));
+    }
+
+    //brauchen wir das ?
+    @GetMapping("/download/{fileName}")
+    @PreAuthorize("hasAuthority('SCOPE_files:read')")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+        try {
+            Path filePath = fileService.loadFile(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return ResponseEntity.ok().body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+}

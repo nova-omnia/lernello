@@ -12,9 +12,3 @@ export const UserTokenSchema = z.object({
 	expires: z.number().int().nonnegative()
 });
 export type UserToken = z.infer<typeof UserTokenSchema>;
-
-export const CreateKitSchema = z.object({
-	name : z.string().nonempty(),
-	language : z.string().nonempty()
-});
-export type CreateKit = z.infer<typeof CreateKitSchema>;

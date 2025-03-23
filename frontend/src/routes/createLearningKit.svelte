@@ -1,5 +1,4 @@
 <script lang="ts">
-    import '../styles/lernello-theme.css';
     import SuperDebug, { superForm } from 'sveltekit-superforms';
 
     let { data } = $props();

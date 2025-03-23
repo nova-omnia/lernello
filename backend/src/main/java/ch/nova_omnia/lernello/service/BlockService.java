@@ -1,8 +1,7 @@
 package ch.nova_omnia.lernello.service;
 
 import ch.nova_omnia.lernello.repository.BlockRepository;
-import jakarta.transaction.Transactional;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 public class BlockService {

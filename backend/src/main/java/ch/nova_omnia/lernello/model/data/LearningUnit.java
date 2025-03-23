@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import ch.nova_omnia.lernello.model.data.blocks.Block;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,19 +18,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LearningUnit {
     @NotNull
-    @NotBlank
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
     private UUID uuid;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "learning_kit_id", nullable = false)
     private LearningKit learningKit;
 
     @Column(name = "name", nullable = false)
     @NotNull
-    @Size(min = 2, max = 32)
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;

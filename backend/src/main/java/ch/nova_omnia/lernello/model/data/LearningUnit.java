@@ -9,15 +9,19 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "learning_units")
+@Data
+@NoArgsConstructor
 public class LearningUnit {
     @NotNull
     @NotBlank
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
+    @Column(name = "uuid", nullable = false)
     private UUID uuid;
 
     @ManyToOne
@@ -28,6 +32,7 @@ public class LearningUnit {
     @NotNull
     @Size(min = 2, max = 32)
     @NotBlank
+    @Size(min = 3, max = 40)
     private String name;
 
     @OneToMany(mappedBy = "learningUnit", cascade = CascadeType.ALL, orphanRemoval = true)

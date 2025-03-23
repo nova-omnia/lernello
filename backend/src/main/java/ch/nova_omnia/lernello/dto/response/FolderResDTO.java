@@ -11,6 +11,5 @@ public record FolderResDTO(
                            @NotNull @Size(min = 3, max = 40) String name,
                            ParentFolderResDTO parentFolder,
                            List<SubFolderResDTO> subFolders,
-                           List<LearningKitResDTO> learningKits
-) {
+                           List<LearningKitResDTO> learningKits) {
 }

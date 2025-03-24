@@ -1,14 +1,10 @@
 package ch.nova_omnia.lernello.api;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
 import ch.nova_omnia.lernello.mapper.FileMapper;
-import ch.nova_omnia.lernello.model.data.File;
 import ch.nova_omnia.lernello.service.FileSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,15 +46,7 @@ public class FileRestController {
     @GetMapping("/static/{id}")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
     public ResponseEntity<Resource> getFile(@PathVariable UUID id) {
-        Optional<File> fileOptional = fileService.findById(id);
-        if (fileOptional.isPresent()) {
-            File file = fileOptional.get();
-            byte[] fileData = fileService.readFileData(id);
-            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(fileData));
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName()).contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(fileData.length).body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return fileService.getFileResource(id);
     }
 
     @DeleteMapping("/{id}")

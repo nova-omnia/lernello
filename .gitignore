@@ -19,6 +19,3 @@ Thumbs.db
 
 # Personal Zellij Layout
 dev-layout.kdl
-
-# Ignore backend file storage
-backend/fileStorage

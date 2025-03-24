@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,13 +18,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * Folder is an entity class that represents a folder in the system.
- * It extends {@link AbstractEntity} and contains additional properties
- * and methods specific to folders.
- */
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "folders")
+@Data
+@NoArgsConstructor
 public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,7 +33,6 @@ public class Folder {
     private UUID uuid;
 
     @Column(name = "name", nullable = false)
-    @NotNull
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;
@@ -42,56 +42,35 @@ public class Folder {
     private Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Folder> subFolders;
+    private List<Folder> subFolders = new ArrayList<>();
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LearningKit> learningKits;
-
-    public Folder() {
-    }
+    private List<LearningKit> learningKits = new ArrayList<>();
 
     public Folder(String name) {
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Folder(String name, Folder parentFolder) {
         this.name = name;
-    }
-
-    public Folder getParentFolder() {
-        return parentFolder;
+        setParentFolder(parentFolder);
     }
 
     public void setParentFolder(Folder parentFolder) {
+        if (parentFolder != null && isCircularReference(parentFolder)) {
+            throw new IllegalArgumentException("Circular reference detected: A folder cannot be its own ancestor.");
+        }
         this.parentFolder = parentFolder;
     }
 
-    public List<Folder> getSubFolders() {
-        return subFolders;
+    private boolean isCircularReference(Folder parentFolder) {
+        Folder current = parentFolder;
+        while (current != null) {
+            if (current.equals(this)) {
+                return true;
+            }
+            current = current.getParentFolder();
+        }
+        return false;
     }
-
-    public void setSubFolders(List<Folder> subFolders) {
-        this.subFolders = subFolders;
-    }
-
-    public List<LearningKit> getLearningKits() {
-        return learningKits;
-    }
-
-    public void setLearningKits(List<LearningKit> learningKits) {
-        this.learningKits = learningKits;
-    }
-
 }

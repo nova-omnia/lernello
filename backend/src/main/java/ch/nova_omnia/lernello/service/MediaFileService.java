@@ -1,6 +1,5 @@
 package ch.nova_omnia.lernello.service;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -21,11 +20,6 @@ public class MediaFileService {
     public MediaFileService(MediaFileRepository fileRepository) {
         this.fileRepository = fileRepository;
         this.fileStorageLocation = Paths.get("file_storage").toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(this.fileStorageLocation);
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
-        }
     }
 
     public List<MediaFile> findAll() {
@@ -45,7 +39,7 @@ public class MediaFileService {
     }
 
     public void storeFile(MultipartFile file) {
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        String fileName = file.getOriginalFilename();
         try {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             file.transferTo(targetLocation);
@@ -53,10 +47,4 @@ public class MediaFileService {
             throw new RuntimeException("Could not store file ", ex);
         }
     }
-
-    public Path loadFile(String fileName) {
-        return this.fileStorageLocation.resolve(fileName).normalize();
-    }
-
-
 }

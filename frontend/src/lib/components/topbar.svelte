@@ -25,7 +25,7 @@
 	}
 </script>
 
-<nav class=" pl-2 flex preset-filled-primary-100-900 ">
+<nav class=" preset-filled-primary-100-900 flex pl-2">
 	<button
 		class="flex h-12 w-12 items-center justify-center rounded"
 		onclick={toggleSidebar}
@@ -35,9 +35,14 @@
 	>
 		<Sidebar size={24} />
 	</button>
-	<div class="input-group grid-cols-[auto_1fr_auto] items-center justify-center disabled">
+	<div class="input-group disabled grid-cols-[auto_1fr_auto] items-center justify-center">
 		<form method="POST" onsubmit={handleSearch}>
-			<input class="ig-input preset-tonal rounded" type="search" bind:value={searchQuery} placeholder="Search..." />
+			<input
+				class="ig-input preset-tonal rounded"
+				type="search"
+				bind:value={searchQuery}
+				placeholder="Search..."
+			/>
 			<button class="ig-btn preset-filled-primary-500 rounded">Submit</button>
 		</form>
 	</div>

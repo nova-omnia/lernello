@@ -1,19 +1,20 @@
 package ch.nova_omnia.lernello.service;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ch.nova_omnia.lernello.dto.request.CreateBlockDTO;
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.blocks.Block;
 import ch.nova_omnia.lernello.model.data.blocks.MultimediaBlock;
 import ch.nova_omnia.lernello.model.data.blocks.QuizBlock;
 import ch.nova_omnia.lernello.model.data.blocks.TheoryBlock;
-import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class LearningUnitService {

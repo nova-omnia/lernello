@@ -1,10 +1,15 @@
 package ch.nova_omnia.lernello.api;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import ch.nova_omnia.lernello.dto.request.CreateFileDTO;
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
 import ch.nova_omnia.lernello.mapper.FileMapper;
+import ch.nova_omnia.lernello.model.data.File;
 import ch.nova_omnia.lernello.service.FileSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +50,16 @@ public class FileRestController {
 
     @GetMapping("/static/{id}")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
-    public Optional<FileResDTO> getFile(@PathVariable UUID id) {
-        return fileService.findById(id).map(fileMapper::toDTO);
+    public ResponseEntity<Resource> getFile(@PathVariable UUID id) {
+        Optional<File> fileOptional = fileService.findById(id);
+        if (fileOptional.isPresent()) {
+            File file = fileOptional.get();
+            byte[] fileData = fileService.readFileData(id);
+            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(fileData));
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName()).contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(fileData.length).body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -56,7 +70,7 @@ public class FileRestController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public FileResDTO uploadFile(@RequestParam("file")CreateFileDTO file) {
-        return fileMapper.toDTO(fileService.save(file.file(),fileMapper.toEntity(file)));
+    public FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
+        return fileMapper.toDTO(fileService.save(file));
     }
 }

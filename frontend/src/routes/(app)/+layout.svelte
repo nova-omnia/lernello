@@ -7,7 +7,7 @@
 
 <div class="flex">
 	<Sidebar />
-	<div class="flex-1 pl-2">
+	<div class="flex-1">
 		<Topbar />
 		{@render children()}
 	</div>

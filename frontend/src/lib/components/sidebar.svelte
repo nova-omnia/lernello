@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { isExpanded } from '$lib/stores/sidebar';
-	import {
-		ChartLine,
-		Files,
-		Settings,
-		User,
-		GraduationCap,
-		LayoutDashboard
-	} from 'lucide-svelte';
+	import { ChartLine, Files, Settings, User, GraduationCap, LayoutDashboard } from 'lucide-svelte';
 </script>
 
 <!-- Sidebar -->

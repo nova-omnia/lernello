@@ -46,7 +46,7 @@ public class LearningUnitTest {
     public void setUp() {
         testFolder = new Folder("Test Folder");
         testFolder = folderRepository.save(testFolder);
-        testLearningKit = new LearningKit("Test Learning Kit", testFolder);
+        testLearningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN, testFolder);
         testLearningKit = learningKitRepository.save(testLearningKit);
     }
 

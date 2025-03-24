@@ -25,7 +25,7 @@
 	}
 </script>
 
-<nav class=" preset-filled-primary-100-900 flex pl-2">
+<nav class="preset-filled-surface-100-900 flex pl-2">
 	<button
 		class="flex h-12 w-12 items-center justify-center rounded"
 		onclick={toggleSidebar}

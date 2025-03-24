@@ -3,61 +3,63 @@
 	import { ChartLine, Files, Settings, User, GraduationCap, LayoutDashboard } from 'lucide-svelte';
 </script>
 
+{#snippet sidebarItemLabel(label: string)}
+	<span
+		class="ml-3 text-nowrap transition-all"
+		class:visible={$isExpanded}
+		class:w-max={$isExpanded}
+		class:opacity-100={$isExpanded}
+		class:invisible={!$isExpanded}
+		class:w-0={!$isExpanded}
+		class:opacity-0={!$isExpanded}>{label}</span
+	>
+{/snippet}
+
 <!-- Sidebar -->
 <div
-	class="preset-filled-primary-100-900 flex h-screen w-full flex-col items-center justify-start overflow-hidden rounded transition-all duration-300"
-	class:isFullWidth={$isExpanded}
-	style="width: {$isExpanded ? '200px' : '4rem'}"
+	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden rounded-l-lg p-4 transition-all duration-300"
+	class:w-64={$isExpanded}
+	class:w-16={!$isExpanded}
 >
-	<div>
+	<div class="w-max min-w-full space-y-2">
 		<!-- Logo -->
-		<p class="mt-3 flex items-center" aria-label="Lernello">
+		<p class="flex items-center" aria-label="Lernello">
 			<GraduationCap size={24} />
-			{#if $isExpanded}<span class="ml-3">Lernello</span>{/if}
+			{@render sidebarItemLabel('Lernello')}
 		</p>
 
+		<hr class="hr" />
 		<!-- Buttons Section -->
-		<div class="mt-3 flex flex-col items-center border-t">
-			<a
-				class="mt-2 flex h-12 w-full items-center rounded"
-				href="/dashboard"
-				aria-label="Dashboard"
-			>
+		<div class="flex flex-col items-center">
+			<a class="flex w-full items-center rounded py-2" href="/dashboard" aria-label="Dashboard">
 				<LayoutDashboard size={24} />
-				{#if $isExpanded}<span class="ml-3">Dashboard</span>{/if}
+				{@render sidebarItemLabel('Dashboard')}
 			</a>
 			<a
-				class="mt-2 flex h-12 w-full items-center rounded"
+				class="flex w-full items-center rounded py-2"
 				href="/learningkit"
 				aria-label="Learning Kit"
 			>
 				<Files size={24} />
-				{#if $isExpanded}<span class="ml-3">Learning Kits</span>{/if}
+				{@render sidebarItemLabel('Learning Kits')}
 			</a>
-			<a
-				class="mt-2 flex h-12 w-full items-center rounded"
-				href="/statistics"
-				aria-label="Statistics"
-			>
+			<a class="flex w-full items-center rounded py-2" href="/statistics" aria-label="Statistics">
 				<ChartLine size={24} />
-				{#if $isExpanded}<span class="ml-3">Statistics</span>{/if}
+				{@render sidebarItemLabel('Statistics')}
 			</a>
 		</div>
 
-		<div class="mt-2 flex flex-col items-center border-t">
-			<a class="mt-2 flex h-12 w-full items-center rounded" href="/settings" aria-label="Settings">
+		<hr class="hr" />
+		<div class="flex flex-col items-center">
+			<a class="flex w-full items-center rounded py-2" href="/settings" aria-label="Settings">
 				<Settings size={24} />
-				{#if $isExpanded}<span class="ml-3">Settings</span>{/if}
+				{@render sidebarItemLabel('Settings')}
 			</a>
 		</div>
 	</div>
 
-	<a
-		class="mt-auto flex h-16 w-full items-center justify-center"
-		href="/profile"
-		aria-label="Profile"
-	>
+	<a class="mt-auto flex w-full items-center justify-start" href="/profile" aria-label="Profile">
 		<User size={24} />
-		{#if $isExpanded}<span class="ml-3">Profile</span>{/if}
+		{@render sidebarItemLabel('Profile')}
 	</a>
 </div>

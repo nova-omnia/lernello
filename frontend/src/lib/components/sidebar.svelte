@@ -3,7 +3,6 @@
 	import {
 		ChartLine,
 		Files,
-		MessageSquare,
 		Settings,
 		User,
 		GraduationCap,
@@ -56,15 +55,6 @@
 			<a class="mt-2 flex h-12 w-full items-center rounded" href="/settings" aria-label="Settings">
 				<Settings size={24} />
 				{#if $isExpanded}<span class="ml-3">Settings</span>{/if}
-			</a>
-			<a
-				class="relative mt-2 flex h-12 w-full items-center justify-center rounded"
-				href="/notifications"
-				aria-label="Notifications"
-			>
-				<MessageSquare size={24} />
-				<span class="absolute top-0.5 left-2.5 mt-2 ml-2 h-2 w-2 rounded-full bg-indigo-500"></span>
-				{#if $isExpanded}<span class="ml-3">Notifications</span>{/if}
 			</a>
 		</div>
 	</div>

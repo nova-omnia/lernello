@@ -18,21 +18,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "files")
 @Data
 @NoArgsConstructor
-public class MediaFile {
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
     @NotNull
     private UUID uuid;
 
-
-    @Column(name = "fileName", nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 1, max = 255)
     private String name;
 
-
-    public MediaFile(String name) {
+    public File(String name) {
         this.name = name;
     }
 }

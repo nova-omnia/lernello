@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ch.nova_omnia.lernello.model.data.MediaFile;
+import ch.nova_omnia.lernello.model.data.File;
 
-public interface MediaFileRepository extends JpaRepository<MediaFile, UUID> {
+public interface FileRepository extends JpaRepository<File, UUID> {
 }

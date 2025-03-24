@@ -47,8 +47,6 @@ public class FolderRestController {
     @PostMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
     public @Valid FolderResDTO create(@Valid @RequestBody CreateFolderDTO folder) {
-        var entity = folderMapper.toEntity(folder);
-        var savedEntity = folderService.save(entity);
-        return folderMapper.toDTO(savedEntity);
+        return folderMapper.toDTO(folderService.save(folderMapper.toEntity(folder)));
     }
 }

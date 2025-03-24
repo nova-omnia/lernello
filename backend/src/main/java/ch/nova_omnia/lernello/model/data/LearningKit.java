@@ -16,69 +16,39 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "learning_kits")
+@Data
+@NoArgsConstructor
 public class LearningKit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
+    @Column(name = "uuid", nullable = false)
     @NotNull
     private UUID uuid;
 
     @Column(name = "name", nullable = false)
-    @NotNull
-    @Size(min = 3, max = 40)
     @NotBlank
+    @Size(min = 3, max = 40)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "folder_id", nullable = false)
     @NotNull
+    @JoinColumn(name = "folder_id")
     private Folder folder;
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotNull
-    private List<LearningUnit> learningUnits;
+    private List<LearningUnit> learningUnits = new ArrayList<>();
 
-    public LearningKit() {
-    }
-
-    public LearningKit(String name, Folder folder, List<LearningUnit> learningUnits) {
+    public LearningKit(String name, Folder folder) {
         this.name = name;
         this.folder = folder;
-        this.learningUnits = learningUnits;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Folder getParentFolder() {
-        return folder;
-    }
-
-    public void setParentFolder(Folder folder) {
-        this.folder = folder;
-    }
-
-    public List<LearningUnit> getLearningUnits() {
-        return learningUnits;
-    }
-
-    public void setLearningUnits(@NotNull List<LearningUnit> learningUnits) {
-        this.learningUnits = learningUnits;
-    }
 }

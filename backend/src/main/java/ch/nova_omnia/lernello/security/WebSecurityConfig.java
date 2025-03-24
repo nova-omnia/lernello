@@ -26,7 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    public static final String[] WHITELIST_URLS = {"/api/auth/**", "/error", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**"
+    public static final String[] WHITELIST_URLS = {"/api/auth/**", "/error", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/h2-console/**"
     };
 
     @Bean
@@ -73,8 +73,16 @@ public class WebSecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF
-                .cors(AbstractHttpConfigurer::disable) // Disable CORS (or configure if needed)
+        http
+                // Disable CSRF
+                .csrf(AbstractHttpConfigurer::disable)
+                // Enable CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Allow H2 console from the same origin  
+                .headers((headers) -> headers.frameOptions(
+                        frameOptionsConfig -> frameOptionsConfig.sameOrigin()
+                ))
+                // Disable session management
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Configure the authorization of requests
                 .authorizeHttpRequests(

@@ -70,6 +70,4 @@ public class MediaFileRestController {
         MediaFile savedEntity = fileService.save(entity);
         return ResponseEntity.ok(fileMapper.toDTO(savedEntity));
     }
-
-   
 }

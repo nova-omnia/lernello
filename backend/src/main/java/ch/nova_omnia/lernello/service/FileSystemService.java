@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,6 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,19 +29,23 @@ public class FileSystemService implements FileService {
     @Value("${storage.path}")
     private String storagePath;
 
+    @Override
     public List<File> findAll() {
         return fileRepository.findAll();
     }
 
+    @Override
     public Optional<File> findById(UUID uuid) {
         return fileRepository.findById(uuid);
     }
 
+    @Override
     @Transactional
     public void deleteById(UUID uuid) {
         fileRepository.deleteById(uuid);
     }
 
+    @Override
     @Transactional
     public File save(MultipartFile file) {
         File savedFile = fileRepository.save(new File(file.getOriginalFilename()));
@@ -51,17 +59,20 @@ public class FileSystemService implements FileService {
         return savedFile;
     }
 
-    public byte[] readFileData(UUID uuid) {
+    public ResponseEntity<Resource> getFileResource(UUID uuid) {
         Optional<File> fileOptional = fileRepository.findById(uuid);
         if (fileOptional.isPresent()) {
+            File file = fileOptional.get();
             Path filePath = Paths.get(storagePath, uuid.toString());
             try {
-                return Files.readAllBytes(filePath);
+                byte[] fileData = Files.readAllBytes(filePath);
+                InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(fileData));
+                return ResponseEntity.ok().header("attachment;filename=" + file.getName()).body(resource);
             } catch (IOException e) {
                 throw new RuntimeException("Could not read file. Error: " + e.getMessage(), e);
             }
         } else {
-            throw new RuntimeException("File not found with UUID: " + uuid);
+            return ResponseEntity.notFound().build();
         }
     }
 }

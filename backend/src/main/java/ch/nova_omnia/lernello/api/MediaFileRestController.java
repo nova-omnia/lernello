@@ -63,7 +63,6 @@ public class MediaFileRestController {
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
     public ResponseEntity<MediaFileResDTO> uploadFile(@RequestParam("file") MultipartFile file) {
-        fileService.storeFile(file);
         MediaFile entity = new MediaFile();
         entity.setName(file.getOriginalFilename());
         entity.setUuid(UUID.randomUUID());

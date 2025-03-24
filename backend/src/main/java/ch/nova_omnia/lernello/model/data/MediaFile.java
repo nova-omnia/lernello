@@ -26,7 +26,7 @@ public class MediaFile {
     private UUID uuid;
 
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "fileName", nullable = false)
     @NotBlank
     @Size(min = 1, max = 255)
     private String name;

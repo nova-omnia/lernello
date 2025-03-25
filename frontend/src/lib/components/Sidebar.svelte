@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { sidebarState } from '$lib/components/sidebarState.svelte';
-	import { ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder } from 'lucide-svelte';
+	import {ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder, Sidebar} from 'lucide-svelte';
 </script>
 
-{#snippet sidebarItemLabel(label: String)}
+{#snippet sidebarItemLabel(label: string)}
 	<span
 		class="ml-3 text-nowrap transition-all"
 		class:visible={sidebarState.isExpanded}
@@ -26,6 +26,20 @@
 		<p class="flex items-center" aria-label="Lernello">
 			<GraduationCap size={24} />
 			{@render sidebarItemLabel('Lernello')}
+		<button
+				class="ml-auto items-center justify-center duration-100 ease-linear"
+				onclick={sidebarState.toggleSidebar}
+				aria-label="Toggle sidebar"
+				aria-expanded={sidebarState.isExpanded}
+				class:visible={sidebarState.isExpanded}
+				class:w-max={sidebarState.isExpanded}
+				class:opacity-100={sidebarState.isExpanded}
+				class:invisible={!sidebarState.isExpanded}
+				class:w-0={!sidebarState.isExpanded}
+				class:opacity-0={!sidebarState.isExpanded}
+		>
+			<Sidebar size={24} />
+		</button>
 		</p>
 
 		<hr class="hr" />
@@ -54,7 +68,7 @@
 		</div>
 	</div>
 
-	<a class="mt-auto flex w-full items-center justify-start" href="/profile" aria-label="Profile">
+	<a class="mt-auto flex items-center" href="/profile" aria-label="Profile">
 		<User size={24} />
 		{@render sidebarItemLabel('Profile')}
 	</a>

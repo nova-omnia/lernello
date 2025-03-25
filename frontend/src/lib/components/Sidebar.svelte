@@ -7,7 +7,7 @@
 		GraduationCap,
 		LayoutDashboard,
 		Folder,
-		Sidebar
+		SidebarClose
 	} from 'lucide-svelte';
 </script>
 
@@ -34,20 +34,16 @@
 		<p class="flex items-center" aria-label="Lernello">
 			<GraduationCap size={24} />
 			{@render sidebarItemLabel('Lernello')}
-			<button
-				class="ml-auto items-center justify-center duration-100 ease-linear"
-				onclick={sidebarState.toggleSidebar}
-				aria-label="Toggle sidebar"
-				aria-expanded={sidebarState.isExpanded}
-				class:visible={sidebarState.isExpanded}
-				class:w-max={sidebarState.isExpanded}
-				class:opacity-100={sidebarState.isExpanded}
-				class:invisible={!sidebarState.isExpanded}
-				class:w-0={!sidebarState.isExpanded}
-				class:opacity-0={!sidebarState.isExpanded}
-			>
-				<Sidebar size={24} />
-			</button>
+			{#if sidebarState.isExpanded}
+				<button
+					class="ml-auto items-center justify-center"
+					onclick={sidebarState.toggleSidebar}
+					aria-label="Toggle sidebar"
+					aria-expanded={sidebarState.isExpanded}
+				>
+					<SidebarClose size={24} />
+				</button>
+			{/if}
 		</p>
 
 		<hr class="hr" />

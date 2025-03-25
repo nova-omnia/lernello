@@ -57,7 +57,6 @@ public class FolderTest {
     // Section: Basic Folder Creation Tests
     @Test
     public void testFolderCreationWithName() {
-        System.out.println("Hibernate Version: " + org.hibernate.Version.getVersionString());
         Folder folder = new Folder("Test Folder");
         folder = folderRepository.save(folder);
         assertThat(folder).isNotNull();

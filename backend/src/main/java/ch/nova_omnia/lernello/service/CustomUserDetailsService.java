@@ -1,8 +1,8 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,8 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Service from Spring Security for handling user details and authentication easily.
@@ -40,6 +41,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> getUserScopes(User user) {
         List<GrantedAuthority> scopes = new ArrayList<>();
+        if (!user.isChangedPassword()) {
+            scopes.add(new SimpleGrantedAuthority("SCOPE_password:change"));
+            return scopes;
+        }
+
         switch (user.getRole()) {
             case INSTRUCTOR -> {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));

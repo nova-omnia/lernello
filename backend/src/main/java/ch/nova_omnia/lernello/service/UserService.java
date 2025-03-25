@@ -1,16 +1,15 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
@@ -32,33 +31,14 @@ public class UserService {
         return user;
     }
 
-    public boolean changePassword(UUID uuid, String oldPassword, String newPassword, String confirmPassword) {
-        User user = userRepository.findByUuid(uuid);
-
-        if (isValidPasswordChange(newPassword, confirmPassword, oldPassword, user.getPassword())) {
-            return false;
-        }
+    public boolean changePassword(String username, String newPassword) {
+        User user = userRepository.findByUsername(username);
 
         user.setPassword(passwordEncoder.encode(newPassword));
+        user.setChangedPassword(true);
         userRepository.save(user);
         return true;
     }
 
-    private boolean isValidPasswordChange(String newPassword, String confirmPassword, String oldPassword, String storedPasswordHash) {
-        return isPasswordConfirmed(newPassword, confirmPassword) &&
-                isOldPasswordValid(oldPassword, storedPasswordHash) &&
-                !isNewPasswordSameAsOld(newPassword, storedPasswordHash);
-    }
 
-    private boolean isPasswordConfirmed(String newPassword, String confirmPassword) {
-        return newPassword.equals(confirmPassword);
-    }
-
-    private boolean isOldPasswordValid(String providedOldPassword, String storedPasswordHash) {
-        return passwordEncoder.matches(providedOldPassword, storedPasswordHash);
-    }
-
-    private boolean isNewPasswordSameAsOld(String newPassword, String storedPasswordHash) {
-        return passwordEncoder.matches(newPassword, storedPasswordHash);
-    }
 }

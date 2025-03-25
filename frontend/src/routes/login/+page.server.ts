@@ -19,6 +19,10 @@ export const actions = {
 		}
 
 		const loggedInUser = await login(form.data);
+		if (!loggedInUser.changedPassword) {
+			redirect(303, '/change-password');
+		}
+
 		cookies.set('sessionToken', JSON.stringify(loggedInUser), {
 			httpOnly: true,
 			path: '/',
@@ -27,10 +31,7 @@ export const actions = {
 
 		const url = new URL(request.url);
 
-		if (loggedInUser.changedPassword) {
-			const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
-			redirect(303, redirectTo);
-		}
-		redirect(303, '/change-password');
+		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
+		redirect(303, redirectTo);
 	})
 } satisfies Actions;

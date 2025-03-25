@@ -20,6 +20,12 @@ export const actions = {
 			return fail(400, { form });
 		}
 		const changePasswordStatus = await changePassword(form.data);
-		return changePasswordStatus.success ? redirect(303, '/dashboard') : fail(400, { form });
+		const url = new URL(request.url);
+		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
+		if (changePasswordStatus.success) {
+			return redirect(303, redirectTo);
+		}
+
+		return fail(400, { form });
 	})
 } satisfies Actions;

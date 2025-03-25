@@ -19,19 +19,17 @@ export const actions = {
 		}
 
 		const loggedInUser = await login(form.data);
-		if (!loggedInUser.changedPassword) {
-			redirect(303, '/change-password');
-		}
-
 		cookies.set('sessionToken', JSON.stringify(loggedInUser), {
 			httpOnly: true,
 			path: '/',
 			maxAge: loggedInUser.expires / 1000 // convert milliseconds to seconds
 		});
-
 		const url = new URL(request.url);
-
 		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
+
+		if (!loggedInUser.changedPassword) {
+			redirect(303, `/change-password?redirectTo=${encodeURIComponent(redirectTo)}`);
+		}
 		redirect(303, redirectTo);
 	})
 } satisfies Actions;

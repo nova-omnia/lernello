@@ -19,19 +19,6 @@
 		<p>Please change your generated password to your own password.</p>
 		<div class="space-y-4">
 			<label class="label">
-				<span class="label-text">Old Password</span>
-				<input
-					class="input preset-filled-surface-200-800"
-					name="oldPassword"
-					type="password"
-					placeholder="old password"
-					aria-invalid={$errors.oldPassword ? 'true' : undefined}
-					bind:value={$form.oldPassword}
-					{...$constraints.oldPassword}
-				/>
-				{#if $errors.oldPassword}<span class="text-error-50-950">{$errors.oldPassword}</span>{/if}
-			</label>
-			<label class="label">
 				<span class="label-text">New Password</span>
 				<input
 					class="input preset-filled-surface-200-800"

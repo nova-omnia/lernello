@@ -10,9 +10,9 @@ import lombok.Data;
 
 import java.util.UUID;
 
-@Table(name = "blocks")
 @Data
 @Entity
+@Table(name = "blocks")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "block_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Block {
@@ -37,7 +37,7 @@ public abstract class Block {
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    public Block(String name, int position, LearningUnit learningUnit) {
+    protected Block(String name, int position, LearningUnit learningUnit) {
         this.name = name;
         this.position = position;
         this.learningUnit = learningUnit;

@@ -11,5 +11,4 @@ public class MultipleChoiceBlock extends Block {
     public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit) {
         super(name, position, learningUnit);
     }
-
 }

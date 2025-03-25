@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class FolderRestController {
-
     private final FolderService folderService;
     private final FolderMapper folderMapper;
 

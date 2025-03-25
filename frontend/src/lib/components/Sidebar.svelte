@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { sidebarState } from '$lib/components/sidebarState.svelte';
-	import {ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder, Sidebar} from 'lucide-svelte';
+	import {
+		ChartLine,
+		Settings,
+		User,
+		GraduationCap,
+		LayoutDashboard,
+		Folder,
+		Sidebar
+	} from 'lucide-svelte';
 </script>
 
 {#snippet sidebarItemLabel(label: string)}
@@ -26,7 +34,7 @@
 		<p class="flex items-center" aria-label="Lernello">
 			<GraduationCap size={24} />
 			{@render sidebarItemLabel('Lernello')}
-		<button
+			<button
 				class="ml-auto items-center justify-center duration-100 ease-linear"
 				onclick={sidebarState.toggleSidebar}
 				aria-label="Toggle sidebar"
@@ -37,9 +45,9 @@
 				class:invisible={!sidebarState.isExpanded}
 				class:w-0={!sidebarState.isExpanded}
 				class:opacity-0={!sidebarState.isExpanded}
-		>
-			<Sidebar size={24} />
-		</button>
+			>
+				<Sidebar size={24} />
+			</button>
 		</p>
 
 		<hr class="hr" />

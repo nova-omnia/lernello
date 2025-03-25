@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -27,31 +26,22 @@ import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
 @RequiredArgsConstructor
 public class LearningUnitRestController {
     private final LearningUnitService learningUnitService;
+    private final LearningUnitMapper learningUnitMapper;
 
     @PostMapping
     public ResponseEntity<LearningUnit> createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
-        LearningUnit newUnit = learningUnitService.createLearningUnit(LearningUnitMapper.toEntity(createLearningUnitDTO));
-        return new ResponseEntity<>(newUnit, HttpStatus.CREATED);
+        return new ResponseEntity<>(learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LearningUnit> getLearningUnit(@PathVariable UUID id) {
-        Optional<LearningUnit> unit = learningUnitService.findById(id);
-        return unit.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<LearningUnit> getById(@PathVariable UUID id) {
+        return learningUnitService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/blocks/order")
     public ResponseEntity<LearningUnit> updateBlockOrder(@PathVariable UUID id, @RequestBody List<UUID> blockIds) {
-        // Load LearningUnit
-        Optional<LearningUnit> opt = learningUnitService.findById(id);
-        if (opt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        LearningUnit unit = opt.get();
-        // Reorder blocks as needed (use blockIds to rearrange)
-        // Save changes via repository
-        learningUnitService.save(unit);
-        return ResponseEntity.ok(unit);
+        return learningUnitService.updateBlockOrder(id, blockIds)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { isExpanded } from '$lib/stores/sidebar';
-	import { ChartLine, Files, Settings, User, GraduationCap, LayoutDashboard } from 'lucide-svelte';
+	import { ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder } from 'lucide-svelte';
 </script>
 
-{#snippet sidebarItemLabel(label: string)}
+{#snippet sidebarItemLabel(label: String)}
 	<span
 		class="ml-3 text-nowrap transition-all"
 		class:visible={$isExpanded}
@@ -35,13 +35,9 @@
 				<LayoutDashboard size={24} />
 				{@render sidebarItemLabel('Dashboard')}
 			</a>
-			<a
-				class="flex w-full items-center rounded py-2"
-				href="/learningkit"
-				aria-label="Learning Kit"
-			>
-				<Files size={24} />
-				{@render sidebarItemLabel('Learning Kits')}
+			<a class="flex w-full items-center rounded py-2" href="/folders" aria-label="Folders">
+				<Folder size={24} />
+				{@render sidebarItemLabel('Folders')}
 			</a>
 			<a class="flex w-full items-center rounded py-2" href="/statistics" aria-label="Statistics">
 				<ChartLine size={24} />

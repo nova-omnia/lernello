@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { UserTokenSchema } from '$lib/models/user';
 
-export function getUsernameFromCookie(cookies) {
+export function getUUIDFromCookie(cookies) {
 	const tokenData = cookies.get('sessionToken');
 	if (!tokenData) {
 		return fail(401);

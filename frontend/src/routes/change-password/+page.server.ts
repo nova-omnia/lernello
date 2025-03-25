@@ -9,7 +9,7 @@ import {
 	ChangePasswordDataSchema
 } from '$lib/models/changePasswordData';
 import { changePassword } from '$lib/api/login/changePassword';
-import { getUsernameFromCookie } from '$lib/utility/sessionCookieUtils';
+import { getUUIDFromCookie } from '$lib/utility/sessionCookieUtils';
 
 export const load = async () => {
 	const form = await superValidate(zod(ChangePasswordDataSchema));
@@ -28,7 +28,7 @@ export const actions = {
 		}
 		//TODO what if fail(401) is returned?
 		const changePasswordUser = new ChangedPasswordUser(
-			getUsernameFromCookie(cookies),
+			getUUIDFromCookie(cookies),
 			changePasswordData.oldPassword,
 			changePasswordData.newPassword,
 			changePasswordData.confirmPassword

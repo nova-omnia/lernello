@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -35,7 +36,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", nullable = false, updatable = false)
+    @Column(name = "uuid", nullable = false)
+    @NotNull
     private UUID uuid;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -71,4 +73,10 @@ public class User {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @Transient
+    private String token;
+
+    @Transient
+    private int expires;
 }

@@ -8,13 +8,13 @@ export const ChangePasswordDataSchema = z.object({
 export const ChangePasswordData = z.infer<typeof ChangePasswordDataSchema>;
 
 export class ChangedPasswordUser {
-	username: string;
+	uuid: string;
 	oldPassword: string;
 	newPassword: string;
 	confirmPassword: string;
 
-	constructor(username: string, oldPassword: string, newPassword: string, confirmPassword: string) {
-		this.username = username;
+	constructor(uuid: string, oldPassword: string, newPassword: string, confirmPassword: string) {
+		this.uuid = uuid;
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 		this.confirmPassword = confirmPassword;

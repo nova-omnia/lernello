@@ -1,9 +1,8 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,16 +10,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service from Spring Security for handling user details and authentication easily.
  */
+@RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * Loads a user by username.

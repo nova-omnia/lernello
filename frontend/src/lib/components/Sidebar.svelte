@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { createSidebarState } from '$lib/components/sidebar.svelte.ts';
+	import { sidebarState } from '$lib/components/sidebarState.svelte';
 	import { ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder } from 'lucide-svelte';
-
-	const sidebarState = createSidebarState();
 </script>
 
 {#snippet sidebarItemLabel(label: String)}

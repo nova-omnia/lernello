@@ -3,13 +3,18 @@
 	import { Sidebar } from 'lucide-svelte';
 </script>
 
-<nav class="preset-filled-surface-100-900 flex pl-2">
+<nav class="preset-filled-surface-100-900 flex pl-2 pt-1">
 	<button
-		class="flex h-12 w-12 items-center justify-center rounded"
+		class="flex h-12 w-12 items-center justify-center rounded duration-100 ease-linear"
 		onclick={sidebarState.toggleSidebar}
 		aria-label="Toggle sidebar"
-		aria-expanded={sidebarState.isExpanded}
-		class:rotate-180={sidebarState.isExpanded}
+		aria-expanded={!sidebarState.isExpanded}
+		class:visible={!sidebarState.isExpanded}
+		class:w-max={!sidebarState.isExpanded}
+		class:opacity-100={!sidebarState.isExpanded}
+		class:invisible={!sidebarState.isExpanded}
+		class:w-0={!sidebarState.isExpanded}
+		class:opacity-0={sidebarState.isExpanded}
 	>
 		<Sidebar size={24} />
 	</button>

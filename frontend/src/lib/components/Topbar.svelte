@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { createSidebarState } from '$lib/components/sidebar.svelte';
+	import { sidebarState } from '$lib/components/sidebarState.svelte';
 	import { Sidebar } from 'lucide-svelte';
-
-
-	const  sidebarState = createSidebarState();
 </script>
 
 <nav class="preset-filled-surface-100-900 flex pl-2">
@@ -16,11 +13,9 @@
 	>
 		<Sidebar size={24} />
 	</button>
-	<div class="ml-auto mr-2 input-group disabled grid-cols-[auto_1fr_auto] items-center justify-center">
-		<input
-				class="ig-input preset-tonal rounded"
-				type="search"
-				placeholder="Search..."
-		/>
+	<div
+		class="input-group disabled ml-auto mr-2 grid-cols-[auto_1fr_auto] items-center justify-center"
+	>
+		<input class="ig-input preset-tonal rounded" type="search" placeholder="Search..." />
 	</div>
 </nav>

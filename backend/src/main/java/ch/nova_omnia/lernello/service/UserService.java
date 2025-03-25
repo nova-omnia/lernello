@@ -33,7 +33,6 @@ public class UserService {
 
     public boolean changePassword(String username, String newPassword) {
         User user = userRepository.findByUsername(username);
-
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setChangedPassword(true);
         userRepository.save(user);

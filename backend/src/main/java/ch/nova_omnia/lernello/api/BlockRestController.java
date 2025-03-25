@@ -20,10 +20,4 @@ public class BlockRestController {
         this.learningUnitService = learningUnitService;
     }
 
-    @PostMapping
-    public ResponseEntity<Block> createBlock(@PathVariable UUID learningUnitId,
-                                             @Valid @RequestBody CreateBlockDTO createBlockDTO) {
-        Block block = learningUnitService.createBlock(learningUnitId, createBlockDTO);
-        return new ResponseEntity<>(block, HttpStatus.CREATED);
-    }
 }

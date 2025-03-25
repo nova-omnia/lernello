@@ -18,19 +18,16 @@ import ch.nova_omnia.lernello.dto.response.FolderResDTO;
 import ch.nova_omnia.lernello.mapper.FolderMapper;
 import ch.nova_omnia.lernello.service.FolderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/folders")
 @Validated
+@RequiredArgsConstructor
 public class FolderRestController {
 
     private final FolderService folderService;
     private final FolderMapper folderMapper;
-
-    public FolderRestController(FolderService folderService, FolderMapper folderMapper) {
-        this.folderService = folderService;
-        this.folderMapper = folderMapper;
-    }
 
     @GetMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")

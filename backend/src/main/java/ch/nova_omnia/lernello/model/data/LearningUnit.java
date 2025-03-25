@@ -29,7 +29,6 @@ public class LearningUnit {
     private LearningKit learningKit;
 
     @Column(name = "name", nullable = false)
-    @NotNull
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;
@@ -40,15 +39,5 @@ public class LearningUnit {
     public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;
         this.learningKit = learningKit;
-    }
-
-    public void addBlock(Block block) {
-        blocks.add(block);
-        block.setLearningUnit(this);
-    }
-
-    public void removeBlock(Block block) {
-        blocks.remove(block);
-        block.setLearningUnit(null);
     }
 }

@@ -5,10 +5,10 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("theory_block")
-public class TheoryBlock extends Block {
+@DiscriminatorValue("question_block")
+public class QuestionBlock extends Block {
     
-    public TheoryBlock(String name, int position, LearningUnit learningUnit) {
+    public QuestionBlock(String name, int position, LearningUnit learningUnit) {
         super(name, position, learningUnit);
     }
 }

@@ -2,11 +2,15 @@ package ch.nova_omnia.lernello.model.data.blocks;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.UUID;
 
+@Table(name = "blocks")
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -14,23 +18,28 @@ import java.util.UUID;
 public abstract class Block {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull
+    @Min(0)
+    @Column(name = "position")
     private int position;
 
-    @NotNull
+    @NotBlank
+    @Column(name = "name")
+    @Size(min = 3, max = 40)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    public void setPosition(int position) {
-        if (position < 0) {
-            throw new IllegalArgumentException("Position must be greater than or equal to 0.");
-        }
+    public Block(String name, int position, LearningUnit learningUnit) {
+        this.name = name;
         this.position = position;
+        this.learningUnit = learningUnit;
     }
 }

@@ -35,7 +35,7 @@
 	>
 		<Sidebar size={24} />
 	</button>
-	<div class="input-group disabled grid-cols-[auto_1fr_auto] items-center justify-center">
+	<div class="ml-auto mr-2 input-group disabled grid-cols-[auto_1fr_auto] items-center justify-center">
 		<form method="POST" onsubmit={handleSearch}>
 			<input
 				class="ig-input preset-tonal rounded"
@@ -43,7 +43,6 @@
 				bind:value={searchQuery}
 				placeholder="Search..."
 			/>
-			<button class="ig-btn preset-filled-primary-500 rounded">Submit</button>
 		</form>
 	</div>
 </nav>

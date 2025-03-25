@@ -1,25 +1,27 @@
 <script lang="ts">
-	import { isExpanded } from '$lib/stores/sidebar';
+	import { createSidebarState } from '$lib/components/sidebar.svelte.ts';
 	import { ChartLine, Settings, User, GraduationCap, LayoutDashboard, Folder } from 'lucide-svelte';
+
+	const sidebarState = createSidebarState();
 </script>
 
 {#snippet sidebarItemLabel(label: String)}
 	<span
 		class="ml-3 text-nowrap transition-all"
-		class:visible={$isExpanded}
-		class:w-max={$isExpanded}
-		class:opacity-100={$isExpanded}
-		class:invisible={!$isExpanded}
-		class:w-0={!$isExpanded}
-		class:opacity-0={!$isExpanded}>{label}</span
+		class:visible={sidebarState.isExpanded}
+		class:w-max={sidebarState.isExpanded}
+		class:opacity-100={sidebarState.isExpanded}
+		class:invisible={!sidebarState.isExpanded}
+		class:w-0={!sidebarState.isExpanded}
+		class:opacity-0={!sidebarState.isExpanded}>{label}</span
 	>
 {/snippet}
 
 <!-- Sidebar -->
 <div
 	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden rounded-l-lg p-4 transition-all duration-300"
-	class:w-64={$isExpanded}
-	class:w-16={!$isExpanded}
+	class:w-64={sidebarState.isExpanded}
+	class:w-16={!sidebarState.isExpanded}
 >
 	<div class="w-max min-w-full space-y-2">
 		<!-- Logo -->

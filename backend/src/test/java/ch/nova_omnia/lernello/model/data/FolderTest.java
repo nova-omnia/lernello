@@ -9,18 +9,17 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class FolderTest {
     
@@ -48,6 +47,13 @@ public class FolderTest {
         parentFolder = new Folder("Parent Folder");
     }
 
+    // Helper method to validate constraints
+    private void assertConstraintViolation(Set<ConstraintViolation<Folder>> violations, String property, Class<?> annotation) {
+        assertThat(violations)
+            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
+                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+    }
+
     // Section: Basic Folder Creation Tests
     @Test
     public void testFolderCreationWithName() {
@@ -73,15 +79,15 @@ public class FolderTest {
     public void testFolderNameConstraints() {
         Folder folder = new Folder("");
         Set<ConstraintViolation<Folder>> violations = validator.validate(folder);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("must not be blank"));
+        assertConstraintViolation(violations, "name", NotBlank.class);
 
         folder = new Folder("ab");
         violations = validator.validate(folder);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
 
         folder = new Folder("a".repeat(41));
         violations = validator.validate(folder);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     @Test
@@ -90,7 +96,8 @@ public class FolderTest {
         folder = folderRepository.save(folder);
         folder.setName("ab");
         Set<ConstraintViolation<Folder>> violations = validator.validate(folder);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     // Section: UUID Generation Test

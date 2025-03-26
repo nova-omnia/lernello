@@ -2,7 +2,7 @@ import { UserLoginSchema } from '$lib/models/user';
 import { login } from '$lib/api/auth';
 import type { Actions } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-import { handleApiError } from '$lib/api/ApiError';
+import { handleApiError } from '$lib/api/apiError';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';

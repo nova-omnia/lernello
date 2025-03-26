@@ -2,8 +2,9 @@ import {superValidate} from "sveltekit-superforms";
 import {zod} from "sveltekit-superforms/adapters";
 import {CreateKitSchema} from "$lib/models/kit";
 //import {createLearningKit} from "$lib/api/learningKit";
-import {handleApiError} from "$lib/api/ApiError";
-import {type Actions, fail} from "@sveltejs/kit";
+import {handleApiError} from "$lib/api/apiError";
+import {type Actions, fail, redirect} from "@sveltejs/kit";
+import {createLearningKit} from "$lib/api/learningKit";
 
 export const load = async () => {
     const form = await superValidate(zod(CreateKitSchema));
@@ -16,8 +17,11 @@ export const actions = {
         if (!form.valid) {
             return fail(400, {form});
         }
-        //const idk = await createLearningKit(form.data); //what should createlearningkit return?
-        // redirect zu neuem kit
+        const learningKitId = await createLearningKit(form.data);
+
+        const url = new URL(request.url);
+        const redirectTo = url.searchParams.get(learningKitId.id) || '/dashboard'; //nicht ganz sicher wie zum neuen learningkti navigieren und ob schon möglich ist
+        redirect(303, redirectTo);
 
     })
 }satisfies Actions;

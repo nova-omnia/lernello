@@ -1,20 +1,46 @@
 <!-- +page.svelte -->
 <script lang="ts">
-  import { MarkdownEditor, PreRendered } from 'carta-md';
-  import { carta } from '$lib/carta'; // Import the carta instance
+  import { MarkdownEditor } from 'carta-md';
+  import { carta } from '$lib/carta';
   export let data: { markdown: string; html: string };
 </script>
 
-<div class="theory-block prose p-4 rounded-lg shadow bg-gray-500">
-  <!-- Pass the imported carta instance -->
+
+<div class="min-h-screen w-full flex items-center justify-center">
+  <div class="w-[1000px] h-[600px] border rounded p-4 mx-auto">
+    <MarkdownEditor bind:value={data.markdown} mode="tabs" {carta} />
+  </div>
 </div>
 
 <style>
-  :global(.carta-font-code) {
-    font-family: 'Fira Code', monospace;
-    font-size: 1rem;
-    line-height: 1.5rem;
+  :global(.carta-toolbar-left button) {
+    margin-right: 0.6rem;
   }
-</style>
+  :global(.carta-toolbar-right button) {
+    margin-left: 0.2rem;
+  }
 
-<MarkdownEditor bind:value={data.markdown} mode="tabs" theme="github" {carta} />
+  :global(.carta-editor) {
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.carta-wrapper) {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+
+  :global(.carta-container) {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+  }
+
+  :global(.carta-font-code) {
+    width: 100%;
+    height: 100%;
+    background-color: green;
+  }
+
+</style>

@@ -6,11 +6,11 @@ import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("theory_block")
+@DiscriminatorValue("multiple_choice_block")
 @NoArgsConstructor
-public class TheoryBlock extends Block {
-    
-    public TheoryBlock(String name, int position, LearningUnit learningUnit) {
+public class MultipleChoiceBlock extends Block {
+
+    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit) {
         super(name, position, learningUnit);
     }
 }

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { sidebarState } from '$lib/components/sidebarState.svelte';
 	import { SidebarOpen } from 'lucide-svelte';
-	import {page} from '$app/state';
+	import { page } from '$app/state';
 </script>
 
-<nav class="preset-filled-surface-100-900 flex min-h-13 pt-1 pl-2 justify-between items-center">
+<nav class="preset-filled-surface-100-900 flex min-h-13 items-center justify-between pt-1 pl-2">
 	{#if !sidebarState.isExpanded}
 		<button
 			class="flex h-12 w-12 items-center justify-center"

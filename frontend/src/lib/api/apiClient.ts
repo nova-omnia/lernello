@@ -1,4 +1,4 @@
-import { ApiError, isApiErrorResponse } from './apiError';
+import { ApiError, isApiErrorResponse } from './ApiError';
 
 //TODO change BASE_URL
 const BASE_URL = 'http://localhost:8080';

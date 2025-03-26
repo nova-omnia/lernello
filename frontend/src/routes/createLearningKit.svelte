@@ -1,5 +1,7 @@
 <script lang="ts">
     import SuperDebug, { superForm } from 'sveltekit-superforms';
+    import { FileUpload } from '@skeletonlabs/skeleton-svelte';
+    import IconUpload from '@lucide/svelte/icons/upload';
 
     let { data } = $props();
     const { form, errors, enhance } = superForm(data.form);
@@ -102,14 +104,12 @@
         </div>
     {/each}
 
-    <label class="label block">
-        <input class="input block rounded-container" type="file" />
-    </label>
-
-
-    <button type="submit" class="w-full px-4 py-2 text-lg text-white bg-blue-500 rounded-container hover:bg-blue-700">
-        Create
-    </button>
+    <FileUpload name="example-button" accept="image/*" onFileChange={console.log} maxFiles={2}>
+        <button class="btn preset-filled">
+            <IconUpload class="size-4" />
+            <span>Select File</span>
+        </button>
+    </FileUpload>
 
     <p class="text-sm">*required fields</p>
     <SuperDebug data={$form} />

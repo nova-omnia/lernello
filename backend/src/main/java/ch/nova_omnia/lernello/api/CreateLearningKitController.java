@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/learning-kits") //TODO: what does this do or where do i have to implement this??
+@RequestMapping("/api/learning-kits")
 @Validated
 public class CreateLearningKitController {
     private final LearningKitRepository repository;
@@ -24,7 +24,7 @@ public class CreateLearningKitController {
         this.learningKitMapper = learningKitMapper;
     }
 
-    @PostMapping("/learning-kits")
+    @PostMapping("/")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLerningKitDTO learningKit) {
         var entity = learningKitMapper.toEntity(learningKit);
         var savedEntity = repository.save(entity);

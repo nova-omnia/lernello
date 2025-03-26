@@ -25,9 +25,9 @@ public class File {
     @NotNull
     private UUID uuid;
 
-    @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 1, max = 255)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     public File(String name) {

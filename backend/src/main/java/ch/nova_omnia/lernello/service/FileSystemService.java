@@ -48,6 +48,7 @@ public class FileSystemService implements FileService {
     @Override
     @Transactional
     public File save(MultipartFile file) {
+        deleteExistingFileIfExists(file.getOriginalFilename());
         File savedFile = fileRepository.save(new File(file.getOriginalFilename()));
         try {
             Path filePath = Paths.get(storagePath, savedFile.getUuid().toString());
@@ -57,6 +58,19 @@ public class FileSystemService implements FileService {
             throw new RuntimeException("Could not create directory for file. Error: " + e.getMessage(), e);
         }
         return savedFile;
+    }
+
+    private void deleteExistingFileIfExists(String fileName) {
+        Optional<File> existingFileOptional = fileRepository.findByName(fileName);
+        existingFileOptional.ifPresent(existingFile -> {
+            Path existingFilePath = Paths.get(storagePath, existingFile.getUuid().toString());
+            try {
+                Files.deleteIfExists(existingFilePath);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not delete existing file. Error: " + e.getMessage(), e);
+            }
+            fileRepository.delete(existingFile);
+        });
     }
 
     public ResponseEntity<Resource> getFileResource(UUID uuid) {

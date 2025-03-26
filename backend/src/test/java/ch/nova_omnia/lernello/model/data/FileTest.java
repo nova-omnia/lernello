@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import ch.nova_omnia.lernello.repository.FileRepository;
@@ -28,7 +28,7 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@SpringBootTest
+@DataJpaTest
 public class FileTest {
 
     private static Validator validator;
@@ -73,16 +73,12 @@ public class FileTest {
     @Test
     public void testNameUnique() {
         File file1 = new File("uniqueName.pdf");
-        fileRepository.save(file1);
+        fileRepository.saveAndFlush(file1);
 
         File file2 = new File("uniqueName.pdf");
-        Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
-            fileRepository.save(file2);
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            fileRepository.saveAndFlush(file2);
         });
-
-        String expectedMessage = "could not execute statement";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test

@@ -17,6 +17,7 @@ export const actions = {
             return fail(400, {form});
         }
         //const idk = await createLearningKit(form.data); //what should createlearningkit return?
+        // redirect zu neuem kit
 
     })
 }satisfies Actions;

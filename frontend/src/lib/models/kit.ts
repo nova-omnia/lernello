@@ -8,3 +8,7 @@ export const CreateKitSchema = z.object({
     context : z.string().optional()
 });
 export type CreateKit = z.infer<typeof CreateKitSchema>;
+export const LearningKitSchema = z.object({
+    id : z.string().nonempty()
+})
+export type LearningKit = z.infer<typeof LearningKitSchema>

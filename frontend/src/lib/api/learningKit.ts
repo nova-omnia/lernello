@@ -1,10 +1,9 @@
-import { request } from '$lib/api/apiClient';
-import {CreateKitSchema,type CreateKit} from "$lib/models/kit";
+import {request} from '$lib/api/apiClient';
+import {type CreateKit, type LearningKit, LearningKitSchema} from "$lib/models/kit";
 
-export async function createLearningKit(payload: CreateKit): Promise<CreateKit> {
+export async function createLearningKit(payload: CreateKit): Promise<LearningKit> {
     const loginUserRes = await request(`/api/learningKit`, 'POST', {
         body: JSON.stringify(payload)
     });
-    const learningkit = CreateKitSchema.parse(loginUserRes);
-    return learningkit;
+    return LearningKitSchema.parse(loginUserRes);
 }

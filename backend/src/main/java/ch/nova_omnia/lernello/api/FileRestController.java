@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,8 +44,8 @@ public class FileRestController {
 
     @GetMapping("/static/{id}")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
-    public ResponseEntity<Resource> getFile(@PathVariable UUID id) {
-        return fileService.getFileResource(id);
+    public Resource getFile(@PathVariable UUID id) {
+        return fileService.getFileResource(id).getBody();
     }
 
     @DeleteMapping("/{id}")
@@ -58,11 +56,7 @@ public class FileRestController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public ResponseEntity<FileResDTO> uploadFile(@RequestParam("file") MultipartFile file) {
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(fileMapper.toDTO(fileService.save(file)));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
+        return fileMapper.toDTO(fileService.save(file));
     }
 }

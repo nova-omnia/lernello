@@ -1,7 +1,5 @@
 .env
 
-
-
 # Compiled output / build
 .gradle
 build/
@@ -18,3 +16,6 @@ Thumbs.db
 
 # Aider
 .aider*
+
+# Personal Zellij Layout
+dev-layout.kdl

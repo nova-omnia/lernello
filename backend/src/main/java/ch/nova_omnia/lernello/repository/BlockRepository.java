@@ -1,12 +1,11 @@
 package ch.nova_omnia.lernello.repository;
 
-import java.util.UUID;
-
+import ch.nova_omnia.lernello.model.data.blocks.Block;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import ch.nova_omnia.lernello.model.data.Instructor;
+import java.util.UUID;
 
 @Repository
-public interface InstructorRepository extends JpaRepository<Instructor, UUID> {
+public interface BlockRepository extends JpaRepository<Block, UUID> {
 }

@@ -1,11 +1,12 @@
 <!-- +page.svelte -->
 <script lang="ts">
-  import { PreRendered } from 'carta-md';
-  export let data: { html: string };
+  import { MarkdownEditor, PreRendered } from 'carta-md';
+  import { carta } from '$lib/carta'; // Import the carta instance
+  export let data: { markdown: string; html: string };
 </script>
 
 <div class="theory-block prose p-4 rounded-lg shadow bg-gray-500">
-  <PreRendered html={data.html} />
+  <!-- Pass the imported carta instance -->
 </div>
 
 <style>
@@ -15,3 +16,5 @@
     line-height: 1.5rem;
   }
 </style>
+
+<MarkdownEditor bind:value={data.markdown} mode="tabs" theme="github" {carta} />

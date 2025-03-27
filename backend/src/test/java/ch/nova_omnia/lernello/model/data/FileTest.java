@@ -34,6 +34,7 @@ public class FileTest {
     private static Validator validator;
 
     private File testFile;
+    
     @Autowired
     private FileRepository fileRepository;
 
@@ -83,7 +84,7 @@ public class FileTest {
 
     @Test
     public void testNameConstraints() {
-        Set<ConstraintViolation<File>> violation1 = validator.validate(new File(""));
+        Set<ConstraintViolation<File>> violation1 = validator.validate(new File("   "));
         assertConstraintViolation(violation1, "name", NotBlank.class);
 
         Set<ConstraintViolation<File>> violation2 = validator.validate(new File("a".repeat(256)));
@@ -94,6 +95,9 @@ public class FileTest {
     @Test
     public void testFileSave() throws IOException {
         Path filePath = Paths.get(storagePath, "testFile");
+
+        // Clean up any existing file
+        Files.deleteIfExists(filePath);
 
         // Simulate saving the file
         Files.createDirectories(filePath.getParent());

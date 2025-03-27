@@ -1,5 +1,5 @@
-<!-- +page.svelte -->
-<script lang="ts">
+  <script lang="ts">
+	import { redirect } from '@sveltejs/kit';
   import { MarkdownEditor } from 'carta-md';
   import { carta } from '$lib/carta';
   export let data: { markdown: string; html: string };
@@ -13,11 +13,15 @@
 </div>
 
 <style>
+
+  :global(.carta-toolbar) {
+    padding-bottom: 1rem;
+  }
   :global(.carta-toolbar-left button) {
-    margin-right: 0.6rem;
+    margin-right: 1rem;
   }
   :global(.carta-toolbar-right button) {
-    margin-left: 0.2rem;
+    margin-left: 0.5rem;
   }
 
   :global(.carta-editor) {
@@ -25,22 +29,36 @@
     height: 100%;
   }
 
-  :global(.carta-wrapper) {
+  :global(.carta-renderer) {
     width: 100%;
-    height: 100%;
-    background-color: white;
-  }
+    height: 100%; 
+    background-color: black;
 
-  :global(.carta-container) {
-    width: 100%;
-    height: 100%;
-    background-color: red;
   }
 
   :global(.carta-font-code) {
     width: 100%;
     height: 100%;
-    background-color: green;
+    background-color: white;
   }
 
+  :global(-carta-input-wrapper) {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+  }
+
+  :global(.carta-input) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.carta-input textarea) {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    resize: none; /* Optional: Prevent resizing if not YY Y needed */
+  }
 </style>

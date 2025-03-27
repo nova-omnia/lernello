@@ -1,15 +1,14 @@
 package ch.nova_omnia.lernello.service;
 
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
@@ -33,11 +32,12 @@ public class UserService {
 
     public boolean changePassword(String username, String newPassword) {
         User user = userRepository.findByUsername(username);
+        if (user.isChangedPassword()) {
+            return false;
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setChangedPassword(true);
         userRepository.save(user);
         return true;
     }
-
-
 }

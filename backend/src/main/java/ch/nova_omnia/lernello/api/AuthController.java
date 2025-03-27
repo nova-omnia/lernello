@@ -1,15 +1,18 @@
 package ch.nova_omnia.lernello.api;
 
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ch.nova_omnia.lernello.dto.request.user.UserLoginDTO;
 import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
 import ch.nova_omnia.lernello.mapper.UserLoginMapper;
 import ch.nova_omnia.lernello.model.data.User;
 import ch.nova_omnia.lernello.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for handling authentication requests.
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
+@Validated
 public class AuthController {
     private final UserService userService;
     private final UserLoginMapper userLoginMapper;
@@ -28,7 +32,7 @@ public class AuthController {
      * @return The JWT token.
      */
     @PostMapping("/signin")
-    public LoggedInUserDTO authenticateUser(@RequestBody UserLoginDTO userLoginDTO) {
+    public @Valid LoggedInUserDTO authenticateUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         User authenticateUser = userService.authenticate(userLoginDTO.username(), userLoginDTO.password());
         return userLoginMapper.toDTO(authenticateUser);
     }

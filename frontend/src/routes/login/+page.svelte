@@ -4,7 +4,7 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	export const toast: ToastContext = getContext('toast');
+	const toast: ToastContext = getContext('toast');
 
 	let { data } = $props();
 

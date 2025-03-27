@@ -1,24 +1,27 @@
 package ch.nova_omnia.lernello.model.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Set;
+
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
+
 import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 
-
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class LearningUnitTest {
 
@@ -50,6 +53,13 @@ public class LearningUnitTest {
         testLearningKit = learningKitRepository.save(testLearningKit);
     }
 
+    // Helper method to validate constraints
+    private void assertConstraintViolation(Set<ConstraintViolation<LearningUnit>> violations, String property, Class<?> annotation) {
+        assertThat(violations)
+            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
+                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+    }
+
     // Section: Basic LearningUnit Creation Tests
     @Test
     public void testLearningUnitCreationWithNameAndLearningKit() {
@@ -64,7 +74,7 @@ public class LearningUnitTest {
     public void testLearningUnitCreationWithNullLearningKit() {
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", null);
         Set<ConstraintViolation<LearningUnit>> violations = validator.validate(learningUnit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("must not be null"));
+        assertConstraintViolation(violations, "learningKit", NotNull.class);
     }
 
     // Section: Validation Tests
@@ -72,15 +82,15 @@ public class LearningUnitTest {
     public void testLearningUnitNameConstraints() {
         LearningUnit learningUnit = new LearningUnit("", testLearningKit);
         Set<ConstraintViolation<LearningUnit>> violations = validator.validate(learningUnit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("must not be blank"));
+        assertConstraintViolation(violations, "name", NotBlank.class);
 
         learningUnit = new LearningUnit("ab", testLearningKit);
         violations = validator.validate(learningUnit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
 
         learningUnit = new LearningUnit("a".repeat(41), testLearningKit);
         violations = validator.validate(learningUnit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     @Test
@@ -89,7 +99,7 @@ public class LearningUnitTest {
         learningUnit = learningUnitRepository.save(learningUnit);
         learningUnit.setName("ab");
         Set<ConstraintViolation<LearningUnit>> violations = validator.validate(learningUnit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     // Section: UUID Generation Test

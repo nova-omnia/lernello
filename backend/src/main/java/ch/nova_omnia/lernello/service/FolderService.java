@@ -9,15 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.Folder;
 import ch.nova_omnia.lernello.repository.FolderRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class FolderService {
-
     private final FolderRepository folderRepository;
-
-    public FolderService(FolderRepository folderRepository) {
-        this.folderRepository = folderRepository;
-    }
 
     public List<Folder> findAll() {
         return folderRepository.findAll();

@@ -1,0 +1,15 @@
+meta {
+  name: Upload File
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/files/upload
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(collection.bru)
+}

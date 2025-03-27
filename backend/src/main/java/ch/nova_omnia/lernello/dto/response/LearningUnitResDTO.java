@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record LearningUnitResDTO(
-                                 @NotBlank UUID uuid,
+                                 @NotNull UUID uuid,
                                  @NotBlank @Size(min = 3, max = 40) String name
 ) {
 }

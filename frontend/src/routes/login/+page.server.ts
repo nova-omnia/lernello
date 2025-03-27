@@ -1,11 +1,11 @@
 import { UserLoginSchema } from '$lib/models/user';
-import { login } from '$lib/api/auth';
+import { login } from '$lib/api/login/auth';
 import type { Actions } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
-import { handleApiError } from '$lib/api/apiError';
-import { superValidate } from 'sveltekit-superforms';
+import { fail, redirect } from '@sveltejs/kit';
+import { ApiError, handleApiError } from '$lib/api/apiError';
+import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { fail } from '@sveltejs/kit';
+import { parseRedirectTo } from '$lib/server/auth';
 
 export const load = async () => {
 	const form = await superValidate(zod(UserLoginSchema));
@@ -13,21 +13,34 @@ export const load = async () => {
 };
 
 export const actions = {
-	login: handleApiError(async ({ request, cookies }) => {
+	login: handleApiError(async ({ request, cookies, url }) => {
 		const form = await superValidate(request, zod(UserLoginSchema));
 		if (!form.valid) {
 			return fail(400, { form });
 		}
+		try {
+			const loggedInUser = await login(form.data);
+			cookies.set('sessionToken', JSON.stringify(loggedInUser), {
+				httpOnly: true,
+				path: '/',
+				maxAge: loggedInUser.expires / 1000 // convert milliseconds to seconds
+			});
+			if (!loggedInUser.changedPassword) {
+				cookies.set('shouldChangePw', 'true', {
+					path: '/'
+				});
+			}
 
-		const userToken = await login(form.data);
-		cookies.set('sessionToken', JSON.stringify(userToken), {
-			httpOnly: true,
-			path: '/',
-			maxAge: userToken.expires / 1000 // convert milliseconds to seconds
-		});
+			const redirectTo = parseRedirectTo(url);
 
-		const url = new URL(request.url);
-		const redirectTo = url.searchParams.get('redirectTo') || '/dashboard';
-		redirect(303, redirectTo);
+			redirect(303, redirectTo);
+		} catch (error) {
+			if (error instanceof ApiError) {
+				if (error.status === 403 || error.error === 'Forbidden') {
+					return setError(form, 'password', 'Invalid username or password');
+				}
+			}
+			throw error;
+		}
 	})
 } satisfies Actions;

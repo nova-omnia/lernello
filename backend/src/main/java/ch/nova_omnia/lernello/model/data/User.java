@@ -1,21 +1,27 @@
 package ch.nova_omnia.lernello.model.data;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -30,7 +36,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", nullable = false, updatable = false)
+    @Column(name = "uuid", nullable = false)
+    @NotNull
     private UUID uuid;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -44,6 +51,9 @@ public class User {
     @NonNull
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
+    @Column(name = "changed_password", nullable = false)
+    private boolean changedPassword;
 
     @Column(name = "language", nullable = false)
     @NotNull
@@ -63,4 +73,10 @@ public class User {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @Transient
+    private String token;
+
+    @Transient
+    private int expires;
 }

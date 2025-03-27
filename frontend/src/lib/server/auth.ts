@@ -17,21 +17,31 @@ export function recoverSession() {
 			}
 		}
 	}
+
+	return locals.user;
 }
 
 export function requireLogin() {
-	const { locals, url } = getRequestEvent();
+	const { url } = getRequestEvent();
 	// try to recover session
-	recoverSession();
+	const user = recoverSession();
 
 	// assume `locals.user` is populated in `handle`
-	if (!locals.user) {
-		let redirectTo = url.pathname + url.search;
-		redirectTo = redirectTo === '/' ? '/dashboard' : redirectTo;
+	if (!user) {
+		const redirectTo = parseRedirectTo(url, url.pathname + url.search);
 		const params = new URLSearchParams({ redirectTo });
 
 		redirect(307, `/login?${params}`);
 	}
 
-	return locals.user;
+	return user;
+}
+
+export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {
+	const redirectTo = url.searchParams.get('redirectTo');
+	if (redirectTo) {
+		url.searchParams.delete('redirectTo');
+		return redirectTo;
+	}
+	return fallback;
 }

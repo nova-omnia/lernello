@@ -35,3 +35,7 @@ out/
 
 # Local configuration
 application-local.properties
+
+
+# Ignore backend file storage
+data/files

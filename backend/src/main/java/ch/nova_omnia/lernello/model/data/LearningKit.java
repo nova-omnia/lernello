@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,23 @@ public class LearningKit {
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;
+
+    @Column(name = "description", nullable = true)
+    @Size(max = 500)
+    private String description;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "deadline", nullable = true)
+    private Date deadline;
+
+    @Column(name = "language", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 2) //then we would parse it/ handle it in backend like "en", "de", "fr", "it"
+    private String language;
+
+    @Column(name = "context", nullable = true)
+    @Size(max = 500)
+    private String context;
 
     @ManyToOne
     @NotNull

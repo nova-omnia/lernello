@@ -69,5 +69,14 @@ public class LearningKit {
         this.folder = folder;
     }
 
+    public LearningKit(String name, Folder folder, String description, Date deadline, String language, String context) {
+        this.name = name;
+        this.folder = folder;
+        this.description = description;
+        this.deadline = deadline;
+        this.language = language;
+        this.context = context;
+    }
+
 
 }

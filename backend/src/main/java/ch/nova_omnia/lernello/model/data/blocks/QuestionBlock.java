@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuestionBlock extends Block {
     
-    public QuestionBlock(String name, int position, LearningUnit learningUnit) {
-        super(name, position, learningUnit);
+    public QuestionBlock(String name, int position, String blockType, LearningUnit learningUnit) {
+        super(name, position, blockType, learningUnit);
     }
 }

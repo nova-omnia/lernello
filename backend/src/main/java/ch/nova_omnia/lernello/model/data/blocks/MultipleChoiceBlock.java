@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MultipleChoiceBlock extends Block {
 
-    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit) {
-        super(name, position, learningUnit);
+    public MultipleChoiceBlock(String name, int position, String blockType, LearningUnit learningUnit) {
+        super(name, position, blockType, learningUnit);
     }
 }

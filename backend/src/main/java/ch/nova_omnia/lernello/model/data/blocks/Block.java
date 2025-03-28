@@ -14,8 +14,6 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "blocks")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "block_type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor
 public abstract class Block {
 
@@ -23,25 +21,30 @@ public abstract class Block {
     @Column(name = "id", nullable = false)
     @NotNull
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @NotNull
-    @Min(0)
-    @Column(name = "position")
-    private int position;
+    private UUID uuid;
 
     @NotBlank
     @Column(name = "name")
     @Size(min = 3, max = 40)
     private String name;
 
+    @NotNull
+    @Min(0)
+    @Column(name = "position")
+    private int position;
+
+    @NotNull
+    @Column(name = "block_type")
+    private String blockType;
+
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    protected Block(String name, int position, LearningUnit learningUnit) {
+    protected Block(String name, int position, String blockType, LearningUnit learningUnit) {
         this.name = name;
         this.position = position;
+        this.blockType = blockType;
         this.learningUnit = learningUnit;
     }
 }

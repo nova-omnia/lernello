@@ -3,12 +3,11 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import CreateLearningKit from '../createLearningKit.svelte';
 
-
 	let { data } = $props();
 	const { form, errors, constraints, message, enhance } = superForm(data.form);
 </script>
 
-<CreateLearningKit />
+<CreateLearningKit {data} />
 
 <main class="flex h-full flex-col items-center justify-center">
 	{#if $message}<h3>{$message}</h3>{/if}

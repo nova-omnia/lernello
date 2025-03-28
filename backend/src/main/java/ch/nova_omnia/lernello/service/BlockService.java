@@ -56,6 +56,4 @@ public class BlockService {
             blockRepository.save(block);
         }
     }
-    
-    // Other methods...
 }

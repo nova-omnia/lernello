@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateBlockDTO {
+public abstract class CreateBlockDTO {
     private String blockType;
     private String name;
     private int position;

@@ -1,10 +1,41 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import {onMount, tick} from 'svelte';
     import { flip } from 'svelte/animate';
     import { quintOut } from 'svelte/easing';
 
     let mouseStartY = 0;
-    const blockHeight = 60; // Height of each block
+    let blockHeightMap = new Map<string, number>();
+    let blockElements = new Map<string, HTMLDivElement>();
+
+    // Helper function for cumulative offset
+    function getCumulativeOffset(index: number): number {
+        let offset = 0;
+        for (let i = 0; i < index; i++) {
+            offset += blockHeightMap.get(blocks[i].uuid) ?? 60;
+        }
+        return offset;
+    }
+
+    function calculateTargetIndex(currentPos: number): number {
+        let cumulative = 0;
+        for (let i = 0; i < blocks.length; i++) {
+            const height = blockHeightMap.get(blocks[i].uuid) ?? 60;
+            if (currentPos < (cumulative + height / 2)) {
+                return i;
+            }
+            cumulative += height;
+        }
+        return blocks.length - 1;
+    }
+
+    function storeElement(node: HTMLDivElement, uuid: string) {
+        blockElements.set(uuid, node);
+        return {
+            destroy() {
+                blockElements.delete(uuid);
+            }
+        };
+    }
 
     function handleMouseDown(e: MouseEvent, index: number, column: 'center' | 'right') {
         draggingIndex = index;
@@ -22,18 +53,18 @@
 
     function handleMouseUp(e: MouseEvent) {
         if (draggingIndex === null) return;
-        // Calculate the new position by using half the block height so that the block can slide in between others.
-        const currentPos = (draggingIndex * blockHeight) + touchOffsetY + (blockHeight / 2);
-        let targetIndex = Math.floor(currentPos / blockHeight);
-        // Clamp target index to valid range
-        if (targetIndex < 0) targetIndex = 0;
-        if (targetIndex >= blocks.length) targetIndex = blocks.length - 1;
+        // Get the height of the dragged block (fallback to 60 if not measured)
+        const draggedBlockHeight = blockHeightMap.get(blocks[draggingIndex].uuid) ?? 60;
+        const currentPos =
+            getCumulativeOffset(draggingIndex) + (draggedBlockHeight / 2) + touchOffsetY;
+        const targetIndex = calculateTargetIndex(currentPos);
 
         if (targetIndex !== draggingIndex) {
             const [movedBlock] = blocks.splice(draggingIndex, 1);
             blocks.splice(targetIndex, 0, movedBlock);
             blocks = blocks; // trigger reactivity
-            orderChanged = JSON.stringify(originalOrder) !== JSON.stringify(blocks.map((b) => b.uuid));
+            orderChanged =
+                JSON.stringify(originalOrder) !== JSON.stringify(blocks.map(b => b.uuid));
         }
         draggingIndex = null;
         draggingColumn = null;
@@ -99,15 +130,18 @@
 
     function handleTouchEnd() {
         if (draggingIndex === null) return;
+        const draggedBlockHeight = blockHeightMap.get(blocks[draggingIndex].uuid) ?? 60;
+        const currentPos =
+            getCumulativeOffset(draggingIndex) + (draggedBlockHeight / 2) + touchOffsetY;
+        const targetIndex = calculateTargetIndex(currentPos);
 
-        const targetIndex = draggingIndex + Math.round(touchOffsetY / 60);
-        if (targetIndex >= 0 && targetIndex < blocks.length && targetIndex !== draggingIndex) {
+        if (targetIndex !== draggingIndex) {
             const [movedBlock] = blocks.splice(draggingIndex, 1);
             blocks.splice(targetIndex, 0, movedBlock);
             blocks = blocks;
-            orderChanged = JSON.stringify(originalOrder) !== JSON.stringify(blocks.map((b) => b.uuid));
+            orderChanged =
+                JSON.stringify(originalOrder) !== JSON.stringify(blocks.map(b => b.uuid));
         }
-
         draggingIndex = null;
         draggingColumn = null;
         touchOffsetY = 0;
@@ -116,21 +150,26 @@
     function deleteBlock(index: number) {
         blocks.splice(index, 1);
         blocks = blocks;
-        orderChanged = JSON.stringify(originalOrder) !== JSON.stringify(blocks.map((b) => b.uuid));
+        orderChanged =
+            JSON.stringify(originalOrder) !== JSON.stringify(blocks.map(b => b.uuid));
     }
 
-    async function addBlock(name: string, type: 'theory' | 'quiz') {
-        const response = await fetch('/api/blocks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+    async function addBlock(name: string, type: "theory" | "quiz") {
+        const response = await fetch("/api/blocks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, type })
         });
 
         const newBlock = await response.json();
         blocks.push(newBlock);
-        originalOrder = blocks.map((b) => b.uuid);
+        originalOrder = blocks.map(b => b.uuid);
+
+        await tick();
+        const blockEl = blockElements.get(newBlock.uuid);
+        if (blockEl) {
+            blockHeightMap.set(newBlock.uuid, blockEl.offsetHeight);
+        }
     }
 
     function saveOrder() {
@@ -200,12 +239,11 @@
         <div class="space-y-4">
             {#each blocks as block, i (block.uuid)}
                 <div
+                        use:storeElement={block.uuid}
                         class="relative group bg-white rounded-lg border border-gray-200 p-4 transition-all duration-200 hover:border-primary-500"
-                        animate:flip={{ delay: 50, duration: 300, easing: quintOut }}
                         style={draggingIndex === i && draggingColumn === 'center'
             ? `transform: translateY(${touchOffsetY}px); opacity: 0.9; z-index: 100;`
-            : ''}
-                >
+            : ''}>
                     <!-- Delete Button -->
                     <button
                             class="absolute -right-2 -top-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

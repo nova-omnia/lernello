@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.CreateLerningKitDTO;
+import ch.nova_omnia.lernello.dto.response.CreateLearningKitResDto;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
@@ -25,7 +25,7 @@ public class CreateLearningKitController {
     }
 
     @PostMapping("/")
-    public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLerningKitDTO learningKit) {
+    public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitResDto learningKit) {
         var entity = learningKitMapper.toEntity(learningKit);
         var savedEntity = repository.save(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));

@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import ch.nova_omnia.lernello.dto.request.block.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.CreateQuestionBlockDTO;
@@ -17,13 +18,19 @@ public interface BlockMapper {
 
     TheoryBlockResDTO toTheoryBlockResDTO(TheoryBlock theoryBlock);
 
-    MultipleChoiceBlockResDTO toMulitpleChoiceBlockResDTO(MultipleChoiceBlock multipleChoiceBlock);
+    MultipleChoiceBlockResDTO toMultipleChoiceBlockResDTO(MultipleChoiceBlock multipleChoiceBlock);
 
-    QuestionBlockResDTO toQuestiopnBlockResDTO(QuestionBlock questionBlock);
+    QuestionBlockResDTO toQuestionBlockResDTO(QuestionBlock questionBlock);
 
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
     TheoryBlock toTheoryBlockEntity(CreateTheoryBlockDTO createTheoryBlockDTO);
 
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
     MultipleChoiceBlock toMultipleChoiceBlockEntity(CreateMultipleChoiceBlockDTO createMultipleChoiceBlock);
 
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
     QuestionBlock toQuestionBlockEntity(CreateQuestionBlockDTO createBlockDTO);
 }

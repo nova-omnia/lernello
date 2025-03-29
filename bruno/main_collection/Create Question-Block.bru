@@ -1,11 +1,22 @@
 meta {
   name: Create Question-Block
   type: http
-  seq: 11
+  seq: 9
 }
 
 post {
   url: {{baseUrl}}/api/blocks/question
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "Sample Question Block",
+    "position": 2,
+    "blockType": "QUESTION",
+    "learningUnitId": "",
+    "question": "What is the capital of France?",
+    "expectedAnswer": "Paris"
+  }
 }

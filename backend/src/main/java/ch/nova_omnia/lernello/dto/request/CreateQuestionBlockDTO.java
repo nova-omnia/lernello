@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CreateQuestionBlockDTO {
-    
+public class CreateQuestionBlockDTO extends CreateBlockDTO{
+    private String question;
+    private String expectedAnswer;
 }

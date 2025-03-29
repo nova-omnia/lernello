@@ -18,7 +18,7 @@ public class TheoryBlock extends Block {
     @Column(name = "content")
     private String content;
 
-    public TheoryBlock(String name, int position, String content,String blockType, LearningUnit learningUnit) {
+    public TheoryBlock(String name, int position,String blockType, LearningUnit learningUnit, String content) {
         super(name, position, blockType, learningUnit);
         this.content = content;
     }

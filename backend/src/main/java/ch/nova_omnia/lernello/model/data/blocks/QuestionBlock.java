@@ -13,11 +13,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class QuestionBlock extends Block {
-    
-    public QuestionBlock(String name, int position, String blockType, LearningUnit learningUnit) {
-        super(name, position,blockType, learningUnit);
-    }
-    
+
     @NotNull
     @Column(name = "question", nullable = false)
     private String question;
@@ -26,4 +22,11 @@ public class QuestionBlock extends Block {
     @Column(name = "expected_answer", nullable = false)
     private String expectedAnswer;
 
+    
+    public QuestionBlock(String name, int position, String blockType, LearningUnit learningUnit, String question,
+            String expectedAnswer) {
+        super(name, position,blockType, learningUnit);
+        this.question = question;
+        this.expectedAnswer = expectedAnswer;
+    }
 }

@@ -19,8 +19,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MultipleChoiceBlock extends Block {
 
-    public MultipleChoiceBlock(String name, int position, String blockType, LearningUnit learningUnit) {
+    public MultipleChoiceBlock(String name, int position, String blockType, LearningUnit learningUnit, String question,
+            List<String> possibleAnswers, List<String> correctAnswers) {
         super(name, position,blockType, learningUnit);
+        this.question = question;
+        this.possibleAnswers = possibleAnswers;
+        this.correctAnswers = correctAnswers;
     }
     @NotNull
     @Column(name = "question", nullable = false)

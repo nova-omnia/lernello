@@ -21,6 +21,9 @@ import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 import ch.nova_omnia.lernello.mapper.BlockMapper;
+import ch.nova_omnia.lernello.model.data.blocks.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.blocks.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.blocks.TheoryBlock;
 import ch.nova_omnia.lernello.service.BlockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,20 +38,26 @@ public class BlockRestController {
 
     @PostMapping("/theory")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public TheoryBlockResDTO createTheoryBlock(@Valid @RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
-        return blockMapper.toTheoryBlockResDTO(blockService.createBlock(blockMapper.toTheoryBlockEntity(createTheoryBlockDTO), createTheoryBlockDTO.learningUnitId()));
+    public @Valid TheoryBlockResDTO createTheoryBlock(@Valid @RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
+        UUID learningUnitId = createTheoryBlockDTO.learningUnitId();
+        TheoryBlock theoryBlock = blockMapper.toTheoryBlockEntity(createTheoryBlockDTO);
+        return blockMapper.toTheoryBlockResDTO(blockService.createBlock(theoryBlock, learningUnitId));
     }
 
     @PostMapping("/multiple-choice")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public MultipleChoiceBlockResDTO createMultipleChoiceBlock(@Valid @RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO) {
-        return blockMapper.toMultipleChoiceBlockResDTO(blockService.createBlock(blockMapper.toMultipleChoiceBlockEntity(createMultipleChoiceBlockDTO), createMultipleChoiceBlockDTO.learningUnitId()));
+    public @Valid MultipleChoiceBlockResDTO createMultipleChoiceBlock(@Valid @RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO) {
+        UUID learningUnitId = createMultipleChoiceBlockDTO.learningUnitId();
+        MultipleChoiceBlock multipleChoiceBlock = blockMapper.toMultipleChoiceBlockEntity(createMultipleChoiceBlockDTO);
+        return blockMapper.toMultipleChoiceBlockResDTO(blockService.createBlock(multipleChoiceBlock, learningUnitId));
     }
 
     @PostMapping("/question")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public QuestionBlockResDTO createQuestionBlock(@Valid @RequestBody CreateQuestionBlockDTO createQuestionBlockDTO) {
-        return blockMapper.toQuestionBlockResDTO(blockService.createBlock(blockMapper.toQuestionBlockEntity(createQuestionBlockDTO), createQuestionBlockDTO.learningUnitId()));
+    public @Valid QuestionBlockResDTO createQuestionBlock(@Valid @RequestBody CreateQuestionBlockDTO createQuestionBlockDTO) {
+        UUID learningUnitId = createQuestionBlockDTO.learningUnitId();
+        QuestionBlock questionBlock = blockMapper.toQuestionBlockEntity(createQuestionBlockDTO);
+        return blockMapper.toQuestionBlockResDTO(blockService.createBlock(questionBlock, learningUnitId));
     }
 
     @GetMapping("/learning-unit/{learningUnitId}")

@@ -56,7 +56,7 @@ public class FileRestController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
+    public @Valid FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
         return fileMapper.toDTO(fileService.save(file));
     }
 }

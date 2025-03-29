@@ -47,6 +47,10 @@
 		"zod": "^3.24.2"
 	},
 	"dependencies": {
-		"carta-md": "^4.8.1"
+		"@cartamd/plugin-code": "^4.1.1",
+		"@cartamd/plugin-emoji": "^4.3.0",
+		"@cartamd/plugin-slash": "^4.2.0",
+		"carta-md": "^4.8.1",
+		"isomorphic-dompurify": "^2.22.0"
 	}
 }

@@ -1,13 +1,16 @@
 package ch.nova_omnia.lernello.dto.response.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import java.util.UUID;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-public class QuestionBlockResDTO {
-    private String question;
-    private String expectedAnswer;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+
+public record QuestionBlockResDTO(
+                                  @NotNull UUID uuid,
+                                  @NotBlank String name,
+                                  @NotNull @Min(0) int position,
+                                  @NotBlank String question,
+                                  @NotBlank String expectedAnswer) {
 }

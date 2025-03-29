@@ -21,14 +21,6 @@ public interface BlockRepository extends JpaRepository<Block, UUID> {
     List<Block> findByLearningUnitIdOrderByPositionAsc(UUID learningUnitId);
 
     /**
-     * Check if a block exists with the given name in a learning unit
-     * @param name The block name
-     * @param learningUnitId The learning unit ID
-     * @return true if exists
-     */
-    boolean existsByNameAndLearningUnitId(String name, UUID learningUnitId);
-
-    /**
      * Update the position of a specific block
      * @param position The new position
      * @param blockId The block ID
@@ -36,13 +28,4 @@ public interface BlockRepository extends JpaRepository<Block, UUID> {
     @Modifying
     @Query("UPDATE Block b SET b.position = :position WHERE b.id = :blockId")
     void updatePosition(int position, UUID blockId);
-
-    /**
-     * Count blocks in a learning unit
-     * @param learningUnitId The learning unit ID
-     * @return number of blocks
-     */
-    long countByLearningUnitId(UUID learningUnitId);
-
-    List<Block> findByLearningUnitId(UUID learningUnitId);
 }

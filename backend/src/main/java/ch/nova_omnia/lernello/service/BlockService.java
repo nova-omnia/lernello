@@ -1,8 +1,7 @@
 // src/main/java/ch/nova_omnia/lernello/service/BlockService.java
-package ch.nova_omnia.lernello.service.block;
+package ch.nova_omnia.lernello.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -19,25 +18,32 @@ public class BlockService {
     private final BlockRepository blockRepository;
     
     @Transactional
-    public Block createBlock(Block block) {
+    public <T extends Block> T createBlock(T block, UUID learningUnitId) {
+        rearrangeBlockPosition(block.getPosition(), learningUnitId);
         return blockRepository.save(block);
     }
-
-    public Optional<Block> getBlockById(UUID id) {
-        return blockRepository.findById(id);
-    }
+    
+   
       public List<Block> getBlocksByLearningUnit(UUID learningUnitId) {
         return blockRepository.findByLearningUnitIdOrderByPositionAsc(learningUnitId);
     }
     
     @Transactional
     public void updateBlockOrder(UpdateBlockOrderDTO updateBlockOrderDTO) {
-        List<UUID> blockIds = updateBlockOrderDTO.getBlockUuidsInOrder();
+        List<UUID> blockIds = updateBlockOrderDTO.blockUuidsInOrder();
         for (int i = 0; i < blockIds.size(); i++) {
             Block block = blockRepository.findById(blockIds.get(i))
                 .orElseThrow(() -> new RuntimeException("Block not found"));
-            block.setPosition(i);
-            blockRepository.save(block);
+            blockRepository.updatePosition(i, block.getUuid());
+        }
+    }
+
+    private void rearrangeBlockPosition(int position, UUID learningUnitUuid) {
+        List<Block> blocks = blockRepository.findByLearningUnitIdOrderByPositionAsc(learningUnitUuid);   
+        for (Block block : blocks) {
+            if (block.getPosition() >= position) {
+                blockRepository.updatePosition(position, block.getUuid());
+            }
         }
     }
 }

@@ -2,12 +2,16 @@ package ch.nova_omnia.lernello.model.data.blocks;
 
 import java.util.UUID;
 
+import org.springframework.security.core.Transient;
+
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,8 +25,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "blocks")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor
 public abstract class Block {
+
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -42,16 +49,24 @@ public abstract class Block {
 
     @NotNull
     @Column(name = "block_type")
-    private String blockType;
+    private BlockType blockType;
 
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    protected Block(String name, int position, String blockType, LearningUnit learningUnit) {
+    protected Block(String name, int position, BlockType blockType, LearningUnit learningUnit) {
         this.name = name;
         this.position = position;
         this.blockType = blockType;
         this.learningUnit = learningUnit;
     }
+
+    @Transient
+    public enum BlockType {
+        THEORY,
+        MULTIPLE_CHOICE,
+        QUESTION
+    }
 }
+

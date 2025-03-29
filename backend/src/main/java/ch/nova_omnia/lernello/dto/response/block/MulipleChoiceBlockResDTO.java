@@ -1,16 +1,17 @@
 package ch.nova_omnia.lernello.dto.response.block;
 
 import java.util.List;
+import java.util.UUID;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-public class MulipleChoiceBlockResDTO {
-    private String question;
-    private List<String> possibleAnswers;
-    private List<String> correctAnswers;
+public record MulipleChoiceBlockResDTO(
+                                       @NotNull UUID uuid,
+                                       @NotBlank String name,
+                                       @NotNull @Min(0) int position,       
+                                       @NotBlank String question,
+                                       @NotNull List<String> possibleAnswers,
+                                       @NotNull List<String> correctAnswers) {
 }

@@ -3,9 +3,11 @@ package ch.nova_omnia.lernello.dto.request.block;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-public class UpdateBlockOrderDTO {
-    private List<UUID> blockUuidsInOrder;
+
+public record UpdateBlockOrderDTO(
+                                  @NotNull List<UUID> blockUuidsInOrder) {
+
+
 }

@@ -1,12 +1,14 @@
 package ch.nova_omnia.lernello.dto.response.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import java.util.UUID;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-public class TheoryBlockResDTO extends BlockResDTO {
-    private String content;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record TheoryBlockResDTO(
+                                @NotNull UUID uuid,
+                                @NotBlank String name,
+                                @NotNull @Min(0) int position,
+                                @NotBlank String content) {
 }

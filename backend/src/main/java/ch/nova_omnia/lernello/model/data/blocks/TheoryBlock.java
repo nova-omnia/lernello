@@ -1,16 +1,27 @@
 package ch.nova_omnia.lernello.model.data.blocks;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
-import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("theory_block")
+@Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class TheoryBlock extends Block {
-    
-    public TheoryBlock(String name, int position, LearningUnit learningUnit) {
-        super(name, position, learningUnit);
+
+    @Lob
+    @NotBlank
+    @Column(name = "content")
+    private String content;
+
+    public TheoryBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String content) {
+        super(name, position, blockType, learningUnit);
+        this.content = content;
     }
 }

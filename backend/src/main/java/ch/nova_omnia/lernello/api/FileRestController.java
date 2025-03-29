@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
 import ch.nova_omnia.lernello.mapper.FileMapper;
-import ch.nova_omnia.lernello.service.FileSystemService;
+import ch.nova_omnia.lernello.service.file.FileSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

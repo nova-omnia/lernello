@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.dto.response;
+package ch.nova_omnia.lernello.dto.response.folder;
 
 import java.util.List;
 import java.util.UUID;

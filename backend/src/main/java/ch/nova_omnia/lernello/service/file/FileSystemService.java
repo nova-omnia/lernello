@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.service;
+package ch.nova_omnia.lernello.service.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.nova_omnia.lernello.dto.request.block.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.UpdateBlockOrderDTO;
 import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
+import ch.nova_omnia.lernello.mapper.BlockMapper;
 import ch.nova_omnia.lernello.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,10 +24,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BlockRestController {
     private final BlockService blockService;
+    private final BlockMapper blockMapper;
     
     @PostMapping
     public BlockResDTO createTheoryBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
         return blockService.createBlock(createTheoryBlockDTO);
+    }
+    
+    @PostMapping("/multiple-choice")
+    public BlockResDTO createMultipleChoiceBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
+        return blockService.createBlock(createTheoryBlockDTO);
+    }
+    @PostMapping("/question")
+    public BlockResDTO createQuestionBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
+        return blockService.createBlock(createTheoryBlockDTO);
+    }
+    @GetMapping("/{id}")
+    public BlockResDTO getBlockById(@PathVariable UUID id) {
+        return blockService.getBlockById(id);
     }
     
     @GetMapping("/learning-unit/{learningUnitId}")

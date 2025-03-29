@@ -1,5 +1,8 @@
 package ch.nova_omnia.lernello.utilities;
 
-public class BlockType {
-    
+
+public enum BlockType {
+    THEORY,
+    MULTIPLE_CHOICE,
+    QUESTION
 }

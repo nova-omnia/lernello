@@ -1,11 +1,11 @@
-package ch.nova_omnia.lernello.service;
+package ch.nova_omnia.lernello.service.block;
 
 import org.springframework.stereotype.Component;
 
-import ch.nova_omnia.lernello.dto.request.CreateBlockDTO;
-import ch.nova_omnia.lernello.dto.request.CreateMultipleChoiceBlockDTO;
-import ch.nova_omnia.lernello.dto.request.CreateQuestionBlockDTO;
-import ch.nova_omnia.lernello.dto.request.CreateTheoryBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateMultipleChoiceBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateQuestionBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.blocks.Block;
 import ch.nova_omnia.lernello.model.data.blocks.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.blocks.QuestionBlock;

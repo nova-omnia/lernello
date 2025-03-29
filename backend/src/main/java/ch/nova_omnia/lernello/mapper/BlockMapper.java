@@ -6,13 +6,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.nova_omnia.lernello.dto.request.CreateBlockDTO;
-import ch.nova_omnia.lernello.dto.request.CreateTheoryBlockDTO;
-import ch.nova_omnia.lernello.dto.response.BlockResDTO;
-import ch.nova_omnia.lernello.dto.response.TheoryBlockResDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateTheoryBlockDTO;
+import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 import ch.nova_omnia.lernello.model.data.blocks.Block;
 import ch.nova_omnia.lernello.model.data.blocks.TheoryBlock;
-import ch.nova_omnia.lernello.service.BlockFactory;
+import ch.nova_omnia.lernello.service.block.BlockFactory;
 
 @Mapper(componentModel = "spring")
 public abstract class BlockMapper {

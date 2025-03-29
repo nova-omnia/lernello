@@ -19,13 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MultipleChoiceBlock extends Block {
 
-    public MultipleChoiceBlock(String name, int position, String blockType, LearningUnit learningUnit, String question,
-            List<String> possibleAnswers, List<String> correctAnswers) {
-        super(name, position,blockType, learningUnit);
-        this.question = question;
-        this.possibleAnswers = possibleAnswers;
-        this.correctAnswers = correctAnswers;
-    }
     @NotNull
     @Column(name = "question", nullable = false)
     private String question;
@@ -39,4 +32,12 @@ public class MultipleChoiceBlock extends Block {
     @CollectionTable(name = "multiple_choice_correct_answers", joinColumns = @JoinColumn(name = "block_id"))
     @Column(name = "correct_answer")
     private List<String> correctAnswers;
+
+    public MultipleChoiceBlock(String name, int position, String blockType, LearningUnit learningUnit, String question,
+    List<String> possibleAnswers, List<String> correctAnswers) {
+        super(name, position,blockType, learningUnit);
+        this.question = question;
+        this.possibleAnswers = possibleAnswers;
+        this.correctAnswers = correctAnswers;
+    }
 }

@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.dto.request;
+package ch.nova_omnia.lernello.dto.response.block;
 
 import java.util.UUID;
 
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public abstract class CreateBlockDTO {
+public class BlockResDTO {
+    private UUID uuid;
     private String blockType;
     private String name;
     private int position;

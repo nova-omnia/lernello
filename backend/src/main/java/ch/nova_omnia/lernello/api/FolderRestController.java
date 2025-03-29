@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.nova_omnia.lernello.dto.request.CreateFolderDTO;
-import ch.nova_omnia.lernello.dto.response.FolderResDTO;
+import ch.nova_omnia.lernello.dto.response.folder.FolderResDTO;
 import ch.nova_omnia.lernello.mapper.FolderMapper;
 import ch.nova_omnia.lernello.service.FolderService;
 import jakarta.validation.Valid;
@@ -30,7 +30,7 @@ public class FolderRestController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
-    public List<@Valid FolderResDTO> loadAll() {
+    public List<ch.nova_omnia.lernello.dto.response.folder.FolderResDTO> loadAll() {
         return folderService.findAll().stream().map(folderMapper::toDTO).toList();
     }
 

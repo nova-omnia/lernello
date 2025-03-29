@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.dto.request;
+package ch.nova_omnia.lernello.dto.request.block;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.nova_omnia.lernello.dto.request.CreateTheoryBlockDTO;
-import ch.nova_omnia.lernello.dto.request.UpdateBlockOrderDTO;
-import ch.nova_omnia.lernello.dto.response.BlockResDTO;
-import ch.nova_omnia.lernello.service.BlockService;
+import ch.nova_omnia.lernello.dto.request.block.CreateTheoryBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.UpdateBlockOrderDTO;
+import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
+import ch.nova_omnia.lernello.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 
 

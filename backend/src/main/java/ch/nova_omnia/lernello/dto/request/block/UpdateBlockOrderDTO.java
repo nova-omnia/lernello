@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.dto.request;
+package ch.nova_omnia.lernello.dto.request.block;
 
 import java.util.List;
 import java.util.UUID;

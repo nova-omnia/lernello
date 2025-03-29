@@ -2,18 +2,20 @@ package ch.nova_omnia.lernello.model.data.blocks;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("question_block")
+@Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class QuestionBlock extends Block {
     
-    public QuestionBlock(String name, int position, LearningUnit learningUnit) {
-        super(name, position, learningUnit);
+    public QuestionBlock(String name, int position, String blockType, LearningUnit learningUnit) {
+        super(name, position,blockType, learningUnit);
     }
     
     @NotNull
@@ -24,19 +26,4 @@ public class QuestionBlock extends Block {
     @Column(name = "expected_answer", nullable = false)
     private String expectedAnswer;
 
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public String getExpectedAnswer() {
-        return expectedAnswer;
-    }
-
-    public void setExpectedAnswer(String expectedAnswer) {
-        this.expectedAnswer = expectedAnswer;
-    }
 }

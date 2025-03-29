@@ -25,7 +25,7 @@ public class BlockService {
     
    
       public List<Block> getBlocksByLearningUnit(UUID learningUnitId) {
-        return blockRepository.findByLearningUnitIdOrderByPositionAsc(learningUnitId);
+        return blockRepository.findByLearningUnitUuidOrderByPositionAsc(learningUnitId);
     }
     
     @Transactional
@@ -39,7 +39,7 @@ public class BlockService {
     }
 
     private void rearrangeBlockPosition(int position, UUID learningUnitUuid) {
-        List<Block> blocks = blockRepository.findByLearningUnitIdOrderByPositionAsc(learningUnitUuid);   
+        List<Block> blocks = blockRepository.findByLearningUnitUuidOrderByPositionAsc(learningUnitUuid);   
         for (Block block : blocks) {
             if (block.getPosition() >= position) {
                 blockRepository.updatePosition(position, block.getUuid());

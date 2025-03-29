@@ -18,7 +18,7 @@ public interface BlockRepository extends JpaRepository<Block, UUID> {
      * @param learningUnitId The ID of the learning unit
      * @return List of blocks in position order
      */
-    List<Block> findByLearningUnitIdOrderByPositionAsc(UUID learningUnitId);
+    List<Block> findByLearningUnitUuidOrderByPositionAsc(UUID learningUnitUuid);
 
     /**
      * Update the position of a specific block

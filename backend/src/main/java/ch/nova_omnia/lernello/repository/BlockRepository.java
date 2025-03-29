@@ -43,4 +43,6 @@ public interface BlockRepository extends JpaRepository<Block, UUID> {
      * @return number of blocks
      */
     long countByLearningUnitId(UUID learningUnitId);
+
+    List<Block> findByLearningUnitId(UUID learningUnitId);
 }

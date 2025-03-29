@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.api;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.nova_omnia.lernello.dto.request.block.CreateMultipleChoiceBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.UpdateBlockOrderDTO;
 import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
@@ -26,27 +28,23 @@ public class BlockRestController {
     private final BlockService blockService;
     private final BlockMapper blockMapper;
     
-    @PostMapping
+    @PostMapping("/theory")
     public BlockResDTO createTheoryBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
-        return blockService.createBlock(createTheoryBlockDTO);
+        return blockMapper.toBlockResDTO(blockService.createBlock(blockMapper.toTheoryBlockEntity(createTheoryBlockDTO)));
     }
     
     @PostMapping("/multiple-choice")
-    public BlockResDTO createMultipleChoiceBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
-        return blockService.createBlock(createTheoryBlockDTO);
+    public BlockResDTO createMultipleChoiceBlock(@RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO) {
+        return blockMapper.toBlockResDTO(blockService.createBlock(blockMapper.toMultipleChoiceBlockEntity(createMultipleChoiceBlockDTO)));
     }
     @PostMapping("/question")
-    public BlockResDTO createQuestionBlock(@RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
-        return blockService.createBlock(createTheoryBlockDTO);
+    public BlockResDTO createQuestionBlock(@RequestBody CreateQuestionBlockDTO createQuestionBlockDTO) {
+        return blockMapper.toBlockResDTO(blockService.createBlock(blockMapper.toQuestionBlockEntity(createQuestionBlockDTO)));
     }
+
     @GetMapping("/{id}")
-    public BlockResDTO getBlockById(@PathVariable UUID id) {
-        return blockService.getBlockById(id);
-    }
-    
-    @GetMapping("/learning-unit/{learningUnitId}")
-    public List<BlockResDTO> getBlocksByLearningUnit(@PathVariable UUID learningUnitId) {
-        return blockService.getBlocksByLearningUnit(learningUnitId);
+    public Optional<BlockResDTO> getBlockById(@PathVariable UUID id) {
+        return blockService.getBlockById(id).map(blockMapper::toBlockResDTO);
     }
     
     @PutMapping("/reorder")

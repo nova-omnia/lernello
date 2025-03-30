@@ -1,5 +1,11 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,23 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-@Getter
-@Setter
-@NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -41,29 +38,25 @@ public class User {
     private UUID uuid;
 
     @Column(name = "username", nullable = false, unique = true)
-    @NotNull
-    @NonNull
-    @Email(message = "Invalid username format")
+    @NotBlank
+    @Email
     private String username;
 
     @Column(name = "password", nullable = false)
-    @NotNull
-    @NonNull
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @NotBlank
+    @Min(8)
     private String password;
 
     @Column(name = "changed_password", nullable = false)
     private boolean changedPassword;
 
     @Column(name = "language", nullable = false)
-    @NotNull
-    @NonNull
+    @NotBlank
     private String language;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    @NotNull(message = "Role is required")
-    @NonNull
+    @NotNull
     private Role role;
 
     @Column(name = "create_date", updatable = false)
@@ -79,4 +72,12 @@ public class User {
 
     @Transient
     private int expires;
+
+
+    public User(String username, String password, String language, Role role) {
+        this.username = username;
+        this.password = password;
+        this.language = language;
+        this.role = role;
+    }
 }

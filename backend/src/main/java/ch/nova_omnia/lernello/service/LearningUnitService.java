@@ -18,8 +18,7 @@ public class LearningUnitService {
 
     @Transactional
     public LearningUnit createLearningUnit(LearningUnit learningUnit) {
-        //TOOD: Implement
-        return null;
+        return learningUnitRepository.save(learningUnit);
     }
 
     public Optional<LearningUnit> findById(UUID id) {
@@ -33,9 +32,11 @@ public class LearningUnitService {
             return Optional.empty();
         }
         LearningUnit unit = opt.get();
-        // Reorder blocks as needed (use blockIds to rearrange)
-        // Save changes via repository
         learningUnitRepository.save(unit);
         return Optional.of(unit);
+    }
+
+    public List<LearningUnit> findAll() {
+        return learningUnitRepository.findAll();
     }
 }

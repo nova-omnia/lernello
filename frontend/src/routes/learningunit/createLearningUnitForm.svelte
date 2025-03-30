@@ -4,9 +4,10 @@
 
 	interface LearningUnit {
 		uuid: string;
+		name: string;
 	}
 
-	async function handleSubmit(event: Event): Promise<void> {
+	async function createLearningUnit(event: Event): Promise<void> {
 		event.preventDefault();
 		error = '';
 
@@ -25,7 +26,7 @@
 				throw new Error('Failed to create');
 			}
 			const createdUnit: LearningUnit = await response.json();
-			window.location.href = `/edit/${createdUnit.uuid}`;
+			window.location.href = `/api/edit/${createdUnit.uuid}`;
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				error = e.message;
@@ -38,7 +39,7 @@
 
 <div class="flex h-full items-center justify-center">
 	<form
-		on:submit|preventDefault={handleSubmit}
+		on:submit|preventDefault={createLearningUnit}
 		class="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md"
 	>
 		<h2 class="mb-4 text-2xl font-bold">Create Learning Unit</h2>

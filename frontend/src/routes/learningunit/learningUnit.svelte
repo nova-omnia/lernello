@@ -24,9 +24,7 @@
 		label: string;
 	}
 
-	const blockGroups: BlockGroup[] = [
-		{ type: 'quiz', label: 'Quiz Blocks' }
-	];
+	const blockGroups: BlockGroup[] = [{ type: 'quiz', label: 'Quiz Blocks' }];
 
 	const toggleSection = (type: 'theory' | 'quiz') => {
 		openSections = { ...openSections, [type]: !openSections[type] };
@@ -92,7 +90,6 @@
 	function arraysEqual(arr1: string[], arr2: string[]): boolean {
 		return arr1.length === arr2.length && arr1.every((val, idx) => val === arr2[idx]);
 	}
-
 </script>
 
 <div class="grid h-screen grid-cols-[25%_50%_25%]">
@@ -101,9 +98,9 @@
 		<h2 class="mb-4 text-lg font-bold">Actions</h2>
 
 		<button
-				type="button"
-				class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
-				onclick={addTheoryBlock}
+			type="button"
+			class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+			onclick={addTheoryBlock}
 		>
 			Theory Block
 		</button>
@@ -111,9 +108,9 @@
 		{#each blockGroups as group (group.type)}
 			<div class="mb-4 py-10">
 				<button
-						class="flex w-full items-center justify-between rounded-t-lg bg-white p-2 hover:bg-gray-200"
-						onclick={() => toggleSection(group.type)}
-						aria-expanded={openSections[group.type]}
+					class="flex w-full items-center justify-between rounded-t-lg bg-white p-2 hover:bg-gray-200"
+					onclick={() => toggleSection(group.type)}
+					aria-expanded={openSections[group.type]}
 				>
 					<span role="heading" aria-level="3" class="font-bold">{group.label}</span>
 					<span class="text-lg">
@@ -125,16 +122,16 @@
 					<div class="space-y-2 rounded-b-lg border-t-0 bg-white p-2">
 						{#if group.type === 'quiz'}
 							<button
-									type="button"
-									class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
-									onclick={addMultipleChoiceQuizBlock}
+								type="button"
+								class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+								onclick={addMultipleChoiceQuizBlock}
 							>
 								Multiple Choice Quiz
 							</button>
 							<button
-									type="button"
-									class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
-									onclick={addTextAnswerQuizBlock}
+								type="button"
+								class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+								onclick={addTextAnswerQuizBlock}
 							>
 								Text Answer Quiz
 							</button>
@@ -146,12 +143,10 @@
 	</div>
 
 	<!-- Middle Column: Block Frames -->
-	<div class="overflow-y-auto border-r border-gray-300 bg-white p-4 m-0">
+	<div class="m-0 overflow-y-auto border-r border-gray-300 bg-white p-4">
 		<h2 class="mb-4 text-xl font-bold">Learning Unit Details</h2>
 
-		<div
-				class="space-y-2"
-		>
+		<div class="space-y-2">
 			{#each blocks as block (block.uuid)}
 				<div animate:flip={{ duration: flipDurationMs }}>
 					<Block {block} onDelete={() => deleteBlock(blocks.indexOf(block))} />
@@ -164,15 +159,15 @@
 	<div class="overflow-y-auto bg-gray-50 p-4">
 		<h3 class="mb-4 font-bold">Block Titles</h3>
 		<div
-				class="space-y-2"
-				use:dragHandleZone={{
+			class="space-y-2"
+			use:dragHandleZone={{
 				items: blocks,
 				flipDurationMs,
 				dropTargetStyle: { border: '2px dashed #ccc', borderRadius: '7px' },
 				dropFromOthersDisabled: true
 			}}
-				onconsider={handleSortOnConsider}
-				onfinalize={handleSortOnFinalize}
+			onconsider={handleSortOnConsider}
+			onfinalize={handleSortOnFinalize}
 		>
 			{#each blocks as block (block.uuid)}
 				<div class="block" animate:flip={{ duration: flipDurationMs }}>
@@ -182,8 +177,8 @@
 		</div>
 		{#if orderChanged}
 			<button
-					class="bg-secondary-500 hover:bg-secondary-600 mt-4 w-full rounded-xl px-4 py-2 text-white"
-					onclick={saveOrder}
+				class="bg-secondary-500 hover:bg-secondary-600 mt-4 w-full rounded-xl px-4 py-2 text-white"
+				onclick={saveOrder}
 			>
 				Save Order
 			</button>

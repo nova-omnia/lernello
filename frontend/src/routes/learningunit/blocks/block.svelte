@@ -29,14 +29,13 @@
 		</svg>
 	</button>
 
-
 	<!-- Block Header -->
-	<div class="flex items-center pl-6 space-x-2">
+	<div class="flex items-center space-x-2 pl-6">
 		<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6 text-gray-500"
-				viewBox="0 0 20 20"
-				fill="currentColor"
+			xmlns="http://www.w3.org/2000/svg"
+			class="h-6 w-6 text-gray-500"
+			viewBox="0 0 20 20"
+			fill="currentColor"
 		>
 			<use href="/app-icons/{icon}-icon.svg#{icon}-icon" />
 		</svg>

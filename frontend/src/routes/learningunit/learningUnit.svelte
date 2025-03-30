@@ -108,7 +108,7 @@
 			Theory Block
 		</button>
 
-		{#each blockGroups as group}
+		{#each blockGroups as group (group.type)}
 			<div class="mb-4 py-10">
 				<button
 						class="flex w-full items-center justify-between rounded-t-lg bg-white p-2 hover:bg-gray-200"

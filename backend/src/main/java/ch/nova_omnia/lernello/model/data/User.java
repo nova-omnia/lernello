@@ -23,9 +23,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     public enum Role {
         INSTRUCTOR, TRAINEE

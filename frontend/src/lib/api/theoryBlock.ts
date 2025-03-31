@@ -1,5 +1,7 @@
 import type { CreateTheoryBlockDTO } from './types';
 
+
+
 export async function createTheoryBlock(data: CreateTheoryBlockDTO): Promise<Response> {
     const response = await fetch('/api/theory-block/create', {
         method: 'POST',

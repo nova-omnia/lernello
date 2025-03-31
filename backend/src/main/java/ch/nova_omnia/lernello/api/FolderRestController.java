@@ -30,7 +30,7 @@ public class FolderRestController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
-    public List<ch.nova_omnia.lernello.dto.response.folder.FolderResDTO> loadAll() {
+    public List<FolderResDTO> loadAll() {
         return folderService.findAll().stream().map(folderMapper::toDTO).toList();
     }
 

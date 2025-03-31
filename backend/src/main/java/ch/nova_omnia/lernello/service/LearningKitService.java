@@ -33,6 +33,21 @@ public class LearningKitService {
     }
 
     @Transactional
+    public LearningKit edit(LearningKit learningKit) {
+        LearningKit learningKitToEdit = learningKitRepository.findById(learningKit.getUuid()).orElseThrow();
+        learningKitToEdit.setName(learningKit.getName());
+        learningKitToEdit.setDescription(learningKit.getDescription());
+        learningKitToEdit.setLanguage(learningKit.getLanguage());
+        learningKitToEdit.setDeadlineDate(learningKit.getDeadlineDate());
+        learningKitToEdit.setParticipants(learningKit.getParticipants());
+        learningKitToEdit.setFolder(learningKit.getFolder());
+        // learningKitToEdit.setFiles(learningKit.getFiles()); // ToDo
+        // learningKitToEdit.setLearningUnits(learningKit.getLearningUnits()); // ToDo
+
+        return learningKitToEdit;
+    }
+
+    @Transactional
     public void deleteById(UUID id) {
         learningKitRepository.deleteById(id);
     }

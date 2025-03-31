@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.api.blocks;
+package ch.nova_omnia.lernello.api.block;
 
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping("/api/blocks")
+@RequestMapping("/api/theory-block")
 @RequiredArgsConstructor
 public class TheoryBlockRestController {
     private final BlockService blockService;
@@ -30,7 +30,7 @@ public class TheoryBlockRestController {
     private final TheoryBlockMapper theoryBlockMapper;
 
 
-    @PostMapping("/theory")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public @Valid TheoryBlockResDTO createTheoryBlock(@Valid @RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
         UUID learningUnitId = createTheoryBlockDTO.learningUnitId();
@@ -38,7 +38,7 @@ public class TheoryBlockRestController {
         return blockMapper.toTheoryBlockResDTO(createdTheoryBlock);
     }
 
-    @PutMapping("/update/theory")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public @Valid TheoryBlockResDTO updateTheoryBlock(@Valid @RequestBody UpdateTheoryBlockDTO updateTheoryBlockDTO) {
         TheoryBlock theoryBlock = blockService.updateTheoryBlock(theoryBlockMapper.toEntity(updateTheoryBlockDTO));

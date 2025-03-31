@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.api.blocks;
+package ch.nova_omnia.lernello.api.block;
 
 import java.util.List;
 import java.util.UUID;

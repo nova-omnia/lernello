@@ -1,11 +1,11 @@
 meta {
   name: Update Block Order
   type: http
-  seq: 13
+  seq: 3
 }
 
 put {
-  url: {{baseUrl}}/api/blocks/reorder
+  url: ((baseUrl}}/api/blocks/reorder
   body: json
   auth: inherit
 }
@@ -13,9 +13,9 @@ put {
 body:json {
   {
     "blockUuidsInOrder": [
-      "",
-      "",
-      ""
+      "uuid1",
+      "uuid2",
+      "uuid3"
     ]
   }
 }

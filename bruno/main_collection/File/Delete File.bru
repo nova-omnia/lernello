@@ -1,10 +1,10 @@
 meta {
-  name: Get File by ID
+  name: Delete File
   type: http
-  seq: 6
+  seq: 3
 }
 
-get {
+delete {
   url: {{baseUrl}}/api/files/{{id}}
   body: none
   auth: inherit

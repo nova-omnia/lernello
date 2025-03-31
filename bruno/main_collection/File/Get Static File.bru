@@ -1,11 +1,11 @@
 meta {
-  name: Delete File
+  name: Get Static File
   type: http
-  seq: 4
+  seq: 5
 }
 
-delete {
-  url: {{baseUrl}}/api/files/{{id}}
+get {
+  url: {{baseUrl}}/api/files/static/{{id}}
   body: none
   auth: inherit
 }

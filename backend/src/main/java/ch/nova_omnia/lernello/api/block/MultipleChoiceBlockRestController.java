@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.api.blocks;
+package ch.nova_omnia.lernello.api.block;
 
 import java.util.UUID;
 
@@ -22,15 +22,15 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping("/api/blocks")
+@RequestMapping("/api/multiple-choice-block")
 @RequiredArgsConstructor
 public class MultipleChoiceBlockRestController {
     private final BlockService blockService;
     private final BlockMapper blockMapper;
     private final MultipleChoiceBlockMapper multipleChoiceBlockMapper;
 
- 
-    @PostMapping("/multiple-choice")
+
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public @Valid MultipleChoiceBlockResDTO createMultipleChoiceBlock(@Valid @RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO) {
         UUID learningUnitId = createMultipleChoiceBlockDTO.learningUnitId();
@@ -38,7 +38,7 @@ public class MultipleChoiceBlockRestController {
         return blockMapper.toMultipleChoiceBlockResDTO(createdMultipleChoiceBlock);
     }
 
-    @PutMapping("/update/multiple-choice/")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public @Valid MultipleChoiceBlockResDTO updateMultipleChoiceBlock(@Valid @RequestBody UpdateMultipleChoiceBlockDTO updateMultipleChoiceBlockDTO) {
         MultipleChoiceBlock updatedMultipleChoiceBlock = blockService.updateMultipleChoiceBlock(multipleChoiceBlockMapper.toEntity(updateMultipleChoiceBlockDTO));

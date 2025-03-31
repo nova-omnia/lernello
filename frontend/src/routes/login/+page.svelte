@@ -20,8 +20,6 @@
 	});
 </script>
 
-<CreateLearningKit {data} />
-
 <main class="flex h-full flex-col items-center justify-center">
 	{#if $message}<h3>{$message}</h3>{/if}
 

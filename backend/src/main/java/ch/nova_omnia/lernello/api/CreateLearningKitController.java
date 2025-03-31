@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,5 +60,12 @@ public class CreateLearningKitController {
                 .map(learningKitMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(learningKitResDTOs);
+    }
+    @PostMapping("/getById")
+    @PreAuthorize("hasAuthority('SCOPE_kits:read')")
+    public @Valid ResponseEntity<LearningKitResDTO> getById(@Valid @RequestBody CreateLearningKitDTO learningKit) {
+        LearningKit entity = learningKitMapper.toEntity(learningKit);
+        Optional<LearningKit> savedEntity = learningKitService.findById(entity.getUuid());
+        return savedEntity.map(kit -> ResponseEntity.ok(learningKitMapper.toDTO(kit))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -16,9 +16,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -44,7 +44,7 @@ public class User {
 
     @Column(name = "password", nullable = false)
     @NotBlank
-    @Min(8)
+    @Size(min = 8)
     private String password;
 
     @Column(name = "changed_password", nullable = false)

@@ -7,8 +7,9 @@ export const UserLoginSchema = z.object({
 export type UserLogin = z.infer<typeof UserLoginSchema>;
 
 export const UserTokenSchema = z.object({
-	username: z.string().nonempty(),
+	uuid: z.string().uuid().nonempty(),
 	token: z.string().nonempty(),
+	changedPassword: z.boolean(),
 	expires: z.number().int().nonnegative()
 });
 export type UserToken = z.infer<typeof UserTokenSchema>;

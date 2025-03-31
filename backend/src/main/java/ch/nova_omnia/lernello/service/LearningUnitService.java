@@ -1,15 +1,15 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.LearningUnit;
-import ch.nova_omnia.lernello.repository.LearningUnitRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.repository.LearningUnitRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

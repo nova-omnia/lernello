@@ -16,7 +16,6 @@ public interface QuestionBlockMapper {
 
     @Mapping(target = "position", ignore = true)
     @Mapping(target = "learningUnit", ignore = true)
-    @Mapping(target = "blockType", ignore = true)
     QuestionBlock toEntity(UpdateQuestionBlockDTO updateQuestionBlockDTO);
 
 

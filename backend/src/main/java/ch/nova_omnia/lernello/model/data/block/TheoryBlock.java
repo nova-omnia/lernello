@@ -20,8 +20,8 @@ public class TheoryBlock extends Block {
     @Column(name = "content")
     private String content;
 
-    public TheoryBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String content) {
-        super(name, position, blockType, learningUnit);
+    public TheoryBlock(String name, int position, LearningUnit learningUnit, String content) {
+        super(name, position, learningUnit);
         this.content = content;
     }
 }

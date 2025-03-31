@@ -17,6 +17,5 @@ public interface MultipleChoiceBlockMapper {
 
     @Mapping(target = "position", ignore = true)
     @Mapping(target = "learningUnit", ignore = true)
-    @Mapping(target = "blockType", ignore = true)
     MultipleChoiceBlock toEntity(UpdateMultipleChoiceBlockDTO updateMultipleChoiceBlockDTO);
 }

@@ -30,9 +30,9 @@ public class MultipleChoiceBlock extends Block {
     @Column(name = "correct_answer")
     private List<String> correctAnswers = new ArrayList<>();
 
-    public MultipleChoiceBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String question,
+    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question,
     List<String> possibleAnswers, List<String> correctAnswers) {
-        super(name, position,blockType, learningUnit);
+        super(name, position, learningUnit);
         this.question = question;
         this.possibleAnswers = possibleAnswers;
         this.correctAnswers = correctAnswers;

@@ -2,8 +2,6 @@ package ch.nova_omnia.lernello.model.data.block;
 
 import java.util.UUID;
 
-import org.springframework.security.core.Transient;
-
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,26 +42,14 @@ public abstract class Block {
     @Column(name = "position")
     private int position;
 
-    @NotNull
-    @Column(name = "block_type")
-    private BlockType blockType;
-
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    protected Block(String name, int position, BlockType blockType, LearningUnit learningUnit) {
+    protected Block(String name, int position, LearningUnit learningUnit) {
         this.name = name;
         this.position = position;
-        this.blockType = blockType;
         this.learningUnit = learningUnit;
-    }
-
-    @Transient
-    public enum BlockType {
-        THEORY,
-        MULTIPLE_CHOICE,
-        QUESTION
     }
 }
 

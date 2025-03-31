@@ -16,7 +16,6 @@ public interface TheoryBlockMapper {
 
     @Mapping(target = "position", ignore = true)
     @Mapping(target = "learningUnit", ignore = true)
-    @Mapping(target = "blockType", ignore = true)
     TheoryBlock toEntity(UpdateTheoryBlockDTO updateTheoryBlockDTO);
 
 

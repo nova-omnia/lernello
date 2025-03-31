@@ -22,9 +22,9 @@ public class QuestionBlock extends Block {
     @Column(name = "expected_answer", nullable = false)
     private String expectedAnswer;
 
-    public QuestionBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String question,
+    public QuestionBlock(String name, int position, LearningUnit learningUnit, String question,
             String expectedAnswer) {
-        super(name, position,blockType, learningUnit);
+        super(name, position, learningUnit);
         this.question = question;
         this.expectedAnswer = expectedAnswer;
     }

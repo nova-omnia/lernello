@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/learning-kits")
 @Validated
@@ -40,5 +43,21 @@ public class CreateLearningKitController {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
         LearningKit savedEntity = learningKitService.edit(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
+    }
+    @PostMapping("/delete")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid ResponseEntity<Void> delete(@Valid @RequestBody CreateLearningKitDTO learningKit) {
+        LearningKit entity = learningKitMapper.toEntity(learningKit);
+        learningKitService.deleteById(entity.getUuid());
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/getAll")
+    @PreAuthorize("hasAuthority('SCOPE_kits:read')")
+    public @Valid ResponseEntity<List<LearningKitResDTO>> getAll() {
+        List<LearningKit> learningKits = learningKitService.findAll();
+        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream()
+                .map(learningKitMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(learningKitResDTOs);
     }
 }

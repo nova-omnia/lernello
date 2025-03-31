@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.dto.response;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +16,8 @@ public record LearningKitResDTO(
                                 List<LearningUnitResDTO> learningUnits,
                                 String description,
                                 @NotNull String language,
-                                Date deadlineDate,
+                                LocalDate deadlineDate,
                                 List<LoggedInUserDTO> participants,
-                                List<File> files,
+                                //List<File> files, ToDo
                                 UUID folderId) {
 }

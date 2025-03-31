@@ -26,11 +26,14 @@ public class CreateLearningKitController {
         this.learningKitMapper = learningKitMapper;
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
+        System.out.println(learningKit);
         var entity = learningKitMapper.toEntity(learningKit);
+        System.out.println(entity);
         var savedEntity = learningKitService.save(entity);
+        System.out.println(savedEntity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }
 }

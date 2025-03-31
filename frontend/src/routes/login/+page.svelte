@@ -1,14 +1,24 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { superForm } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms';
-	import CreateLearningKit from '../createLearningKit.svelte';
-
+	import { getContext } from 'svelte';
+	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	const toast: ToastContext = getContext('toast');
 
 	let { data } = $props();
-	const { form, errors, constraints, message, enhance } = superForm(data.form);
-</script>
 
-<CreateLearningKit />
+	const { form, errors, constraints, message, enhance } = superForm(data.form, {
+		onError: (error) => {
+			console.error('Error:', error.result.error);
+			toast.create({
+				title: 'Error',
+				description: `Uh oh, something went wrong. (${error.result.status})`,
+				type: 'error'
+			});
+		}
+	});
+</script>
 
 <main class="flex h-full flex-col items-center justify-center">
 	{#if $message}<h3>{$message}</h3>{/if}
@@ -16,7 +26,7 @@
 	<form
 		method="POST"
 		use:enhance
-		action="?/login"
+		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
 	>
 		<h1 class="h2">Login</h1>

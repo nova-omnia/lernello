@@ -1,23 +1,25 @@
 package ch.nova_omnia.lernello.model.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Set;
+
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
+
 import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 
-
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class LearningKitTest {
 
@@ -43,6 +45,13 @@ public class LearningKitTest {
         testFolder = folderRepository.save(testFolder);
     }
 
+    // Helper method to validate constraints
+    private void assertConstraintViolation(Set<ConstraintViolation<LearningKit>> violations, String property, Class<?> annotation) {
+        assertThat(violations)
+            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
+                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+    }
+
     // Section: Basic LearningKit Creation Tests
     @Test
     public void testLearningKitCreationWithNameAndFolder() {
@@ -58,15 +67,15 @@ public class LearningKitTest {
     public void testLearningKitNameConstraints() {
         LearningKit learningKit = new LearningKit("", LearningKit.Language.GERMAN, testFolder);
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("must not be blank"));
+        assertConstraintViolation(violations, "name", NotBlank.class);
 
         learningKit = new LearningKit("ab", LearningKit.Language.GERMAN, testFolder);
         violations = validator.validate(learningKit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
 
         learningKit = new LearningKit("a".repeat(41), LearningKit.Language.GERMAN, testFolder);
         violations = validator.validate(learningKit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     @Test
@@ -75,7 +84,7 @@ public class LearningKitTest {
         learningKit = learningKitRepository.save(learningKit);
         learningKit.setName("ab");
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
-        assertThat(violations).anyMatch(v -> v.getMessage().contains("size must be between 3 and 40"));
+        assertConstraintViolation(violations, "name", Size.class);
     }
 
     // Section: UUID Generation Test
@@ -94,7 +103,7 @@ public class LearningKitTest {
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", learningKit);
         learningKit.getLearningUnits().add(learningUnit);
         learningKit = learningKitRepository.save(learningKit);
-    
+
         // Fetch the learning kit again to ensure the association is persisted
         LearningKit fetchedLearningKit = learningKitRepository.findById(learningKit.getUuid()).orElse(null);
         assertThat(fetchedLearningKit).isNotNull();

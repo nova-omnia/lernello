@@ -22,20 +22,27 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("org.mapstruct:mapstruct:1.5.2.Final")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("org.projectlombok:lombok:1.18.36")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
-    testCompileOnly("org.projectlombok:lombok:1.18.36")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+    runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
-    runtimeOnly("com.h2database:h2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.mockito")
+}
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:3.4.2")
+    }
 }
 
 tasks.withType<Test> {

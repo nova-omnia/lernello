@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/learning-kits") //TODO: what does this do or where do i have to implement this??
+@RequestMapping("/api/learning-kits")
 @Validated
 public class CreateLearningKitController {
     private final LearningKitService learningKitService;
@@ -26,7 +26,7 @@ public class CreateLearningKitController {
         this.learningKitMapper = learningKitMapper;
     }
 
-    @PostMapping("/learning-kits")
+    @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         var entity = learningKitMapper.toEntity(learningKit);

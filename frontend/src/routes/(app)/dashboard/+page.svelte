@@ -1,4 +1,4 @@
-<div class="ml-10 p-12">
+<div class="p-5">
 	<p class="mb-2.5 text-2xl font-bold">Dashboard</p>
 	<div class="mb-2.5 text-xl">Good morning ...!</div>
 	<a href="/learningkit" class="card preset-filled-surface-100-900 no-underline hover:underline"

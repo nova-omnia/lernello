@@ -1,14 +1,10 @@
 {
-  "cSpell.words": [
-    "assertj",
-    "DTOs",
-    "lernello",
-    "omnia"
-  ],
+  "cSpell.words": ["assertj", "DTOs", "lernello", "omnia"],
   "java.configuration.updateBuildConfiguration": "interactive",
   "java.format.settings.url": ".vscode/java-formatter.xml",
   "[java]": {
     "editor.detectIndentation": false
   },
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.saveActions.organizeImports": true
 }

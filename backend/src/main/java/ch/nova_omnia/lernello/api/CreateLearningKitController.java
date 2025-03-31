@@ -3,6 +3,7 @@ package ch.nova_omnia.lernello.api;
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class CreateLearningKitController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
-        var entity = learningKitMapper.toEntity(learningKit);
-        var savedEntity = learningKitService.save(entity);
+        LearningKit entity = learningKitMapper.toEntity(learningKit);
+        LearningKit savedEntity = learningKitService.save(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }
 }

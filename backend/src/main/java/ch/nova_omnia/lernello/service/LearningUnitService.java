@@ -39,4 +39,8 @@ public class LearningUnitService {
     public List<LearningUnit> findAll() {
         return learningUnitRepository.findAll();
     }
+
+    public void deleteById(UUID id) {
+        learningUnitRepository.deleteById(id);
+    }
 }

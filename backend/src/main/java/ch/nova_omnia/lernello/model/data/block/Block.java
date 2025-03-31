@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data.blocks;
+package ch.nova_omnia.lernello.model.data.block;
 
 import java.util.UUID;
 
@@ -29,8 +29,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class Block {
 
-
-
     @Id
     @Column(name = "id", nullable = false)
     @NotNull
@@ -42,7 +40,6 @@ public abstract class Block {
     @Size(min = 3, max = 40)
     private String name;
 
-    @NotNull
     @Min(0)
     @Column(name = "position")
     private int position;

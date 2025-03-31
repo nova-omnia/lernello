@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data.blocks;
+package ch.nova_omnia.lernello.model.data.block;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;

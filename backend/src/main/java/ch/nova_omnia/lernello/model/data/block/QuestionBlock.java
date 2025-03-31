@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data.blocks;
+package ch.nova_omnia.lernello.model.data.block;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
@@ -22,7 +22,6 @@ public class QuestionBlock extends Block {
     @Column(name = "expected_answer", nullable = false)
     private String expectedAnswer;
 
-    
     public QuestionBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String question,
             String expectedAnswer) {
         super(name, position,blockType, learningUnit);

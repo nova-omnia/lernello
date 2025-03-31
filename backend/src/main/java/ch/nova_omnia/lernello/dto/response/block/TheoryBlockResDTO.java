@@ -2,13 +2,19 @@ package ch.nova_omnia.lernello.dto.response.block;
 
 import java.util.UUID;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public record TheoryBlockResDTO(
-                                @NotNull UUID uuid,
-                                @NotBlank String name,
-                                @NotNull @Min(0) int position,
-                                @NotBlank String content) {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class TheoryBlockResDTO extends BlockResDTO {
+
+    @NotBlank
+    private String content;
+    
+    public TheoryBlockResDTO(UUID uuid, String name, int position, String content) {
+        super(uuid, name, position);
+        this.content = content;
+    }
 }

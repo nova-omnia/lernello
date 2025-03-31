@@ -1,5 +1,6 @@
-package ch.nova_omnia.lernello.model.data.blocks;
+package ch.nova_omnia.lernello.model.data.block;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -23,11 +24,11 @@ public class MultipleChoiceBlock extends Block {
 
     @NotNull
     @Column(name = "possible_answer")
-    private List<String> possibleAnswers;
+    private List<String> possibleAnswers = new ArrayList<>();
 
     @NotNull
     @Column(name = "correct_answer")
-    private List<String> correctAnswers;
+    private List<String> correctAnswers = new ArrayList<>();
 
     public MultipleChoiceBlock(String name, int position, BlockType blockType, LearningUnit learningUnit, String question,
     List<String> possibleAnswers, List<String> correctAnswers) {

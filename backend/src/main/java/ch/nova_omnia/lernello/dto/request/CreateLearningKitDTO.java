@@ -6,17 +6,16 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public record CreateLearningKitDTO(
         @NotNull @Size(min = 3, max = 40) String name,
         String description,
         @NotNull String language,
-        Date dealineDate,
+        Date deadlineDate,
         Date startDate,
         Date endDate,
-        List<LoggedInUserDTO> participants
-        Date deadlineDate,
-        List<UserDTO> participants,
+        List<LoggedInUserDTO> participants,
         UUID folderId
     ){
 }

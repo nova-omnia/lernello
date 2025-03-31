@@ -3,6 +3,7 @@ package ch.nova_omnia.lernello.model.data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,10 +16,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -44,7 +41,7 @@ public class User {
 
     @Column(name = "password", nullable = false)
     @NotBlank
-    @Min(8)
+    @Size(min = 8)
     private String password;
 
     @Column(name = "changed_password", nullable = false)

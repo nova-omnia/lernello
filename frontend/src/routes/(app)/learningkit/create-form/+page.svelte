@@ -9,12 +9,7 @@
 	const users = data.users;
 </script>
 
-<form
-	method="POST"
-	use:enhance
-	action="?/create"
-	class="mx-auto w-full max-w-lg space-y-4 p-4"
->
+<form method="POST" use:enhance action="?/create" class="mx-auto w-full max-w-lg space-y-4 p-4">
 	<h1 class="text-2xl font-bold">Create a new Learning Kit</h1>
 
 	<div>
@@ -46,12 +41,12 @@
 	<div>
 		<label for="language" class="block">Default Language *</label>
 		<select
-				id="language"
-				name="language"
-				bind:value={$form.language}
-				aria-invalid={$errors.language ? 'true' : 'false'}
-				required
-				class="rounded-container w-full border border-gray-300 p-2 text-lg"
+			id="language"
+			name="language"
+			bind:value={$form.language}
+			aria-invalid={$errors.language ? 'true' : 'false'}
+			required
+			class="rounded-container w-full border border-gray-300 p-2 text-lg"
 		>
 			<option value="" disabled>Select a language</option>
 			<option value="ENGLISH">English</option>
@@ -78,11 +73,11 @@
 	<div>
 		<label for="participants" class="block">Select Participant</label>
 		<select
-				id="participants"
-				name="participants"
-				multiple
-				bind:value={$form.participants}
-				class="rounded-container w-full border border-gray-300 p-2 text-lg"
+			id="participants"
+			name="participants"
+			multiple
+			bind:value={$form.participants}
+			class="rounded-container w-full border border-gray-300 p-2 text-lg"
 		>
 			<option value="" disabled>Select a participant</option>
 			{#each users as user (user.uuid)}
@@ -129,9 +124,7 @@
 	-->
 
 	<div>
-		<button type="submit" class="btn preset-filled-primary-400-600">
-			Create Learning Kit
-		</button>
+		<button type="submit" class="btn preset-filled-primary-400-600"> Create Learning Kit </button>
 	</div>
 	<p class="text-sm">*required fields</p>
 	<SuperDebug data={$form} />

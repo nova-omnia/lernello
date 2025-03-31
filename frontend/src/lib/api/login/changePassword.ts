@@ -2,8 +2,8 @@ import {
 	ChangePasswordStatusSchema,
 	type ChangePasswordStatus
 } from '$lib/models/changePasswordData';
-import {userRequest} from '$lib/api/apiClient';
-import {ParticipantSchema, type Participant} from "$lib/models/user";
+import { userRequest } from '$lib/api/apiClient';
+import { ParticipantSchema, type Participant } from '$lib/models/user';
 import { z } from 'zod';
 
 export async function changePassword(changedPasswordUser: {

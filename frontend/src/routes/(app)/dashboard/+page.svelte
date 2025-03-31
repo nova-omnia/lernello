@@ -31,9 +31,9 @@
 		</div>
 	</div>
 	<div class="mt-5">
-		<button class="btn preset-filled-primary-400-600 cursor-pointer rounded border"
-				on:click={handleCreate}
-			>+ Create new Learning Kit</button
+		<button
+			class="btn preset-filled-primary-400-600 cursor-pointer rounded border"
+			on:click={handleCreate}>+ Create new Learning Kit</button
 		>
 	</div>
 </div>

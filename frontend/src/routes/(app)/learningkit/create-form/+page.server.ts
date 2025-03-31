@@ -3,7 +3,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { CreateKitSchema } from '$lib/models/kit';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import {getUsers} from "$lib/api/login/changePassword";
+import { getUsers } from '$lib/api/login/changePassword';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateKitSchema));

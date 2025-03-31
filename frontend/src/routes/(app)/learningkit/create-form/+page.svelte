@@ -60,6 +60,17 @@
 	</div>
 
 	<div>
+		<label for="context" class="block font-medium">Context ✨</label>
+		<textarea
+			id="context"
+			name="additionalContext"
+			bind:value={$form.additionalContext}
+			class="rounded-container w-full border border-gray-300 p-3 text-base"
+			placeholder="Provide additional context..."
+		></textarea>
+	</div>
+
+	<div>
 		<label for="deadlineDate" class="block">Deadline</label>
 		<input
 			id="deadlineDate"

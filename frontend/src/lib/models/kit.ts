@@ -9,7 +9,8 @@ export const CreateKitSchema = z.object({
 		return undefined;
 	}, z.date().optional()),
 	language: z.string().nonempty(),
-	participants: z.array(z.string().uuid())
+	participants: z.array(z.string().uuid()),
+	context: z.string().optional()
 	//files: z.array(z.object()) ToDo: Add File Objects
 });
 export type CreateKit = z.infer<typeof CreateKitSchema>;

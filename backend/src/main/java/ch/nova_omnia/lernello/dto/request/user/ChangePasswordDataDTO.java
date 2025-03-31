@@ -2,7 +2,8 @@ package ch.nova_omnia.lernello.dto.request.user;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record ChangePasswordDataDTO(
-                                    @NotBlank @Min(8) String newPassword) {
+                                    @NotBlank @Size(min=8) String newPassword) {
 }

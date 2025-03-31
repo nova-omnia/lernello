@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import BlockTitle from '../learningUnitComponents/blockTitle.svelte';
-	import type { BlockItem } from '../blocks/globalBlocks'; // adjust the path as needed
+	import BlockTitle from './blockTitle.svelte';
+	import type { BlockItem } from '../blocks/globalBlocks';
+	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	import { getContext } from "svelte";
+	const toast: ToastContext = getContext('toast');
 
 	export let blocks: BlockItem[];
 	export let flipDurationMs: number;
@@ -23,7 +26,6 @@
 			orderChanged = true;
 		}
 		blocks = newBlocks;
-		console.log(blocks);
 	}
 
 	function arraysEqual(arr1: string[], arr2: string[]): boolean {
@@ -40,13 +42,29 @@
 				body: JSON.stringify(blockIds)
 			});
 			if (!response.ok) {
-				throw new Error('Failed to update block order');
+				toast.create({
+					title: 'Error',
+					description: 'Failed to update block order',
+					type: 'error'
+				});
 			}
-			const updatedLearningUnit = await response.json();
-			console.log('Updated Learning Unit:', updatedLearningUnit);
+			toast.create({
+				title: 'Success',
+				description: 'Block order updated successfully',
+				type: 'success'
+			});
 			orderChanged = false;
-		} catch (error) {
-			console.error('Error updating block order:', error);
+		} catch (error: unknown) {
+			let statusCode = '';
+			if (error && typeof error === 'object' && 'result' in error) {
+				const errObj = error as { result: { status: string } };
+				statusCode = errObj.result.status;
+			}
+			toast.create({
+				title: 'Error',
+				description: `Uh oh, something went wrong. (${statusCode})`,
+				type: 'error'
+			});
 		}
 	}
 </script>

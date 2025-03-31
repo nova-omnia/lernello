@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.api;
 
+import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,7 @@ import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
 
 @RestController
+//TODO: update the path
 @RequestMapping("/api/learning-kit/learning-unit")
 @Validated
 @RequiredArgsConstructor
@@ -33,7 +35,8 @@ public class LearningUnitRestController {
     @PostMapping( "/create")
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
-        return learningUnitMapper.toDTO(learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO)));
+        LearningUnit learningUnit = learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO));
+        return learningUnitMapper.toDTO(learningUnit);
     }
 
     @DeleteMapping("/{id}")

@@ -4,9 +4,9 @@
 	import TheoryBlockComponent from './blocks/theoryBlockComponent.svelte';
 	import QuizBlockComponent from './blocks/quizBlockComponent.svelte';
 	import { type BlockItem } from './blocks/globalBlocks';
-	import LeftColumn from './columns/leftColumn.svelte';
-	import MiddleColumn from './columns/middleColumn.svelte';
-	import RightColumn from './columns/rightColumn.svelte';
+	import BlockAdder from './learningUnitComponents/blockAdder.svelte';
+	import LearningUnitEditor from './learningUnitComponents/learningUnitEditor.svelte';
+	import LearningUnitEditOverview from './learningUnitComponents/learningUnitEditOverview.svelte';
 
 	const flipDurationMs = 200;
 
@@ -23,9 +23,9 @@
 </script>
 
 <div class="grid h-screen grid-cols-[25%_50%_25%]">
-	<LeftColumn {blocks} {unitId} />
+	<BlockAdder {blocks} {unitId} />
 
-	<MiddleColumn {blocks} {flipDurationMs} {unitId} />
+	<LearningUnitEditor {blocks} {flipDurationMs} {unitId} />
 
-	<RightColumn {blocks} {flipDurationMs} {unitId} />
+	<LearningUnitEditOverview {blocks} {flipDurationMs} {unitId} />
 </div>

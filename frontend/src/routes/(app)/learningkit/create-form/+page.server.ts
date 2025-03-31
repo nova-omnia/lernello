@@ -3,12 +3,12 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { CreateKitSchema } from '$lib/models/kit';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import { getUsers } from '$lib/api/login/changePassword';
+import { createLearningKit } from '$lib/api/learningKit';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateKitSchema));
-	const users = await getUsers();
-	return { form, users };
+
+	return { form };
 };
 
 export const actions = {
@@ -18,10 +18,8 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		// ToDo: Use for redirect to the created learning kit
-		// const learningKit = await createLearningKit(form.data);
-		// const learningKitId = learningKit.uuid;
+		const learningKit = await createLearningKit(form.data);
 
-		return redirect(303, `/dashboard`);
+		return redirect(303, `/learningkit/${learningKit.uuid}`);
 	})
 } satisfies Actions;

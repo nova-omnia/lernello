@@ -1,142 +1,91 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { getContext } from 'svelte';
+	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	const toast: ToastContext = getContext('toast');
 	// TODO: Re-enable file upload later
 	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	// import IconUpload from '@lucide/svelte/icons/upload';
 
 	let { data } = $props();
-	const { form, errors, enhance } = superForm(data.form);
-	const users = data.users;
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		onError: (error) => {
+			console.error('Error:', error.result.error);
+			toast.create({
+				title: 'Error',
+				description: `Uh oh, something went wrong. (${error.result.status})`,
+				type: 'error'
+			});
+		}
+	});
 </script>
 
-<form method="POST" use:enhance action="?/create" class="mx-auto w-full max-w-lg space-y-4 p-4">
-	<h1 class="text-2xl font-bold">Create a new Learning Kit</h1>
+<form method="POST" use:enhance action="?/create" class="mx-auto max-w-lg space-y-4">
+	<p class="preset-typo-subtitle">Dashboard</p>
+	<h1 class="h1">Create a new Learning Kit</h1>
 
-	<div>
-		<label for="name" class="block">Name *</label>
+	<label class="label">
+		<span class="label-text">Name</span>
 		<input
 			id="name"
 			type="text"
+			class="input"
 			name="name"
+			placeholder="Learning Kit Name"
+			aria-invalid={$errors.name ? 'true' : undefined}
 			bind:value={$form.name}
-			aria-invalid={$errors.name ? 'true' : 'false'}
-			required
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
+			{...$constraints.name}
 		/>
 		{#if $errors.name}
 			<p class="text-sm text-red-500">{$errors.name}</p>
 		{/if}
-	</div>
-
-	<div>
-		<label for="description" class="block">Description</label>
+	</label>
+	<label class="label">
+		<span class="label-text">Description <i>– Optional</i></span>
 		<textarea
 			id="description"
 			name="description"
 			bind:value={$form.description}
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
+			class="textarea"
+			placeholder="Provide a description..."
+			aria-invalid={$errors.description ? 'true' : undefined}
+			{...$constraints.description}
 		></textarea>
-	</div>
-
-	<div>
-		<label for="language" class="block">Default Language *</label>
-		<select
-			id="language"
-			name="language"
-			bind:value={$form.language}
-			aria-invalid={$errors.language ? 'true' : 'false'}
-			required
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
-		>
-			<option value="" disabled>Select a language</option>
-			<option value="ENGLISH">English</option>
-			<option value="GERMAN">German</option>
-			<option value="FRENCH">French</option>
-			<option value="ITALIAN">Italian</option>
-		</select>
-		{#if $errors.language}
-			<p class="text-sm text-red-500">{$errors.language}</p>
+		{#if $errors.description}
+			<p class="text-sm text-red-500">{$errors.description}</p>
 		{/if}
-	</div>
-
-	<div>
-		<label for="context" class="block font-medium">Context ✨</label>
+	</label>
+	<label class="label">
+		<span class="label-text">Context <i>– Optional</i></span>
 		<textarea
 			id="context"
-			name="additionalContext"
-			bind:value={$form.additionalContext}
-			class="rounded-container w-full border border-gray-300 p-3 text-base"
+			name="context"
+			bind:value={$form.context}
+			class="textarea"
 			placeholder="Provide additional context..."
+			aria-invalid={$errors.context ? 'true' : undefined}
+			{...$constraints.context}
 		></textarea>
-	</div>
-
-	<div>
-		<label for="deadlineDate" class="block">Deadline</label>
+		{#if $errors.context}
+			<p class="text-sm text-red-500">{$errors.context}</p>
+		{/if}
+	</label>
+	<label class="label">
+		<span class="label-text">Deadline <i>– Optional</i></span>
 		<input
 			id="deadlineDate"
-			type="date"
+			type="datetime-local"
 			name="deadlineDate"
 			bind:value={$form.deadlineDate}
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
+			class="input"
+			placeholder="YYYY-MM-DD"
+			aria-invalid={$errors.deadlineDate ? 'true' : undefined}
+			{...$constraints.deadlineDate}
 		/>
-	</div>
-
-	<div>
-		<label for="participants" class="block">Select Participant</label>
-		<select
-			id="participants"
-			name="participants"
-			multiple
-			bind:value={$form.participants}
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
-		>
-			<option value="" disabled>Select a participant</option>
-			{#each users as user (user.uuid)}
-				<option value={user.uuid}>{user.username}</option>
-			{/each}
-		</select>
-	</div>
-
-	<!-- TODO: Re-enable file upload when backend accepts multipart/form-data -->
-	<!--
-	{#each $form.files as file (file.name)}
-		<div
-			class="rounded-container mt-2 flex items-center justify-between border border-gray-300 p-3"
-		>
-			<div class="flex items-center space-x-2">
-				<svg
-					class="h-6 w-6 text-gray-600"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"
-					></path>
-				</svg>
-				<span class="text-base text-gray-800">{file.name}</span>
-			</div>
-			<button
-				type="button"
-				onclick={() => removeFile()}
-				class="rounded-container bg-red-500 px-3 py-1 text-white hover:bg-red-600"
-			>
-				Remove
-			</button>
-		</div>
-	{/each}
-
-	<FileUpload name="example-button" accept="image/*" onFileChange={console.log} maxFiles={2}>
-		<button class="btn preset-filled">
-			<IconUpload class="size-4" />
-			<span>Select File</span>
-		</button>
-	</FileUpload>
-	-->
-
-	<div>
-		<button type="submit" class="btn preset-filled-primary-400-600"> Create Learning Kit </button>
-	</div>
-	<p class="text-sm">*required fields</p>
+		{#if $errors.deadlineDate}
+			<p class="text-sm text-red-500">{$errors.deadlineDate}</p>
+		{/if}
+	</label>
+	<button class="btn preset-filled-primary-400-600 w-full">Create</button>
 	<SuperDebug data={$form} />
 </form>

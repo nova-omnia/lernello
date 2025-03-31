@@ -9,6 +9,8 @@
 	<Sidebar />
 	<div class="flex-1">
 		<Topbar />
-		{@render children()}
+		<main class="p-4">
+			{@render children()}
+		</main>
 	</div>
 </div>

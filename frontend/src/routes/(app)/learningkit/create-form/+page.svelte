@@ -1,15 +1,12 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	import IconUpload from '@lucide/svelte/icons/upload';
+	// TODO: Re-enable file upload later
+	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
+	// import IconUpload from '@lucide/svelte/icons/upload';
 
 	let { data } = $props();
 	const { form, errors, enhance } = superForm(data.form);
 	const users = data.users;
-
-	function removeFile() {
-		//TODO implement remove file
-	}
 </script>
 
 <form
@@ -88,7 +85,7 @@
 				class="rounded-container w-full border border-gray-300 p-2 text-lg"
 		>
 			<option value="" disabled>Select a participant</option>
-			{#each users as user}
+			{#each users as user (user.uuid)}
 				<option value={user.uuid}>{user.username}</option>
 			{/each}
 		</select>

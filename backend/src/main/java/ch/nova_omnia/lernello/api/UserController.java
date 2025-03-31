@@ -25,7 +25,7 @@ public class UserController {
     @PostMapping("/change-password")
     @PreAuthorize("hasAuthority('SCOPE_password:change')")
     public @Valid PasswordStatusDTO changePassword(
-                                                   @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails) {
         boolean status = userService.changePassword(userDetails.getUsername(), data.newPassword());
         return new PasswordStatusDTO(status);
     }

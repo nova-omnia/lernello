@@ -11,13 +11,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record LearningKitResDTO(
-                                @NotNull UUID uuid,
-                                @NotNull @Size(min = 3, max = 40) String name,
-                                List<LearningUnitResDTO> learningUnits,
-                                String description,
-                                @NotNull String language,
-                                LocalDate deadlineDate,
-                                List<LoggedInUserDTO> participants,
-                                //List<File> files, ToDo
-                                UUID folderId) {
+        @NotNull UUID uuid,
+        @NotNull @Size(min = 3, max = 40) String name,
+        List<LearningUnitResDTO> learningUnits,
+        String description,
+        @NotNull String language,
+        LocalDate deadlineDate,
+        List<LoggedInUserDTO> participants,
+        UUID folderId
+        //List<File> files, ToDo
+) {
 }

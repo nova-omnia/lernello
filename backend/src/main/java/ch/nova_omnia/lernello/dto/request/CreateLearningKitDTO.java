@@ -18,7 +18,7 @@ public record CreateLearningKitDTO(
         @NotNull String language,
         LocalDate deadlineDate,
         List<ParticipantUserDTO> participants,
-        //MultipartFile[] files, ToDo
         UUID folderId
+        //MultipartFile[] files, ToDo
     ){
 }

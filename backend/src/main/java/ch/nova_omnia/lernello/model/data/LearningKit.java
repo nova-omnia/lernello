@@ -50,6 +50,8 @@ public class LearningKit {
     private Date deadlineDate;
 
     @ManyToOne
+    @NotNull
+    @NonNull
     @JoinColumn(name = "folder_id")
     private Folder folder;
 

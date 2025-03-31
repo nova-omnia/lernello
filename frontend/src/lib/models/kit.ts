@@ -29,5 +29,6 @@ export const LearningKitSchema = z.object({
 	language: z.string().nonempty(),
 	participants: z.array(z.string().uuid()),
 	folderId: z.string().uuid().nullable()
+	//files: z.array(z.object()) ToDo: Add File Objects
 });
 export type LearningKit = z.infer<typeof LearningKitSchema>;

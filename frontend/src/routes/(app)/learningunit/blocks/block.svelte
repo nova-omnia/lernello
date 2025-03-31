@@ -1,8 +1,8 @@
 <script lang="ts">
 	import TheoryBlockComponent from './theoryBlockComponent.svelte';
 	import QuizBlockComponent from './quizBlockComponent.svelte';
-	import { X, BookOpen, FileText } from 'lucide-svelte';
-	import type { Block } from './globalBlocks';
+	import { BookOpen, FileText, X } from 'lucide-svelte';
+	import type { Block } from '$lib/models/globalBlock';
 
 	export let block: Block;
 	export let onDelete: (block: Block) => void;
@@ -18,7 +18,6 @@
 <div
 	class="group hover:border-primary-500 relative rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200"
 >
-	<!-- Updated Delete Button using Tailwind and Lucide -->
 	<button
 		onclick={handleDelete}
 		class="absolute top-[-8px] right-[-8px] rounded-full bg-red-500 p-1 text-white opacity-0 shadow transition-opacity group-hover:opacity-100 hover:bg-red-600"

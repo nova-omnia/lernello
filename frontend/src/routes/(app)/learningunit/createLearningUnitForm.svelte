@@ -1,11 +1,12 @@
 <script lang="ts">
+	import type { LearningUnit } from '$lib/models/learningUnit';
+	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	import { getContext } from 'svelte';
+
+	const toast: ToastContext = getContext('toast');
+
 	let learningUnitName: string = '';
 	let error: string = '';
-
-	interface LearningUnit {
-		uuid: string;
-		name: string;
-	}
 
 	async function createLearningUnit(event: Event): Promise<void> {
 		event.preventDefault();
@@ -23,7 +24,11 @@
 				body: JSON.stringify({ name: learningUnitName.trim() })
 			});
 			if (!response.ok) {
-				throw new Error('Failed to create');
+				toast.create({
+					title: 'Error',
+					description: 'Failed to create',
+					type: 'error'
+				});
 			}
 			const createdUnit: LearningUnit = await response.json();
 			window.location.href = `/api/edit/${createdUnit.uuid}`;

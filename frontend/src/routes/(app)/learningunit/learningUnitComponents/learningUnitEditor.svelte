@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Block from '../blocks/block.svelte';
 	import { flip } from 'svelte/animate';
-	import type { BlockItem } from '../blocks/globalBlocks';
+	import type { BlockItem } from '$lib/models/globalBlock';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	import { getContext } from "svelte";
+	import { getContext } from 'svelte';
+
 	const toast: ToastContext = getContext('toast');
 
 	export let blocks: BlockItem[];

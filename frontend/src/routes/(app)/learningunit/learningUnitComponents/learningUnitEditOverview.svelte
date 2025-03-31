@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
+	import { type DndEvent, dragHandleZone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import BlockTitle from './blockTitle.svelte';
-	import type { BlockItem } from '../blocks/globalBlocks';
+	import type { BlockItem } from '$lib/models/globalBlock';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	import { getContext } from "svelte";
+	import { getContext } from 'svelte';
+
 	const toast: ToastContext = getContext('toast');
 
 	export let blocks: BlockItem[];

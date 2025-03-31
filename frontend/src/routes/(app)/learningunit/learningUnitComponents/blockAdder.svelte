@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BLOCK_GROUPS, type BlockGroup, type BlockType } from '../blocks/globalBlocks';
+	import { BLOCK_GROUPS, type BlockGroup, type BlockType } from '$lib/models/globalBlock';
 
 	let { blocks, unitId } = $props();
 

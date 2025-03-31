@@ -1,15 +1,14 @@
 <script lang="ts">
 	import TheoryBlockComponent from './theoryBlockComponent.svelte';
 	import QuizBlockComponent from './quizBlockComponent.svelte';
+	import { X, BookOpen, FileText } from 'lucide-svelte';
+	import type { Block } from './globalBlocks';
 
-	type BlockType = { uuid: string; name: string; type: string };
-
-	export let block: BlockType;
-	export let onDelete: (block: BlockType) => void;
+	export let block: Block;
+	export let onDelete: (block: Block) => void;
 
 	let Component = block.type === 'theory' ? TheoryBlockComponent : QuizBlockComponent;
-
-	let icon = block.type === 'theory' ? 'open-book' : 'pencil-file';
+	let IconComponent = block.type === 'theory' ? BookOpen : FileText;
 
 	function handleDelete() {
 		onDelete(block);
@@ -19,29 +18,20 @@
 <div
 	class="group hover:border-primary-500 relative rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200"
 >
-	<!-- Delete Button -->
+	<!-- Updated Delete Button using Tailwind and Lucide -->
 	<button
-		class="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-		on:click={handleDelete}
+		onclick={handleDelete}
+		class="absolute top-[-8px] right-[-8px] rounded-full bg-red-500 p-1 text-white opacity-0 shadow transition-opacity group-hover:opacity-100 hover:bg-red-600"
 	>
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-			<use href="/app-icons/x-icon.svg#x-icon" />
-		</svg>
+		<X class="h-5 w-5" />
 	</button>
 
 	<!-- Block Header -->
 	<div class="flex items-center space-x-2 pl-6">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 text-gray-500"
-			viewBox="0 0 20 20"
-			fill="currentColor"
-		>
-			<use href="/app-icons/{icon}-icon.svg#{icon}-icon" />
-		</svg>
+		<IconComponent class="h-6 w-6 text-gray-500" />
 		<h3 class="font-medium">{block.name}</h3>
 		<span class="ml-2 text-sm text-gray-500">({block.type})</span>
 	</div>
-	<!-- Render the block content component -->
+	<!-- Block Content -->
 	<svelte:component this={Component} />
 </div>

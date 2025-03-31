@@ -5,6 +5,7 @@
 
 	let { data } = $props();
 	const { form, errors, enhance } = superForm(data.form);
+	const users = data.users;
 
 	function removeFile() {
 		//TODO implement remove file
@@ -14,7 +15,7 @@
 <form
 	method="POST"
 	use:enhance
-	action="?/CreateLearningKit"
+	action="?/create"
 	class="mx-auto w-full max-w-lg space-y-4 p-4"
 >
 	<h1 class="text-2xl font-bold">Create a new Learning Kit</h1>
@@ -22,6 +23,7 @@
 	<div>
 		<label for="name" class="block">Name *</label>
 		<input
+			id="name"
 			type="text"
 			name="name"
 			bind:value={$form.name}
@@ -35,7 +37,7 @@
 	</div>
 
 	<div>
-		<label for="description" class="block">Description *</label>
+		<label for="description" class="block">Description</label>
 		<textarea
 			id="description"
 			name="description"
@@ -45,46 +47,55 @@
 	</div>
 
 	<div>
-		<label for="deadline" class="block">Deadline</label>
+		<label for="language" class="block">Default Language *</label>
+		<select
+				id="language"
+				name="language"
+				bind:value={$form.language}
+				aria-invalid={$errors.language ? 'true' : 'false'}
+				required
+				class="rounded-container w-full border border-gray-300 p-2 text-lg"
+		>
+			<option value="" disabled>Select a language</option>
+			<option value="ENGLISH">English</option>
+			<option value="GERMAN">German</option>
+			<option value="FRENCH">French</option>
+			<option value="ITALIAN">Italian</option>
+		</select>
+		{#if $errors.language}
+			<p class="text-sm text-red-500">{$errors.language}</p>
+		{/if}
+	</div>
+
+	<div>
+		<label for="deadlineDate" class="block">Deadline</label>
 		<input
+			id="deadlineDate"
 			type="date"
-			name="deadline"
-			bind:value={$form.deadline}
+			name="deadlineDate"
+			bind:value={$form.deadlineDate}
 			class="rounded-container w-full border border-gray-300 p-2 text-lg"
 		/>
 	</div>
 
 	<div>
-		<label for="defaultLanguage" class="block">Default Language *</label>
+		<label for="participants" class="block">Select Participant</label>
 		<select
-			id="defaultLanguage"
-			name="defaultLanguage"
-			bind:value={$form.defaultLanguage}
-			aria-invalid={$errors.defaultLanguage ? 'true' : 'false'}
-			required
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
+				id="participants"
+				name="participants"
+				multiple
+				bind:value={$form.participants}
+				class="rounded-container w-full border border-gray-300 p-2 text-lg"
 		>
-			<option value="" disabled>Select a language</option>
-			<option value="en">English</option>
-			<option value="de">German</option>
-			<option value="fr">French</option>
+			<option value="" disabled>Select a participant</option>
+			{#each users as user}
+				<option value={user.uuid}>{user.username}</option>
+			{/each}
 		</select>
-		{#if $errors.defaultLanguage}
-			<p class="text-sm text-red-500">{$errors.defaultLanguage}</p>
-		{/if}
 	</div>
 
-	<div>
-		<label for="context" class="block font-medium">Context ✨</label>
-		<textarea
-			id="context"
-			name="additionalContext"
-			bind:value={$form.additionalContext}
-			class="rounded-container w-full border border-gray-300 p-3 text-base"
-			placeholder="Provide additional context..."
-		></textarea>
-	</div>
-
+	<!-- TODO: Re-enable file upload when backend accepts multipart/form-data -->
+	<!--
 	{#each $form.files as file (file.name)}
 		<div
 			class="rounded-container mt-2 flex items-center justify-between border border-gray-300 p-3"
@@ -118,7 +129,13 @@
 			<span>Select File</span>
 		</button>
 	</FileUpload>
+	-->
 
+	<div>
+		<button type="submit" class="btn preset-filled-primary-400-600">
+			Create Learning Kit
+		</button>
+	</div>
 	<p class="text-sm">*required fields</p>
 	<SuperDebug data={$form} />
 </form>

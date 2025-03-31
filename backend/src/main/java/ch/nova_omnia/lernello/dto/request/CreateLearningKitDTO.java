@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.dto.request;
 
 import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
+import ch.nova_omnia.lernello.model.data.File;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -13,9 +14,8 @@ public record CreateLearningKitDTO(
         String description,
         @NotNull String language,
         Date deadlineDate,
-        Date startDate,
-        Date endDate,
         List<LoggedInUserDTO> participants,
+        List<File> files,
         UUID folderId
     ){
 }

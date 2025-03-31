@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +46,9 @@ public class LearningKit {
     @NonNull
     private Language language;
 
+    @Column(name = "deadlineDate")
+    private Date deadlineDate;
+
     @ManyToOne
     @NotNull
     @NonNull
@@ -61,4 +65,7 @@ public class LearningKit {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<File> files = new ArrayList<>();
 }

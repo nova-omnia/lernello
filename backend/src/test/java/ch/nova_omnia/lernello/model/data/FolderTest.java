@@ -123,7 +123,7 @@ public class FolderTest {
     public void testLearningKitsAssociation() {
         Folder folder = new Folder("Test Folder");
         folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN, folder);
         learningKit = learningKitRepository.save(learningKit); // Save the LearningKit entity
         folder.getLearningKits().add(learningKit);
         folder = folderRepository.save(folder);
@@ -146,7 +146,7 @@ public class FolderTest {
     public void testOrphanRemovalForLearningKits() {
         Folder folder = new Folder("Test Folder");
         folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN, folder);
         learningKit = learningKitRepository.save(learningKit);
         folder.getLearningKits().add(learningKit);
         folder = folderRepository.save(folder);

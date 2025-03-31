@@ -1,3 +1,11 @@
+<script lang="ts">
+	import { goto } from '$app/navigation';
+
+	function handleCreate() {
+		goto('/learningkit/create-form');
+	}
+</script>
+
 <div class="p-5">
 	<p class="mb-2.5 text-2xl font-bold">Dashboard</p>
 	<div class="mb-2.5 text-xl">Good morning ...!</div>
@@ -23,8 +31,9 @@
 		</div>
 	</div>
 	<div class="mt-5">
-		<button class="btn preset-filled-primary-400-600 cursor-pointer rounded border"
-			>+ Create new Learning Kit</button
+		<button
+			class="btn preset-filled-primary-400-600 cursor-pointer rounded border"
+			on:click={handleCreate}>+ Create new Learning Kit</button
 		>
 	</div>
 </div>

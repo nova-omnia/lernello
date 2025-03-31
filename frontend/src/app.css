@@ -6,6 +6,8 @@
 @import '@skeletonlabs/skeleton/themes/cerberus';
 @import './styles/lernello-theme.css';
 
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+
 @plugin '@tailwindcss/forms';
 
 /* @custom-variant dark (&:where(.dark, .dark *)); */

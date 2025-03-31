@@ -1,6 +1,10 @@
 package ch.nova_omnia.lernello;
 
 
+import ch.nova_omnia.lernello.model.data.Folder;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.FolderRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +12,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import ch.nova_omnia.lernello.model.data.Folder;
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
 
 @Configuration
 public class LoadDatabase {
@@ -27,6 +26,7 @@ public class LoadDatabase {
         bilbo.setParentFolder(bungo);
 
         User frodo = new User("frodo@gmail.com", encoder.encode("password"), "en", User.Role.INSTRUCTOR);
+        frodo.setChangedPassword(true);
 
         return (_) -> {
             log.info("Preloading folders");

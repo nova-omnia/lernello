@@ -11,6 +11,14 @@
 	</div>
 </div>
 
+<form method="post" action="?/create" class="flex flex-col space-y-4">
+    <input type="text" name="name" placeholder="Block Name" required class="border p-2" />
+    <input type="number" name="position" placeholder="Position" required class="border p-2" />
+    <input type="text" name="learningUnitId" placeholder="Learning Unit ID" required class="border p-2" />
+    <textarea name="content" placeholder="Content" required class="border p-2"></textarea>
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded">Create TheoryBlock</button>
+</form>
+
 <style>
 	:global(.carta-toolbar) {
 		padding-bottom: 1rem;

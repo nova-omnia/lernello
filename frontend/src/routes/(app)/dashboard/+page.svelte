@@ -1,3 +1,7 @@
+<script lang="ts">
+	import MultipleChoiceBlock from "$lib/components/MultipleChoiceBlock.svelte";
+</script>
+
 <div class="p-5">
 	<p class="mb-2.5 text-2xl font-bold">Dashboard</p>
 	<div class="mb-2.5 text-xl">Good morning ...!</div>
@@ -27,4 +31,5 @@
 			>+ Create new Learning Kit</button
 		>
 	</div>
+	<MultipleChoiceBlock />
 </div>

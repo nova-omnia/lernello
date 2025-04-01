@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { BLOCK_GROUPS, type BlockGroup, type BlockType } from '$lib/models/globalBlock';
-
-	let { blocks, unitId } = $props();
+	import { addTheoryBlock, addMultipleChoiceQuizBlock, addTextAnswerQuizBlock} from "$lib/api/learningUnits";
 
 	let openSections: Record<BlockType, boolean> = {
 		theory: true,
@@ -13,22 +12,6 @@
 	};
 
 	const blockGroups: BlockGroup[] = BLOCK_GROUPS;
-
-	//TODO: Add blocks to API and fetch them
-	async function addBlock(name: string, type: BlockType) {
-		const response = await fetch(`/api/learning-kit/learning-unit/${unitId}/blocks`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ name, type })
-		});
-
-		const newBlock = await response.json();
-		blocks.push(newBlock);
-	}
-
-	const addTheoryBlock = () => addBlock('New Theory Block', 'theory');
-	const addMultipleChoiceQuizBlock = () => addBlock('New Multiple Choice Block', 'quiz');
-	const addTextAnswerQuizBlock = () => addBlock('New Text Answer Block', 'quiz');
 </script>
 
 <div class="bg-gray-30 border-r border-gray-300 p-4">

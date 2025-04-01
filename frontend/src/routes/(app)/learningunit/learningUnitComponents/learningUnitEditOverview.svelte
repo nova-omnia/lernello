@@ -5,6 +5,7 @@
 	import type { BlockItem } from '$lib/models/globalBlock';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	import { getContext } from 'svelte';
+	import {updateBlockOrder} from "$lib/api/learningUnits";
 
 	const toast: ToastContext = getContext('toast');
 
@@ -33,40 +34,23 @@
 		return arr1.length === arr2.length && arr1.every((val, idx) => val === arr2[idx]);
 	}
 
-	async function saveOrder() {
+	async function handleSubmit(event: SubmitEvent) {
+		event.preventDefault();
 		try {
-			console.log('Saving order...');
-			const blockIds = blocks.map((block) => block.uuid);
-			const response = await fetch(`/api/learning-kit/learning-unit/${unitId}/blocks/order`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(blockIds)
-			});
-			if (!response.ok) {
-				toast.create({
-					title: 'Error',
-					description: 'Failed to update block order',
-					type: 'error'
-				});
-			}
-			toast.create({
-				title: 'Success',
-				description: 'Block order updated successfully',
-				type: 'success'
-			});
-			orderChanged = false;
-		} catch (error: unknown) {
-			let statusCode = '';
-			if (error && typeof error === 'object' && 'result' in error) {
-				const errObj = error as { result: { status: string } };
-				statusCode = errObj.result.status;
-			}
+			await updateBlockOrder(unitId, blocks.map((block) => block.uuid));
+		} catch (error) {
 			toast.create({
 				title: 'Error',
-				description: `Uh oh, something went wrong. (${statusCode})`,
+				description: 'Failed to update block order',
 				type: 'error'
 			});
 		}
+		toast.create({
+			title: 'Success',
+			description: 'Block order updated successfully',
+			type: 'success'
+		});
+		orderChanged = false;
 	}
 </script>
 
@@ -90,11 +74,13 @@
 		{/each}
 	</div>
 	{#if orderChanged}
-		<button
-			class="bg-secondary-500 hover:bg-secondary-600 mt-4 w-full rounded-xl px-4 py-2 text-white"
-			onclick={saveOrder}
-		>
-			Save Order
-		</button>
+		<form onsubmit={handleSubmit}>
+			<button
+				type="submit"
+				class="bg-secondary-500 hover:bg-secondary-600 mt-4 w-full rounded-xl px-4 py-2 text-white"
+			>
+				Save Order
+			</button>
+		</form>
 	{/if}
 </div>

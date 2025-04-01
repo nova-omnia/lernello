@@ -35,11 +35,7 @@ public class LearningKitService {
 
     @Transactional
     public LearningKit edit(LearningKit learningKit) {
-        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
-
-        updateLearningKit(existingKit, learningKit);
-        return existingKit;
+        return learningKitRepository.save(learningKit);
     }
 
     private void updateLearningKit(LearningKit target, LearningKit source) {
@@ -47,7 +43,10 @@ public class LearningKitService {
         target.setDescription(source.getDescription());
         target.setLanguage(source.getLanguage());
         target.setDeadlineDate(source.getDeadlineDate());
-        target.setParticipants(source.getParticipants());
+        target.getParticipants().clear();
+        if (source.getParticipants() != null) {
+            target.getParticipants().addAll(source.getParticipants());
+        }
         target.setFolder(source.getFolder());
         target.setContext(source.getContext());
     }

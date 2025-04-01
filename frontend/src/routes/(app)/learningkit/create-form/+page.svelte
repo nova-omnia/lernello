@@ -10,7 +10,9 @@
 </script>
 
 <form method="POST" use:enhance action="?/create" class="mx-auto w-full max-w-lg space-y-4 p-4">
-	<h1 class="text-2xl font-bold">Create a new Learning Kit</h1>
+	<h1 class="text-2xl font-bold">
+		{data.editId ? 'Edit Learning Kit' : 'Create a new Learning Kit'}
+	</h1>
 
 	<div>
 		<label for="name" class="block">Name *</label>
@@ -135,7 +137,7 @@
 	-->
 
 	<div>
-		<button type="submit" class="btn preset-filled-primary-400-600"> Create Learning Kit </button>
+		<button type="submit" class="btn preset-filled-primary-400-600"> {data.editId ? 'Update Learning Kit' : 'Create Learning Kit'} </button>
 	</div>
 	<p class="text-sm">*required fields</p>
 	<SuperDebug data={$form} />

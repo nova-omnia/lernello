@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const CreateKitSchema = z.object({
+	uuid: z.string().uuid().optional(),
 	name: z.string().nonempty(),
 	description: z.string().optional(),
 	deadlineDate: z.preprocess((val) => {

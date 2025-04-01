@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record CreateLearningKitDTO(
+        UUID uuid,
         @NotNull @Size(min = 3, max = 40) String name,
         String description,
         @NotNull String language,

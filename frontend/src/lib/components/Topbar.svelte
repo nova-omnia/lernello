@@ -5,7 +5,7 @@
 	import LanguageDropdown from '$lib/components/LanguageSelector.svelte';
 </script>
 
-<nav class="preset-filled-surface-100-900 flex min-h-13 items-center justify-between py-1 px-5">
+<nav class="preset-filled-surface-100-900 flex min-h-13 items-center justify-between px-5 py-1">
 	{#if !sidebarState.isExpanded}
 		<button
 			class="flex h-12 w-12 items-center justify-center"

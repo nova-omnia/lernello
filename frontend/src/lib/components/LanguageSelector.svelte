@@ -18,7 +18,8 @@
 	<button
 		type="button"
 		on:click={toggleDropdown}
-		class="flex items-center justify-between w-full border rounded border-surface-200-800 pl-3 pr-3 py-2 text-left focus:outline-none">
+		class="border-surface-200-800 flex w-full items-center justify-between rounded border py-2 pr-3 pl-3 text-left focus:outline-none"
+	>
 		<span class="flex items-center space-x-2">
 			<Globe size={20} />
 			<span class="truncate">
@@ -38,13 +39,16 @@
 		</span>
 	</button>
 	{#if open}
-		<ul class="absolute z-10 mt-1 w-full bg-surface-100-900 border border-surface-200-800 rounded shadow-lg max-h-60 overflow-auto">
+		<ul
+			class="bg-surface-100-900 border-surface-200-800 absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border shadow-lg"
+		>
 			{#each $locales as loc (loc)}
 				<li>
 					<button
 						type="button"
 						on:click={() => selectLocale(loc)}
-						class="flex items-center justify-between w-full text-left px-3 py-2 truncate hover:bg-surface-200-800 focus:outline-none">
+						class="hover:bg-surface-200-800 flex w-full items-center justify-between truncate px-3 py-2 text-left focus:outline-none"
+					>
 						<span class="truncate">
 							{$_(`languageName.${loc}`)}
 						</span>

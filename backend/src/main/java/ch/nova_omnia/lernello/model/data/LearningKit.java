@@ -55,6 +55,9 @@ public class LearningKit {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
+    @Column(name = "context")
+    private String context;
+
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LearningUnit> learningUnits = new ArrayList<>();
 

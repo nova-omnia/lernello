@@ -4,6 +4,7 @@ import ch.nova_omnia.lernello.model.data.Folder;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,26 @@ public class LearningKitService {
     public LearningKit save(LearningKit learningKit) {
         return learningKitRepository.save(learningKit);
     }
+
+    @Transactional
+    public LearningKit edit(LearningKit learningKit) {
+        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+
+        updateLearningKit(existingKit, learningKit);
+        return existingKit;
+    }
+
+    private void updateLearningKit(LearningKit target, LearningKit source) {
+        target.setName(source.getName());
+        target.setDescription(source.getDescription());
+        target.setLanguage(source.getLanguage());
+        target.setDeadlineDate(source.getDeadlineDate());
+        target.setParticipants(source.getParticipants());
+        target.setFolder(source.getFolder());
+        target.setContext(source.getContext());
+    }
+
 
     @Transactional
     public void deleteById(UUID id) {

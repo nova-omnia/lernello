@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dragHandle } from 'svelte-dnd-action';
 	import { BookOpen, FileText, GripVertical } from 'lucide-svelte';
-	import type { Block } from '../blocks/globalBlocks';
+	import type { Block } from '$lib/models/globalBlock';
 
 	export let block: Block;
 

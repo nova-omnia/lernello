@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
-	overrideItemIdKeyNameBeforeInitialisingDndZones('uuid');
 	import TheoryBlockComponent from './blocks/theoryBlockComponent.svelte';
 	import QuizBlockComponent from './blocks/quizBlockComponent.svelte';
-	import { type BlockItem } from './blocks/globalBlocks';
+	import { type BlockItem } from '$lib/models/globalBlock';
 	import BlockAdder from './learningUnitComponents/blockAdder.svelte';
 	import LearningUnitEditor from './learningUnitComponents/learningUnitEditor.svelte';
 	import LearningUnitEditOverview from './learningUnitComponents/learningUnitEditOverview.svelte';
+
+	overrideItemIdKeyNameBeforeInitialisingDndZones('uuid');
 
 	const flipDurationMs = 200;
 

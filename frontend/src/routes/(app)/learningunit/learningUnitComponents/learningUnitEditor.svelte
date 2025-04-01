@@ -6,7 +6,6 @@
 	export let blocks: BlockItem[];
 	export let flipDurationMs: number;
 	export let unitId: string;
-
 </script>
 
 <div class="m-0 overflow-y-auto border-r border-gray-300 bg-white p-4">

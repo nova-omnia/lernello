@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { BLOCK_GROUPS, type BlockGroup, type BlockType } from '$lib/models/globalBlock';
-	import { addTheoryBlock, addMultipleChoiceQuizBlock, addTextAnswerQuizBlock} from "$lib/api/learningUnits";
+	import {
+		addTheoryBlock,
+		addMultipleChoiceQuizBlock,
+		addTextAnswerQuizBlock
+	} from '$lib/api/learningUnits';
 
 	let openSections: Record<BlockType, boolean> = {
 		theory: true,

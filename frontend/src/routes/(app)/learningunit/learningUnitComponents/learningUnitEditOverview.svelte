@@ -5,7 +5,7 @@
 	import type { BlockItem } from '$lib/models/globalBlock';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	import { getContext } from 'svelte';
-	import {updateBlockOrder} from "$lib/api/learningUnits";
+	import { updateBlockOrder } from '$lib/api/learningUnits';
 
 	const toast: ToastContext = getContext('toast');
 
@@ -37,7 +37,10 @@
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		try {
-			await updateBlockOrder(unitId, blocks.map((block) => block.uuid));
+			await updateBlockOrder(
+				unitId,
+				blocks.map((block) => block.uuid)
+			);
 		} catch (error) {
 			toast.create({
 				title: 'Error',

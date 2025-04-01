@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createLearningUnit } from "$lib/api/learningUnits";
+	import { createLearningUnit } from '$lib/api/learningUnits';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	const toast: ToastContext = getContext('toast');
@@ -21,10 +21,7 @@
 </script>
 
 <div class="flex h-full items-center justify-center">
-	<form
-		onsubmit={handleSubmit}
-		class="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md"
-	>
+	<form onsubmit={handleSubmit} class="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
 		<h2 class="mb-4 text-2xl font-bold">Create Learning Unit</h2>
 		<div class="mb-4">
 			<label for="learningUnitName" class="mb-1 block text-sm font-medium">Learning Unit Name</label

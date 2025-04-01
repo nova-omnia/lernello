@@ -3,9 +3,9 @@
 	import QuizBlockComponent from './quizBlockComponent.svelte';
 	import { BookOpen, FileText, X } from 'lucide-svelte';
 	import type { Block } from '$lib/models/globalBlock';
-	import {deleteBlock} from "$lib/api/learningUnits";
-	import type {ToastContext} from "@skeletonlabs/skeleton-svelte";
-	import {getContext} from "svelte";
+	import { deleteBlock } from '$lib/api/learningUnits';
+	import type { ToastContext } from '@skeletonlabs/skeleton-svelte';
+	import { getContext } from 'svelte';
 
 	const toast: ToastContext = getContext('toast');
 
@@ -14,7 +14,6 @@
 
 	let Component = block.type === 'theory' ? TheoryBlockComponent : QuizBlockComponent;
 	let IconComponent = block.type === 'theory' ? BookOpen : FileText;
-
 
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();

@@ -2,8 +2,8 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 </script>
 
-<div class="preset-filled-surface-50-950 space-y-4 border-r border-gray-300 p-4">
-	<h2 class="mb-4 text-lg font-bold">Actions</h2>
+<div class="preset-filled-surface-50-950 space-y-4 p-4">
+	<h2 class="h2">Actions</h2>
 	<button
 		type="button"
 		class="btn preset-filled-primary-500 block w-full"

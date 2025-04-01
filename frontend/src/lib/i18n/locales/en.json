@@ -1,4 +1,9 @@
 {
+	"languageName.en-EN": "English",
+	"languageName.de-DE": "German",
+	"languageName.it-IT": "Italian",
+	"languageName.fr-FR": "French",
+	"dashboard.welcome": "Good Morning!",
 	"error.title": "Error",
 	"error.description": "Uh oh, something went wrong. ({status})",
 	"login.title": "Sign in",

@@ -1,4 +1,9 @@
 {
+	"languageName.en-EN": "Englisch",
+	"languageName.de-DE": "Deutsch",
+	"languageName.it-IT": "Italienisch",
+	"languageName.fr-FR": "Französisch",
+	"dashboard.welcome": "Guten Morgen!",
 	"error.title": "Fehler",
 	"error.description": "Hoppla, etwas ist schiefgelaufen. ({status})",
 	"login.title": "Anmelden",

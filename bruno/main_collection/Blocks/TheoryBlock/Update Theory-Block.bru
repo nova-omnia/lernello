@@ -1,0 +1,19 @@
+meta {
+  name: Update Theory-Block
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/theory-block/update
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "uuid": "",
+    "name": "Michal",
+    "content": "blond"
+  }
+}

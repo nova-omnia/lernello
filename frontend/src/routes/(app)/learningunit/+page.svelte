@@ -1,5 +1,7 @@
 <script lang="ts">
 	import LearningUnit from './learningUnit.svelte';
+
+	let { data } = $props();
 </script>
 
-<LearningUnit />
+<LearningUnit blocks={data.blocks} />

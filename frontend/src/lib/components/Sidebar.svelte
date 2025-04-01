@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { sidebarState } from '$lib/components/sidebarState.svelte';
+	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import {
 		ChartLine,
 		Settings,

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createLearningUnit } from '$lib/api/learningUnits';
+	// import { createLearningUnit } from '$lib/api/learningUnits';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	const toast: ToastContext = getContext('toast');
@@ -9,7 +9,7 @@
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		try {
-			await createLearningUnit(learningUnitName);
+			// await createLearningUnit(learningUnitName);
 		} catch (error) {
 			toast.create({
 				title: 'Error',
@@ -32,14 +32,14 @@
 				bind:value={learningUnitName}
 				placeholder="Enter learning unit name"
 				required
-				class="focus:ring-primary-500 w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+				class="focus:ring-primary-500 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2"
 			/>
 		</div>
 
 		<div>
 			<button
 				type="submit"
-				class="bg-primary-500 hover:bg-primary-600 focus:ring-primary-500 w-full rounded px-4 py-2 font-medium text-white focus:ring-2 focus:outline-none"
+				class="bg-primary-500 hover:bg-primary-600 focus:ring-primary-500 w-full rounded px-4 py-2 font-medium text-white focus:outline-none focus:ring-2"
 			>
 				Create
 			</button>

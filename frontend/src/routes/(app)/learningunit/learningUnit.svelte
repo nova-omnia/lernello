@@ -1,32 +1,27 @@
 <script lang="ts">
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
-	import TheoryBlockComponent from './blocks/theoryBlockComponent.svelte';
-	import QuizBlockComponent from './blocks/quizBlockComponent.svelte';
-	import { type BlockItem } from '$lib/models/globalBlock';
-	import BlockAdder from './learningUnitComponents/blockAdder.svelte';
-	import LearningUnitEditor from './learningUnitComponents/learningUnitEditor.svelte';
-	import LearningUnitEditOverview from './learningUnitComponents/learningUnitEditOverview.svelte';
+
+	import BlockSelector from '$lib/components/blocks/BlockSelector.svelte';
+	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
+	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
+	import type { Block } from '$lib/models/block';
+	import { learningUnitActionQueue } from '$lib/states/blockActionState';
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('uuid');
 
-	const flipDurationMs = 200;
+	interface LearningUnitProps {
+		blocks: Block[];
+	}
+	const { blocks }: LearningUnitProps = $props();
 
-	//TODO: Fetch blocks from API and assign the component based on the type
-
-	let blocks: BlockItem[] = [
-		{ uuid: '1', name: 'Block 1', type: 'theory', element: TheoryBlockComponent },
-		{ uuid: '2', name: 'Block 2', type: 'quiz', element: QuizBlockComponent },
-		{ uuid: '3', name: 'Block 3', type: 'theory', element: TheoryBlockComponent },
-		{ uuid: '4', name: 'Block 4', type: 'quiz', element: QuizBlockComponent }
-	];
-	// TODO: Fetch unitID
-	let unitId = '1';
+	learningUnitActionQueue.blocks = blocks;
+	learningUnitActionQueue.actions = [];
 </script>
 
-<div class="grid h-screen grid-cols-[25%_50%_25%]">
-	<BlockAdder {blocks} {unitId} />
-
-	<LearningUnitEditor {blocks} {flipDurationMs} {unitId} />
-
-	<LearningUnitEditOverview {blocks} {flipDurationMs} {unitId} />
+<div class="-m-4">
+	<div class="grid h-full grid-cols-[25%_50%_25%]">
+		<BlockSelector />
+		<BlockEditor />
+		<BlockReorder />
+	</div>
 </div>

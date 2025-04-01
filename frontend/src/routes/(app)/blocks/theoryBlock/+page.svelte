@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { redirect } from '@sveltejs/kit';
 	import { MarkdownEditor } from 'carta-md';
 	import { carta } from '$lib/carta';
 	export let data: { markdown: string; html: string };

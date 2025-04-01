@@ -21,20 +21,16 @@
 
 <div>
 	<button class="preset-filled-primary-100-900 m-auto p-5" on:click={openDialog}
-		>Add new Question</button
+		>Add new multiple choice block</button
 	>
 	<dialog bind:this={dialog} class=" preset-filled-primary-300-700 m-auto p-4">
-		<input
-			type="text"
-			placeholder="Type Question"
-			bind:value={question}
-			class="mb-4 w-full border p-2"
-		/>
-		<button on:click={addQuestion} class="preset-filled-primary-50-950 mt-4 rounded p-2">
-			Add question
-		</button>
-
 		<div class="grid grid-cols-12 items-center justify-items-center gap-4">
+			<input
+				type="text"
+				placeholder="Type Question"
+				bind:value={question}
+				class="col-span-12 mb-4 w-full border p-2"
+			/>
 			<input type="checkbox" id="correct" name="correct" value="correct" class="col-span-1" />
 			<input
 				type="text"
@@ -63,6 +59,9 @@
 				bind:value={answer4}
 				class="col-span-5 border p-2"
 			/>
+			<button on:click={addQuestion} class="preset-filled-primary-50-950 mt-4 rounded p-2">
+				Add multiple choice block
+			</button>
 		</div>
 	</dialog>
 </div>

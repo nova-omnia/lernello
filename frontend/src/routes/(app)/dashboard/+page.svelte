@@ -1,5 +1,4 @@
 <script lang="ts">
-	import MultipleChoiceBlock from "$lib/components/MultipleChoiceBlock.svelte";
 </script>
 
 <div class="p-5">
@@ -31,5 +30,4 @@
 			>+ Create new Learning Kit</button
 		>
 	</div>
-	<MultipleChoiceBlock />
 </div>

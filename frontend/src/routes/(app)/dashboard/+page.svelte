@@ -1,4 +1,6 @@
 <script lang="ts">
+	import TheoryBlock from "$lib/components/blocks/TheoryBlock.svelte";
+
 </script>
 
 <div class="p-5">
@@ -30,4 +32,5 @@
 			>+ Create new Learning Kit</button
 		>
 	</div>
+	<TheoryBlock />
 </div>

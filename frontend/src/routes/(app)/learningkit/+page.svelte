@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FileUpdate from '$lib/components/FileUpdate.svelte';
+	import FileUpdate from '$lib/components/FileUpload.svelte';
 </script>
 
 <div class="ml-4">

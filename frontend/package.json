@@ -52,6 +52,6 @@
 		"@cartamd/plugin-slash": "^4.2.0",
 		"carta-md": "^4.8.1",
 		"isomorphic-dompurify": "^2.22.0",
-        "svelte-i18n": "^4.0.1"
+		"svelte-i18n": "^4.0.1"
 	}
 }

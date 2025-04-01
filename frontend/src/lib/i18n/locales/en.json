@@ -1,4 +1,17 @@
 {
-  "greeting": "Hello, {name}!",
-  "welcome": "Welcome to our website"
+	"error.title": "Error",
+	"error.description": "Uh oh, something went wrong. ({status})",
+	"login.title": "Sign in",
+	"login.signIn": "Sign in",
+	"form.emailLabel": "Email",
+	"form.emailPlaceholder": "email",
+	"form.passwordLabel": "Password",
+	"form.passwordPlaceholder": "password",
+	"form.newPasswordLabel": "New Password",
+	"form.newPasswordPlaceholder": "new password",
+	"form.confirmPasswordLabel": "Confirm Password",
+	"form.confirmPasswordPlaceholder": "confirm password",
+	"changePassword.title": "Change your Password",
+	"changePassword.description": "Please change your generated password to your own password.",
+	"changePassword.button": "Change Password"
 }

@@ -1,4 +1,17 @@
 {
-  "greeting": "Hallo, {name}!",
-  "welcome": "Willkommen auf unserer Website"
+	"error.title": "Fehler",
+	"error.description": "Hoppla, etwas ist schiefgelaufen. ({status})",
+	"login.title": "Anmelden",
+	"login.signIn": "Anmelden",
+	"form.emailLabel": "E-Mail",
+	"form.emailPlaceholder": "E-Mail",
+	"form.passwordLabel": "Passwort",
+	"form.passwordPlaceholder": "Passwort",
+	"form.newPasswordLabel": "Neues Passwort",
+	"form.newPasswordPlaceholder": "neues Passwort",
+	"form.confirmPasswordLabel": "Passwort bestätigen",
+	"form.confirmPasswordPlaceholder": "Passwort bestätigen",
+	"changePassword.title": "Ändere dein Passwort",
+	"changePassword.description": "Bitte ändere dein generiertes Passwort in dein eigenes Passwort.",
+	"changePassword.button": "Passwort ändern"
 }

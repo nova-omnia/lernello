@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { superForm } from 'sveltekit-superforms';
-	import SuperDebug from 'sveltekit-superforms';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	import { _ } from 'svelte-i18n';
+
 	const toast: ToastContext = getContext('toast');
 
 	let { data } = $props();
@@ -12,8 +13,8 @@
 		onError: (error) => {
 			console.error('Error:', error.result.error);
 			toast.create({
-				title: 'Error',
-				description: `Uh oh, something went wrong. (${error.result.status})`,
+				title: $_('error.title'),
+				description: $_('error.description', { values: { status: error.result.status } }),
 				type: 'error'
 			});
 		}
@@ -29,16 +30,16 @@
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
 	>
-		<h1 class="h2">Login</h1>
+		<h1 class="h2">{$_('login.title')}</h1>
+
 		<div class="space-y-4">
 			<label class="label">
-				<span class="label-text">Email</span>
+				<span class="label-text">{$_('form.emailLabel')}</span>
 				<input
 					class="input preset-filled-surface-200-800"
 					name="username"
 					type="text"
-					placeholder="email"
-					autofocus
+					placeholder={$_('form.emailPlaceholder')}
 					aria-invalid={$errors.username ? 'true' : undefined}
 					bind:value={$form.username}
 					{...$constraints.username}
@@ -46,12 +47,12 @@
 				{#if $errors.username}<span class="text-error-50-950">{$errors.username}</span>{/if}
 			</label>
 			<label class="label">
-				<span class="label-text">Passwort</span>
+				<span class="label-text">{$_('form.passwordLabel')}</span>
 				<input
 					class="input preset-filled-surface-200-800"
 					name="password"
 					type="password"
-					placeholder="password"
+					placeholder={$_('form.passwordPlaceholder')}
 					aria-invalid={$errors.password ? 'true' : undefined}
 					bind:value={$form.password}
 					{...$constraints.password}
@@ -59,7 +60,7 @@
 				{#if $errors.password}<span class="text-error-50-950">{$errors.password}</span>{/if}
 			</label>
 		</div>
-		<button class="btn preset-filled-primary-500 w-full">Sign in</button>
+		<button class="btn preset-filled-primary-500 w-full">{$_('login.button')}</button>
 	</form>
 	<SuperDebug data={$form} />
 </main>

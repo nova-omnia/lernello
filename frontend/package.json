@@ -11,7 +11,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint . && prettier --check .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"start": "vite dev & open-cli http://localhost:5173"
 	},
 	"engines": {
 		"node": ">=22.14.0",
@@ -32,6 +33,7 @@
 		"eslint-plugin-svelte": "^3.3.1",
 		"globals": "^16.0.0",
 		"lucide-svelte": "^0.482.0",
+		"open-cli": "^8.0.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
@@ -45,6 +47,11 @@
 		"zod": "^3.24.2"
 	},
 	"dependencies": {
-		"svelte-i18n": "^4.0.1"
+		"@cartamd/plugin-code": "^4.1.1",
+		"@cartamd/plugin-emoji": "^4.3.0",
+		"@cartamd/plugin-slash": "^4.2.0",
+		"carta-md": "^4.8.1",
+		"isomorphic-dompurify": "^2.22.0",
+        "svelte-i18n": "^4.0.1"
 	}
 }

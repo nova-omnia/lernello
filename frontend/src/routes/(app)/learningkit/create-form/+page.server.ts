@@ -19,15 +19,12 @@ export const load = async ({url}: { url: any }) => {
                 ? new Date(existingKit.deadlineDate)
                 : undefined,
             description: existingKit.description,
-            language: existingKit.language,
-            name: existingKit.name,
-            participants: existingKit.participants
+            name: existingKit.name
         };
     }
 
     const form = await superValidate(formData, zod(CreateKitSchema));
-    const users = await getUsers();
-    return {form, users, editId};
+    return {form, editId};
 };
 
 export const actions = {

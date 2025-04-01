@@ -21,9 +21,6 @@ export const LearningKitSchema = z.object({
 	deadlineDate: z.preprocess(
 		(val) => (typeof val === 'string' ? new Date(val) : undefined),
 		z.date().optional()
-	),
-	language: z.string().nonempty(),
-	participants: z.array(z.string().uuid()),
-	folderId: z.string().uuid().nullable()
+	)
 });
 export type LearningKit = z.infer<typeof LearningKitSchema>;

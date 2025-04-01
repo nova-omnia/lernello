@@ -3,26 +3,29 @@ package ch.nova_omnia.lernello.model.data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     public enum Role {
         INSTRUCTOR, TRAINEE
@@ -30,30 +33,30 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", nullable = false, updatable = false)
+    @Column(name = "uuid", nullable = false)
+    @NotNull
     private UUID uuid;
 
     @Column(name = "username", nullable = false, unique = true)
-    @NotNull
-    @NonNull
-    @Email(message = "Invalid username format")
+    @NotBlank
+    @Email
     private String username;
 
     @Column(name = "password", nullable = false)
-    @NotNull
-    @NonNull
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @NotBlank
+    @Size(min = 8)
     private String password;
 
+    @Column(name = "changed_password", nullable = false)
+    private boolean changedPassword;
+
     @Column(name = "language", nullable = false)
-    @NotNull
-    @NonNull
+    @NotBlank
     private String language;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    @NotNull(message = "Role is required")
-    @NonNull
+    @NotNull
     private Role role;
 
     @Column(name = "create_date", updatable = false)
@@ -63,4 +66,18 @@ public class User {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @Transient
+    private String token;
+
+    @Transient
+    private int expires;
+
+
+    public User(String username, String password, String language, Role role) {
+        this.username = username;
+        this.password = password;
+        this.language = language;
+        this.role = role;
+    }
 }

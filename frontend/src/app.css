@@ -6,6 +6,8 @@
 @import '@skeletonlabs/skeleton/themes/cerberus';
 @import './styles/lernello-theme.css';
 
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+
 @plugin '@tailwindcss/forms';
 
 /* @custom-variant dark (&:where(.dark, .dark *)); */
@@ -14,5 +16,16 @@
 	html,
 	body {
 		@apply h-full;
+	}
+}
+
+@layer components {
+	.preset-typo-subtitle {
+		font-size: var(--text-base);
+		font-family: var(--heading-font-family);
+		color: var(--color-surface-700-300);
+		@variant lg {
+			font-size: var(--text-xl);
+		}
 	}
 }

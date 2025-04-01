@@ -18,3 +18,14 @@
 		@apply h-full;
 	}
 }
+
+@layer components {
+	.preset-typo-subtitle {
+		font-size: var(--text-base);
+		font-family: var(--heading-font-family);
+		color: var(--color-surface-700-300);
+		@variant lg {
+			font-size: var(--text-xl);
+		}
+	}
+}

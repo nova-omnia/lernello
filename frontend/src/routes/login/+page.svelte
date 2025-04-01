@@ -38,6 +38,7 @@
 					name="username"
 					type="text"
 					placeholder="email"
+					autofocus
 					aria-invalid={$errors.username ? 'true' : undefined}
 					bind:value={$form.username}
 					{...$constraints.username}

@@ -25,6 +25,7 @@
 					name="newPassword"
 					type="password"
 					placeholder="new password"
+					autofocus
 					aria-invalid={$errors.newPassword ? 'true' : undefined}
 					bind:value={$form.newPassword}
 					{...$constraints.newPassword}

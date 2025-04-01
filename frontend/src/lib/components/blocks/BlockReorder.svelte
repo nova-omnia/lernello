@@ -2,10 +2,10 @@
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import BlockReorderItem from '$lib/components/blocks/BlockReorderItem.svelte';
-	import { learningUnitActionQueue, queueLearningUnitAction } from '$lib/states/blockActionState';
+	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { Block } from '$lib/models/block';
 
-	let blocksSnapshot = $derived(learningUnitActionQueue.blocks);
+	let blocksSnapshot = $derived(blockActionState.blocks);
 
 	let currentlyDraggingId: string | null = null;
 	function handleSortOnConsider(e: CustomEvent<DndEvent<Block>>) {
@@ -24,7 +24,7 @@
 
 		blocksSnapshot = e.detail.items;
 
-		queueLearningUnitAction({
+		queueBlockAction({
 			type: 'REORDER_BLOCK',
 			data: {
 				blockId: newBlockId,

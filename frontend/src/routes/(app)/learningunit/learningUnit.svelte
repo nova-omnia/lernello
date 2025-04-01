@@ -5,7 +5,7 @@
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import type { Block } from '$lib/models/block';
-	import { learningUnitActionQueue } from '$lib/states/blockActionState';
+	import { blockActionState } from '$lib/states/blockActionState.svelte';
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('uuid');
 
@@ -14,8 +14,8 @@
 	}
 	const { blocks }: LearningUnitProps = $props();
 
-	learningUnitActionQueue.blocks = blocks;
-	learningUnitActionQueue.actions = [];
+	blockActionState.blocks = blocks;
+	blockActionState.queue = [];
 </script>
 
 <div class="-m-4">

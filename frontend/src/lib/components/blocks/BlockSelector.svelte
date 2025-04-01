@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { queueLearningUnitAction } from '$lib/states/blockActionState';
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 </script>
 
 <div class="preset-filled-surface-50-950 space-y-4 border-r border-gray-300 p-4">
@@ -8,7 +8,7 @@
 		type="button"
 		class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
 		onclick={() => {
-			queueLearningUnitAction({
+			queueBlockAction({
 				type: 'ADD_BLOCK',
 				data: {
 					name: 'Theory Block',
@@ -23,7 +23,7 @@
 		type="button"
 		class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
 		onclick={() => {
-			queueLearningUnitAction({
+			queueBlockAction({
 				type: 'ADD_BLOCK',
 				data: {
 					name: 'Multiple Choice Quiz',

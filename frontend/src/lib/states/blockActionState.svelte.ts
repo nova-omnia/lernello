@@ -17,17 +17,17 @@ type BlockAction =
 			};
 	  };
 
-type BlockActionQueue = {
-	actions: BlockAction[];
+type BlockActionState = {
+	queue: BlockAction[];
 	blocks: Block[];
 };
 
-export const learningUnitActionQueue: BlockActionQueue = $state({
-	actions: [],
+export const blockActionState: BlockActionState = $state({
+	queue: [],
 	blocks: []
 });
 
-function applyLearningUnitAction(action: BlockAction, blocks: Block[]): Block[] {
+function applyBlockAction(action: BlockAction, blocks: Block[]): Block[] {
 	switch (action.type) {
 		case 'ADD_BLOCK':
 			if (action.data.index !== undefined) {
@@ -52,7 +52,7 @@ function applyLearningUnitAction(action: BlockAction, blocks: Block[]): Block[] 
 	return blocks;
 }
 
-export function queueLearningUnitAction(action: BlockAction) {
-	learningUnitActionQueue.blocks = applyLearningUnitAction(action, learningUnitActionQueue.blocks);
-	learningUnitActionQueue.actions.push(action);
+export function queueBlockAction(action: BlockAction) {
+	blockActionState.blocks = applyBlockAction(action, blockActionState.blocks);
+	blockActionState.queue.push(action);
 }

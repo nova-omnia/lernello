@@ -6,7 +6,7 @@
 	<h2 class="mb-4 text-lg font-bold">Actions</h2>
 	<button
 		type="button"
-		class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+		class="btn preset-filled-primary-500 block w-full"
 		onclick={() => {
 			queueBlockAction({
 				type: 'ADD_BLOCK',
@@ -21,7 +21,7 @@
 	</button>
 	<button
 		type="button"
-		class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+		class="btn preset-filled-primary-500 block w-full"
 		onclick={() => {
 			queueBlockAction({
 				type: 'ADD_BLOCK',
@@ -36,7 +36,7 @@
 	</button>
 	<button
 		type="button"
-		class="bg-primary-500 hover:bg-primary-600 w-full rounded-xl px-4 py-2 text-white"
+		class="btn preset-filled-primary-500 block w-full"
 		onclick={() => {
 			// queueLearningUnitAction({
 			// 	type: 'ADD_BLOCK',

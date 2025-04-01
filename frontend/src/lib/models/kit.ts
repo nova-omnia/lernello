@@ -9,12 +9,10 @@ export const CreateKitSchema = z.object({
 		if (val instanceof Date) return val;
 		return undefined;
 	}, z.date().optional()),
-	language: z.string().nonempty(),
-	participants: z.array(z.string().uuid()),
 	context: z.string().optional()
-	//files: z.array(z.object()) ToDo: Add File Objects
 });
 export type CreateKit = z.infer<typeof CreateKitSchema>;
+
 export const LearningKitSchema = z.object({
 	uuid: z.string().uuid().nonempty(),
 	name: z.string().nonempty(),
@@ -27,6 +25,5 @@ export const LearningKitSchema = z.object({
 	language: z.string().nonempty(),
 	participants: z.array(z.string().uuid()),
 	folderId: z.string().uuid().nullable()
-	//files: z.array(z.object()) ToDo: Add File Objects
 });
 export type LearningKit = z.infer<typeof LearningKitSchema>;

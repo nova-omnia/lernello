@@ -7,6 +7,7 @@ import { createLearningKit } from '$lib/api/learningKit';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateKitSchema));
+
 	return { form };
 };
 
@@ -16,10 +17,9 @@ export const actions = {
 		if (!form.valid) {
 			return fail(400, { form });
 		}
+
 		const learningKit = await createLearningKit(form.data);
 
-		const learningKitId = learningKit.id;
-
-		redirect(303, `/learning-kit/${learningKitId}`);
+		return redirect(303, `/learningkit/${learningKit.uuid}`);
 	})
 } satisfies Actions;

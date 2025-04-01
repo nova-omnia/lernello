@@ -13,3 +13,9 @@ export const UserTokenSchema = z.object({
 	expires: z.number().int().nonnegative()
 });
 export type UserToken = z.infer<typeof UserTokenSchema>;
+
+export const ParticipantSchema = z.object({
+	username: z.string().email().nonempty(),
+	uuid: z.string().uuid().nonempty()
+});
+export type Participant = z.infer<typeof ParticipantSchema>;

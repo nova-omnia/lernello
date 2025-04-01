@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.service;
 
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,8 @@ import ch.nova_omnia.lernello.model.data.User;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import ch.nova_omnia.lernello.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -40,5 +43,9 @@ public class UserService {
         user.setChangedPassword(true);
         userRepository.save(user);
         return true;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

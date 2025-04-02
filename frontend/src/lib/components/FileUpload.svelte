@@ -2,7 +2,7 @@
 	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	import {
 		Upload as IconUpload,
-		Paperclip as IconFile,
+		File as IconFile,
 		XCircle as IconRemove
 	} from 'lucide-svelte';
 </script>

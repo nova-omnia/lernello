@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FileUpdate from '$lib/components/FileUpload.svelte';
+	import FileUpload from '$lib/components/FileUpload.svelte';
 </script>
 
 <div class="ml-4">
@@ -7,6 +7,6 @@
 	<p>Description</p>
 	<div class="mt-5">
 		<h2 class="mb-2 text-lg font-semibold">Upload Files</h2>
-		<FileUpdate />
+		<FileUpload />
 	</div>
 </div>

@@ -54,7 +54,7 @@
 						</span>
 						<span class="w-5 flex-shrink-0 text-right">
 							{#if loc === $locale}
-								<Check size={16} class="text-primary-50" />
+								<Check size={16} class="text-primary-900-100" />
 							{/if}
 						</span>
 					</button>

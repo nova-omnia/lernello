@@ -1,0 +1,22 @@
+{
+	"languageName.en-EN": "Anglais",
+	"languageName.de-DE": "Allemand",
+	"languageName.it-IT": "Italien",
+	"languageName.fr-FR": "Français",
+	"dashboard.welcome": "Bonjour!",
+	"error.title": "Erreur",
+	"error.description": "Oh non, quelque chose s'est mal passé. ({status})",
+	"login.title": "Se connecter",
+	"login.signIn": "Se connecter",
+	"form.emailLabel": "E-mail",
+	"form.emailPlaceholder": "email",
+	"form.passwordLabel": "Mot de passe",
+	"form.passwordPlaceholder": "mot de passe",
+	"form.newPasswordLabel": "Nouveau mot de passe",
+	"form.newPasswordPlaceholder": "nouveau mot de passe",
+	"form.confirmPasswordLabel": "Confirmer le mot de passe",
+	"form.confirmPasswordPlaceholder": "confirmer le mot de passe",
+	"changePassword.title": "Changez votre mot de passe",
+	"changePassword.description": "Veuillez changer votre mot de passe généré pour un mot de passe de votre choix.",
+	"changePassword.button": "Changer le mot de passe"
+}

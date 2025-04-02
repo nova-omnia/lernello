@@ -11,7 +11,7 @@
 			console.error('Error:', error.result.error);
 			toast.create({
 				title: 'Error',
-				description: `Uh oh, something went wrong. (${ error.result.status })`,
+				description: `Uh oh, something went wrong. (${error.result.status})`,
 				type: 'error'
 			});
 		}
@@ -91,7 +91,8 @@
 		{/if}
 	</label>
 
-	<button
-		class="btn preset-filled-primary-400-600 w-full">{data.editId ? 'Update Learning Kit' : 'Create Learning Kit'}</button>
+	<button class="btn preset-filled-primary-400-600 w-full"
+		>{data.editId ? 'Update Learning Kit' : 'Create Learning Kit'}</button
+	>
 	<SuperDebug data={$form} />
 </form>

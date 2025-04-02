@@ -18,14 +18,11 @@ export const LearningKitSchema = z.object({
 	name: z.string().nonempty(),
 	learningUnits: z.array(z.any()).optional(), //ToDo
 	description: z.string().optional(),
-	deadlineDate: z.preprocess(
-		(val) => {
-			if (typeof val === 'string' && val) return new Date(val);
-			if (val instanceof Date) return val;
-			return undefined;
-		},
-		z.date().optional()
-	),
+	deadlineDate: z.preprocess((val) => {
+		if (typeof val === 'string' && val) return new Date(val);
+		if (val instanceof Date) return val;
+		return undefined;
+	}, z.date().optional()),
 	context: z.string().optional()
 });
 export type LearningKit = z.infer<typeof LearningKitSchema>;

@@ -2,8 +2,12 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import { createLearningKit, getLearningKit, updateLearningKit } from "$lib/api/learning-kit/learningKit";
-import { CreateLearningKitSchema, EditLearningKitSchema } from "$lib/models/kit";
+import {
+	createLearningKit,
+	getLearningKit,
+	updateLearningKit
+} from '$lib/api/learning-kit/learningKit';
+import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/models/kit';
 
 export const load = async ({ url }: { url: any }) => {
 	const editId = url.searchParams.get('edit');
@@ -44,7 +48,7 @@ export const actions = {
 		}
 		const learningKitId = learningKit.uuid;
 
-		return redirect(303, `/learningkit/${ learningKitId }`);
+		return redirect(303, `/learningkit/${learningKitId}`);
 	})
 } satisfies Actions;
 

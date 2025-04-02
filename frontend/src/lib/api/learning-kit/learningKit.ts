@@ -1,6 +1,6 @@
 import { userRequest } from '$lib/api/apiClient';
 import { type CreateLearningKit, type LearningKit, LearningKitSchema } from '$lib/models/kit';
-import { z } from "zod";
+import { z } from 'zod';
 
 export async function createLearningKit(payload: CreateLearningKit): Promise<LearningKit> {
 	const { deadlineDate, ...rest } = payload;
@@ -18,7 +18,7 @@ export async function createLearningKit(payload: CreateLearningKit): Promise<Lea
 }
 
 export async function getLearningKit(uuid: string): Promise<LearningKit> {
-	const res = await userRequest(`/api/learning-kits/${ uuid }`, 'GET');
+	const res = await userRequest(`/api/learning-kits/${uuid}`, 'GET');
 	return LearningKitSchema.parse(res);
 }
 
@@ -42,7 +42,7 @@ export async function updateLearningKit(payload: CreateLearningKit): Promise<Lea
 }
 
 export async function deleteLearningKit(uuid: string): Promise<string> {
-	const res = await userRequest(`/api/learning-kits/${ uuid }`, 'DELETE', {
+	const res = await userRequest(`/api/learning-kits/${uuid}`, 'DELETE', {
 		headers: {
 			'Content-Type': 'application/json'
 		}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Pencil, Trash2 } from '@lucide/svelte';
-	import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
+	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 
 	type Kit = {
 		uuid: string;
@@ -56,17 +56,14 @@
 		{#each kits as kit (kit.uuid)}
 			<div
 				on:click={() => goto(`/learningkit/${kit.uuid}`)}
-				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 p-5 pt-10 text-center hover:bg-gray-100 transition-colors"
+				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100"
 			>
-				<div class="absolute right-2 top-2 flex gap-2">
-					<a
-						href="/learningkit/create-form?edit={kit.uuid}"
-						on:click|stopPropagation
-					>
-						<Pencil class="w-4 h-4 text-blue-600 hover:text-blue-800" />
+				<div class="absolute top-2 right-2 flex gap-2">
+					<a href="/learningkit/create-form?edit={kit.uuid}" on:click|stopPropagation>
+						<Pencil class="h-4 w-4 text-blue-600 hover:text-blue-800" />
 					</a>
 					<button on:click={(e) => openDeleteDialog(kit, e)}>
-						<Trash2 class="w-4 h-4 text-red-600 hover:text-red-800" />
+						<Trash2 class="h-4 w-4 text-red-600 hover:text-red-800" />
 					</button>
 				</div>
 
@@ -77,7 +74,9 @@
 	</div>
 
 	<div class="mt-5">
-		<a href="/learningkit/create-form" class="btn preset-filled-primary-400-600">Create new Learning Kit</a>
+		<a href="/learningkit/create-form" class="btn preset-filled-primary-400-600"
+			>Create new Learning Kit</a
+		>
 	</div>
 </div>
 

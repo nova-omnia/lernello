@@ -33,6 +33,7 @@ public class CreateLearningKitController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
+        entity.setLanguage(LearningKit.Language.ENGLISH);
         LearningKit savedEntity = learningKitService.save(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }

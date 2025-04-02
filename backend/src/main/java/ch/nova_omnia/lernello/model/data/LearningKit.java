@@ -59,4 +59,11 @@ public class LearningKit {
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
+
+    // For testing purposes
+    public LearningKit(String name, Language language, Folder folder) {
+        this.name = name;
+        this.language = language;
+        this.folder = folder;
+    }
 }

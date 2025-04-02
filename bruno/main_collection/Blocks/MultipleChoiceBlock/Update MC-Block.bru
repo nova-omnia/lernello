@@ -1,0 +1,21 @@
+meta {
+  name: Update MC-Block
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/multiple-choice-block/update
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "uuid": "",
+    "name": "newBlock",
+    "question": "what is sence of life",
+  "possibleAnswer": ["getting old", "42", "43"],
+    "correctAnswers": ["42"]
+  }
+}

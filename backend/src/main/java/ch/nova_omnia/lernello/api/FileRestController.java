@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
 import ch.nova_omnia.lernello.mapper.FileMapper;
-import ch.nova_omnia.lernello.service.FileSystemService;
+import ch.nova_omnia.lernello.service.file.FileSystemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -56,7 +56,7 @@ public class FileRestController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
+    public @Valid FileResDTO uploadFile(@RequestParam("file") MultipartFile file) {
         return fileMapper.toDTO(fileService.save(file));
     }
 }

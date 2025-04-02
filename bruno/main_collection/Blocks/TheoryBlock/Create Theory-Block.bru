@@ -1,0 +1,20 @@
+meta {
+  name: Create Theory-Block
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/theory-block/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Introduction to Theory",
+    "position": 1,
+    "learningUnitId": "123e4567-e89b-12d3-a456-426614174000",
+    "content": "This is the content of the theory block."
+  }
+}

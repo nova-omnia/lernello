@@ -2,7 +2,6 @@
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
 	import QuizBlockComponent from './BlockQuizItem.svelte';
 	import type { Block } from '$lib/models/block';
-	import BlockIcon from './BlockIcon.svelte';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 
 	interface BlockItemProps {

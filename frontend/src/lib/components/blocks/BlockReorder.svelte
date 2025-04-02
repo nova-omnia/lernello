@@ -5,17 +5,21 @@
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { Block } from '$lib/models/block';
 
-	let blocksSnapshot = $derived(blockActionState.blocks);
+	let blocksSnapshot = $derived(
+		blockActionState.blocks.map((block) => ({ ...block, id: block.uuid as string })) // its not really a string, can be a symbol but sveltednd seems to work good enough with that
+	);
+
+	type BlockWithId = Block & { id: string };
 
 	let currentlyDraggingId: string | null = null;
-	function handleSortOnConsider(e: CustomEvent<DndEvent<Block>>) {
+	function handleSortOnConsider(e: CustomEvent<DndEvent<BlockWithId>>) {
 		blocksSnapshot = e.detail.items;
 		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
 			currentlyDraggingId = e.detail.info.id;
 		}
 	}
 
-	function handleSortOnFinalize(e: CustomEvent<DndEvent<Block>>) {
+	function handleSortOnFinalize(e: CustomEvent<DndEvent<BlockWithId>>) {
 		if (!currentlyDraggingId) {
 			throw new Error('No currently dragging ID');
 		}
@@ -37,17 +41,16 @@
 <div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
 	<h2 class="h2">Reorder Blocks</h2>
 	<div
-		class="space-y-2"
+		class="space-y-2 rounded-lg"
 		use:dragHandleZone={{
 			items: blocksSnapshot,
 			flipDurationMs: 200,
-			dropTargetStyle: { border: '2px dashed #ccc', borderRadius: '7px' },
 			dropFromOthersDisabled: true
 		}}
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		{#each blocksSnapshot as block (block.uuid)}
+		{#each blocksSnapshot as block (block.id)}
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<BlockReorderItem {block} />
 			</div>

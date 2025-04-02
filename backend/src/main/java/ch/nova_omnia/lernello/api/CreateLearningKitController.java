@@ -41,23 +41,15 @@ public class CreateLearningKitController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> edit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
-        System.out.println(learningKit);
-        System.out.println(entity);
-
-        if (learningKit.uuid() != null) {
-            entity.setUuid(learningKit.uuid());
-        }
-
         LearningKit updated = learningKitService.edit(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(updated));
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid ResponseEntity<Void> delete(@Valid @RequestBody CreateLearningKitDTO learningKit) {
-        LearningKit entity = learningKitMapper.toEntity(learningKit);
-        learningKitService.deleteById(entity.getUuid());
-        return ResponseEntity.ok().build();
+    public @Valid ResponseEntity<UUID> delete(@Valid @PathVariable UUID learningKitId) {
+        learningKitService.deleteById(learningKitId);
+        return ResponseEntity.ok(learningKitId);
     }
 
     @GetMapping("/getAll")

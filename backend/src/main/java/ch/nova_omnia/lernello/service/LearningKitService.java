@@ -38,20 +38,6 @@ public class LearningKitService {
         return learningKitRepository.save(learningKit);
     }
 
-    private void updateLearningKit(LearningKit target, LearningKit source) {
-        target.setName(source.getName());
-        target.setDescription(source.getDescription());
-        target.setLanguage(source.getLanguage());
-        target.setDeadlineDate(source.getDeadlineDate());
-        target.getParticipants().clear();
-        if (source.getParticipants() != null) {
-            target.getParticipants().addAll(source.getParticipants());
-        }
-        target.setFolder(source.getFolder());
-        target.setContext(source.getContext());
-    }
-
-
     @Transactional
     public void deleteById(UUID id) {
         learningKitRepository.deleteById(id);

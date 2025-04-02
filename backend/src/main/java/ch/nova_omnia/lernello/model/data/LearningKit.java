@@ -21,10 +21,6 @@ import java.util.ArrayList;
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class LearningKit {
-    public enum Language {
-        GERMAN, ENGLISH, ITALIAN, FRENCH
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
@@ -39,12 +35,6 @@ public class LearningKit {
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "language", nullable = false)
-    @Enumerated
-    @NotNull
-    @NonNull
-    private Language language;
 
     @Column(name = "deadlineDate")
     private Date deadlineDate;

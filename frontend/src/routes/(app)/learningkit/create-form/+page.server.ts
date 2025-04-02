@@ -8,8 +8,9 @@ import {
 	updateLearningKit
 } from '$lib/api/learning-kit/learningKit';
 import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/models/kit';
+import type { PageServerLoad } from '../../../../../.svelte-kit/types/src/routes/$types';
 
-export const load = async ({ url }: { url: any }) => {
+export const load: PageServerLoad = async ({ url }) => {
 	const editId = url.searchParams.get('edit');
 	let formData;
 

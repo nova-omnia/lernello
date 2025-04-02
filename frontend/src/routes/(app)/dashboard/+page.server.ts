@@ -1,6 +1,5 @@
 import { deleteLearningKit, getAllLearningKits } from '$lib/api/learning-kit/learningKit';
 import type { Actions } from '@sveltejs/kit';
-import { handleApiError } from '$lib/api/apiError';
 import { fail } from '@sveltejs/kit';
 
 export async function load() {

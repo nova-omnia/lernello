@@ -83,7 +83,7 @@
 <ConfirmDialog
 	isOpen={showDeleteDialog}
 	title="Confirm Deletion"
-	message={`Are you sure you want to delete "<span class='font-semibold'>${kitToDelete?.name}</span>"?`}
+	message={`Are you sure you want to delete "${kitToDelete?.name}"?`}
 	confirmText="Delete"
 	danger={true}
 	onConfirm={handleConfirmDelete}

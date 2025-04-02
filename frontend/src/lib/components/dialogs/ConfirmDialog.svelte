@@ -18,7 +18,7 @@
 	<div transition:fade class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
 		<div class="w-full max-w-md rounded-lg bg-white p-6">
 			<h2 class="mb-4 text-xl font-bold">{title}</h2>
-			<p class="mb-6">{@html message}</p>
+			<p class="mb-6">{message}</p>
 
 			<div class="flex justify-end gap-3">
 				<button class="rounded border px-4 py-2 hover:bg-gray-100" on:click={onCancel}>

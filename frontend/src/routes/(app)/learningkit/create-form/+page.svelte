@@ -48,7 +48,6 @@
 			id="description"
 			name="description"
 			bind:value={$form.description}
-			class="rounded-container w-full border border-gray-300 p-2 text-lg"
 			class="textarea"
 			placeholder="Provide a description..."
 			aria-invalid={$errors.description ? 'true' : undefined}
@@ -63,9 +62,6 @@
 		<span class="label-text">Context <i>– Optional</i></span>
 		<textarea
 			id="context"
-			name="additionalContext"
-			bind:value={$form.additionalContext}
-			class="rounded-container w-full border border-gray-300 p-3 text-base"
 			name="context"
 			bind:value={$form.context}
 			class="textarea"

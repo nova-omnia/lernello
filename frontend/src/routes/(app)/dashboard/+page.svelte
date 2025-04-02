@@ -1,9 +1,47 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Pencil, Trash2 } from '@lucide/svelte';
+	import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
 
-	let { data } = $props();
-	const kits = data.kits;
+	type Kit = {
+		uuid: string;
+		name: string;
+		description: string;
+	};
+
+	export let data: { kits: Kit[] };
+	let kits = data.kits;
+
+	let showDeleteDialog = false;
+	let kitToDelete: Kit | null = null;
+
+	function openDeleteDialog(kit: Kit, event: MouseEvent) {
+		event.stopPropagation();
+		kitToDelete = kit;
+		showDeleteDialog = true;
+	}
+
+	function closeDeleteDialog() {
+		showDeleteDialog = false;
+		kitToDelete = null;
+	}
+
+	async function handleConfirmDelete() {
+		if (!kitToDelete) return;
+
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = '?/delete';
+
+		const input = document.createElement('input');
+		input.type = 'hidden';
+		input.name = 'uuid';
+		input.value = kitToDelete.uuid;
+
+		form.appendChild(input);
+		document.body.appendChild(form);
+		form.submit();
+	}
 </script>
 
 <div class="p-5">
@@ -21,8 +59,15 @@
 				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 p-5 pt-10 text-center hover:bg-gray-100 transition-colors"
 			>
 				<div class="absolute right-2 top-2 flex gap-2">
-					<a href="/learningkit/create-form?edit=${ kit.uuid }"><Pencil class="w-4 h-4" /></a>
-					<a href="/dashboard"><Trash2 class="w-4 h-4" /></a>
+					<a
+						href="/learningkit/create-form?edit={kit.uuid}"
+						on:click|stopPropagation
+					>
+						<Pencil class="w-4 h-4 text-blue-600 hover:text-blue-800" />
+					</a>
+					<button on:click={(e) => openDeleteDialog(kit, e)}>
+						<Trash2 class="w-4 h-4 text-red-600 hover:text-red-800" />
+					</button>
 				</div>
 
 				<h3 class="my-2.5 font-semibold">{kit.name}</h3>
@@ -35,3 +80,13 @@
 		<a href="/learningkit/create-form" class="btn preset-filled-primary-400-600">Create new Learning Kit</a>
 	</div>
 </div>
+
+<ConfirmDialog
+	isOpen={showDeleteDialog}
+	title="Confirm Deletion"
+	message={`Are you sure you want to delete "<span class='font-semibold'>${kitToDelete?.name}</span>"?`}
+	confirmText="Delete"
+	danger={true}
+	onConfirm={handleConfirmDelete}
+	onCancel={closeDeleteDialog}
+/>

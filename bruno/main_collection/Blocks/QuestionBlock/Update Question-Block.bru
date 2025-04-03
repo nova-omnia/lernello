@@ -1,0 +1,19 @@
+meta {
+  name: Update Question-Block
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/question-block/update
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "uuid" : "",
+  "name": "Hajir",
+  "question": "what is hajir",
+  "expectedAnswer": "monkey"}
+}

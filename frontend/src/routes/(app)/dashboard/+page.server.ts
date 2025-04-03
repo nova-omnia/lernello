@@ -9,7 +9,7 @@ export async function load() {
 
 export const actions: Actions = {
 	delete: async ({ request }) => {
-		const formData = await request.formData(); // Use formData instead of JSON
+		const formData = await request.formData();
 		const uuid = formData.get('uuid');
 
 		if (!uuid || typeof uuid !== 'string') {

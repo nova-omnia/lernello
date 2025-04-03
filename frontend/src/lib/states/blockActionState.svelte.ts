@@ -9,6 +9,12 @@ type BlockAction =
 			};
 	  }
 	| {
+			type: 'REMOVE_BLOCK';
+			data: {
+				blockId: string | symbol;
+			};
+	  }
+	| {
 			type: 'ADD_BLOCK';
 			data: {
 				type: BlockResType;
@@ -43,6 +49,10 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 				blocks = blocks.filter((block) => block.uuid !== action.data.blockId);
 				blocks.splice(action.data.newIndex, 0, blockToMove);
 			}
+			break;
+		}
+		case 'REMOVE_BLOCK': {
+			blocks = blocks.filter((block) => block.uuid !== action.data.blockId);
 			break;
 		}
 		default:

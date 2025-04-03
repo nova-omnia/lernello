@@ -32,8 +32,8 @@ public class AuthController {
      * @return The JWT token.
      */
     @PostMapping("/signin")
-    public @Valid LoggedInUserDTO authenticateUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
-        User authenticateUser = userService.authenticate(userLoginDTO.username(), userLoginDTO.password());
-        return userLoginMapper.toDTO(authenticateUser);
+    public @Valid LoggedInUserDTO signin(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+        User authenticatedUser = userService.authenticate(userLoginDTO.username(), userLoginDTO.password());
+        return userLoginMapper.toDTO(authenticatedUser);
     }
 }

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Dialog from '../Dialog.svelte';
+	import { Switch } from '@skeletonlabs/skeleton-svelte'
+	import {Check, X} from 'lucide-svelte';
 	let question = '';
 	let answer1 = '';
 	let answer2 = '';
@@ -23,7 +25,7 @@
 	<button class="preset-filled-primary-100-900 m-auto p-5" on:click={openDialog}
 		>Add new multiple choice block</button
 	>
-	<dialog bind:this={dialog} class=" preset-filled-primary-300-700 m-auto p-4">
+	<dialog bind:this={dialog} class=" preset-filled-primary-300-700 max-w-5xl m-auto p-4">
 		<div class="grid grid-cols-12 items-center justify-items-center gap-4">
 			<input
 				type="text"
@@ -31,28 +33,40 @@
 				bind:value={question}
 				class="col-span-12 mb-4 w-full border p-2"
 			/>
-			<input type="checkbox" id="correct" name="correct" value="correct" class="col-span-1" />
+			<Switch name="correct" controlActive="bg-primary-400">
+				{#snippet inactiveChild()}<X size="14" />{/snippet}
+				{#snippet activeChild()}<Check size="14" />{/snippet}
+			</Switch>
 			<input
 				type="text"
 				placeholder="add answer 1"
 				bind:value={answer1}
 				class="col-span-5 border p-2"
 			/>
-			<input type="checkbox" id="correct" name="correct" value="correct" class="col-span-1" />
+			<Switch name="correct" controlActive="bg-primary-400">
+				{#snippet inactiveChild()}<X size="14" />{/snippet}
+				{#snippet activeChild()}<Check size="14" />{/snippet}
+			</Switch>
 			<input
 				type="text"
 				placeholder="add answer 2"
 				bind:value={answer2}
 				class="col-span-5 border p-2"
 			/>
-			<input type="checkbox" id="correct" name="correct" value="correct" class="col-span-1" />
+			<Switch name="correct" controlActive="bg-primary-400">
+				{#snippet inactiveChild()}<X size="14" />{/snippet}
+				{#snippet activeChild()}<Check size="14" />{/snippet}
+			</Switch>
 			<input
 				type="text"
 				placeholder="add answer 3 (optional)"
 				bind:value={answer3}
 				class="col-span-5 border p-2"
 			/>
-			<input type="checkbox" id="correct" name="correct" value="correct" class="col-span-1" />
+			<Switch name="correct" controlActive="bg-primary-400">
+				{#snippet inactiveChild()}<X size="14" />{/snippet}
+				{#snippet activeChild()}<Check size="14" />{/snippet}
+			</Switch>
 			<input
 				type="text"
 				placeholder="add answer 4 (optional)"

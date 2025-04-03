@@ -1,13 +1,13 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 
-import type { UserToken } from '$lib/models/user';
+import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
 
 // for information about these interfaces
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user?: UserToken;
+			user?: LoggedInUser;
 		}
 		// interface PageData {}
 		// interface PageState {}

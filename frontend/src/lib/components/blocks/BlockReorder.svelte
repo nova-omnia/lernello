@@ -3,13 +3,13 @@
 	import { flip } from 'svelte/animate';
 	import BlockReorderItem from '$lib/components/blocks/BlockReorderItem.svelte';
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import type { Block } from '$lib/models/block';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 
 	let blocksSnapshot = $derived(
 		blockActionState.blocks.map((block) => ({ ...block, id: block.uuid as string })) // its not really a string, can be a symbol but sveltednd seems to work good enough with that
 	);
 
-	type BlockWithId = Block & { id: string };
+	type BlockWithId = BlockRes & { id: string };
 
 	let currentlyDraggingId: string | null = null;
 	function handleSortOnConsider(e: CustomEvent<DndEvent<BlockWithId>>) {

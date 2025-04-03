@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { BlockType } from '$lib/models/block';
+	import type { BlockResType } from '$lib/schemas/response/BlockRes';
 	import { BookOpen, FileText, CircleHelp, type IconProps } from 'lucide-svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
 
 	interface BlockIconProps extends IconProps {
-		iconType: BlockType;
+		iconType: BlockResType;
 		class?: string;
 	}
 

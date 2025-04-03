@@ -1,7 +1,8 @@
 import { userRequest } from '$lib/api/apiClient';
-import { type CreateKit, type LearningKit, LearningKitSchema } from '$lib/models/kit';
+import type { CreateLearningKit } from '$lib/schemas/request/CreateLearningKit';
+import { LearningKitResSchema, type LearningKitRes } from '$lib/schemas/response/LearningKitRes';
 
-export async function createLearningKit(payload: CreateKit): Promise<LearningKit> {
+export async function createLearningKit(payload: CreateLearningKit): Promise<LearningKitRes> {
 	const { deadlineDate, ...rest } = payload;
 	const loginUserRes = await userRequest(`/api/learning-kits/create`, 'POST', {
 		headers: {
@@ -13,5 +14,5 @@ export async function createLearningKit(payload: CreateKit): Promise<LearningKit
 		})
 	});
 
-	return LearningKitSchema.parse(loginUserRes);
+	return LearningKitResSchema.parse(loginUserRes);
 }

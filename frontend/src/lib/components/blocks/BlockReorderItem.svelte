@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { dragHandle } from 'svelte-dnd-action';
 	import { GripVertical } from 'lucide-svelte';
-	import type { Block } from '$lib/models/block';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 
 	interface BlockReorderItemProps {
-		block: Block;
+		block: BlockRes;
 	}
 	const { block }: BlockReorderItemProps = $props();
 </script>

@@ -1,4 +1,4 @@
-import type { Block } from '$lib/models/block';
+import type { BlockRes } from '$lib/schemas/response/BlockRes';
 
 export const load = async () => {
 	return {
@@ -7,6 +7,6 @@ export const load = async () => {
 			{ uuid: 'b2', name: 'Block 2', type: 'quiz' },
 			{ uuid: 'c3', name: 'Block 3', type: 'theory' },
 			{ uuid: 'd4', name: 'Block 4', type: 'quiz' }
-		] as Block[]
+		] as BlockRes[]
 	};
 };

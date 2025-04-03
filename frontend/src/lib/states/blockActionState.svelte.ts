@@ -1,4 +1,4 @@
-import type { Block, BlockType } from '$lib/models/block';
+import type { BlockRes, BlockResType } from '$lib/schemas/response/BlockRes';
 
 type BlockAction =
 	| {
@@ -11,7 +11,7 @@ type BlockAction =
 	| {
 			type: 'ADD_BLOCK';
 			data: {
-				type: BlockType;
+				type: BlockResType;
 				index?: number; // Optional index for adding at a specific position vs just append
 				name: string;
 			};
@@ -19,7 +19,7 @@ type BlockAction =
 
 type BlockActionState = {
 	queue: BlockAction[];
-	blocks: Block[];
+	blocks: BlockRes[];
 };
 
 export const blockActionState: BlockActionState = $state({
@@ -27,7 +27,7 @@ export const blockActionState: BlockActionState = $state({
 	blocks: []
 });
 
-function applyBlockAction(action: BlockAction, blocks: Block[]): Block[] {
+function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
 		case 'ADD_BLOCK':
 			if (action.data.index !== undefined) {

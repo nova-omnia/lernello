@@ -3,9 +3,9 @@ import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { ChangePasswordDataSchema } from '$lib/models/changePasswordData';
 import { changePassword } from '$lib/api/login/changePassword';
 import { parseRedirectTo, requireLogin } from '$lib/server/auth';
+import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
 
 export const load = async ({ url }) => {
 	const user = requireLogin();

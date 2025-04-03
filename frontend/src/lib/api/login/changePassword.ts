@@ -1,14 +1,11 @@
-import {
-	ChangePasswordStatusSchema,
-	type ChangePasswordStatus
-} from '$lib/models/changePasswordData';
+import { PasswordStatusSchema, type PasswordStatus } from '$lib/schemas/response/PasswordStatus';
 import { userRequest } from '$lib/api/apiClient';
-import { ParticipantSchema, type Participant } from '$lib/models/user';
 import { z } from 'zod';
+import { ParticipantUserSchema, type ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 
 export async function changePassword(changedPasswordUser: {
 	newPassword: string;
-}): Promise<ChangePasswordStatus> {
+}): Promise<PasswordStatus> {
 	const changePasswordRes = await userRequest(`/api/user/change-password`, 'POST', {
 		headers: {
 			'Content-Type': 'application/json'
@@ -17,10 +14,10 @@ export async function changePassword(changedPasswordUser: {
 			newPassword: changedPasswordUser.newPassword
 		})
 	});
-	return ChangePasswordStatusSchema.parse(changePasswordRes);
+	return PasswordStatusSchema.parse(changePasswordRes);
 }
 
-export async function getUsers(): Promise<Array<Participant>> {
+export async function getUsers(): Promise<Array<ParticipantUser>> {
 	const getUserRes = await userRequest('/api/user/users', 'GET');
-	return z.array(ParticipantSchema).parse(getUserRes);
+	return z.array(ParticipantUserSchema).parse(getUserRes);
 }

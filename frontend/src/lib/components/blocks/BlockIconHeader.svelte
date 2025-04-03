@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Block } from '$lib/models/block';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIcon from './BlockIcon.svelte';
 
 	interface BlockIconHeaderProps {
-		block: Block;
+		block: BlockRes;
 	}
 	const { block }: BlockIconHeaderProps = $props();
 </script>

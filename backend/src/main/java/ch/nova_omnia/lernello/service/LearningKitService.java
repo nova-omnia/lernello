@@ -35,6 +35,9 @@ public class LearningKitService {
 
     @Transactional
     public LearningKit edit(LearningKit learningKit) {
+        if (learningKit.getUuid() == null || !learningKitRepository.existsById(learningKit.getUuid())) {
+            throw new EntityNotFoundException("LearningKit not found with id: " + learningKit.getUuid());
+        }
         return learningKitRepository.save(learningKit);
     }
 

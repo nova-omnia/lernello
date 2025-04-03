@@ -61,9 +61,8 @@ public class LearningKit {
     private List<File> files = new ArrayList<>();
 
     // For testing purposes
-    public LearningKit(String name, Language language, Folder folder) {
+    public LearningKit(String name, Folder folder) {
         this.name = name;
-        this.language = language;
         this.folder = folder;
     }
 }

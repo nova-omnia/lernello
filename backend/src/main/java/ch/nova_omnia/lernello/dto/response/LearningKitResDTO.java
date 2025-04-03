@@ -13,7 +13,6 @@ public record LearningKitResDTO(
         List<LearningUnitResDTO> learningUnits,
         String description,
         LocalDate deadlineDate,
-        FolderResDTO folder,
         String context
 ) {
 }

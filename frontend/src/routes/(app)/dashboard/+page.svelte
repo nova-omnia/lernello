@@ -51,9 +51,9 @@
 	<div class="mt-5 flex flex-wrap gap-5">
 		<div
 			on:click={() => goto('/learningkit/create-form')}
-			class="relative w-52 cursor-pointer rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100 flex flex-col justify-center items-center"
+			class="relative flex w-52 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100"
 		>
-			<Plus class="h-10 w-10 text-primary-500" />
+			<Plus class="text-primary-500 h-10 w-10" />
 			<p class="text-gray-600">Create New Kit</p>
 		</div>
 
@@ -64,10 +64,10 @@
 			>
 				<div class="absolute top-2 right-2 flex gap-2">
 					<a href="/learningkit/create-form?edit={kit.uuid}" on:click|stopPropagation>
-						<Pencil class="h-4 w-4 text-primary-500 hover:text-blue-800" />
+						<Pencil class="text-primary-500 h-4 w-4 hover:text-blue-800" />
 					</a>
 					<button on:click={(e) => openDeleteDialog(kit, e)}>
-						<Trash2 class="h-4 w-4 text-primary-500 hover:text-red-800" />
+						<Trash2 class="text-primary-500 h-4 w-4 hover:text-red-800" />
 					</button>
 				</div>
 

@@ -10,7 +10,7 @@ import {
 import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/models/kit';
 import type { PageServerLoad } from '../../../../../.svelte-kit/types/src/routes/$types';
 
-let editId : string | null;
+let editId: string | null;
 export const load: PageServerLoad = async ({ url }) => {
 	editId = url.searchParams.get('edit');
 	let formData;
@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
 export const actions = {
 	create: handleApiError(async (event) => {
-		const { request, url } = event;
+		const { request } = event;
 		const form = await superValidate(request, zod(CreateLearningKitSchema));
 		if (!form.valid) {
 			return fail(400, { form });
@@ -43,7 +43,7 @@ export const actions = {
 
 		let learningKit;
 		if (editId) {
-			learningKit = await updateLearningKit({...form.data, uuid: editId});
+			learningKit = await updateLearningKit({ ...form.data, uuid: editId });
 		} else {
 			learningKit = await createLearningKit(form.data);
 		}

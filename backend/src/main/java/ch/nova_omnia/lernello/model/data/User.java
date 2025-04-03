@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+public class User{
     public enum Role {
         INSTRUCTOR, TRAINEE
     }
@@ -55,7 +55,7 @@ public class User {
     private String language;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, updatable = false)
     @NotNull
     private Role role;
 
@@ -72,7 +72,6 @@ public class User {
 
     @Transient
     private int expires;
-
 
     public User(String username, String password, String language, Role role) {
         this.username = username;

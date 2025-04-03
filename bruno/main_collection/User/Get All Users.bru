@@ -1,0 +1,11 @@
+meta {
+  name: Get All Users
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/user/users
+  body: none
+  auth: inherit
+}

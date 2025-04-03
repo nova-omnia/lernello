@@ -48,10 +48,6 @@
 	<p class="mb-2.5 text-2xl font-bold">Dashboard</p>
 	<div class="mb-2.5 text-xl">Good morning ...!</div>
 
-	<a href="/learningkit" class="card preset-filled-surface-100-900 no-underline hover:underline">
-		Manage Learning Kits
-	</a>
-
 	<div class="mt-5 flex flex-wrap gap-5">
 		{#each kits as kit (kit.uuid)}
 			<div

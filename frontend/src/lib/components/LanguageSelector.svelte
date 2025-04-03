@@ -10,6 +10,7 @@
 
 	function selectLocale(loc: string) {
 		locale.set(loc);
+		localStorage.setItem('locale', loc);
 		open = false;
 	}
 </script>

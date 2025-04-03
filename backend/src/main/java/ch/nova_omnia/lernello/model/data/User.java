@@ -20,12 +20,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "users")
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class User{
     public enum Role {
         INSTRUCTOR, TRAINEE
@@ -55,9 +55,9 @@ public class User{
     private String language;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, updatable = false)
     @NotNull
-    private final Role role;
+    private Role role;
 
     @Column(name = "create_date", updatable = false)
     @CreationTimestamp

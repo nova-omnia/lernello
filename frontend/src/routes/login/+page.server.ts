@@ -1,11 +1,12 @@
-import { UserLoginSchema } from '$lib/models/user';
-import { login } from '$lib/api/login/auth';
 import type { Actions } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { parseRedirectTo } from '$lib/server/auth';
+import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
+import { serverApiClient } from '$lib/api/serverApiClient';
+import { signin } from '$lib/api/collections/auth';
 
 export const load = async () => {
 	const form = await superValidate(zod(UserLoginSchema));
@@ -19,7 +20,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 		try {
-			const loggedInUser = await login(form.data);
+			const loggedInUser = await serverApiClient.req(signin, form.data);
 			cookies.set('sessionToken', JSON.stringify(loggedInUser), {
 				httpOnly: true,
 				path: '/',

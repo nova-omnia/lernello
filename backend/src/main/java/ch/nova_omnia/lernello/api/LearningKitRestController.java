@@ -22,12 +22,12 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/learning-kit")
 @Validated
-public class LearningKitController {
+public class LearningKitRestController {
     private final LearningKitService learningKitService;
 
     private final LearningKitMapper learningKitMapper;
 
-    public LearningKitController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
+    public LearningKitRestController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
         this.learningKitService = learningKitService;
         this.learningKitMapper = learningKitMapper;
     }

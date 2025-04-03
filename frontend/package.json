@@ -18,6 +18,9 @@
 		"npm": ">=10.9.2"
 	},
 	"devDependencies": {
+		"@cartamd/plugin-code": "^4.1.2",
+		"@cartamd/plugin-emoji": "^4.3.0",
+		"@cartamd/plugin-slash": "^4.2.0",
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.23.0",
 		"@skeletonlabs/floating-ui-svelte": "^0.3.9",
@@ -28,10 +31,12 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/forms": "^0.5.10",
 		"@tailwindcss/vite": "^4.0.17",
+		"carta-md": "^4.9.0",
 		"eslint": "^9.23.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.5.0",
 		"globals": "^16.0.0",
+		"isomorphic-dompurify": "^2.22.0",
 		"lucide-svelte": "^0.486.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",

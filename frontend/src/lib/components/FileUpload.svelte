@@ -1,10 +1,6 @@
 <script lang="ts">
 	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	import {
-		Upload as IconUpload,
-		File as IconFile,
-		XCircle as IconRemove
-	} from 'lucide-svelte';
+	import { Upload as IconUpload, File as IconFile, XCircle as IconRemove } from 'lucide-svelte';
 </script>
 
 <FileUpload

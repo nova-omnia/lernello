@@ -2,7 +2,7 @@ import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit'
 import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 import { createEndpoint } from '../createEndpoint';
 
-const REQUEST_MAPPING = '/api/learning-kit';
+const REQUEST_MAPPING = '/api/learning-kits';
 
 export const createLearningKit = createEndpoint({
 	method: 'POST',

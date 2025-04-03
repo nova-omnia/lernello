@@ -15,9 +15,7 @@ import java.util.UUID;
 public record CreateLearningKitDTO(
         @NotNull @Size(min = 3, max = 40) String name,
         String description,
-        @NotNull String language,
         LocalDate deadlineDate,
-        List<ParticipantUserDTO> participants,
         UUID folderId,
         String context
         //MultipartFile[] files, ToDo

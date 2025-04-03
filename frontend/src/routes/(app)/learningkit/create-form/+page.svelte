@@ -2,10 +2,8 @@
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+
 	const toast: ToastContext = getContext('toast');
-	// TODO: Re-enable file upload later
-	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	// import IconUpload from '@lucide/svelte/icons/upload';
 
 	let { data } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
@@ -22,7 +20,9 @@
 
 <form method="POST" use:enhance action="?/create" class="mx-auto max-w-lg space-y-4">
 	<p class="preset-typo-subtitle">Dashboard</p>
-	<h1 class="h1">Create a new Learning Kit</h1>
+	<h1 class="h1">
+		{data.editId ? 'Edit Learning Kit' : 'Create a new Learning Kit'}
+	</h1>
 
 	<label class="label">
 		<span class="label-text">Name</span>
@@ -41,6 +41,7 @@
 			<p class="text-sm text-red-500">{$errors.name}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Description <i>– Optional</i></span>
 		<textarea
@@ -56,6 +57,7 @@
 			<p class="text-sm text-red-500">{$errors.description}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Context <i>– Optional</i></span>
 		<textarea
@@ -71,6 +73,7 @@
 			<p class="text-sm text-red-500">{$errors.context}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Deadline <i>– Optional</i></span>
 		<input
@@ -87,6 +90,9 @@
 			<p class="text-sm text-red-500">{$errors.deadlineDate}</p>
 		{/if}
 	</label>
-	<button class="btn preset-filled-primary-400-600 w-full">Create</button>
+
+	<button class="btn preset-filled-primary-400-600 w-full"
+		>{data.editId ? 'Update Learning Kit' : 'Create Learning Kit'}</button
+	>
 	<SuperDebug data={$form} />
 </form>

@@ -35,23 +35,11 @@ public class LearningKitService {
 
     @Transactional
     public LearningKit edit(LearningKit learningKit) {
-        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
-
-        updateLearningKit(existingKit, learningKit);
-        return existingKit;
+        if (learningKit.getUuid() == null || !learningKitRepository.existsById(learningKit.getUuid())) {
+            throw new EntityNotFoundException("LearningKit not found with id: " + learningKit.getUuid());
+        }
+        return learningKitRepository.save(learningKit);
     }
-
-    private void updateLearningKit(LearningKit target, LearningKit source) {
-        target.setName(source.getName());
-        target.setDescription(source.getDescription());
-        target.setLanguage(source.getLanguage());
-        target.setDeadlineDate(source.getDeadlineDate());
-        target.setParticipants(source.getParticipants());
-        target.setFolder(source.getFolder());
-        target.setContext(source.getContext());
-    }
-
 
     @Transactional
     public void deleteById(UUID id) {

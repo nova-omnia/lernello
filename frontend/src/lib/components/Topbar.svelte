@@ -4,7 +4,7 @@
 	import { page } from '$app/state';
 </script>
 
-<nav class="preset-filled-surface-100-900 min-h-13 flex items-center justify-between pl-2 pt-1">
+<nav class="preset-filled-surface-100-900 flex min-h-13 items-center justify-between pt-1 pl-2">
 	{#if !sidebarState.isExpanded}
 		<button
 			class="flex h-12 w-12 items-center justify-center"
@@ -16,7 +16,7 @@
 	{/if}
 	{page.url.pathname.at(1)?.toUpperCase() + page.url.pathname.slice(2)}
 	<div
-		class="input-group disabled ml-auto mr-2 grid-cols-[auto_1fr_auto] items-center justify-center"
+		class="input-group disabled mr-2 ml-auto grid-cols-[auto_1fr_auto] items-center justify-center"
 	>
 		<input class="ig-input preset-tonal rounded" type="search" placeholder="Search..." />
 	</div>

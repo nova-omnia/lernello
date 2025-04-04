@@ -1,5 +1,7 @@
 package ch.nova_omnia.lernello.api;
 
+import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.mapper.TemporaryKeyMapper;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ public class LearningUnitRestController {
 
     private final LearningUnitService learningUnitService;
     private final LearningUnitMapper learningUnitMapper;
+    private final TemporaryKeyMapper temporaryKeyMapper;
 
     @PostMapping( "/create")
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
@@ -57,9 +60,9 @@ public class LearningUnitRestController {
         return learningUnitService.findAll().stream().map(learningUnitMapper::toDTO).toList();
     }
 
-    @PutMapping("/{id}/blocks/order")
+    @PostMapping("/{id}/applyLearningUnitActions")
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
-    public @Valid LearningUnitResDTO updateBlockOrder(@PathVariable UUID id, @RequestBody List<UUID> blockIds) {
-        return learningUnitMapper.toDTO(learningUnitService.updateBlockOrder(id, blockIds).orElseThrow());
+    public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
+        return temporaryKeyMapper.toDTO(learningUnitService.applyLearningUnitActions(id, actionQueue)).temporaryKeyMap();
     }
 }

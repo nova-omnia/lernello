@@ -21,7 +21,7 @@
 	<button
 		type="button"
 		on:click={toggleDropdown}
-		class="border-surface-200-800 flex w-full items-center justify-between rounded border py-2 pl-3 pr-3 text-left focus:outline-none"
+		class="border-surface-200-800 flex w-full items-center justify-between rounded border py-2 pr-3 pl-3 text-left focus:outline-none"
 	>
 		<span class="truncate">
 			{#if selected}

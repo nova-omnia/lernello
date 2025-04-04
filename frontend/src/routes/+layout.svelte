@@ -1,20 +1,20 @@
 <script lang="ts">
-    import '../app.css';
-    import { ToastProvider } from '@skeletonlabs/skeleton-svelte';
-    import { i18nReady } from '$lib/i18n/i18n';
-    import LoadingRing from '$lib/components/LoadingRing.svelte';
+	import '../app.css';
+	import { ToastProvider } from '@skeletonlabs/skeleton-svelte';
+	import { i18nReady } from '$lib/i18n/i18n';
+	import LoadingRing from '$lib/components/LoadingRing.svelte';
 
-    let ready = false;
+	let ready = false;
 
-    i18nReady.then(() => {
-        ready = true;
-    });
+	i18nReady.then(() => {
+		ready = true;
+	});
 </script>
 
 {#if !ready}
-    <LoadingRing />
+	<LoadingRing />
 {:else}
-    <ToastProvider>
-        <slot />
-    </ToastProvider>
+	<ToastProvider>
+		<slot />
+	</ToastProvider>
 {/if}

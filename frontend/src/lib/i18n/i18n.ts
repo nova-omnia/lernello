@@ -13,8 +13,8 @@ const savedLocale = typeof localStorage !== 'undefined' ? localStorage.getItem('
 const initialLocale = savedLocale || getLocaleFromNavigator();
 
 init({
-    fallbackLocale: 'it-IT',
-    initialLocale
+	fallbackLocale: 'it-IT',
+	initialLocale
 });
 
 export const i18nReady = waitLocale();

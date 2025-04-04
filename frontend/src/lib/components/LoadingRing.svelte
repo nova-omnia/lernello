@@ -2,7 +2,7 @@
 	import { ProgressRing } from '@skeletonlabs/skeleton-svelte';
 </script>
 
-<div class="flex items-center justify-center min-h-screen">
+<div class="flex min-h-screen items-center justify-center">
 	<ProgressRing
 		value={null}
 		size="size-10"
@@ -10,4 +10,3 @@
 		trackStroke="stroke-tertiary-50-950"
 	/>
 </div>
-

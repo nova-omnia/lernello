@@ -1,14 +1,6 @@
 <script lang="ts">
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
-	import {
-		ChartLine,
-		Settings,
-		User,
-		GraduationCap,
-		LayoutDashboard,
-		Folder,
-		SidebarClose
-	} from 'lucide-svelte';
+	import { ChartLine, Folder, GraduationCap, LayoutDashboard, Settings, SidebarClose, User } from 'lucide-svelte';
 </script>
 
 {#snippet sidebarItemLabel(label: string)}
@@ -21,6 +13,7 @@
 		class:w-0={!sidebarState.isExpanded}
 		class:opacity-0={!sidebarState.isExpanded}>{label}</span
 	>
+	<div></div>
 {/snippet}
 
 <!-- Sidebar -->

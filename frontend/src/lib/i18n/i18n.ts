@@ -13,7 +13,7 @@ const savedLocale = typeof localStorage !== 'undefined' ? localStorage.getItem('
 const initialLocale = savedLocale || getLocaleFromNavigator();
 
 init({
-	fallbackLocale: 'it-IT',
+	fallbackLocale: 'de-DE',
 	initialLocale
 });
 

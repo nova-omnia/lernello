@@ -11,6 +11,6 @@ public record CreateTheoryBlockDTO(
                                    @Min(0) int position,
                                    @NotNull UUID learningUnitId,
                                    @NotBlank String content
-) {
+) implements CreateBlockDTO {
 
 }

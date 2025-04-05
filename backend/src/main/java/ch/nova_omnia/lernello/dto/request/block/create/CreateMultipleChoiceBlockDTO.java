@@ -14,5 +14,5 @@ public record CreateMultipleChoiceBlockDTO(
                                            @NotNull UUID learningUnitId,
                                            @NotBlank String question,
                                            @NotNull List<String> possibleAnswers,
-                                           @NotNull List<String> correctAnswers) {
+                                           @NotNull List<String> correctAnswers) implements CreateBlockDTO {
 }

@@ -12,6 +12,6 @@ public record CreateQuestionBlockDTO(
                                      @NotNull UUID learningUnitId,
                                      @NotBlank String question,
                                      @NotBlank String expectedAnswer
-) {
+) implements CreateBlockDTO {
 
 }

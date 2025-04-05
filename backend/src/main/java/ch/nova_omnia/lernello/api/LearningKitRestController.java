@@ -20,7 +20,7 @@ import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/learning-kit")
+@RequestMapping("/api/learning-kits")
 @Validated
 public class LearningKitRestController {
     private final LearningKitService learningKitService;

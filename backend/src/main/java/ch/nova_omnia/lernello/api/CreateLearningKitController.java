@@ -9,13 +9,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,25 +33,26 @@ public class CreateLearningKitController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
-        entity.setLanguage(LearningKit.Language.ENGLISH);
         LearningKit savedEntity = learningKitService.save(entity);
         return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }
-    @PostMapping("/edit")
+
+    @PutMapping("/edit")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> edit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
-        LearningKit savedEntity = learningKitService.edit(entity);
-        return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
+        LearningKit updated = learningKitService.edit(entity);
+        return ResponseEntity.ok(learningKitMapper.toDTO(updated));
     }
-    @PostMapping("/delete")
+
+    @DeleteMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid ResponseEntity<Void> delete(@Valid @RequestBody CreateLearningKitDTO learningKit) {
-        LearningKit entity = learningKitMapper.toEntity(learningKit);
-        learningKitService.deleteById(entity.getUuid());
-        return ResponseEntity.ok().build();
+    public @Valid ResponseEntity<UUID> delete(@Valid @PathVariable UUID learningKitId) {
+        learningKitService.deleteById(learningKitId);
+        return ResponseEntity.ok(learningKitId);
     }
-    @PostMapping("/getAll")
+
+    @GetMapping("/getAll")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid ResponseEntity<List<LearningKitResDTO>> getAll() {
         List<LearningKit> learningKits = learningKitService.findAll();
@@ -62,11 +61,11 @@ public class CreateLearningKitController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(learningKitResDTOs);
     }
-    @PostMapping("/getById")
+
+    @GetMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
-    public @Valid ResponseEntity<LearningKitResDTO> getById(@Valid @RequestBody CreateLearningKitDTO learningKit) {
-        LearningKit entity = learningKitMapper.toEntity(learningKit);
-        Optional<LearningKit> savedEntity = learningKitService.findById(entity.getUuid());
-        return savedEntity.map(kit -> ResponseEntity.ok(learningKitMapper.toDTO(kit))).orElseGet(() -> ResponseEntity.notFound().build());
+    public @Valid ResponseEntity<LearningKitResDTO> getById(@Valid @PathVariable UUID learningKitId) {
+        Optional<LearningKit> entity = learningKitService.findById(learningKitId);
+        return entity.map(kit -> ResponseEntity.ok(learningKitMapper.toDTO(kit))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

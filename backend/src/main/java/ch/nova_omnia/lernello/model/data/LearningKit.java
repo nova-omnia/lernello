@@ -21,10 +21,6 @@ import java.util.ArrayList;
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class LearningKit {
-    public enum Language {
-        GERMAN, ENGLISH, ITALIAN, FRENCH
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
@@ -39,12 +35,6 @@ public class LearningKit {
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "language", nullable = false)
-    @Enumerated
-    @NotNull
-    @NonNull
-    private Language language;
 
     @Column(name = "deadlineDate")
     private Date deadlineDate;
@@ -71,9 +61,8 @@ public class LearningKit {
     private List<File> files = new ArrayList<>();
 
     // For testing purposes
-    public LearningKit(String name, Language language, Folder folder) {
+    public LearningKit(String name, Folder folder) {
         this.name = name;
-        this.language = language;
         this.folder = folder;
     }
 }

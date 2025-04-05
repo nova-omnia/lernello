@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { sidebarState } from '$lib/components/sidebarState.svelte';
+	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import { SidebarOpen } from 'lucide-svelte';
 	import { page } from '$app/state';
 	import LanguageDropdown from '$lib/components/LanguageSelector.svelte';
@@ -15,7 +15,7 @@
 			<SidebarOpen size={24} />
 		</button>
 	{/if}
-	{page.url.pathname.at(1).toUpperCase() + page.url.pathname.slice(2)}
+	{page.url.pathname.at(1)?.toUpperCase() + page.url.pathname.slice(2)}
 	<div
 		class="input-group disabled mr-2 ml-auto grid-cols-[auto_1fr_auto] items-center justify-center"
 	>

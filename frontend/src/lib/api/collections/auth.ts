@@ -16,3 +16,16 @@ export const signin = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const setAuthCookie = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/set-cookie`,
+	payload: {
+		schema: LoggedInUserSchema,
+		defaultValidate: false
+	},
+	response: {
+		schema: LoggedInUserSchema,
+		defaultValidate: true
+	}
+});

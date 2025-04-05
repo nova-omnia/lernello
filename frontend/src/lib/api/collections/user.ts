@@ -8,7 +8,7 @@ const REQUEST_MAPPING = '/api/user';
 
 export const changePassword = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/signin`,
+	getPath: () => `${REQUEST_MAPPING}/change-password`,
 	response: {
 		schema: PasswordStatusSchema,
 		defaultValidate: true

@@ -26,7 +26,7 @@ public class LoadDatabase {
         bilbo.setParentFolder(bungo);
 
         User frodo = new User("frodo@gmail.com", encoder.encode("password"), "en", User.Role.INSTRUCTOR);
-        frodo.setChangedPassword(false);
+        frodo.setChangedPassword(true);
 
         return (_) -> {
             log.info("Preloading folders");

@@ -41,7 +41,6 @@ public class AuthRestController {
 
         userService.setAuthCookie(response, authenticatedUser);
 
-
         return userLoginMapper.toDTO(authenticatedUser);
     }
 

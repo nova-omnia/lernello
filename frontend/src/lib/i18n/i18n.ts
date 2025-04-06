@@ -1,17 +1,13 @@
-import { getLocaleFromNavigator, init, register } from 'svelte-i18n';
-import en from './locales/en.json';
-import de from './locales/de.json';
-import fr from './locales/fr.json';
-import it from './locales/it.json';
+import { init, register } from 'svelte-i18n';
 
-register('en-EN', () => Promise.resolve(en));
-register('de-DE', () => Promise.resolve(de));
-register('fr-FR', () => Promise.resolve(fr));
-register('it-IT', () => Promise.resolve(it));
+register('en-EN', () => import('./locales/en.json'));
+register('de-DE', () => import('./locales/de.json'));
+register('fr-FR', () => import('./locales/fr.json'));
+register('it-IT', () => import('./locales/it.json'));
 
-export async function initI18n(clientLocale: string | undefined) {
-	await init({
+export function initi18n(initialLocale: string) {
+	init({
 		fallbackLocale: 'en-EN',
-		initialLocale: clientLocale || getLocaleFromNavigator()
+		initialLocale: initialLocale
 	});
 }

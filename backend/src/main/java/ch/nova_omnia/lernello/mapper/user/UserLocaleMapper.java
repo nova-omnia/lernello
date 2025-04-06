@@ -1,7 +1,8 @@
 package ch.nova_omnia.lernello.mapper.user;
 
-import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 import org.mapstruct.Mapper;
+
+import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 
 @Mapper(componentModel = "spring")
 public interface UserLocaleMapper {

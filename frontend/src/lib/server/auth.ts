@@ -1,40 +1,54 @@
 import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
+import { serverApiClient } from '$lib/api/serverApiClient';
+import { getUserInfo } from '$lib/api/collections/user';
 
 export function recoverSession() {
 	const { locals, cookies } = getRequestEvent();
 	// Recover session
-	if (!locals.user) {
+	if (!locals.tokenInfo) {
 		const sessionToken = cookies.get('sessionToken');
 
 		if (sessionToken) {
 			try {
 				const parsedToken = LoggedInUserSchema.parse(JSON.parse(sessionToken));
-				locals.user = parsedToken;
+				locals.tokenInfo = parsedToken;
 			} catch (error) {
 				console.error('Failed to parse session token:', error);
 			}
 		}
 	}
 
-	return locals.user;
+	return locals.tokenInfo;
+}
+export async function loadUserInfo() {
+	const isLoggedIn = recoverSession();
+	if (!isLoggedIn) {
+		throw new Error('User is not authenticated!');
+	}
+	const { locals } = getRequestEvent();
+	if (!locals.userInfo) {
+		const userInfo = await serverApiClient.req(getUserInfo, null);
+		locals.userInfo = userInfo;
+	}
+	return locals.userInfo;
 }
 
 export function requireLogin() {
 	const { url } = getRequestEvent();
 	// try to recover session
-	const user = recoverSession();
+	const tokenInfo = recoverSession();
 
 	// assume `locals.user` is populated in `handle`
-	if (!user) {
+	if (!tokenInfo) {
 		const redirectTo = parseRedirectTo(url, url.pathname + url.search);
 		const params = new URLSearchParams({ redirectTo });
 
 		redirect(307, `/login?${params}`);
 	}
 
-	return user;
+	return tokenInfo;
 }
 
 export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {

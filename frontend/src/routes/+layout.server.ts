@@ -1,5 +1,16 @@
-export const load = ({ locals }) => {
+import { loadUserInfo, recoverSession } from '$lib/server/auth';
+
+export const load = async () => {
+	const tokenInfo = recoverSession();
+
+	if (tokenInfo) {
+		const userInfo = await loadUserInfo();
+		return {
+			userInfo
+		};
+	}
+
 	return {
-		locale: locals.user?.locale
+		userInfo: null
 	};
 };

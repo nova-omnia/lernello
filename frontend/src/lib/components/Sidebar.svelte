@@ -21,7 +21,6 @@
 		class:w-0={!sidebarState.isExpanded}
 		class:opacity-0={!sidebarState.isExpanded}>{label}</span
 	>
-	<div></div>
 {/snippet}
 
 <!-- Sidebar -->

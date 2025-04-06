@@ -9,20 +9,14 @@
 	const toast: ToastContext = getContext('toast');
 
 	function selectLocale(loc: string) {
-		browserApiClient
-			.req(setUserLocale, { locale: loc })
-			.then(() => {
-				// TODO Set in locals
-				locale.set(loc);
-			})
-			.catch((error) => {
-				console.error('Error:', error.result.error);
-				toast.create({
-					title: $_('error.title'),
-					description: $_('error.description', { values: { error: error.result.error } }),
-					type: 'error'
-				});
+		browserApiClient.req(setUserLocale, { locale: loc }).catch((error) => {
+			console.error('Error:', error.result.error);
+			toast.create({
+				title: $_('error.title'),
+				description: $_('error.description', { values: { error: error.result.error } }),
+				type: 'error'
 			});
+		});
 
 		locale.set(loc);
 	}
@@ -30,7 +24,7 @@
 
 <div class="relative inline-block w-40">
 	<DefaultSelector options={$locales} selected={$locale} onSelect={selectLocale}>
-		<span slot="selected">{$_(`languageName.${$locale}`)}</span>
+		<span slot="selected">{$locale}</span>
 		<span slot="option" let:option>{$_(`languageName.${option}`)}</span>
 	</DefaultSelector>
 </div>

@@ -1,4 +1,5 @@
-import type { BlockRes, BlockResType } from '$lib/schemas/response/BlockRes';
+import type { BlockRes } from '$lib/schemas/response/BlockRes';
+import type { BlockAction } from '$lib/schemas/request/blockAction';
 
 let currTempId = 0;
 function getTempId() {
@@ -7,29 +8,6 @@ function getTempId() {
 	currTempId++;
 	return tempId;
 }
-
-type BlockAction =
-	| {
-			type: 'REORDER_BLOCK';
-			data: {
-				blockId: string;
-				newIndex: number;
-			};
-	  }
-	| {
-			type: 'REMOVE_BLOCK';
-			data: {
-				blockId: string;
-			};
-	  }
-	| {
-			type: 'ADD_BLOCK';
-			data: {
-				type: BlockResType;
-				index?: number; // Optional index for adding at a specific position vs just append
-				name: string;
-			};
-	  };
 
 type BlockActionState = {
 	queue: BlockAction[];
@@ -61,28 +39,34 @@ export function addBlockActionListener(onBlockAction: (event: CustomBlockActionE
 
 function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
-		case 'ADD_BLOCK':
+		case 'ADD_BLOCK': {
+			const newBlock = {
+				type: action.data.type,
+				name: action.data.name,
+				uuid: action.blockId || getTempId()
+			};
+
 			if (action.data.index !== undefined) {
-				blocks.splice(action.data.index, 0, { ...action.data, uuid: getTempId() });
+				blocks.splice(action.data.index, 0, newBlock);
 			} else {
-				blocks.push({ ...action.data, uuid: getTempId() });
+				blocks.push(newBlock);
 			}
 			break;
-		case 'REORDER_BLOCK': {
-			const blockToMove = blocks.find((block) => block.uuid === action.data.blockId);
+		}
 
+		case 'REORDER_BLOCK': {
+			const blockToMove = blocks.find((block) => block.uuid === action.blockId);
 			if (blockToMove) {
-				blocks = blocks.filter((block) => block.uuid !== action.data.blockId);
+				blocks = blocks.filter((block) => block.uuid !== action.blockId);
 				blocks.splice(action.data.newIndex, 0, blockToMove);
 			}
 			break;
 		}
+
 		case 'REMOVE_BLOCK': {
-			blocks = blocks.filter((block) => block.uuid !== action.data.blockId);
+			blocks = blocks.filter((block) => block.uuid !== action.blockId);
 			break;
-		}
-		default:
-			throw new Error('Unknown action type');
+			}
 	}
 
 	return blocks;

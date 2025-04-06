@@ -1,5 +1,6 @@
-import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { z } from 'zod';
+import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
+import { BlockActionSchema } from '$lib/schemas/request/blockAction';
 import { createEndpoint } from '../createEndpoint';
 
 const REQUEST_MAPPING = '/api/learning-kit/learning-unit';
@@ -25,7 +26,7 @@ export const applyBlockActions = createEndpoint({
 		defaultValidate: true
 	},
 	payload: {
-		schema: z.array(z.any()),
+		schema: z.array(BlockActionSchema),
 		defaultValidate: false
 	}
 });

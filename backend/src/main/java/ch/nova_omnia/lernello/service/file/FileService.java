@@ -20,4 +20,6 @@ public interface FileService {
     public File save(MultipartFile file);
 
     public ResponseEntity<Resource> getFileResource(UUID uuid);
+
+    public String getFileContent(UUID fileId);
 }

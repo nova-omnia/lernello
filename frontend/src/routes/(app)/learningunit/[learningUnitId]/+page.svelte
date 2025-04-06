@@ -27,7 +27,7 @@
 				const queue = blockActionState.queue; // Get the current queue
 				blockActionState.queue = []; // Clear the queue
 				try {
-					await browserApiClient.req(applyBlockActions, queue, '99');
+					await browserApiClient.req(applyBlockActions, queue, data.learningUnitId);
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
 					toast.create({

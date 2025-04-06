@@ -9,6 +9,7 @@ export const load = handleApiError(async ({ params }) => {
 	const learningUnit = await serverApiClient.req(getLearningUnitById, null, learningUnitId);
 
 	return {
+		learningUnitId,
 		blocks: [
 			{ uuid: 'a1', name: 'Block 1', type: 'theory' },
 			{ uuid: 'b2', name: 'Block 2', type: 'quiz' },

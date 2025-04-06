@@ -28,7 +28,21 @@
 				const queue = blockActionState.queue; // Get the current queue
 				blockActionState.clearQueue(); // Clear the queue
 				try {
-					await browserApiClient.req(applyBlockActions, queue, data.learningUnitId);
+					const applyResult = await browserApiClient.req(
+						applyBlockActions,
+						queue,
+						data.learningUnitId
+					);
+					// applyResult is a map of temporary block ids to permanent block ids, lets reflect this in our blockActionState
+					blockActionState.setBlocks(
+						blockActionState.blocks.map((block) => {
+							const mappedId = applyResult[block.uuid];
+							if (mappedId) {
+								return { ...block, uuid: mappedId };
+							}
+							return block;
+						})
+					);
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
 					toast.create({

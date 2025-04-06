@@ -1,28 +1,30 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.mapper.TemporaryKeyMapper;
-import ch.nova_omnia.lernello.model.data.LearningUnit;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.service.LearningUnitService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
+import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
+import ch.nova_omnia.lernello.mapper.TemporaryKeyMapper;
+import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.service.LearningUnitService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 //TODO: update the path
@@ -35,7 +37,7 @@ public class LearningUnitRestController {
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
 
-    @PostMapping( "/create")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
         LearningUnit learningUnit = learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO));
@@ -48,10 +50,10 @@ public class LearningUnitRestController {
         learningUnitService.deleteById(id);
     }
 
-    @GetMapping( "/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
-    public @Valid Optional<LearningUnitResDTO> getById(@PathVariable UUID id) {
-        return learningUnitService.findById(id).map(learningUnitMapper::toDTO);
+    public @Valid LearningUnitResDTO getById(@PathVariable UUID id) {
+        return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Learning unit with id %s not found", id)));
     }
 
     @GetMapping("/all")

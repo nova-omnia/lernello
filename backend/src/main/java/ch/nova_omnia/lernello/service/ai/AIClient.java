@@ -21,6 +21,8 @@ public class AIClient {
             You are an AI tutor. Create a theory block on the topic '%s'.
             Content of the chapter:
             %s
+
+            The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
             """.formatted(topic, fullText);
 
         return sendRequest(prompt);

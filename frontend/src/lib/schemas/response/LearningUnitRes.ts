@@ -1,5 +1,5 @@
 import z from 'zod';
-import { BlockResSchema} from "$lib/schemas/response/BlockRes";
+import { BlockResSchema } from '$lib/schemas/response/BlockRes';
 
 export const LearningUnitResSchema = z.object({
 	uuid: z.string().uuid().nonempty(),

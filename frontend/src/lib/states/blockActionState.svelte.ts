@@ -1,5 +1,5 @@
 import type { BlockRes } from '$lib/schemas/response/BlockRes';
-import type { BlockAction, BlockActionWithQuickAdd } from '$lib/schemas/request/blockAction';
+import type { BlockAction, BlockActionWithQuickAdd } from '$lib/schemas/request/BlockAction';
 
 let currTempId = 0;
 function getTempId() {

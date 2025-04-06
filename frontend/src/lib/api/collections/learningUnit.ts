@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
-import { BlockActionSchema } from '$lib/schemas/request/blockAction';
+import { BlockActionSchema } from '$lib/schemas/request/BlockAction';
 import { createEndpoint } from '../createEndpoint';
 
 const REQUEST_MAPPING = '/api/learning-kit/learning-unit';

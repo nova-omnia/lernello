@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CreateBlockSchema } from './CreateBlock';
 
 export const BlockTypeSchema = z.enum(['theory', 'quiz']);
 
@@ -12,7 +13,7 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 		type: BlockTypeSchema,
 		index: z.number().min(0).optional(),
 		name: z.string().min(1),
-		blockPayload: z.any().optional()
+		blockPayload: CreateBlockSchema.optional()
 	})
 });
 

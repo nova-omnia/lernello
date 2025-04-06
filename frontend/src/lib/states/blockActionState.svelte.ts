@@ -43,7 +43,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			const newBlock = {
 				type: action.data.type,
 				name: action.data.name,
-				uuid: action.blockId || getTempId()
+				uuid: getTempId()
 			};
 
 			if (action.data.index !== undefined) {

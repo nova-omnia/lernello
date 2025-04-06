@@ -122,6 +122,8 @@ public class LearningUnitService {
     }
 
     private void removeBlock(LearningUnit learningUnit, RemoveBlockActionDTO removeAction) {
+
+
         if (learningUnit.getBlocks().stream().anyMatch(block -> block.getUuid().equals(removeAction.blockId()))) {
             learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(removeAction.blockId()));
         } else {
@@ -136,7 +138,10 @@ public class LearningUnitService {
 
     private void reorderBlocks(LearningUnit learningUnit, ReorderBlockActionDTO reorderAction) {
         int newIndex = reorderAction.newIndex();
-        UUID targetId = UUID.fromString(reorderAction.blockId());
+        String tempKey = reorderAction.blockId();
+
+        UUID targetId = temporaryKeyMap.containsKey(tempKey) ? temporaryKeyMap.get(tempKey) : UUID.fromString(tempKey);
+
         List<Block> blocks = learningUnit.getBlocks();
 
         int currentIndex = -1;
@@ -148,7 +153,7 @@ public class LearningUnitService {
         }
 
         if (currentIndex == -1) {
-            throw new IllegalArgumentException("Block not found: " + reorderAction.blockId());
+            throw new IllegalArgumentException("Block not found: " + tempKey);
         }
 
         if (newIndex >= blocks.size()) {

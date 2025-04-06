@@ -43,7 +43,6 @@ public class LearningKitService {
     private void updateLearningKit(LearningKit target, LearningKit source) {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
-        target.setLanguage(source.getLanguage());
         target.setDeadlineDate(source.getDeadlineDate());
         target.setParticipants(source.getParticipants());
         target.setContext(source.getContext());

@@ -42,7 +42,7 @@ public class LearningKitTest {
     // Section: Basic LearningKit Creation Tests
     @Test
     public void testLearningKitCreationWithName() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         assertThat(learningKit).isNotNull();
         assertThat(learningKit.getName()).isEqualTo("Test Learning Kit");
@@ -51,22 +51,22 @@ public class LearningKitTest {
     // Section: Validation Tests
     @Test
     public void testLearningKitNameConstraints() {
-        LearningKit learningKit = new LearningKit("", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("");
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", NotBlank.class);
 
-        learningKit = new LearningKit("ab", LearningKit.Language.GERMAN);
+        learningKit = new LearningKit("ab");
         violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", Size.class);
 
-        learningKit = new LearningKit("a".repeat(41), LearningKit.Language.GERMAN);
+        learningKit = new LearningKit("a".repeat(41));
         violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", Size.class);
     }
 
     @Test
     public void testValidationOnUpdate() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         learningKit.setName("ab");
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
@@ -76,7 +76,7 @@ public class LearningKitTest {
     // Section: UUID Generation Test
     @Test
     public void testLearningKitUuidGeneration() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         assertThat(learningKit.getUuid()).isNotNull();
     }
@@ -84,7 +84,7 @@ public class LearningKitTest {
     // Section: Association Tests
     @Test
     public void testLearningUnitsAssociation() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", learningKit);
         learningKit.getLearningUnits().add(learningUnit);
@@ -100,7 +100,7 @@ public class LearningKitTest {
     // Section: Orphan Removal Tests
     @Test
     public void testOrphanRemovalForLearningUnits() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", learningKit);
         learningKit.getLearningUnits().add(learningUnit);

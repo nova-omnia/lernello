@@ -40,7 +40,7 @@ public class LearningUnitTest {
 
     @BeforeEach
     public void setUp() {
-        testLearningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN);
+        testLearningKit = new LearningKit("Test Learning Kit");
         testLearningKit = learningKitRepository.save(testLearningKit);
     }
 

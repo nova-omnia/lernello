@@ -8,7 +8,6 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -50,11 +49,6 @@ public class LearningKit {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "language", nullable = false)
-    @Enumerated
-    @NotNull
-    @NonNull
-    private Language language;
 
     @Column(name = "deadlineDate")
     private Date deadlineDate;

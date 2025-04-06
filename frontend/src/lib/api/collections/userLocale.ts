@@ -1,6 +1,5 @@
 import { createEndpoint } from '$lib/api/createEndpoint';
-import { CreateUserLocaleSchema } from '$lib/schemas/request/CreateUserLocale';
-import { UserLocaleResSchema } from '$lib/schemas/response/UserLocaleRes';
+import { UserLocaleSchema } from '$lib/schemas/request/CreateUserLocale';
 import { z } from 'zod';
 
 const REQUEST_MAPPING = '/api/user/locale';
@@ -9,11 +8,11 @@ export const setUserLocale = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}`,
 	response: {
-		schema: UserLocaleResSchema,
+		schema: UserLocaleSchema,
 		defaultValidate: true
 	},
 	payload: {
-		schema: CreateUserLocaleSchema,
+		schema: UserLocaleSchema,
 		defaultValidate: false
 	}
 });
@@ -22,7 +21,7 @@ export const getUserLocale = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}`,
 	response: {
-		schema: UserLocaleResSchema,
+		schema: UserLocaleSchema,
 		defaultValidate: true
 	},
 	payload: {

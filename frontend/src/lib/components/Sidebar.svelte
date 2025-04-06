@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
-	import { ChartLine, Folder, GraduationCap, LayoutDashboard, Settings, SidebarClose, User } from 'lucide-svelte';
+	import {
+		ChartLine,
+		Folder,
+		GraduationCap,
+		LayoutDashboard,
+		Settings,
+		SidebarClose,
+		User
+	} from 'lucide-svelte';
 </script>
 
 {#snippet sidebarItemLabel(label: string)}

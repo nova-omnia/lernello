@@ -1,20 +1,23 @@
 <script lang="ts">
 	import '../app.css';
 	import { ToastProvider } from '@skeletonlabs/skeleton-svelte';
-	import { i18nReady } from '$lib/i18n/i18n';
 	import LoadingRing from '$lib/components/LoadingRing.svelte';
+	import { onMount } from 'svelte';
+	import { initI18n } from '$lib/i18n/i18n';
 
-	let ready = false;
+	let i18nReady = $state(false);
+	const { data, children } = $props();
 
-	i18nReady.then(() => {
-		ready = true;
+	onMount(async () => {
+		await initI18n(data.locale);
+		i18nReady = true;
 	});
 </script>
 
-{#if !ready}
+{#if !i18nReady}
 	<LoadingRing />
 {:else}
 	<ToastProvider>
-		<slot />
+		{@render children()}
 	</ToastProvider>
 {/if}

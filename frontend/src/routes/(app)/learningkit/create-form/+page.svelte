@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { getToastContext } from '$lib/states/toastContext.svelte.js';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	const toast: ToastContext = getContext('toast');
+	const toast = getToastContext();
+
 	// TODO: Re-enable file upload later
 	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	// import IconUpload from '@lucide/svelte/icons/upload';

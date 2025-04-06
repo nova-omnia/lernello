@@ -1,17 +1,25 @@
 import type { BlockRes, BlockResType } from '$lib/schemas/response/BlockRes';
 
+let currTempId = 0;
+function getTempId() {
+	// Generate a temporary ID for new blocks
+	const tempId = `tempid:${currTempId}`;
+	currTempId++;
+	return tempId;
+}
+
 type BlockAction =
 	| {
 			type: 'REORDER_BLOCK';
 			data: {
-				blockId: string | symbol;
+				blockId: string;
 				newIndex: number;
 			};
 	  }
 	| {
 			type: 'REMOVE_BLOCK';
 			data: {
-				blockId: string | symbol;
+				blockId: string;
 			};
 	  }
 	| {
@@ -33,13 +41,31 @@ export const blockActionState: BlockActionState = $state({
 	blocks: []
 });
 
+export type CustomBlockActionEvent = CustomEvent<{
+	action: BlockAction;
+}>;
+export function addBlockActionListener(onBlockAction: (event: CustomBlockActionEvent) => void) {
+	const handler = (e: Event) => {
+		if (e instanceof CustomEvent) {
+			onBlockAction(e as CustomBlockActionEvent);
+		}
+	};
+	document.addEventListener('blockAction', handler);
+
+	return {
+		remove: () => {
+			document.removeEventListener('blockAction', handler);
+		}
+	};
+}
+
 function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
 		case 'ADD_BLOCK':
 			if (action.data.index !== undefined) {
-				blocks.splice(action.data.index, 0, { ...action.data, uuid: Symbol() });
+				blocks.splice(action.data.index, 0, { ...action.data, uuid: getTempId() });
 			} else {
-				blocks.push({ ...action.data, uuid: Symbol() });
+				blocks.push({ ...action.data, uuid: getTempId() });
 			}
 			break;
 		case 'REORDER_BLOCK': {
@@ -64,5 +90,11 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 
 export function queueBlockAction(action: BlockAction) {
 	blockActionState.blocks = applyBlockAction(action, blockActionState.blocks);
-	blockActionState.queue.push(action);
+	blockActionState.queue = [...blockActionState.queue, action];
+	const blockActionEvent: CustomBlockActionEvent = new CustomEvent('blockAction', {
+		detail: {
+			action
+		}
+	});
+	document.dispatchEvent(blockActionEvent);
 }

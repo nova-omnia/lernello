@@ -6,7 +6,7 @@
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 
 	let blocksSnapshot = $derived(
-		blockActionState.blocks.map((block) => ({ ...block, id: block.uuid as string })) // its not really a string, can be a symbol but sveltednd seems to work good enough with that
+		blockActionState.blocks.map((block) => ({ ...block, id: block.uuid }))
 	);
 
 	type BlockWithId = BlockRes & { id: string };
@@ -25,6 +25,10 @@
 		}
 		const newBlockId = currentlyDraggingId;
 		const newBlockIdx = e.detail.items.findIndex((block) => block.uuid === newBlockId);
+		const oldBlockIdx = blockActionState.blocks.findIndex((block) => block.uuid === newBlockId);
+		if (newBlockIdx === oldBlockIdx) {
+			return;
+		}
 
 		blocksSnapshot = e.detail.items;
 

@@ -34,8 +34,8 @@
 
 		queueBlockAction({
 			type: 'REORDER_BLOCK',
+			blockId: newBlockId,
 			data: {
-				blockId: newBlockId,
 				newIndex: newBlockIdx
 			}
 		});

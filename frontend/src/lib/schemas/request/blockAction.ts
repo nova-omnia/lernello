@@ -33,7 +33,10 @@ export const BlockActionSchema = z.discriminatedUnion('type', [
 	RemoveBlockActionSchema
 ]);
 
+type AddBlockActionNoId = Omit<z.infer<typeof AddBlockActionSchema>, 'blockId'>;
+
 export type BlockAction = z.infer<typeof BlockActionSchema>;
+export type BlockActionWithQuickAdd = AddBlockActionNoId | BlockAction;
 export type AddBlockAction = z.infer<typeof AddBlockActionSchema>;
 export type ReorderBlockAction = z.infer<typeof ReorderBlockActionSchema>;
 export type RemoveBlockAction = z.infer<typeof RemoveBlockActionSchema>;

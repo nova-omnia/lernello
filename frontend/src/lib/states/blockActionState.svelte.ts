@@ -1,5 +1,5 @@
 import type { BlockRes } from '$lib/schemas/response/BlockRes';
-import type { BlockAction } from '$lib/schemas/request/blockAction';
+import type { BlockAction, BlockActionWithQuickAdd } from '$lib/schemas/request/blockAction';
 
 let currTempId = 0;
 function getTempId() {
@@ -9,15 +9,22 @@ function getTempId() {
 	return tempId;
 }
 
-type BlockActionState = {
-	queue: BlockAction[];
-	blocks: BlockRes[];
+let learningUnitBlocksState: BlockRes[] = $state([]);
+let blockActionQueue: BlockAction[] = $state([]);
+export const blockActionState = {
+	get blocks() {
+		return learningUnitBlocksState;
+	},
+	setBlocks(blocks: BlockRes[]) {
+		learningUnitBlocksState = blocks;
+	},
+	get queue() {
+		return blockActionQueue;
+	},
+	clearQueue() {
+		blockActionQueue = [];
+	}
 };
-
-export const blockActionState: BlockActionState = $state({
-	queue: [],
-	blocks: []
-});
 
 export type CustomBlockActionEvent = CustomEvent<{
 	action: BlockAction;
@@ -43,7 +50,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			const newBlock = {
 				type: action.data.type,
 				name: action.data.name,
-				uuid: getTempId()
+				uuid: action.blockId
 			};
 
 			if (action.data.index !== undefined) {
@@ -75,12 +82,21 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	return blocks;
 }
 
-export function queueBlockAction(action: BlockAction) {
-	blockActionState.blocks = applyBlockAction(action, blockActionState.blocks);
-	blockActionState.queue = [...blockActionState.queue, action];
+export function queueBlockAction(action: BlockActionWithQuickAdd) {
+	let parsedAction: BlockAction;
+	if (action.type === 'ADD_BLOCK') {
+		parsedAction = {
+			...action,
+			blockId: getTempId()
+		};
+	} else {
+		parsedAction = action;
+	}
+	learningUnitBlocksState = applyBlockAction(parsedAction, learningUnitBlocksState);
+	blockActionQueue = [...blockActionQueue, parsedAction];
 	const blockActionEvent: CustomBlockActionEvent = new CustomEvent('blockAction', {
 		detail: {
-			action
+			action: parsedAction
 		}
 	});
 	document.dispatchEvent(blockActionEvent);

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { isApiErrorResponse } from '$lib/api/apiError.js';
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
-	import { applyBlockActions } from '$lib/api/collections/learningUnit.js';
+	import { applyBlockActions, getLearningUnitById } from '$lib/api/collections/learningUnit.js';
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
@@ -11,10 +11,11 @@
 
 	let { data } = $props();
 
-	blockActionState.blocks = data.blocks;
-	blockActionState.queue = [];
+	blockActionState.setBlocks(data.learningUnit.blocks);
+	blockActionState.clearQueue();
 
 	let timer: NodeJS.Timeout | null = null;
+	let dataLoading = $state(false);
 
 	$effect(() => {
 		const { remove } = addBlockActionListener(() => {
@@ -25,7 +26,7 @@
 			timer && clearTimeout(timer);
 			timer = setTimeout(async () => {
 				const queue = blockActionState.queue; // Get the current queue
-				blockActionState.queue = []; // Clear the queue
+				blockActionState.clearQueue(); // Clear the queue
 				try {
 					await browserApiClient.req(applyBlockActions, queue, data.learningUnitId);
 				} catch (error) {
@@ -35,8 +36,16 @@
 						description: `Failed to save learning unit. (${status})`,
 						type: 'error'
 					});
+					dataLoading = true;
+					const refetchedData = await browserApiClient.req(
+						getLearningUnitById,
+						null,
+						data.learningUnitId
+					);
+					blockActionState.setBlocks(refetchedData.blocks);
+					dataLoading = false;
 				}
-			}, 1000);
+			}, 400);
 		});
 
 		return () => {
@@ -46,7 +55,12 @@
 </script>
 
 <div class="-m-4">
-	<div class="grid h-full grid-cols-[75%_25%]">
+	<div
+		class="grid h-full grid-cols-[75%_25%]"
+		class:pointer-events-none={dataLoading}
+		class:opacity-50={dataLoading}
+		class:cursor-not-allowed={dataLoading}
+	>
 		<BlockEditor />
 		<BlockReorder />
 	</div>

@@ -37,5 +37,7 @@
 	<CheckpointDisplay />
 	<button class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-4" ><Plus></Plus>Create new Learning Kit</button>
 
+	<!-- trainee -->
+	<p class="mt-5 text-sm text-primary-500 font-semibold">Trainees</p>
 
 </div>

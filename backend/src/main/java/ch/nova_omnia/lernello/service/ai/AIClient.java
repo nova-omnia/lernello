@@ -16,7 +16,7 @@ public class AIClient {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String apiUrl = "http://localhost:4000/chat/completions";
 
-    public String generateTextBlock(String fullText, String topic) {
+    public String generateTheoryBlock(String fullText, String topic) {
         String prompt = """
             You are an AI tutor. Create a theory block on the topic '%s'.
             Content of the chapter:

@@ -28,3 +28,7 @@ jobs:
       - name: Frontend Lint & Prettier check
         working-directory: frontend
         run: npm run lint
+
+      - name: Frontend Check
+        working-directory: frontend
+        run: npm run check

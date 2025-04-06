@@ -1,5 +1,7 @@
 package ch.nova_omnia.lernello.service.ai;
 
+import java.util.Objects;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,13 +16,17 @@ public class AIClient {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String apiUrl = "http://localhost:4000/chat/completions";
 
-    public String generateBlockContent(String fullText, String topic, String blockType) {
+    public String generateTextBlock(String fullText, String topic) {
         String prompt = """
-            Du bist ein KI-Tutor. Erstelle einen %s-Block zum Thema '%s'.
-            Inhalt des Kapitels:
+            You are an AI tutor. Create a theory block on the topic '%s'.
+            Content of the chapter:
             %s
-            """.formatted(blockType, topic, fullText);
+            """.formatted(topic, fullText);
 
+        return sendRequest(prompt);
+    }
+
+    private String sendRequest(String prompt) {
         ChatRequest request = new ChatRequest(prompt);
 
         HttpHeaders headers = new HttpHeaders();
@@ -29,10 +35,16 @@ public class AIClient {
         HttpEntity<ChatRequest> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<ChatResponse> response = restTemplate.postForEntity(apiUrl, entity, ChatResponse.class);
+
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new RuntimeException("AI response failed");
+            throw new RuntimeException("AI response failed: " + response.getStatusCode());
         }
 
-        return response.getBody().getChoices().get(0).getMessage().getContent();
+        ChatResponse responseBody = Objects.requireNonNull(response.getBody(), "Response body is null");
+        if (responseBody.getChoices() == null || responseBody.getChoices().isEmpty()) {
+            throw new RuntimeException("AI response contains no choices");
+        }
+
+        return responseBody.getChoices().get(0).getMessage().getContent();
     }
 }

@@ -1,8 +1,7 @@
 <script lang="ts">
-	// import { createLearningUnit } from '$lib/api/learningUnits';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	const toast: ToastContext = getContext('toast');
+	import { getToastContext } from '$lib/states/toastContext.svelte';
+
+	const toast = getToastContext();
 
 	let learningUnitName: string = '';
 

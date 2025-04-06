@@ -2,12 +2,11 @@
 	import { page } from '$app/state';
 	import { superForm } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	import { setAuthCookie } from '$lib/api/collections/auth.js';
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
 	import { goto } from '$app/navigation';
-	const toast: ToastContext = getContext('toast');
+	import { getToastContext } from '$lib/states/toastContext.svelte.js';
+	const toast = getToastContext();
 
 	let { data } = $props();
 

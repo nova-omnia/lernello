@@ -41,12 +41,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> getUserScopes(User user) {
         List<GrantedAuthority> scopes = new ArrayList<>();
+
+        scopes.add(new SimpleGrantedAuthority("SCOPE_authcookie:read"));
         if (!user.isChangedPassword()) {
             scopes.add(new SimpleGrantedAuthority("SCOPE_password:write"));
             return scopes;
         }
 
-        scopes.add(new SimpleGrantedAuthority("SCOPE_authcookie:read"));
         switch (user.getRole()) {
             case INSTRUCTOR -> {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));

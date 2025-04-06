@@ -1,10 +1,22 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,8 +24,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import java.util.ArrayList;
 
 @Entity
 @Table(name = "learning_kits")
@@ -49,9 +59,6 @@ public class LearningKit {
     @Column(name = "deadlineDate")
     private Date deadlineDate;
 
-    @ManyToOne
-    @JoinColumn(name = "folder_id")
-    private Folder folder;
 
     @Column(name = "context")
     private String context;
@@ -61,19 +68,10 @@ public class LearningKit {
 
     @ManyToMany
     @JoinTable(
-            name = "learning_kit_participants",
-            joinColumns = @JoinColumn(name = "learning_kit_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
-
-    // For testing purposes
-    public LearningKit(String name, Language language, Folder folder) {
-        this.name = name;
-        this.language = language;
-        this.folder = folder;
-    }
 }

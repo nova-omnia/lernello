@@ -1,16 +1,15 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.Folder;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LearningKitService {
@@ -35,8 +34,7 @@ public class LearningKitService {
 
     @Transactional
     public LearningKit edit(LearningKit learningKit) {
-        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid()).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
 
         updateLearningKit(existingKit, learningKit);
         return existingKit;
@@ -48,7 +46,6 @@ public class LearningKitService {
         target.setLanguage(source.getLanguage());
         target.setDeadlineDate(source.getDeadlineDate());
         target.setParticipants(source.getParticipants());
-        target.setFolder(source.getFolder());
         target.setContext(source.getContext());
     }
 

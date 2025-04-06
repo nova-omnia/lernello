@@ -67,6 +67,9 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			blocks = blocks.filter((block) => block.uuid !== action.blockId);
 			break;
 			}
+
+		default:
+			throw new Error(`Unknown action type`);
 	}
 
 	return blocks;

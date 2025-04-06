@@ -12,6 +12,7 @@
 		browserApiClient
 			.req(setUserLocale, { locale: loc })
 			.then(() => {
+				// TODO Set in locals
 				locale.set(loc);
 			})
 			.catch((error) => {

@@ -1,8 +1,10 @@
 package ch.nova_omnia.lernello.service;
 
-import java.time.Duration;
-import java.util.List;
-
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,11 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -67,5 +66,12 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public String setLocale(String username, String locale) {
+        User user = userRepository.findByUsername(username);
+        user.setLocale(locale);
+        userRepository.save(user);
+        return locale;
     }
 }

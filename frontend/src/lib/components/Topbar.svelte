@@ -2,7 +2,7 @@
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import { SidebarOpen } from 'lucide-svelte';
 	import { page } from '$app/state';
-	import LanguageDropdown from '$lib/components/LanguageSelector.svelte';
+	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
 </script>
 
 <nav class="preset-filled-surface-100-900 flex min-h-13 items-center justify-between px-5 py-1">
@@ -21,5 +21,5 @@
 	>
 		<input class="ig-input preset-tonal rounded" type="search" placeholder="Search..." />
 	</div>
-	<LanguageDropdown />
+	<LanguageSelector />
 </nav>

@@ -1,26 +1,17 @@
 package ch.nova_omnia.lernello.model.data;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -50,9 +41,8 @@ public class User {
     @Column(name = "changed_password", nullable = false)
     private boolean changedPassword;
 
-    @Column(name = "language", nullable = false)
-    @NotBlank
-    private String language;
+    @Column(name = "locale")
+    private String locale;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -74,10 +64,10 @@ public class User {
     private int expires;
 
 
-    public User(String username, String password, String language, Role role) {
+    public User(String username, String password, String locale, Role role) {
         this.username = username;
         this.password = password;
-        this.language = language;
+        this.locale = locale;
         this.role = role;
     }
 }

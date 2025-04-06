@@ -66,7 +66,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 		case 'REMOVE_BLOCK': {
 			blocks = blocks.filter((block) => block.uuid !== action.blockId);
 			break;
-			}
+		}
 
 		default:
 			throw new Error(`Unknown action type`);

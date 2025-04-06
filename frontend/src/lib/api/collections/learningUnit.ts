@@ -16,3 +16,16 @@ export const getLearningUnitById = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const applyBlockActions = createEndpoint({
+	method: 'POST',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/applyLearningUnitActions`,
+	response: {
+		schema: z.record(z.string(), z.string()),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.array(z.any()),
+		defaultValidate: false
+	}
+});

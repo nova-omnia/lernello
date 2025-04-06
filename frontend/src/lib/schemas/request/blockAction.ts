@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-export const BlockTypeSchema = z.enum(['theory', 'quiz']); //Adjust based on your block types
+export const BlockTypeSchema = z.enum(['theory', 'quiz']);
 
 const BaseBlockActionSchema = z.object({
-	blockId: z.string().min(1) // Changed from uuid() to allow temp IDs
+	blockId: z.string().min(1)
 });
 
 export const AddBlockActionSchema = BaseBlockActionSchema.extend({
@@ -12,7 +12,7 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 		type: BlockTypeSchema,
 		index: z.number().min(0).optional(),
 		name: z.string().min(1),
-		blockPayload: z.any().optional() // Made optional for frontend
+		blockPayload: z.any().optional()
 	})
 });
 

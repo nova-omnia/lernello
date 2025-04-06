@@ -14,7 +14,7 @@
 	blockActionState.setBlocks(data.learningUnit.blocks);
 	blockActionState.clearQueue();
 
-	let timer: NodeJS.Timeout | null = null;
+	let timer: ReturnType<typeof setTimeout> | null = null;
 	let dataLoading = $state(false);
 
 	$effect(() => {
@@ -23,7 +23,9 @@
 				return;
 			}
 
-			timer && clearTimeout(timer);
+			if (timer) {
+				clearTimeout(timer);
+			}
 			timer = setTimeout(async () => {
 				const queue = blockActionState.queue; // Get the current queue
 				blockActionState.clearQueue(); // Clear the queue

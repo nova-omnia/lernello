@@ -4,9 +4,14 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import { getContext } from 'svelte';
 	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
+	import { setAuthCookie } from '$lib/api/collections/auth.js';
+	import { browserApiClient } from '$lib/api/browserApiClient.js';
+	import { goto } from '$app/navigation';
 	const toast: ToastContext = getContext('toast');
 
 	let { data } = $props();
+
+	let loading = $state(false);
 
 	const { form, errors, constraints, message, enhance } = superForm(data.form, {
 		onError: (error) => {
@@ -18,16 +23,48 @@
 			});
 		}
 	});
+
+	$effect(() => {
+		if ($message) {
+			loading = true;
+			browserApiClient
+				.reqRaw(setAuthCookie, $message.user, {
+					headers: {
+						Authorization: `Bearer ${$message.user.token}`
+					},
+					credentials: 'include'
+				})
+				.then((response) => response.json())
+				.then((response) => setAuthCookie.response.schema.parse(response))
+				.then(() => {
+					loading = false;
+					toast.create({
+						title: 'Success',
+						description: 'Login successful!',
+						type: 'success'
+					});
+					goto($message.redirectTo);
+				})
+				.catch(() => {
+					loading = false;
+					toast.create({
+						title: 'Error',
+						description: `Uh oh, something went wrong. (cookie)`,
+						type: 'error'
+					});
+				});
+		}
+	});
 </script>
 
 <main class="flex h-full flex-col items-center justify-center">
-	{#if $message}<h3>{$message}</h3>{/if}
-
 	<form
 		method="POST"
 		use:enhance
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+		class:opacity-50={loading}
+		class:pointer-events-none={loading}
 	>
 		<h1 class="h2">Login</h1>
 		<div class="space-y-4">
@@ -38,7 +75,6 @@
 					name="username"
 					type="text"
 					placeholder="email"
-					autofocus
 					aria-invalid={$errors.username ? 'true' : undefined}
 					bind:value={$form.username}
 					{...$constraints.username}

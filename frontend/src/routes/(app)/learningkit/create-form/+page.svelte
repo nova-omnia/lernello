@@ -31,7 +31,6 @@
 			type="text"
 			class="input"
 			name="name"
-			autofocus
 			placeholder="Learning Kit Name"
 			aria-invalid={$errors.name ? 'true' : undefined}
 			bind:value={$form.name}

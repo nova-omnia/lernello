@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/learning-kits")
 @Validated
-public class CreateLearningKitController {
+public class LearningKitRestController {
     private final LearningKitService learningKitService;
 
     private final LearningKitMapper learningKitMapper;
 
-    public CreateLearningKitController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
+    public LearningKitRestController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
         this.learningKitService = learningKitService;
         this.learningKitMapper = learningKitMapper;
     }
@@ -41,8 +41,8 @@ public class CreateLearningKitController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> edit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
-        LearningKit updated = learningKitService.edit(entity);
-        return ResponseEntity.ok(learningKitMapper.toDTO(updated));
+        LearningKit savedEntity = learningKitService.edit(entity);
+        return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }
 
     @DeleteMapping("/{learningKitId}")
@@ -56,9 +56,7 @@ public class CreateLearningKitController {
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid ResponseEntity<List<LearningKitResDTO>> getAll() {
         List<LearningKit> learningKits = learningKitService.findAll();
-        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream()
-                .map(learningKitMapper::toDTO)
-                .collect(Collectors.toList());
+        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(learningKitResDTOs);
     }
 

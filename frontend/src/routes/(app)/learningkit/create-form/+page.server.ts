@@ -2,19 +2,14 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import {
-	createLearningKit,
-	getLearningKit,
-	updateLearningKit
-} from '$lib/api/learning-kit/learningKit';
-import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/models/kit';
-import type { PageServerLoad } from '../../../../../.svelte-kit/types/src/routes/$types';
+import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
+import { serverApiClient } from '$lib/api/serverApiClient';
+import { createLearningKit } from '$lib/api/collections/learningKit';
 
 let editId: string | null;
-export const load: PageServerLoad = async ({ url }) => {
+export const load = async () => {
 	editId = url.searchParams.get('edit');
-	let formData;
-
+	const form = await superValidate(zod(CreateLearningKitSchema));
 	if (editId) {
 		const existingKit = await getLearningKit(editId);
 
@@ -34,13 +29,13 @@ export const load: PageServerLoad = async ({ url }) => {
 };
 
 export const actions = {
-	create: handleApiError(async (event) => {
-		const { request } = event;
+	create: handleApiError(async ({ request }) => {
 		const form = await superValidate(request, zod(CreateLearningKitSchema));
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
+		const learningKit = await serverApiClient.req(createLearningKit, form.data);
 		let learningKit;
 		if (editId) {
 			learningKit = await updateLearningKit({ ...form.data, uuid: editId });
@@ -49,7 +44,7 @@ export const actions = {
 		}
 		const learningKitId = learningKit.uuid;
 
-		return redirect(303, `/learningkit/${learningKitId}`);
+		return redirect(303, `/learningkit/${learningKit.uuid}`);
 	})
 } satisfies Actions;
 

@@ -60,17 +60,21 @@ public class FileSystemService implements FileService {
         return savedFile;
     }
 
-    private void deleteExistingFileIfExists(String fileName) {
-        Optional<File> existingFileOptional = fileRepository.findByName(fileName);
-        existingFileOptional.ifPresent(existingFile -> {
-            Path existingFilePath = Paths.get(storagePath, existingFile.getUuid().toString());
+    @Override
+    @Transactional(readOnly = true)
+    public String getFileContent(UUID fileId) {
+        Optional<File> fileOptional = fileRepository.findById(fileId);
+        if (fileOptional.isPresent()) {
+            File file = fileOptional.get();
+            Path filePath = Paths.get(storagePath, file.getUuid().toString());
             try {
-                Files.deleteIfExists(existingFilePath);
+                return Files.readString(filePath);
             } catch (IOException e) {
-                throw new RuntimeException("Could not delete existing file. Error: " + e.getMessage(), e);
+                throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
             }
-            fileRepository.delete(existingFile);
-        });
+        } else {
+            throw new RuntimeException("File not found");
+        }
     }
 
     public ResponseEntity<Resource> getFileResource(UUID uuid) {
@@ -88,5 +92,18 @@ public class FileSystemService implements FileService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private void deleteExistingFileIfExists(String fileName) {
+        Optional<File> existingFileOptional = fileRepository.findByName(fileName);
+        existingFileOptional.ifPresent(existingFile -> {
+            Path existingFilePath = Paths.get(storagePath, existingFile.getUuid().toString());
+            try {
+                Files.deleteIfExists(existingFilePath);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not delete existing file. Error: " + e.getMessage(), e);
+            }
+            fileRepository.delete(existingFile);
+        });
     }
 }

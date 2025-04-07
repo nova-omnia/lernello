@@ -2,13 +2,18 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
+import {
+	CreateLearningKitSchema,
+	EditLearningKitSchema
+} from '$lib/schemas/request/CreateLearningKit';
 import { serverApiClient } from '$lib/api/serverApiClient';
-import { createLearningKit, editLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
-import type { PageServerLoad } from "../../../../../.svelte-kit/types/src/routes/$types";
-import type { LearningKitRes } from "$lib/schemas/response/LearningKitRes";
-import { z } from "zod";
-import { LearningKitResSchema } from "$lib/schemas/response/LearningKitRes";
+import {
+	createLearningKit,
+	editLearningKit,
+	getLearningKitById
+} from '$lib/api/collections/learningKit';
+import type { PageServerLoad } from '../../../../../.svelte-kit/types/src/routes/$types';
+import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 
 let editId: string | null;
 export const load: PageServerLoad = async ({ url }) => {
@@ -46,16 +51,20 @@ export const actions = {
 			learningKit = await serverApiClient.req(editLearningKit, {
 				...form.data,
 				uuid: editId,
-				deadlineDate: form.data.deadlineDate ? form.data.deadlineDate.toISOString().split('T')[0] : null
+				deadlineDate: form.data.deadlineDate
+					? form.data.deadlineDate.toISOString().split('T')[0]
+					: null
 			});
 		} else {
 			learningKit = await serverApiClient.req(createLearningKit, {
 				...form.data,
-				deadlineDate: form.data.deadlineDate ? form.data.deadlineDate.toISOString().split('T')[0] : null
+				deadlineDate: form.data.deadlineDate
+					? form.data.deadlineDate.toISOString().split('T')[0]
+					: null
 			});
 		}
 
-		return redirect(303, `/learningkit/${ learningKit.uuid }`);
+		return redirect(303, `/learningkit/${learningKit.uuid}`);
 	})
 } satisfies Actions;
 
@@ -68,5 +77,5 @@ function formatLocalDateTime(date: Date): string {
 	const hours = pad(date.getHours());
 	const minutes = pad(date.getMinutes());
 
-	return `${ year }-${ month }-${ day }T${ hours }:${ minutes }`;
+	return `${year}-${month}-${day}T${hours}:${minutes}`;
 }

@@ -1,7 +1,7 @@
 import type { Actions } from '@sveltejs/kit';
 import { fail } from '@sveltejs/kit';
-import { serverApiClient } from "$lib/api/serverApiClient";
-import { deleteLearningKit, getAllLearningKits } from "$lib/api/collections/learningKit";
+import { serverApiClient } from '$lib/api/serverApiClient';
+import { deleteLearningKit, getAllLearningKits } from '$lib/api/collections/learningKit';
 
 export async function load() {
 	const kits = await serverApiClient.req(getAllLearningKits, null);

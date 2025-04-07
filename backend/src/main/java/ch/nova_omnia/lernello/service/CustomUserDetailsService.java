@@ -58,6 +58,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_blocks:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_user:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:write"));
             }
             case TRAINEE -> {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_files:read"));

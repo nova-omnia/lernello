@@ -38,32 +38,32 @@ public class LearningUnitRestController {
     private final TemporaryKeyMapper temporaryKeyMapper;
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('SCOPE_folders:write')")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
         LearningUnit learningUnit = learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO));
         return learningUnitMapper.toDTO(learningUnit);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_files:write')")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public void deleteById(@PathVariable UUID id) {
         learningUnitService.deleteById(id);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_folders:read')")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
     public @Valid LearningUnitResDTO getById(@PathVariable UUID id) {
         return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Learning unit with id %s not found", id)));
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('SCOPE_folders:read')")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
     public List<@Valid LearningUnitResDTO> getAllLearningUnits() {
         return learningUnitService.findAll().stream().map(learningUnitMapper::toDTO).toList();
     }
 
     @PostMapping("/{id}/applyLearningUnitActions")
-    @PreAuthorize("hasAuthority('SCOPE_folders:write')")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
         return temporaryKeyMapper.toDTO(learningUnitService.applyLearningUnitActions(id, actionQueue)).temporaryKeyMap();
     }

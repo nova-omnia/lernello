@@ -9,8 +9,8 @@ export const LearningKitResSchema = z.object({
 		(val) => (typeof val === 'string' ? new Date(val) : undefined),
 		z.date().optional()
 	),
-	language: z.string().nonempty(),
+	language: z.string().nonempty().optional(), //TODO
 	participants: z.array(z.string().uuid()),
-	folderId: z.string().uuid().nullable()
+	folderId: z.string().uuid().optional().nullable() //TODO
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;

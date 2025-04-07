@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const CreateLearningKitSchema = z.object({
+	uuid: z.string().uuid().optional(),
 	name: z.string().nonempty(),
 	description: z.string().optional(),
 	deadlineDate: z.preprocess((val) => {
@@ -11,3 +12,11 @@ export const CreateLearningKitSchema = z.object({
 	context: z.string().optional()
 });
 export type CreateLearningKit = z.infer<typeof CreateLearningKitSchema>;
+
+export const EditLearningKitSchema = z.object({
+	uuid: z.string().uuid().optional(),
+	name: z.string().nonempty(),
+	description: z.string().optional(),
+	deadlineDate: z.string(),
+	context: z.string().optional()
+});

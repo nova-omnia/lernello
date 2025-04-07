@@ -2,16 +2,22 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
-import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
+import { CreateLearningKitSchema, EditLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
 import { serverApiClient } from '$lib/api/serverApiClient';
-import { createLearningKit } from '$lib/api/collections/learningKit';
+import { createLearningKit, editLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
+import type { PageServerLoad } from "../../../../../.svelte-kit/types/src/routes/$types";
+import type { LearningKitRes } from "$lib/schemas/response/LearningKitRes";
+import { z } from "zod";
+import { LearningKitResSchema } from "$lib/schemas/response/LearningKitRes";
 
 let editId: string | null;
-export const load = async () => {
+export const load: PageServerLoad = async ({ url }) => {
 	editId = url.searchParams.get('edit');
-	const form = await superValidate(zod(CreateLearningKitSchema));
+	let formData;
+
 	if (editId) {
-		const existingKit = await getLearningKit(editId);
+		const response = await serverApiClient.req(getLearningKitById, null, editId);
+		const existingKit = LearningKitResSchema.parse(response);
 
 		formData = {
 			uuid: existingKit.uuid,
@@ -35,16 +41,21 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const learningKit = await serverApiClient.req(createLearningKit, form.data);
 		let learningKit;
 		if (editId) {
-			learningKit = await updateLearningKit({ ...form.data, uuid: editId });
+			learningKit = await serverApiClient.req(editLearningKit, {
+				...form.data,
+				uuid: editId,
+				deadlineDate: form.data.deadlineDate ? form.data.deadlineDate.toISOString().split('T')[0] : null
+			});
 		} else {
-			learningKit = await createLearningKit(form.data);
+			learningKit = await serverApiClient.req(createLearningKit, {
+				...form.data,
+				deadlineDate: form.data.deadlineDate ? form.data.deadlineDate.toISOString().split('T')[0] : null
+			});
 		}
-		const learningKitId = learningKit.uuid;
 
-		return redirect(303, `/learningkit/${learningKit.uuid}`);
+		return redirect(303, `/learningkit/${ learningKit.uuid }`);
 	})
 } satisfies Actions;
 
@@ -57,5 +68,5 @@ function formatLocalDateTime(date: Date): string {
 	const hours = pad(date.getHours());
 	const minutes = pad(date.getMinutes());
 
-	return `${year}-${month}-${day}T${hours}:${minutes}`;
+	return `${ year }-${ month }-${ day }T${ hours }:${ minutes }`;
 }

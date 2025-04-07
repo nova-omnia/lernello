@@ -1,11 +1,9 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -15,16 +13,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/learning-kits")
 @Validated
-public class CreateLearningKitController {
+public class LearningKitRestController {
     private final LearningKitService learningKitService;
 
     private final LearningKitMapper learningKitMapper;
 
-    public CreateLearningKitController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
+    public LearningKitRestController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
         this.learningKitService = learningKitService;
         this.learningKitMapper = learningKitMapper;
     }

@@ -8,8 +8,8 @@
 >
 	<File class="h-10 w-10" />
 	<p class="text-bold text-black-700 ml-2 text-base">File Name</p>
-	<button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-xl p-2"
+	<button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2"
 		><Download /></button
 	>
-	<button type="button" class="btn preset-filled-error-500 ml-1 rounded-xl p-2">Remove</button>
+	<button type="button" class="btn preset-filled-error-500 ml-1 rounded-full p-2">Remove</button>
 </div>

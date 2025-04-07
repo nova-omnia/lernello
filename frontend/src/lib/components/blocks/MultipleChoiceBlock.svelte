@@ -1,81 +1,54 @@
 <script lang="ts">
-	import Dialog from '../Dialog.svelte';
-	import { Switch } from '@skeletonlabs/skeleton-svelte'
-	import {Check, X} from 'lucide-svelte';
+	import { Switch } from '@skeletonlabs/skeleton-svelte';
+	import { Check, X } from 'lucide-svelte';
+
 	let question = '';
-	let answer1 = '';
-	let answer2 = '';
-	let answer3 = '';
-	let answer4 = '';
+	let answers: { value: string; isCorrect: boolean }[] = [
+		{ value: '', isCorrect: false },
+		{ value: '', isCorrect: false }
+	];
 
-	const addQuestion = () => {
-		// Hier fügst du die Logik ein, um die Frage und Antworten zu verarbeiten
-		console.log({ question, answer1, answer2, answer3, answer4 });
+	function addAnswerField() {
+		answers = [...answers, { value: '', isCorrect: false }];
+	}
 
-		// Optional: Daten an dein Spring Boot Backend senden
-		// fetch('/api/questions', { ... });
-	};
-	let dialog: Dialog;
-	export const openDialog = () => {
-		if (dialog) dialog.showModal();
-	};
+	function toggleCorrect(index: number) {
+		if (index >= 0 && index < answers.length) {
+			answers = answers.map((answer, i) =>
+				i === index ? { ...answer, isCorrect: !answer.isCorrect } : answer
+			);
+		}
+	}
 </script>
 
 <div>
-	<button class="preset-filled-primary-100-900 m-auto p-5" on:click={openDialog}
-		>Add new multiple choice block</button
-	>
-	<dialog bind:this={dialog} class=" preset-filled-primary-300-700 max-w-5xl m-auto p-4">
-		<div class="grid grid-cols-12 items-center justify-items-center gap-4">
-			<input
-				type="text"
-				placeholder="Type Question"
-				bind:value={question}
-				class="col-span-12 mb-4 w-full border p-2"
-			/>
-			<Switch name="correct" controlActive="bg-primary-400">
+	<input
+		type="text"
+		placeholder="Type Question"
+		bind:value={question}
+		class="input col-span-12 mb-4 w-full border p-2"
+	/>
+
+	{#each answers as answer, idx (idx)}
+		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4">
+			<Switch
+				name="correct-{idx}"
+				controlActive="bg-primary-400"
+				classes="col-span-1"
+				onCheckedChange={() => toggleCorrect(idx)}
+			>
 				{#snippet inactiveChild()}<X size="14" />{/snippet}
 				{#snippet activeChild()}<Check size="14" />{/snippet}
 			</Switch>
 			<input
 				type="text"
-				placeholder="add answer 1"
-				bind:value={answer1}
-				class="col-span-5 border p-2"
+				placeholder={`Answer ${idx + 1}`}
+				class="input col-span-11 p-2"
+				bind:value={answer.value}
 			/>
-			<Switch name="correct" controlActive="bg-primary-400">
-				{#snippet inactiveChild()}<X size="14" />{/snippet}
-				{#snippet activeChild()}<Check size="14" />{/snippet}
-			</Switch>
-			<input
-				type="text"
-				placeholder="add answer 2"
-				bind:value={answer2}
-				class="col-span-5 border p-2"
-			/>
-			<Switch name="correct" controlActive="bg-primary-400">
-				{#snippet inactiveChild()}<X size="14" />{/snippet}
-				{#snippet activeChild()}<Check size="14" />{/snippet}
-			</Switch>
-			<input
-				type="text"
-				placeholder="add answer 3 (optional)"
-				bind:value={answer3}
-				class="col-span-5 border p-2"
-			/>
-			<Switch name="correct" controlActive="bg-primary-400">
-				{#snippet inactiveChild()}<X size="14" />{/snippet}
-				{#snippet activeChild()}<Check size="14" />{/snippet}
-			</Switch>
-			<input
-				type="text"
-				placeholder="add answer 4 (optional)"
-				bind:value={answer4}
-				class="col-span-5 border p-2"
-			/>
-			<button on:click={addQuestion} class="preset-filled-primary-50-950 mt-4 rounded p-2">
-				Add multiple choice block
-			</button>
 		</div>
-	</dialog>
+	{/each}
+	<button on:click={addAnswerField} class="bg-primary-100-900 col-span-12 mt-4 rounded p-4">
+		Add more possible answers
+	</button>
 </div>

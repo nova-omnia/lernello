@@ -9,6 +9,6 @@
 	};
 </script>
 
-<div class="m-auto rounded p-5 justify-between">
+<div>
 	<MarkdownEditor bind:value={data.markdown} mode="tabs" {carta} />
 </div>

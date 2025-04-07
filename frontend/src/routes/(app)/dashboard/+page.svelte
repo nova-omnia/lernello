@@ -1,8 +1,3 @@
-<script lang="ts">
-	import TheoryBlock from "$lib/components/blocks/TheoryBlock.svelte";
-
-</script>
-
 <div class="p-5">
 	<p class="preset-typo-subtitle">Good morning!</p>
 
@@ -33,5 +28,4 @@
 			>Create new Learning Kit</a
 		>
 	</div>
-	<TheoryBlock />
 </div>

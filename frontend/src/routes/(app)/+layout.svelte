@@ -9,7 +9,7 @@
 	<Sidebar />
 	<div class="flex flex-1 flex-col">
 		<Topbar />
-		<main class="min-h-0 flex-1 overflow-auto p-4">
+		<main class="relative min-h-0 flex-1 overflow-auto p-4">
 			{@render children()}
 		</main>
 	</div>

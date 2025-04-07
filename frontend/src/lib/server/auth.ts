@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
-import { UserTokenSchema } from '$lib/models/user';
+import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
 
 export function recoverSession() {
 	const { locals, cookies } = getRequestEvent();
@@ -10,7 +10,7 @@ export function recoverSession() {
 
 		if (sessionToken) {
 			try {
-				const parsedToken = UserTokenSchema.parse(JSON.parse(sessionToken));
+				const parsedToken = LoggedInUserSchema.parse(JSON.parse(sessionToken));
 				locals.user = parsedToken;
 			} catch (error) {
 				console.error('Failed to parse session token:', error);

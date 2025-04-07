@@ -10,8 +10,3 @@ export const ChangePasswordDataSchema = z
 		path: ['confirmPassword']
 	});
 export type ChangePasswordData = z.infer<typeof ChangePasswordDataSchema>;
-
-export const ChangePasswordStatusSchema = z.object({
-	success: z.boolean()
-});
-export type ChangePasswordStatus = z.infer<typeof ChangePasswordStatusSchema>;

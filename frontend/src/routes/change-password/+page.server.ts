@@ -3,9 +3,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { ChangePasswordDataSchema } from '$lib/models/changePasswordData';
-import { changePassword } from '$lib/api/login/changePassword';
 import { parseRedirectTo, requireLogin } from '$lib/server/auth';
+import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
+import { serverApiClient } from '$lib/api/serverApiClient.js';
+import { changePassword } from '$lib/api/collections/user';
 
 export const load = async ({ url }) => {
 	const user = requireLogin();
@@ -29,7 +30,7 @@ export const actions = {
 		}
 
 		try {
-			const { success } = await changePassword(form.data);
+			const { success } = await serverApiClient.req(changePassword, form.data);
 			if (!success) {
 				return setError(form, 'confirmPassword', 'Change password failed');
 			}

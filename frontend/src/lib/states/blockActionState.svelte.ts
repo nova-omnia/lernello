@@ -3,8 +3,10 @@ import type { BlockAction, BlockActionWithQuickAdd } from '$lib/schemas/request/
 
 let currTempId = 0;
 function getTempId() {
-	// Generate a temporary ID for new blocks
-	const tempId = `tempid:${currTempId}`;
+	const uuidPrefix = "00000000-0000-0000-0000-";
+	const tempUuid = `${uuidPrefix}${currTempId.toString(16).padStart(12, '0')}`;
+	const tempId = `${tempUuid}`;
+
 	currTempId++;
 	return tempId;
 }

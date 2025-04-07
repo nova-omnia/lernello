@@ -42,6 +42,14 @@ public class User{
     @Email
     private String username;
 
+    @Column(name = "first_name", nullable = false)
+    @NotBlank
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    @NotBlank
+    private String lastName;
+
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(min = 8)
@@ -73,8 +81,10 @@ public class User{
     @Transient
     private int expires;
 
-    public User(String username, String password, String language, Role role) {
+    public User(String username, String firstName, String lastName, String password, String language, Role role) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.language = language;
         this.role = role;

@@ -27,8 +27,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-//TODO: update the path
-@RequestMapping("/api/learning-kit/learning-unit")
+@RequestMapping("/api/learning-units")
 @Validated
 @RequiredArgsConstructor
 public class LearningUnitRestController {
@@ -62,7 +61,7 @@ public class LearningUnitRestController {
         return learningUnitService.findAll().stream().map(learningUnitMapper::toDTO).toList();
     }
 
-    @PostMapping("/{id}/applyLearningUnitActions")
+    @PostMapping("/{id}/apply-block-actions")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
         return temporaryKeyMapper.toDTO(learningUnitService.applyLearningUnitActions(id, actionQueue)).temporaryKeyMap();

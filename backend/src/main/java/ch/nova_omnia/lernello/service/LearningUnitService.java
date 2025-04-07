@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -29,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
-    private Map<String, UUID> temporaryKeyMap;
+    private Map<String, UUID> temporaryKeyMap = new ConcurrentHashMap<>();
 
     @Transactional
     public LearningUnit createLearningUnit(LearningUnit learningUnit) {
@@ -123,7 +125,6 @@ public class LearningUnitService {
 
     private void removeBlock(LearningUnit learningUnit, RemoveBlockActionDTO removeAction) {
 
-
         if (learningUnit.getBlocks().stream().anyMatch(block -> block.getUuid().equals(removeAction.blockId()))) {
             learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(removeAction.blockId()));
         } else {
@@ -199,10 +200,20 @@ public class LearningUnitService {
 
     private UUID getActionKey(BlockActionDTO action) {
         if (action instanceof AddBlockActionDTO addAction) {
-            return UUID.fromString(addAction.blockId());
+            if (isTemporaryId(addAction.blockId())) {
+                String tempUUID = addAction.blockId();
+                System.out.println(tempUUID);
+                return UUID.fromString(addAction.blockId());
+            }
         } else if (action instanceof RemoveBlockActionDTO removeAction) {
-            return UUID.fromString(removeAction.blockId());
+            if (isTemporaryId(removeAction.blockId())) {
+                return UUID.fromString(removeAction.blockId());
+            }
         }
         return null;
+    }
+
+    private boolean isTemporaryId(String id) {
+        return id != null && id.startsWith("tempid:");
     }
 }

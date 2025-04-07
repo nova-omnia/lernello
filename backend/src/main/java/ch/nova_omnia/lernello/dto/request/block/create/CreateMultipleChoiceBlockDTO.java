@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record CreateMultipleChoiceBlockDTO(
-                                           @NotBlank String name,
-                                           @Min(0) int position,
-                                           @NotNull UUID learningUnitId,
-                                           @NotBlank String question,
-                                           @NotNull List<String> possibleAnswers,
-                                           @NotNull List<String> correctAnswers) implements CreateBlockDTO {
-}
+        @NotBlank String name,
+        @Min(0) int position,
+        @NotNull UUID learningUnitId,
+        @NotBlank String question,
+        @NotNull List<String> possibleAnswers,
+        @NotNull List<String> correctAnswers
+) implements CreateBlockDTO {}

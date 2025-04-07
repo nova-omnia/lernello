@@ -46,7 +46,7 @@ public class UserService {
         Duration expirationTime = Duration.ofMillis(authenticatedUser.getExpires());
 
         ResponseCookie jwtCookie = ResponseCookie.from("lernello_auth_token", token).httpOnly(true)  // Prevent JavaScript access (XSS protection)
-                .secure(true)    // Only send over HTTPS
+                .secure(false)    // Only send over HTTPS (TODO: set to true in production?)
                 .sameSite("None") // Prevent CSRF
                 .path("/")       // Make cookie available across the site
                 .maxAge(expirationTime) // Set expiration

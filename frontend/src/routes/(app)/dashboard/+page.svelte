@@ -51,7 +51,7 @@
 	<div class="mt-5 flex flex-wrap gap-5">
 		<div
 			on:click={() => goto('/learningkit/create-form')}
-			class="relative flex w-52 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 dark:border-gray-600 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+			class="relative flex w-52 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
 		>
 			<Plus class="text-primary-500 h-10 w-10" />
 			<p class="text-gray-600 dark:text-gray-300">Create New Kit</p>
@@ -60,7 +60,7 @@
 		{#each kits as kit (kit.uuid)}
 			<div
 				on:click={() => goto(`/learningkit/${kit.uuid}`)}
-				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 dark:border-gray-700 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
 			>
 				<div class="absolute top-2 right-2 flex gap-2">
 					<a href="/learningkit/create-form?edit={kit.uuid}" on:click|stopPropagation>

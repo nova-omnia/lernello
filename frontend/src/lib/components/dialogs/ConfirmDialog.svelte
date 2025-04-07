@@ -23,32 +23,32 @@
 	backdropClasses="bg-black/30 backdrop-blur-sm z-50"
 >
 	{#snippet content()}
-	<header class="flex justify-between items-center">
-		<h2 class="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
-	</header>
+		<header class="flex items-center justify-between">
+			<h2 class="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+		</header>
 
-	<article>
-		<p class="text-gray-700 dark:text-gray-300">{message}</p>
-	</article>
+		<article>
+			<p class="text-gray-700 dark:text-gray-300">{message}</p>
+		</article>
 
-	<footer class="flex justify-end gap-3 pt-2">
-		<button
-			class="rounded border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-			on:click={onCancel}
-		>
-			{cancelText}
-		</button>
+		<footer class="flex justify-end gap-3 pt-2">
+			<button
+				class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+				on:click={onCancel}
+			>
+				{cancelText}
+			</button>
 
-		<button
-			class="rounded px-4 py-2 text-white"
-			class:bg-red-600={danger}
-			class:bg-blue-600={!danger}
-			class:hover:bg-red-700={danger}
-			class:hover:bg-blue-700={!danger}
-			on:click={onConfirm}
-		>
-			{confirmText}
-		</button>
-	</footer>
+			<button
+				class="rounded px-4 py-2 text-white"
+				class:bg-red-600={danger}
+				class:bg-blue-600={!danger}
+				class:hover:bg-red-700={danger}
+				class:hover:bg-blue-700={!danger}
+				on:click={onConfirm}
+			>
+				{confirmText}
+			</button>
+		</footer>
 	{/snippet}
 </Modal>

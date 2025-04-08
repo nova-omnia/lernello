@@ -1,7 +1,15 @@
 <script lang="ts">
 	import logo from '$lib/assets/Lernello_Logo.svg';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
-	import { ChartLine, Folder, LayoutDashboard, LogOut, Settings, SidebarClose, User } from 'lucide-svelte';
+	import {
+		ChartLine,
+		Folder,
+		LayoutDashboard,
+		LogOut,
+		Settings,
+		SidebarClose,
+		User
+	} from 'lucide-svelte';
 </script>
 
 {#snippet sidebarItemLabel(label: string)}

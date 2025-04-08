@@ -10,15 +10,10 @@
 
 	export let onConfirm: () => void;
 	export let onCancel: () => void;
-
-	function handleOpenChange(e: any) {
-		if (!e.detail.open) onCancel();
-	}
 </script>
 
 <Modal
 	open={isOpen}
-	onOpenChange={handleOpenChange}
 	contentBase="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl w-full max-w-md space-y-4"
 	backdropClasses="bg-black/30 backdrop-blur-sm z-50"
 >

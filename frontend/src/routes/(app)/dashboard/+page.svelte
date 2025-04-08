@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AITheoryBlock from './../../../lib/components/AITheoryBlock.svelte';
 </script>
 
 <div class="p-5">
@@ -30,5 +31,8 @@
 		<a href="/learningkit/create-form" class="btn preset-filled-primary-400-600"
 			>Create new Learning Kit</a
 		>
+	</div>
+	<div>
+		<AITheoryBlock />
 	</div>
 </div>

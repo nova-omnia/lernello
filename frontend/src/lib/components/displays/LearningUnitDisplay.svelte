@@ -1,6 +1,5 @@
 <script lang="ts">
     import { AlignLeft, GripVertical } from 'lucide-svelte';
-    import {serverApiClient} from "$lib/api/serverApiClient";
     import {browserApiClient} from "$lib/api/browserApiClient.js";
     import {getLearningUnitById, deleteLearningUnit, regenerateLearningUnit} from "$lib/api/collections/learningUnit";
     import {redirect} from "@sveltejs/kit";
@@ -8,16 +7,19 @@
     const {learningUnit} = $props();
 
     async function openLearningUnit() {
+        console.log('openLearningUnit');
+        console.log(learningUnit);
         let unit = await browserApiClient.req(getLearningUnitById, null, learningUnit.id);
+        console.log(unit);
         redirect(303, `/learning-units/${unit.uuid}`);
     }
 
     async function regenerateLearningUnitHandler() {
-        await serverApiClient.req(regenerateLearningUnit, null, learningUnit.id);
+        await browserApiClient.req(regenerateLearningUnit, null, learningUnit.id);
     }
 
     async function deleteLearningUnitHandler() {
-        await serverApiClient.req(deleteLearningUnit, null, learningUnit.id);
+        await browserApiClient.req(deleteLearningUnit, null, learningUnit.id);
     }
 
 </script>

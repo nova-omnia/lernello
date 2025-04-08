@@ -19,7 +19,8 @@
 	}
 	let learningUnit = {
 		name: 'test',
-		description: 'hushf'
+		description: 'hushf',
+		id: '1234',
 	};
 </script>
 

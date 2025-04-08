@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.dto.response.user;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
@@ -9,5 +10,5 @@ public record LoggedInUserDTO(
                               @NotNull UUID uuid,
                               @NotBlank String token,
                               boolean changedPassword,
-                              @NotNull int expires) {
+                              @NotNull ZonedDateTime expires) {
 }

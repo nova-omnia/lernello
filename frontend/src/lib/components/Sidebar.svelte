@@ -33,7 +33,7 @@
 	<div class="w-max min-w-full space-y-2">
 		<!-- Logo -->
 		<p class="flex items-center" aria-label="Lernello">
-			<img alt="Lernello" src={logo} width="24" class="object-cover object-center"/>
+			<img alt="Lernello" src={logo} width="24" class="object-cover object-center" />
 			{@render sidebarItemLabel('Lernello')}
 			{#if sidebarState.isExpanded}
 				<button

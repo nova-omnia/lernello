@@ -20,10 +20,10 @@
 	};
 
 	const localeNames = new Map<string, string>([
-		['en-EN', 'English'],
-		['de-DE', 'Deutsch'],
-		['fr-FR', 'Français'],
-		['it-IT', 'Italiano']
+		['en', 'English'],
+		['de', 'Deutsch'],
+		['fr', 'Français'],
+		['it', 'Italiano']
 	]);
 </script>
 
@@ -32,8 +32,5 @@
 		selected={$locale}
 		options={$locales.map((loc) => ({ value: loc, label: localeNames.get(loc) || loc }))}
 		onSelect={selectLocale}
-	>
-		<span slot="selected">{$locale}</span>
-		<span slot="option" let:option>{$_(`languageName.${option}`)}</span>
-	</Select>
+	/>
 </div>

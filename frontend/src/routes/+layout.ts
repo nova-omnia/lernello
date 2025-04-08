@@ -1,9 +1,13 @@
-import { getLocaleFromNavigator, waitLocale } from 'svelte-i18n';
+import { getLocaleFromNavigator, locale, waitLocale } from 'svelte-i18n';
 
 import { initi18n } from '$lib/i18n/i18n';
+import { browser } from '$app/environment';
 
 export const load = async ({ data }) => {
-	await initi18n(data.userInfo?.locale || getLocaleFromNavigator() || 'en-EN');
-
+	if (browser) {
+		const lang = data.userInfo?.locale || getLocaleFromNavigator();
+		await initi18n(lang);
+		locale.set(lang);
+	}
 	await waitLocale();
 };

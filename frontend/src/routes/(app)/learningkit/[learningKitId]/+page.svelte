@@ -5,10 +5,11 @@
 	import TraineeDisplay from "$lib/components/displays/TraineeDisplay.svelte";
 	import FileDisplay from "$lib/components/displays/FileDisplay.svelte";
 	import FileUpload from "$lib/components/FileUpload.svelte";
-	let { data } = $props();
-	const kit = data.kit;
 
-	const learningUnits = kit.learningUnits || [];
+	let { data } = $props();
+	const learningKit = data.kit;
+
+	const learningUnits = learningKit.learningUnits || [];
 
 	function formatDate(date: Date): string {
 		const day = String(date.getDate()).padStart(2, '0');
@@ -26,9 +27,9 @@
 	<!--header-->
 	<div class="flex space-between items-start p-1">
 		<div>
-		<h1 class="text-2xl font-bold">Learning Kit: {kit.name}</h1>
-		<h2 class="mt-2 text-lg font-semibold">{kit.description}</h2>
-		<p class="mt-2 flex items-center"><Clock class="inline-block mr-2" /> {formatDate(kit.deadlineDate)}</p>
+		<h1 class="text-2xl font-bold">Learning Kit: {learningKit.name}</h1>
+		<h2 class="mt-2 text-lg font-semibold">{learningKit.description}</h2>
+		<p class="mt-2 flex items-center"><Clock class="inline-block mr-2" /> {formatDate(learningKit.deadlineDate)}</p>
 		</div>
 
 		<button type="button" class="btn preset-outlined-surface-500 ml-auto rounded-full p-2"><Settings/>Edit</button>
@@ -41,6 +42,7 @@
 	{#each learningUnits as learningUnit}
 		<LearningUnitDisplay {learningUnit}/>
 	{/each}
+	<LearningUnitDisplay {learningUnit}/>
 	<CheckpointDisplay/>
 	<button type="button" class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2" ><Plus></Plus>Create new Learning Kit</button>
 

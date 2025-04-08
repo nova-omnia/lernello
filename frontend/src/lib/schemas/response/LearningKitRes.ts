@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import {LearningUnitResSchema} from "$lib/schemas/response/LearningUnitRes";
 
 export const LearningKitResSchema = z.object({
 	uuid: z.string().uuid().nonempty(),
 	name: z.string().nonempty(),
-	learningUnits: z.array(z.any()).optional(), //ToDo
+	learningUnits: z.array(LearningUnitResSchema).optional(),
 	description: z.string().optional(),
 	deadlineDate: z.preprocess((val) => {
 		if (typeof val === 'string' && val) return new Date(val);

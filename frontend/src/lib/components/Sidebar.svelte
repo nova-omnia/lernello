@@ -1,10 +1,10 @@
 <script lang="ts">
+	import logo from '$lib/assets/Lernello_Logo.svg';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import {
 		ChartLine,
 		Settings,
 		User,
-		GraduationCap,
 		LayoutDashboard,
 		Folder,
 		SidebarClose,
@@ -33,7 +33,7 @@
 	<div class="w-max min-w-full space-y-2">
 		<!-- Logo -->
 		<p class="flex items-center" aria-label="Lernello">
-			<GraduationCap size={24} />
+			<img alt="Lernello" src={logo} width="24" class="object-cover object-center"/>
 			{@render sidebarItemLabel('Lernello')}
 			{#if sidebarState.isExpanded}
 				<button

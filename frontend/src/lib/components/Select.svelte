@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { Check, ChevronDown, ChevronUp } from 'lucide-svelte';
 
-	let { selected, onSelect, ...props } = $props();
+	interface SelectProps {
+		selected?: string | null;
+		onSelect: (option: string) => void;
+		options: { value: string; label: string }[];
+	}
+
+	let { selected, onSelect, options }: SelectProps = $props();
 	let open = $state(false);
 
 	function toggleDropdown() {
@@ -26,7 +32,7 @@
 	>
 		<span class="truncate">
 			{#if selected}
-				{@render figure(selected)}
+				{@render figure(options.find((option) => option.value === selected)?.label || selected)}
 			{:else}
 				Select...
 			{/if}
@@ -43,19 +49,19 @@
 		<ul
 			class="bg-surface-100-900 border-surface-200-800 absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border shadow-lg"
 		>
-			{#each props.options as option (option)}
+			{#each options as option (option)}
 				<li>
 					<button
 						type="button"
-						onclick={() => selectOption(option)}
+						onclick={() => selectOption(option.value)}
 						class="hover:bg-surface-200-800 flex w-full items-center justify-between truncate px-3 py-2 text-left focus:outline-none"
 					>
 						<span class="truncate">
-							{@render figure(option)}
+							{@render figure(option.label)}
 							<!-- Pass 'option' to the slot -->
 						</span>
 						<span class="w-5 flex-shrink-0 text-right">
-							{#if option === selected}
+							{#if option.label === selected}
 								<Check size={16} class="text-primary-900-100" />
 							{/if}
 						</span>

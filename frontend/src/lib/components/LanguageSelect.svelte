@@ -6,22 +6,33 @@
 	import { setUserLocale } from '$lib/api/collections/user';
 
 	const selectLocale = async (loc: string) => {
-		await browserApiClient
-			.req(setUserLocale, { locale: loc })
-			.then(() => locale.set(loc))
-			.catch((error) => {
-				console.error('Error:', error.result.error);
-				toaster.create({
-					title: $_('error.title'),
-					description: $_('error.description', { values: { error: error.result.error } }),
-					type: 'error'
-				});
+		try {
+			await browserApiClient.req(setUserLocale, { locale: loc });
+			locale.set(loc);
+		} catch (error) {
+			console.error('Error:', error);
+			toaster.create({
+				title: $_('error.title'),
+				description: $_('error.description', { values: { status: 'unknown' } }),
+				type: 'error'
 			});
+		}
 	};
+
+	const localeNames = new Map<string, string>([
+		['en-EN', 'English'],
+		['de-DE', 'Deutsch'],
+		['fr-FR', 'Français'],
+		['it-IT', 'Italiano']
+	]);
 </script>
 
 <div class="relative inline-block w-40">
-	<Select selected={$locale} options={$locales} onSelect={selectLocale}>
+	<Select
+		selected={$locale}
+		options={$locales.map((loc) => ({ value: loc, label: localeNames.get(loc) || loc }))}
+		onSelect={selectLocale}
+	>
 		<span slot="selected">{$locale}</span>
 		<span slot="option" let:option>{$_(`languageName.${option}`)}</span>
 	</Select>

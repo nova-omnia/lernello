@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { Pencil, Plus, Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { state } from 'svelte';
 
 	type Kit = {
 		uuid: string;
@@ -10,20 +11,20 @@
 	};
 
 	export let data: { kits: Kit[] };
-	let kits = data.kits;
+	const kits = state(data.kits);
 
-	let showDeleteDialog = false;
-	let kitToDelete: Kit | null = null;
+	const showDeleteDialog = state(false);
+	const kitToDelete = state<Kit | null>(null);
 
 	function openDeleteDialog(kit: Kit, event: MouseEvent) {
 		event.stopPropagation();
-		kitToDelete = kit;
-		showDeleteDialog = true;
+		kitToDelete.set(kit);
+		showDeleteDialog.set(true);
 	}
 
 	function closeDeleteDialog() {
-		showDeleteDialog = false;
-		kitToDelete = null;
+		showDeleteDialog.set(false);
+		kitToDelete.set(null);
 	}
 
 	async function handleConfirmDelete() {
@@ -36,7 +37,7 @@
 		const input = document.createElement('input');
 		input.type = 'hidden';
 		input.name = 'uuid';
-		input.value = kitToDelete.uuid;
+		input.value = kitToDelete().uuid;
 
 		form.appendChild(input);
 		document.body.appendChild(form);
@@ -79,9 +80,9 @@
 </div>
 
 <ConfirmDialog
-	isOpen={showDeleteDialog}
+	isOpen={showDeleteDialog()}
 	title="Confirm Deletion"
-	message={`Are you sure you want to delete "${kitToDelete?.name}"?`}
+	message={`Are you sure you want to delete "${kitToDelete()?.name}"?`}
 	confirmText="Delete"
 	danger={true}
 	onConfirm={handleConfirmDelete}

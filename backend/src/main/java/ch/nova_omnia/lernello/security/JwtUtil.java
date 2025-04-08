@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.security;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -38,10 +39,10 @@ public class JwtUtil {
     /**
      * Returns the expiration time of the JWT token.
      *
-     * @return The expiration time in milliseconds.
+     * @return The expiration time.
      */
-    public int getExpirationTime() {
-        return jwtExpirationMs;
+    public Duration getExpirationTime() {
+        return Duration.ofMillis(jwtExpirationMs);
     }
 
     /**

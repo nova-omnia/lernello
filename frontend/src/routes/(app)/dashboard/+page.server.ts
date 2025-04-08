@@ -1,9 +1,10 @@
-import { deleteLearningKit, getAllLearningKits } from '$lib/api/learning-kit/learningKit';
 import type { Actions } from '@sveltejs/kit';
 import { fail } from '@sveltejs/kit';
+import { serverApiClient } from '$lib/api/serverApiClient';
+import { deleteLearningKit, getAllLearningKits } from '$lib/api/collections/learningKit';
 
 export async function load() {
-	const kits = await getAllLearningKits();
+	const kits = await serverApiClient.req(getAllLearningKits, null);
 	return { kits };
 }
 
@@ -16,7 +17,7 @@ export const actions: Actions = {
 			return fail(400, { message: 'Missing kit ID' });
 		}
 
-		await deleteLearningKit(uuid);
+		await serverApiClient.req(deleteLearningKit, null, uuid);
 		return { success: true };
 	}
 };

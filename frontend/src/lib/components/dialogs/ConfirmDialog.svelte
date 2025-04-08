@@ -1,7 +1,5 @@
-<svelte:options accessors={true} immutable={true} />
-
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { Modal } from '@skeletonlabs/skeleton-svelte';
 
 	export let isOpen = false;
 	export let title = 'Confirm Action';
@@ -12,27 +10,45 @@
 
 	export let onConfirm: () => void;
 	export let onCancel: () => void;
+
+	function handleOpenChange(e: CustomEvent<{ open: boolean }>) {
+		if (!e.detail.open) onCancel();
+	}
 </script>
 
-{#if isOpen}
-	<div transition:fade class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="w-full max-w-md rounded-lg bg-white p-6">
-			<h2 class="mb-4 text-xl font-bold">{title}</h2>
-			<p class="mb-6">{message}</p>
+<Modal
+	open={isOpen}
+	on:openChange={handleOpenChange}
+	contentBase="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl w-full max-w-md space-y-4"
+	backdropClasses="bg-black/30 backdrop-blur-sm z-50"
+>
+	{#snippet content()}
+		<header class="flex items-center justify-between">
+			<h2 class="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+		</header>
 
-			<div class="flex justify-end gap-3">
-				<button class="rounded border px-4 py-2 hover:bg-gray-100" on:click={onCancel}>
-					{cancelText}
-				</button>
-				<button
-					class="rounded px-4 py-2 text-white hover:bg-{danger ? 'red' : 'blue'}-700"
-					class:bg-red-600={danger}
-					class:bg-blue-600={!danger}
-					on:click={onConfirm}
-				>
-					{confirmText}
-				</button>
-			</div>
-		</div>
-	</div>
-{/if}
+		<article>
+			<p class="text-gray-700 dark:text-gray-300">{message}</p>
+		</article>
+
+		<footer class="flex justify-end gap-3 pt-2">
+			<button
+				class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+				on:click={onCancel}
+			>
+				{cancelText}
+			</button>
+
+			<button
+				class="rounded px-4 py-2 text-white"
+				class:bg-red-600={danger}
+				class:bg-blue-600={!danger}
+				class:hover:bg-red-700={danger}
+				class:hover:bg-blue-700={!danger}
+				on:click={onConfirm}
+			>
+				{confirmText}
+			</button>
+		</footer>
+	{/snippet}
+</Modal>

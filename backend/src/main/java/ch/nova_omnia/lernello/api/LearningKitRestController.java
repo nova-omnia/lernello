@@ -1,9 +1,11 @@
 package ch.nova_omnia.lernello.api;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -13,12 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/learning-kits")
@@ -45,8 +41,8 @@ public class LearningKitRestController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid ResponseEntity<LearningKitResDTO> edit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
-        LearningKit updated = learningKitService.edit(entity);
-        return ResponseEntity.ok(learningKitMapper.toDTO(updated));
+        LearningKit savedEntity = learningKitService.edit(entity);
+        return ResponseEntity.ok(learningKitMapper.toDTO(savedEntity));
     }
 
     @DeleteMapping("/{learningKitId}")
@@ -60,9 +56,7 @@ public class LearningKitRestController {
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid ResponseEntity<List<LearningKitResDTO>> getAll() {
         List<LearningKit> learningKits = learningKitService.findAll();
-        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream()
-                .map(learningKitMapper::toDTO)
-                .collect(Collectors.toList());
+        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(learningKitResDTOs);
     }
 

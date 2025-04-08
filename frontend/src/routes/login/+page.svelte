@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
-
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { setAuthCookie } from '$lib/api/collections/auth.js';
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
 	import { goto } from '$app/navigation';
-	const toast: ToastContext = getContext('toast');
+	import { toaster } from '$lib/states/toasterState.svelte.js';
 
 	let { data } = $props();
 
@@ -17,7 +14,7 @@
 	const { form, errors, constraints, message, enhance } = superForm(data.form, {
 		onError: (error) => {
 			console.error('Error:', error.result.error);
-			toast.create({
+			toaster.create({
 				title: $_('error.title'),
 				description: $_('error.description', { values: { status: error.result.status } }),
 				type: 'error'
@@ -26,34 +23,38 @@
 	});
 
 	$effect(() => {
-		if ($message) {
+		if ($message && !loading) {
 			loading = true;
-			browserApiClient
-				.reqRaw(setAuthCookie, $message.user, {
-					headers: {
-						Authorization: `Bearer ${$message.user.token}`
+			toaster.promise(
+				browserApiClient
+					.reqRaw(setAuthCookie, $message.user, {
+						headers: {
+							Authorization: `Bearer ${ $message.user.token }`
+						},
+						credentials: 'include'
+					})
+					.then((response) => response.json())
+					.then((response) => setAuthCookie.response.schema.parse(response))
+					.then(() => new Promise((resolve) => setTimeout(resolve, 2000)))
+					.then(() => {
+						loading = false;
+						goto($message.redirectTo);
+					}),
+				{
+					loading: {
+						title: 'Loading',
+						description: 'Logging in...'
 					},
-					credentials: 'include'
-				})
-				.then((response) => response.json())
-				.then((response) => setAuthCookie.response.schema.parse(response))
-				.then(() => {
-					loading = false;
-					toast.create({
+					success: {
 						title: 'Success',
-						description: 'Login successful!',
-						type: 'success'
-					});
-					goto($message.redirectTo);
-				})
-				.catch(() => {
-					loading = false;
-					toast.create({
+						description: 'Login successful!'
+					},
+					error: {
 						title: 'Error',
-						description: `Uh oh, something went wrong. (cookie)`,
-						type: 'error'
-					});
-				});
+						description: `Uh oh, something went wrong. (cookie)`
+					}
+				}
+			);
 		}
 	});
 </script>

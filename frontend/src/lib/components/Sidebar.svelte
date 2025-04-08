@@ -1,14 +1,7 @@
 <script lang="ts">
+	import logo from '$lib/assets/Lernello_Logo.svg';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
-	import {
-		ChartLine,
-		Folder,
-		GraduationCap,
-		LayoutDashboard,
-		Settings,
-		SidebarClose,
-		User
-	} from 'lucide-svelte';
+	import { ChartLine, Folder, LayoutDashboard, LogOut, Settings, SidebarClose, User } from 'lucide-svelte';
 </script>
 
 {#snippet sidebarItemLabel(label: string)}
@@ -25,14 +18,14 @@
 
 <!-- Sidebar -->
 <div
-	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden rounded-l-lg p-4 transition-all duration-300"
+	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden p-4 transition-all duration-300"
 	class:w-64={sidebarState.isExpanded}
 	class:w-16={!sidebarState.isExpanded}
 >
 	<div class="w-max min-w-full space-y-2">
 		<!-- Logo -->
 		<p class="flex items-center" aria-label="Lernello">
-			<GraduationCap size={24} />
+			<img alt="Lernello" src={logo} width="24" class="object-cover object-center" />
 			{@render sidebarItemLabel('Lernello')}
 			{#if sidebarState.isExpanded}
 				<button
@@ -49,31 +42,37 @@
 		<hr class="hr" />
 		<!-- Buttons Section -->
 		<div class="flex flex-col items-center">
-			<a class="flex w-full items-center rounded py-2" href="/dashboard" aria-label="Dashboard">
+			<a class="flex w-full items-center py-2" href="/dashboard" aria-label="Dashboard">
 				<LayoutDashboard size={24} />
 				{@render sidebarItemLabel('Dashboard')}
 			</a>
-			<a class="flex w-full items-center rounded py-2" href="/folders" aria-label="Folders">
+			<a class="flex w-full items-center py-2" href="/folders" aria-label="Folders">
 				<Folder size={24} />
 				{@render sidebarItemLabel('Folders')}
 			</a>
-			<a class="flex w-full items-center rounded py-2" href="/statistics" aria-label="Statistics">
+			<a class="flex w-full items-center py-2" href="/statistics" aria-label="Statistics">
 				<ChartLine size={24} />
 				{@render sidebarItemLabel('Statistics')}
 			</a>
 		</div>
 
 		<hr class="hr" />
-		<div class="flex flex-col items-center">
-			<a class="flex w-full items-center rounded py-2" href="/settings" aria-label="Settings">
-				<Settings size={24} />
-				{@render sidebarItemLabel('Settings')}
-			</a>
-		</div>
 	</div>
 
-	<a class="mt-auto flex items-center" href="/profile" aria-label="Profile">
-		<User size={24} />
-		{@render sidebarItemLabel('Profile')}
-	</a>
+	<div class="mt-auto flex flex-col items-center">
+		<a class="flex w-full items-center py-2" href="/settings" aria-label="Settings">
+			<Settings size={24} />
+			{@render sidebarItemLabel('Settings')}
+		</a>
+		<a class="flex w-full items-center py-2" href="/profile" aria-label="Profile">
+			<User size={24} />
+			{@render sidebarItemLabel('Profile')}
+		</a>
+		<form method="POST" action="/logout" class="flex w-full items-center py-2">
+			<button class="flex" aria-label="Logout">
+				<LogOut size={24} />
+				{@render sidebarItemLabel('Logout')}
+			</button>
+		</form>
+	</div>
 </div>

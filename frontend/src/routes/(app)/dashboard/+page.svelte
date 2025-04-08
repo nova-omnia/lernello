@@ -9,11 +9,11 @@
 		description: string;
 	};
 
-	export let data: { kits: Kit[] };
-	let kits = $state(data.kits);
+	const { data } = $props<{ data: { kits: Kit[] } }>();
+	let kits = data.kits;
 
-	let showDeleteDialog = $state(false);
-	let kitToDelete = $state<Kit | null>(null);
+	let showDeleteDialog = false;
+	let kitToDelete = null;
 
 	function openDeleteDialog(kit: Kit, event: MouseEvent) {
 		event.stopPropagation();
@@ -79,7 +79,7 @@
 </div>
 
 <ConfirmDialog
-	isOpen={showDeleteDialog()}
+	isOpen={showDeleteDialog}
 	title="Confirm Deletion"
 	message={`Are you sure you want to delete "${kitToDelete?.name}"?`}
 	confirmText="Delete"

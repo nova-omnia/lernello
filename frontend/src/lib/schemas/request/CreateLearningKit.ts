@@ -20,3 +20,4 @@ export const EditLearningKitSchema = z.object({
 	deadlineDate: z.string(),
 	context: z.string().optional()
 });
+export type EditLearningKit = z.infer<typeof EditLearningKitSchema>;

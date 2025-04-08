@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.model.data;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -71,7 +72,7 @@ public class User {
     private String token;
 
     @Transient
-    private int expires;
+    private ZonedDateTime expires;
 
 
     public User(String username, String password, String language, Role role) {

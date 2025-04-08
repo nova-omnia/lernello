@@ -10,7 +10,7 @@
 	const { block }: BlockItemProps = $props();
 
 	// TODO: Improve mapping similar to BlockIcon.svelte
-	let Component = block.type === 'theory' ? TheoryBlockComponent : QuizBlockComponent;
+	let Component = block.type === 'THEORY' ? TheoryBlockComponent : QuizBlockComponent;
 </script>
 
 <div

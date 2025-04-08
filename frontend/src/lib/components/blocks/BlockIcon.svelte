@@ -10,8 +10,9 @@
 	const { iconType, ...props }: BlockIconProps = $props();
 
 	const iconMap = {
-		theory: BookOpen,
-		quiz: FileText,
+		THEORY: BookOpen,
+		MULTIPLE_CHOICE: FileText,
+		QUESTION: FileText,
 		help: CircleHelp
 	};
 	const IconComponent = iconMap[iconType] || iconMap['help'];

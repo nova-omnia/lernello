@@ -5,9 +5,8 @@
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
-	import { getToastContext } from '$lib/states/toastContext.svelte.js';
+	import { toaster } from "$lib/states/toasterState.svelte";
 
-	const toast = getToastContext();
 
 	let { data } = $props();
 
@@ -47,7 +46,7 @@
 					);
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
-					toast.create({
+					toaster.create({
 						title: 'Error',
 						description: `Failed to save learning unit. (${status})`,
 						type: 'error'

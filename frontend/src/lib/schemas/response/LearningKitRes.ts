@@ -9,7 +9,7 @@ export const LearningKitResSchema = z.object({
 		if (typeof val === 'string' && val) return new Date(val);
 		if (val instanceof Date) return val;
 		return undefined;
-	}, z.date().optional()),
+	}, z.date()),
 	context: z.string().optional()
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;

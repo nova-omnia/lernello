@@ -10,10 +10,10 @@
 	};
 
 	const { data } = $props<{ data: { kits: Kit[] } }>();
-	let kits = data.kits;
+	let kits = $state(data.kits);
 
-	let showDeleteDialog = false;
-	let kitToDelete = null;
+	let showDeleteDialog = $state(false);
+	let kitToDelete = $state<Kit | null>(null);
 
 	function openDeleteDialog(kit: Kit, event: MouseEvent) {
 		event.stopPropagation();

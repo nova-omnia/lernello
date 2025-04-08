@@ -11,7 +11,7 @@
 	export let onConfirm: () => void;
 	export let onCancel: () => void;
 
-	function handleOpenChange(e: CustomEvent<{ open: boolean }>) {
+	function handleOpenChange(e: any) {
 		if (!e.detail.open) onCancel();
 	}
 </script>

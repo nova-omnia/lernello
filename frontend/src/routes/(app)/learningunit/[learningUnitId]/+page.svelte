@@ -5,8 +5,7 @@
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
-	import { toaster } from "$lib/states/toasterState.svelte";
-
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	let { data } = $props();
 

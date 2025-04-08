@@ -12,3 +12,5 @@ public record ReorderBlockActionDTO(
         @Min(0) int newIndex
 ) implements BlockActionDTO {
 }
+
+

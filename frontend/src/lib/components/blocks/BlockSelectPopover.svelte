@@ -14,6 +14,9 @@
 	import { PlusCircle } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { BlockType } from '$lib/schemas/request/CreateBlock';
+	import { ActionType } from '$lib/schemas/request/BlockAction';
+	import { AddBlockActionSchema } from '$lib/schemas/request/BlockAction';
 
 	interface BlockSelectPopoverProps {
 		index: number;
@@ -57,6 +60,42 @@
 			})
 		);
 	};
+
+	function addTheoryBlock() {
+		const actionData = {
+			type: ActionType.Enum.ADD_BLOCK,
+			blockId: '',
+			index: insertIndex,
+			data: {
+				type: BlockType.Enum.THEORY,
+				name: 'Theory Block',
+				position: 0,
+				learningUnitId: '00000000-0000-0000-0000-000000000000', // Placeholder id
+				content: 'placeholder'
+			}
+		};
+		const parsedAction = AddBlockActionSchema.parse(actionData);
+		queueBlockAction(parsedAction);
+	}
+
+	function addMultipleChoiceBlock() {
+		const actionData = {
+			type: ActionType.Enum.ADD_BLOCK,
+			blockId: '',
+			index: insertIndex,
+			data: {
+				type: BlockType.Enum.MULTIPLE_CHOICE,
+				name: 'Multiple Choice Quiz',
+				position: 0,
+				learningUnitId: '00000000-0000-0000-0000-000000000000', // Placeholder id
+				question: 'placeholder question?',
+				possibleAnswers: ['A', 'B'],
+				correctAnswers: ['A']
+			}
+		};
+		const parsedAction = AddBlockActionSchema.parse(actionData);
+		queueBlockAction(parsedAction);
+	}
 </script>
 
 <div>
@@ -89,14 +128,7 @@
 					type="button"
 					class="btn preset-filled-primary-500 block w-full"
 					onclick={() => {
-						queueBlockAction({
-							type: 'ADD_BLOCK',
-							data: {
-								index: insertIndex,
-								name: 'Theory Block',
-								type: 'theory'
-							}
-						});
+						addTheoryBlock();
 					}}
 				>
 					Theory Block
@@ -105,14 +137,7 @@
 					type="button"
 					class="btn preset-filled-primary-500 block w-full"
 					onclick={() => {
-						queueBlockAction({
-							type: 'ADD_BLOCK',
-							data: {
-								index: insertIndex,
-								name: 'Multiple Choice Quiz',
-								type: 'quiz'
-							}
-						});
+						addMultipleChoiceBlock();
 					}}
 				>
 					Multiple Choice Quiz
@@ -121,14 +146,7 @@
 					type="button"
 					class="btn preset-filled-primary-500 block w-full"
 					onclick={() => {
-						// queueLearningUnitAction({
-						// 	type: 'ADD_BLOCK',
-						// 	data: {
-						//      index: insertIndex,
-						// 		name: 'Text Answer Quiz',
-						// 		type: 'textAnswer'
-						// 	}
-						// });
+						//TODO: Implement Text Answer Quiz
 						alert(
 							'Text Answer Quiz is not implemented yet. Please use the Multiple Choice Quiz for now.'
 						);

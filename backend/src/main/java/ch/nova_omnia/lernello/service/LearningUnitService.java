@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
+import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
@@ -16,10 +16,10 @@ import ch.nova_omnia.lernello.dto.request.blockActions.AddBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.blockActions.RemoveBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.blockActions.ReorderBlockActionDTO;
-import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.*;
+import ch.nova_omnia.lernello.repository.BlockRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
-    private Map<String, UUID> temporaryKeyMap = new ConcurrentHashMap<>();
+    private final BlockRepository blockRepository;
+
+    private Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
     @Transactional
     public LearningUnit createLearningUnit(LearningUnit learningUnit) {
@@ -51,12 +53,12 @@ public class LearningUnitService {
     }
 
     @Transactional
-    public Map<String, UUID> applyLearningUnitActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
+    public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
 
         actions = filterCorrelatedActions(actions);
 
         LearningUnit learningUnit = getLearningUnit(id);
-        temporaryKeyMap = Map.of();
+        temporaryKeyMap.clear();
 
         for (BlockActionDTO action : actions) {
             switch (action) {
@@ -66,51 +68,38 @@ public class LearningUnitService {
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
         }
+        learningUnitRepository.save(learningUnit);
         return temporaryKeyMap;
     }
 
     private void addBlock(LearningUnit learningUnit, AddBlockActionDTO addAction) throws IllegalArgumentException {
         Block block = null;
-        switch (addAction.type()) {
+        CreateBlockDTO createBlockDTO = addAction.data();
 
-            case THEORY: {
-                assert addAction.blockPayload() instanceof CreateTheoryBlockDTO;
-                CreateTheoryBlockDTO theoryBlockDTO = (CreateTheoryBlockDTO) addAction.blockPayload();
-                block = new TheoryBlock(
-                        theoryBlockDTO.name(),
-                        theoryBlockDTO.position(),
-                        learningUnit,
-                        theoryBlockDTO.content()
-                );
-                break;
-            }
-            case MULTIPLE_CHOICE: {
-                assert addAction.blockPayload() instanceof CreateMultipleChoiceBlockDTO;
-                CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO = (CreateMultipleChoiceBlockDTO) addAction.blockPayload();
-                block = new MultipleChoiceBlock(
-                        multipleChoiceBlockDTO.name(),
-                        multipleChoiceBlockDTO.position(),
-                        learningUnit,
-                        multipleChoiceBlockDTO.question(),
-                        multipleChoiceBlockDTO.possibleAnswers(),
-                        multipleChoiceBlockDTO.correctAnswers()
-                );
-                break;
-            }
-            case QUESTION: {
-                assert addAction.blockPayload() instanceof CreateMultipleChoiceBlockDTO;
-                CreateQuestionBlockDTO questionBlockDTO = (CreateQuestionBlockDTO) addAction.blockPayload();
-                block = new QuestionBlock(
-                        questionBlockDTO.name(),
-                        questionBlockDTO.position(),
-                        learningUnit,
-                        questionBlockDTO.question(),
-                        questionBlockDTO.expectedAnswer()
-                );
-                break;
-            }
-            default: throw new IllegalArgumentException("Unknown block type: " + addAction.type());
-        }
+        block = switch (createBlockDTO) {
+            case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
+                    theoryBlockDTO.name(),
+                    theoryBlockDTO.position(),
+                    learningUnit,
+                    theoryBlockDTO.content()
+            );
+            case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
+                    multipleChoiceBlockDTO.name(),
+                    multipleChoiceBlockDTO.position(),
+                    learningUnit,
+                    multipleChoiceBlockDTO.question(),
+                    multipleChoiceBlockDTO.possibleAnswers(),
+                    multipleChoiceBlockDTO.correctAnswers()
+            );
+            case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
+                    questionBlockDTO.name(),
+                    questionBlockDTO.position(),
+                    learningUnit,
+                    questionBlockDTO.question(),
+                    questionBlockDTO.expectedAnswer()
+            );
+            case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
+        };
 
         if (addAction.index() != null) {
             learningUnit.getBlocks().add(addAction.index(), block);
@@ -118,8 +107,13 @@ public class LearningUnitService {
             learningUnit.getBlocks().add(block);
         }
 
+        blockRepository.saveAndFlush(block);
+
         if (addAction.blockId() != null) {
+            System.out.println(block.getUuid());
             temporaryKeyMap.put(addAction.blockId(), block.getUuid());
+        } else {
+            throw new RuntimeException("addAction is null");
         }
     }
 
@@ -179,14 +173,13 @@ public class LearningUnitService {
     }
 
     private List<BlockActionDTO> filterCorrelatedActions(List<BlockActionDTO> actions) {
-        Map<UUID, List<BlockActionDTO>> groupedActions = new HashMap<>();
+        Map<String, List<BlockActionDTO>> groupedActions = new HashMap<>();
         for (BlockActionDTO action : actions) {
-            UUID key = getActionKey(action);
+            String key = getActionKey(action);
             if (key != null) {
                 groupedActions.computeIfAbsent(key, k -> new ArrayList<>()).add(action);
             }
         }
-
         List<BlockActionDTO> filtered = new ArrayList<>();
         for (List<BlockActionDTO> group : groupedActions.values()) {
             boolean hasAdd = group.stream().anyMatch(a -> a instanceof AddBlockActionDTO);
@@ -198,16 +191,14 @@ public class LearningUnitService {
         return filtered;
     }
 
-    private UUID getActionKey(BlockActionDTO action) {
+    private String getActionKey(BlockActionDTO action) {
         if (action instanceof AddBlockActionDTO addAction) {
             if (isTemporaryId(addAction.blockId())) {
-                String tempUUID = addAction.blockId();
-                System.out.println(tempUUID);
-                return UUID.fromString(addAction.blockId());
+                return addAction.blockId();
             }
         } else if (action instanceof RemoveBlockActionDTO removeAction) {
             if (isTemporaryId(removeAction.blockId())) {
-                return UUID.fromString(removeAction.blockId());
+                return removeAction.blockId();
             }
         }
         return null;

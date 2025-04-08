@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        property = "blockType"
+        property = "type"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = CreateMultipleChoiceBlockDTO.class, name = "MULTIPLE_CHOICE"),

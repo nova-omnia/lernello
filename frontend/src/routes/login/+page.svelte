@@ -3,11 +3,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { setAuthCookie } from '$lib/api/collections/auth.js';
-	import { browserApiClient } from '$lib/api/browserApiClient.js';
+
 	import { goto } from '$app/navigation';
-	import { getToastContext } from '$lib/states/toastContext.svelte.js';
-	const toast = getToastContext();
 
 	let { data } = $props();
 

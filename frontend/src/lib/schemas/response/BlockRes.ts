@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const BlockResTypeSchema = z.enum(['theory', 'quiz']);
+export const BlockResTypeSchema = z.enum(['THEORY', 'MULTIPLE_CHOICE']);
 export type BlockResType = z.infer<typeof BlockResTypeSchema>;
 
 export const BlockResSchema = z.object({

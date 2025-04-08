@@ -5,4 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 public record RemoveBlockActionDTO(
         @NotBlank String blockId
 ) implements BlockActionDTO {
+
 }

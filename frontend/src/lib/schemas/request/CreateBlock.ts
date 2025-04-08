@@ -1,31 +1,21 @@
 import { z } from 'zod';
 
-const CreateMultipleChoiceBlockDTOSchema = z.object({
+export const BlockType = z.enum(['THEORY', 'MULTIPLE_CHOICE']);
+
+export const CreateTheoryBlockSchema = z.object({
+	type: z.literal(BlockType.Enum.THEORY),
 	name: z.string().min(1),
 	position: z.number().min(0),
-	learningUnitId: z.string().uuid(),
+	learningUnitId: z.string().uuid().nullable().optional(),
+	content: z.string().min(1).nullable().optional()
+});
+
+export const CreateMultipleChoiceBlockSchema = z.object({
+	type: z.literal(BlockType.Enum.MULTIPLE_CHOICE),
+	name: z.string().min(1),
+	position: z.number().min(0),
+	learningUnitId: z.string().uuid().nullable().optional(),
 	question: z.string().min(1),
 	possibleAnswers: z.array(z.string().min(1)),
 	correctAnswers: z.array(z.string().min(1))
 });
-
-const CreateQuestionBlockDTOSchema = z.object({
-	name: z.string().min(1),
-	position: z.number().min(0),
-	learningUnitId: z.string().uuid(),
-	question: z.string().min(1),
-	expectedAnswer: z.string().min(1)
-});
-
-const CreateTheoryBlockDTOSchema = z.object({
-	name: z.string().min(1),
-	position: z.number().min(0),
-	learningUnitId: z.string().uuid(),
-	content: z.string().min(1)
-});
-
-export const CreateBlockSchema = z.union([
-	CreateMultipleChoiceBlockDTOSchema,
-	CreateQuestionBlockDTOSchema,
-	CreateTheoryBlockDTOSchema
-]);

@@ -8,23 +8,25 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class QuestionBlock extends Block {
 
-    @NotBlank
-    @Column(name = "question", nullable = false)
+    @NotBlank(message = "Question is required")
+    @Column(name = "question", nullable = true)
     private String question;
 
-    @NotBlank
-    @Column(name = "expected_answer", nullable = false)
+    @NotBlank(message = "Expected answer is required")
+    @Column(name = "expected_answer", nullable = true)
     private String expectedAnswer;
 
     public QuestionBlock(String name, int position, LearningUnit learningUnit, String question,
             String expectedAnswer) {
-        super(name, position, learningUnit);
+        super(QUESTION, name, position, learningUnit);
         this.question = question;
         this.expectedAnswer = expectedAnswer;
     }

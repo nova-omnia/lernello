@@ -3,7 +3,7 @@ import { fail } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseRedirectTo, recoverSession } from '$lib/server/auth';
+import { parseRedirectTo, recoverAuthToken } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
 import { publicApiClient } from '$lib/api/publicApiClient';
 import { signin } from '$lib/api/collections/auth';
@@ -11,17 +11,17 @@ import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
 
 export const load = async () => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
-	const user = recoverSession();
-	if (user) {
+	const tokenInfo = recoverAuthToken();
+	if (tokenInfo) {
 		message(form, {
 			redirectTo: '/',
-			user
+			tokenInfo
 		});
 	}
 	return { form };
 };
 
-type Message = { redirectTo: string; user: LoggedInUser };
+type Message = { redirectTo: string; tokenInfo: LoggedInUser };
 
 export const actions = {
 	login: handleApiError(async ({ request, cookies, url }) => {
@@ -34,17 +34,23 @@ export const actions = {
 		}
 		try {
 			const loggedInUserRes = await publicApiClient.reqRaw(signin, form.data, undefined);
-			const loggedInUser = signin.response.schema.parse(await loggedInUserRes.json());
+			const loggedInUserResJson = await loggedInUserRes.json();
+			const loggedInUser = signin.response.schema.parse(loggedInUserResJson);
+			const expiresDate = new Date(loggedInUser.expires);
+			const expiresMs = expiresDate.getTime() - Date.now();
+			if (expiresMs < 0) {
+				throw new Error('Newly retrieved token is expired');
+			}
 
-			cookies.set('sessionToken', JSON.stringify(loggedInUser), {
+			cookies.set('lernello_auth_token', JSON.stringify(loggedInUser), {
 				httpOnly: true,
 				path: '/',
-				maxAge: loggedInUser.expires / 1000 // convert milliseconds to seconds
+				maxAge: Math.floor(expiresMs / 1000)
 			});
 
 			return message(form, {
 				redirectTo: parseRedirectTo(url),
-				user: loggedInUser
+				tokenInfo: loggedInUser
 			});
 		} catch (error) {
 			if (error instanceof ApiError) {

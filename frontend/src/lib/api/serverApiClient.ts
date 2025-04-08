@@ -1,8 +1,8 @@
-import { recoverSession } from '$lib/server/auth';
+import { recoverAuthToken } from '$lib/server/auth';
 import { createApiClient } from './createApiClient';
 
 export const serverApiClient = createApiClient((request) => {
-	const tokenInfo = recoverSession();
+	const tokenInfo = recoverAuthToken();
 	if (!tokenInfo) {
 		throw new Error('User is not authenticated');
 	}

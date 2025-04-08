@@ -2,14 +2,10 @@
 	import { page } from '$app/state';
 	import { _ } from 'svelte-i18n';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { setAuthCookie } from '$lib/api/collections/auth.js';
-	import { browserApiClient } from '$lib/api/browserApiClient.js';
-	import { goto } from '$app/navigation';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
-
-	let loading = $state(false);
 
 	const { form, errors, constraints, message, enhance } = superForm(data.form, {
 		onError: (error) => {
@@ -23,38 +19,9 @@
 	});
 
 	$effect(() => {
-		if ($message && !loading) {
-			loading = true;
-			toaster.promise(
-				browserApiClient
-					.reqRaw(setAuthCookie, $message.user, {
-						headers: {
-							Authorization: `Bearer ${$message.user.token}`
-						},
-						credentials: 'include'
-					})
-					.then((response) => response.json())
-					.then((response) => setAuthCookie.response.schema.parse(response))
-					.then(() => new Promise((resolve) => setTimeout(resolve, 2000)))
-					.then(() => {
-						loading = false;
-						goto($message.redirectTo);
-					}),
-				{
-					loading: {
-						title: 'Loading',
-						description: 'Logging in...'
-					},
-					success: {
-						title: 'Success',
-						description: 'Login successful!'
-					},
-					error: {
-						title: 'Error',
-						description: `Uh oh, something went wrong. (cookie)`
-					}
-				}
-			);
+		if ($message) {
+			localStorage.setItem('lernello_auth_token', JSON.stringify($message.tokenInfo));
+			goto($message.redirectTo);
 		}
 	});
 </script>
@@ -65,8 +32,6 @@
 		use:enhance
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
-		class:opacity-50={loading}
-		class:pointer-events-none={loading}
 	>
 		<h1 class="h2">{$_('login.title')}</h1>
 

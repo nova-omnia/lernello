@@ -1,20 +1,18 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.List;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
@@ -36,22 +34,11 @@ public class UserService {
 
         User user = this.findByUsername(username);
         user.setToken(jwtUtil.generateToken(user.getUsername()));
-        user.setExpires(jwtUtil.getExpirationTime());
+        ZonedDateTime expirationTime = ZonedDateTime.now().plus(jwtUtil.getExpirationTime());
+        user.setExpires(expirationTime);
         return user;
     }
 
-    public void setAuthCookie(HttpServletResponse response, User authenticatedUser) {
-        String token = authenticatedUser.getToken();
-        Duration expirationTime = Duration.ofMillis(authenticatedUser.getExpires());
-
-        ResponseCookie jwtCookie = ResponseCookie.from("lernello_auth_token", token).httpOnly(true)  // Prevent JavaScript access (XSS protection)
-                .secure(false)    // Only send over HTTPS (TODO: set to true in production?)
-                .sameSite("None") // Prevent CSRF
-                .path("/")       // Make cookie available across the site
-                .maxAge(expirationTime) // Set expiration
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-    }
 
     public boolean changePassword(String username, String newPassword) {
         User user = userRepository.findByUsername(username);

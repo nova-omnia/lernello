@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ch.nova_omnia.lernello.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -63,15 +62,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("lernello_auth_token".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-
 
         return null;
     }

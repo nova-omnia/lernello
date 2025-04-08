@@ -1,14 +1,6 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-
-	const toast: ToastContext = getContext('toast');
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-
-	// TODO: Re-enable file upload later
-	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	// import IconUpload from '@lucide/svelte/icons/upload';
 
 	let { data } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.form, {

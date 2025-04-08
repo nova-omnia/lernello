@@ -29,7 +29,7 @@
 				browserApiClient
 					.reqRaw(setAuthCookie, $message.user, {
 						headers: {
-							Authorization: `Bearer ${ $message.user.token }`
+							Authorization: `Bearer ${$message.user.token}`
 						},
 						credentials: 'include'
 					})

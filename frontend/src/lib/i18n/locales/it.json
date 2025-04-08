@@ -1,8 +1,4 @@
 {
-	"languageName.en-EN": "Inglese",
-	"languageName.de-DE": "Tedesco",
-	"languageName.it-IT": "Italiano",
-	"languageName.fr-FR": "Francese",
 	"dashboard.welcome": "Buongiorno!",
 	"error.title": "Errore",
 	"error.description": "Ops, qualcosa è andato storto. ({status})",

@@ -1,8 +1,4 @@
 {
-	"languageName.en-EN": "Anglais",
-	"languageName.de-DE": "Allemand",
-	"languageName.it-IT": "Italien",
-	"languageName.fr-FR": "Français",
 	"dashboard.welcome": "Bonjour!",
 	"error.title": "Erreur",
 	"error.description": "Oh non, quelque chose s'est mal passé. ({status})",

@@ -3,9 +3,14 @@ import { loadUserInfo, recoverSession } from '$lib/server/auth';
 export const load = async () => {
 	const tokenInfo = recoverSession();
 
-	if (!tokenInfo) {
-		return { userInfo: null };
+	if (tokenInfo) {
+		const userInfo = await loadUserInfo();
+		return {
+			userInfo
+		};
 	}
-	const userInfo = await loadUserInfo();
-	return { userInfo: userInfo?.locale };
+
+	return {
+		userInfo: null
+	};
 };

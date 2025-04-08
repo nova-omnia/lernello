@@ -4,6 +4,7 @@ import { createEndpoint } from '../createEndpoint';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
 import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
+import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -42,6 +43,19 @@ export const getUserInfo = createEndpoint({
 	},
 	payload: {
 		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const setUserLocale = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/locale`,
+	response: {
+		schema: UserLocaleSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: UserLocaleSchema,
 		defaultValidate: false
 	}
 });

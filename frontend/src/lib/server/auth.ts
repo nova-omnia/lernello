@@ -2,15 +2,15 @@ import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
 
-export function recoverSession() {
+export function recoverAuthToken() {
 	const { locals, cookies } = getRequestEvent();
 	// Recover session
 	if (!locals.user) {
-		const sessionToken = cookies.get('sessionToken');
+		const authToken = cookies.get('lernello_auth_token');
 
-		if (sessionToken) {
+		if (authToken) {
 			try {
-				const parsedToken = LoggedInUserSchema.parse(JSON.parse(sessionToken));
+				const parsedToken = LoggedInUserSchema.parse(JSON.parse(authToken));
 				locals.user = parsedToken;
 			} catch (error) {
 				console.error('Failed to parse session token:', error);
@@ -24,17 +24,17 @@ export function recoverSession() {
 export function requireLogin() {
 	const { url } = getRequestEvent();
 	// try to recover session
-	const user = recoverSession();
+	const tokenInfo = recoverAuthToken();
 
 	// assume `locals.user` is populated in `handle`
-	if (!user) {
+	if (!tokenInfo) {
 		const redirectTo = parseRedirectTo(url, url.pathname + url.search);
 		const params = new URLSearchParams({ redirectTo });
 
 		redirect(307, `/login?${params}`);
 	}
 
-	return user;
+	return tokenInfo;
 }
 
 export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {

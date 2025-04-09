@@ -1,5 +1,9 @@
+<script lang="ts">
+	import { _ } from 'svelte-i18n';
+</script>
+
 <div class="p-5">
-	<p class="preset-typo-subtitle">Good morning!</p>
+	<p class="preset-typo-subtitle">{$_('dashboard.welcome')}</p>
 
 	<h1 class="h1">Dashboard</h1>
 	<!-- <a href="/learningkit" class="card preset-filled-surface-100-900 no-underline hover:underline"

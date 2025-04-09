@@ -1,9 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	import { Toaster } from '@skeletonlabs/skeleton-svelte';
-	import { toaster } from '$lib/states/toasterState.svelte.js';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
-	let { children } = $props();
+	const { children } = $props();
 </script>
 
 {@render children()}

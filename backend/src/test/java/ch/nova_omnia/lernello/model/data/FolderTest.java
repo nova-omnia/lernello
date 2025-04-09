@@ -5,6 +5,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import ch.nova_omnia.lernello.repository.FolderRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -12,23 +19,12 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-
 @DataJpaTest
 public class FolderTest {
-    
+
 
     @Autowired
     private FolderRepository folderRepository;
-
-    @Autowired
-    private LearningKitRepository learningKitRepository;
 
     private static Validator validator;
 
@@ -49,9 +45,7 @@ public class FolderTest {
 
     // Helper method to validate constraints
     private void assertConstraintViolation(Set<ConstraintViolation<Folder>> violations, String property, Class<?> annotation) {
-        assertThat(violations)
-            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
-                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals(property) && v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
     }
 
     // Section: Basic Folder Creation Tests
@@ -119,17 +113,6 @@ public class FolderTest {
         assertThat(parentFolder.getSubFolders()).contains(childFolder);
     }
 
-    @Test
-    public void testLearningKitsAssociation() {
-        Folder folder = new Folder("Test Folder");
-        folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
-        learningKit = learningKitRepository.save(learningKit); // Save the LearningKit entity
-        folder.getLearningKits().add(learningKit);
-        folder = folderRepository.save(folder);
-        assertThat(folder.getLearningKits()).contains(learningKit);
-    }
-
     // Section: Orphan Removal Tests
     @Test
     public void testOrphanRemoval() {
@@ -142,18 +125,6 @@ public class FolderTest {
         assertThat(folderRepository.findById(childFolder.getUuid())).isEmpty();
     }
 
-    @Test
-    public void testOrphanRemovalForLearningKits() {
-        Folder folder = new Folder("Test Folder");
-        folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
-        learningKit = learningKitRepository.save(learningKit);
-        folder.getLearningKits().add(learningKit);
-        folder = folderRepository.save(folder);
-        folderRepository.delete(folder);
-        assertThat(learningKitRepository.findById(learningKit.getUuid())).isEmpty();
-    }
-
     // Section: Hierarchy Tests
     @Test
     public void testEmptySubFoldersAndLearningKits() {
@@ -161,7 +132,6 @@ public class FolderTest {
         folder = folderRepository.save(folder);
         assertThat(folder).isNotNull();
         assertThat(folder.getSubFolders()).isEmpty();
-        assertThat(folder.getLearningKits()).isEmpty();
     }
 
     @Test

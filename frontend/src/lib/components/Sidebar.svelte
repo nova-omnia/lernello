@@ -3,12 +3,12 @@
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import {
 		ChartLine,
-		Settings,
-		User,
-		LayoutDashboard,
 		Folder,
+		LayoutDashboard,
+		LogOut,
+		Settings,
 		SidebarClose,
-		LogOut
+		User
 	} from 'lucide-svelte';
 </script>
 

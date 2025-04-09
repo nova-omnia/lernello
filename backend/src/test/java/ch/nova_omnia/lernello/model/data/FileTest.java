@@ -34,7 +34,7 @@ public class FileTest {
     private static Validator validator;
 
     private File testFile;
-    
+
     @Autowired
     private FileRepository fileRepository;
 

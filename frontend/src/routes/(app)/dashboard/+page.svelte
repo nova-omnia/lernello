@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
 	import { Pencil, Plus, Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -45,6 +46,7 @@
 </script>
 
 <div class="p-5">
+	<p class="preset-typo-subtitle">{$_('dashboard.welcome')}</p>
 	<p class="mb-2.5 text-2xl font-bold text-gray-900 dark:text-white">Dashboard</p>
 	<div class="mb-2.5 text-xl text-gray-800 dark:text-gray-300">Good morning ...!</div>
 

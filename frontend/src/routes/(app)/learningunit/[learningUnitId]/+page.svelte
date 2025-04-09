@@ -75,7 +75,7 @@
 		class:opacity-50={dataLoading}
 		class:cursor-not-allowed={dataLoading}
 	>
-		<BlockEditor />
+		<BlockEditor learningUnitId={data.learningUnitId} />
 		<BlockReorder />
 	</div>
 </div>

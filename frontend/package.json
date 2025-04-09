@@ -45,12 +45,15 @@
 		"svelte": "^5.25.6",
 		"svelte-check": "^4.1.5",
 		"svelte-dnd-action": "^0.9.60",
-		"sveltekit-superforms": "^2.24.0",
 		"svelte-i18n": "^4.0.1",
+		"sveltekit-superforms": "^2.24.0",
 		"tailwindcss": "^4.0.17",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.29.0",
 		"vite": "^6.2.4",
 		"zod": "^3.24.2"
+	},
+	"dependencies": {
+		"i": "^0.3.7"
 	}
 }

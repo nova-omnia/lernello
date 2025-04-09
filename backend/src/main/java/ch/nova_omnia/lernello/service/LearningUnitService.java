@@ -68,7 +68,7 @@ public class LearningUnitService {
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
         }
-        learningUnitRepository.save(learningUnit);
+        learningUnitRepository.saveAndFlush(learningUnit);
         return temporaryKeyMap;
     }
 
@@ -110,7 +110,6 @@ public class LearningUnitService {
         blockRepository.saveAndFlush(block);
 
         if (addAction.blockId() != null) {
-            System.out.println(block.getUuid());
             temporaryKeyMap.put(addAction.blockId(), block.getUuid());
         } else {
             throw new RuntimeException("addAction is null");

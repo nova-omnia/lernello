@@ -1,8 +1,5 @@
 package ch.nova_omnia.lernello;
 
-
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +33,8 @@ public class LoadDatabase {
         User frodo = new User("frodo@gmail.com", encoder.encode("password"), null, User.Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
 
-        UUID lkId = UUID.randomUUID();
-        UUID luId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
-
         LearningKit learningKit = new LearningKit("Learning Kit 1");
-        // learningKit.setUuid(lkId);
         LearningUnit learningUnit = new LearningUnit("Learning Unit 1", learningKit);
-        // learningUnit.setUuid(luId);
 
         return (_) -> {
             log.info("Preloading folders");

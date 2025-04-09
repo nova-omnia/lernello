@@ -70,7 +70,7 @@
 				type: BlockType.Enum.THEORY,
 				name: 'Theory Block',
 				position: 0,
-				learningUnitId: '00000000-0000-0000-0000-000000000000', // Placeholder id
+				learningUnitId: '',
 				content: 'placeholder'
 			}
 		};
@@ -87,7 +87,7 @@
 				type: BlockType.Enum.MULTIPLE_CHOICE,
 				name: 'Multiple Choice Quiz',
 				position: 0,
-				learningUnitId: '00000000-0000-0000-0000-000000000000', // Placeholder id
+				learningUnitId: '',
 				question: 'placeholder question?',
 				possibleAnswers: ['A', 'B'],
 				correctAnswers: ['A']

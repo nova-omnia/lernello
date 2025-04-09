@@ -3,7 +3,7 @@ import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { BlockActionSchema } from '$lib/schemas/request/BlockAction';
 import { createEndpoint } from '../createEndpoint';
 
-const REQUEST_MAPPING = '/api/learning-units';
+const REQUEST_MAPPING = '/api/learning-unit';
 
 export const getLearningUnitById = createEndpoint({
 	method: 'GET',

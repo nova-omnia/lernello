@@ -16,11 +16,11 @@ import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 @NoArgsConstructor
 public class QuestionBlock extends Block {
 
-    @NotBlank(message = "Question is required")
+    @NotBlank
     @Column(name = "question", nullable = true)
     private String question;
 
-    @NotBlank(message = "Expected answer is required")
+    @NotBlank
     @Column(name = "expected_answer", nullable = true)
     private String expectedAnswer;
 

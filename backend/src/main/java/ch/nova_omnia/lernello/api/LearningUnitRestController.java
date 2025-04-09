@@ -27,11 +27,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/learning-units")
+@RequestMapping("/api/learning-unit")
 @Validated
 @RequiredArgsConstructor
 public class LearningUnitRestController {
-
     private final LearningUnitService learningUnitService;
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
@@ -39,7 +38,8 @@ public class LearningUnitRestController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
-        LearningUnit learningUnit = learningUnitService.createLearningUnit(learningUnitMapper.toEntity(createLearningUnitDTO));
+        LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO);
+        LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit);
         return learningUnitMapper.toDTO(learningUnit);
     }
 
@@ -52,7 +52,9 @@ public class LearningUnitRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
     public @Valid LearningUnitResDTO getById(@PathVariable UUID id) {
-        return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Learning unit with id %s not found", id)));
+        return learningUnitService.findById(id)
+                .map(learningUnitMapper::toDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/all")

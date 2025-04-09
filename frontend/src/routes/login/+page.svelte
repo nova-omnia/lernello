@@ -3,7 +3,6 @@
 	import { _ } from 'svelte-i18n';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-
 	import { goto } from '$app/navigation';
 
 	let { data } = $props();

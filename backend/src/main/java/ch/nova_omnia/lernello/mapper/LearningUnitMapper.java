@@ -3,8 +3,6 @@ package ch.nova_omnia.lernello.mapper;
 import ch.nova_omnia.lernello.model.data.block.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.Named;
-
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -13,10 +11,9 @@ import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static ch.nova_omnia.lernello.model.data.block.BlockType.*;
+import static ch.nova_omnia.lernello.model.data.block.BlockType.MULTIPLE_CHOICE;
+import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
+import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LearningUnitMapper {
@@ -24,16 +21,6 @@ public interface LearningUnitMapper {
     LearningUnitResDTO toDTO(LearningUnit learningUnit);
 
     LearningUnit toEntity(CreateLearningUnitDTO createLearningUnitDTO);
-
-    @Named("mapBlocks")
-    default List<BlockResDTO> mapBlocks(List<Block> blocks) {
-        if (blocks == null) {
-            return null;
-        }
-        return blocks.stream()
-                .map(this::mapBlockToResDTO)
-                .collect(Collectors.toList());
-    }
 
     default BlockResDTO mapBlockToResDTO(Block block) {
 

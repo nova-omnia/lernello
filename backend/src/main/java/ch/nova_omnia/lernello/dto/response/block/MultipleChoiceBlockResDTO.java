@@ -7,17 +7,19 @@ import ch.nova_omnia.lernello.model.data.block.BlockType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import static ch.nova_omnia.lernello.model.data.block.BlockType.MULTIPLE_CHOICE;
 
 public record MultipleChoiceBlockResDTO(
         @NotNull BlockType type,
         @NotNull UUID uuid,
+        @Size(min = 3, max = 40)
         @NotBlank String name,
         @Min(0) int position,
         @NotBlank String question,
-        @NotBlank List<String> possibleAnswers,
-        @NotBlank List<String> correctAnswers
+        @NotNull List<String> possibleAnswers,
+        @NotNull List<String> correctAnswers
 ) implements BlockResDTO {
     public MultipleChoiceBlockResDTO {
         type = MULTIPLE_CHOICE;

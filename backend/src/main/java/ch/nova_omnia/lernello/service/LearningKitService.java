@@ -34,7 +34,9 @@ public class LearningKitService {
 
     @Transactional
     public LearningKit edit(LearningKit learningKit) {
-        LearningKit existingKit = learningKitRepository.findById(learningKit.getUuid()).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+        LearningKit existingKit = learningKitRepository
+                .findById(learningKit.getUuid())
+                .orElseThrow(EntityNotFoundException::new);
 
         updateLearningKit(existingKit, learningKit);
         return existingKit;

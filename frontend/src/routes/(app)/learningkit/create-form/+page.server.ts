@@ -12,11 +12,10 @@ import {
 	editLearningKit,
 	getLearningKitById
 } from '$lib/api/collections/learningKit';
-import type { PageServerLoad } from '../../../../../.svelte-kit/types/src/routes/$types';
 import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 
 let editId: string | null;
-export const load: PageServerLoad = async ({ url }) => {
+export const load = async ({ url }) => {
 	editId = url.searchParams.get('edit');
 	let formData;
 

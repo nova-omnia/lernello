@@ -51,9 +51,8 @@ public class User {
     @Column(name = "changed_password", nullable = false)
     private boolean changedPassword;
 
-    @Column(name = "language", nullable = false)
-    @NotBlank
-    private String language;
+    @Column(name = "locale")
+    private String locale;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -75,10 +74,10 @@ public class User {
     private ZonedDateTime expires;
 
 
-    public User(String username, String password, String language, Role role) {
+    public User(String username, String password, String locale, Role role) {
         this.username = username;
         this.password = password;
-        this.language = language;
+        this.locale = locale;
         this.role = role;
     }
 }

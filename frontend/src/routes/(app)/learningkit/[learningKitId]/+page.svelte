@@ -2,13 +2,14 @@
 	let { data } = $props();
 	const kit = data.kitToDisplay;
 
-	function formatDate(date: Date): string {
+	function formatDate(date: Date | null): string {
 		if (date) {
 			const day = String(date.getDate()).padStart(2, '0');
 			const month = String(date.getMonth() + 1).padStart(2, '0');
 			const year = date.getFullYear();
 			return `${day}.${month}.${year}`;
 		}
+		return "";
 	}
 </script>
 

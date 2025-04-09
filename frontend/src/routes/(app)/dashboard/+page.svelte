@@ -45,7 +45,7 @@
 				href={`/learningkit/${kit.uuid}`}
 				class="relative w-52 rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
 			>
-				<div class="absolute right-2 top-2 flex gap-2">
+				<div class="absolute top-2 right-2 flex gap-2">
 					<button onclick={() => goto(`/learningkit/create-form?edit=${kit.uuid}`)}>
 						<Pencil class="text-primary-500 h-4 w-4 hover:text-blue-800 dark:hover:text-blue-400" />
 					</button>

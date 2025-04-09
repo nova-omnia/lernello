@@ -4,6 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -11,23 +19,9 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.junit.jupiter.api.BeforeAll;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 
 @DataJpaTest
 public class LearningUnitTest {
-
-    @Autowired
-    private FolderRepository folderRepository;
-
     @Autowired
     private LearningKitRepository learningKitRepository;
 
@@ -36,7 +30,6 @@ public class LearningUnitTest {
 
     private static Validator validator;
 
-    private Folder testFolder;
     private LearningKit testLearningKit;
 
     @BeforeAll
@@ -47,17 +40,13 @@ public class LearningUnitTest {
 
     @BeforeEach
     public void setUp() {
-        testFolder = new Folder("Test Folder");
-        testFolder = folderRepository.save(testFolder);
-        testLearningKit = new LearningKit("Test Learning Kit", LearningKit.Language.GERMAN, testFolder);
+        testLearningKit = new LearningKit("Test Learning Kit");
         testLearningKit = learningKitRepository.save(testLearningKit);
     }
 
     // Helper method to validate constraints
     private void assertConstraintViolation(Set<ConstraintViolation<LearningUnit>> violations, String property, Class<?> annotation) {
-        assertThat(violations)
-            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
-                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals(property) && v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
     }
 
     // Section: Basic LearningUnit Creation Tests

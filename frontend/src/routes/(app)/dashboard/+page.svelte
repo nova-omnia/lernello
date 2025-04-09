@@ -3,45 +3,29 @@
 	import { goto } from '$app/navigation';
 	import { Pencil, Plus, Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { browserApiClient } from '$lib/api/browserApiClient';
+	import { deleteLearningKit } from '$lib/api/collections/learningKit';
+	import { invalidate } from '$app/navigation';
 
-	type Kit = {
+	interface Kit {
 		uuid: string;
 		name: string;
-		description: string;
-	};
+	}
 
-	const { data } = $props<{ data: { kits: Kit[] } }>();
+	const { data } = $props();
 	let kits = $state(data.kits);
 
 	let showDeleteDialog = $state(false);
 	let kitToDelete = $state<Kit | null>(null);
 
-	function openDeleteDialog(kit: Kit, event: MouseEvent) {
-		event.stopPropagation();
-		kitToDelete = kit;
-		showDeleteDialog = true;
-	}
-
-	function closeDeleteDialog() {
-		showDeleteDialog = false;
-		kitToDelete = null;
-	}
-
 	async function handleConfirmDelete() {
 		if (!kitToDelete) return;
 
-		const form = document.createElement('form');
-		form.method = 'POST';
-		form.action = '?/delete';
+		await browserApiClient.req(deleteLearningKit, null, kitToDelete.uuid);
+		await invalidate('learningkits:list');
 
-		const input = document.createElement('input');
-		input.type = 'hidden';
-		input.name = 'uuid';
-		input.value = kitToDelete.uuid;
-
-		form.appendChild(input);
-		document.body.appendChild(form);
-		form.submit();
+		showDeleteDialog = false;
+		kitToDelete = null;
 	}
 </script>
 
@@ -49,31 +33,37 @@
 	<p class="mb-2.5 text-2xl font-bold text-gray-900 dark:text-white">{$_('dashboard.welcome')}</p>
 
 	<div class="mt-5 flex flex-wrap gap-5">
-		<div
-			on:click={() => goto('/learningkit/create-form')}
-			class="relative flex w-52 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
+		<a
+			href="/learningkit/create-form"
+			class="relative flex w-52 flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
 		>
 			<Plus class="text-primary-500 h-10 w-10" />
 			<p class="text-gray-600 dark:text-gray-300">Create New Kit</p>
-		</div>
+		</a>
 
 		{#each kits as kit (kit.uuid)}
-			<div
-				on:click={() => goto(`/learningkit/${kit.uuid}`)}
-				class="relative w-52 cursor-pointer rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+			<a
+				href={`/learningkit/${kit.uuid}`}
+				class="relative w-52 rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
 			>
-				<div class="absolute top-2 right-2 flex gap-2">
-					<a href="/learningkit/create-form?edit={kit.uuid}" on:click|stopPropagation>
+				<div class="absolute right-2 top-2 flex gap-2">
+					<button onclick={() => goto(`/learningkit/create-form?edit=${kit.uuid}`)}>
 						<Pencil class="text-primary-500 h-4 w-4 hover:text-blue-800 dark:hover:text-blue-400" />
-					</a>
-					<button on:click={(e) => openDeleteDialog(kit, e)}>
+					</button>
+					<button
+						onclick={(e) => {
+							e.preventDefault();
+							kitToDelete = kit;
+							showDeleteDialog = true;
+						}}
+					>
 						<Trash2 class="text-primary-500 h-4 w-4 hover:text-red-800 dark:hover:text-red-400" />
 					</button>
 				</div>
 
 				<h3 class="my-2.5 font-semibold text-gray-900 dark:text-white">{kit.name}</h3>
 				<p class="text-gray-600 dark:text-gray-300">{kit.description}</p>
-			</div>
+			</a>
 		{/each}
 	</div>
 </div>
@@ -85,5 +75,8 @@
 	confirmText="Delete"
 	danger={true}
 	onConfirm={handleConfirmDelete}
-	onCancel={closeDeleteDialog}
+	onCancel={() => {
+		showDeleteDialog = false;
+		kitToDelete = null;
+	}}
 />

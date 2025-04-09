@@ -1,20 +1,28 @@
 package ch.nova_omnia.lernello.api;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/learning-kits")
@@ -52,7 +60,7 @@ public class LearningKitRestController {
         return ResponseEntity.ok(learningKitId);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid ResponseEntity<List<LearningKitResDTO>> getAll() {
         List<LearningKit> learningKits = learningKitService.findAll();

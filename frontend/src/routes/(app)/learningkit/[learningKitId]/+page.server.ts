@@ -6,9 +6,9 @@ import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 export async function load({ params }: { params: { learningKitId: string } }) {
 	const kit = await serverApiClient.req(getLearningKitById, null, params.learningKitId);
 	if (!kit) throw error(404, 'Learning Kit not found');
-	const kitToEdit = LearningKitResSchema.parse(kit);
+	const kitToDisplay = LearningKitResSchema.parse(kit);
 
 	return {
-		kitToEdit
+		kitToDisplay
 	};
 }

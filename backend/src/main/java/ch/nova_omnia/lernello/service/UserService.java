@@ -54,4 +54,11 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    public String setLocale(String username, String locale) {
+        User user = userRepository.findByUsername(username);
+        user.setLocale(locale);
+        userRepository.save(user);
+        return locale;
+    }
 }

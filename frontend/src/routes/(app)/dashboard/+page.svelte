@@ -12,8 +12,7 @@
 		name: string;
 	}
 
-	const { data } = $props();
-	let kits = $state(data.kits);
+	let { data } = $props();
 
 	let showDeleteDialog = $state(false);
 	let kitToDelete = $state<Kit | null>(null);
@@ -41,7 +40,7 @@
 			<p class="text-gray-600 dark:text-gray-300">Create New Kit</p>
 		</a>
 
-		{#each kits as kit (kit.uuid)}
+		{#each data.kits as kit (kit.uuid)}
 			<a
 				href={`/learningkit/${kit.uuid}`}
 				class="relative w-52 rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"

@@ -4,7 +4,11 @@
 	import { flip } from 'svelte/animate';
 	import BlockSelectPopover from './BlockSelectPopover.svelte';
 
-	export let learningUnitId: string;
+	interface BlockEditorProps {
+		learningUnitId: string;
+	}
+
+	const { learningUnitId }: BlockEditorProps = $props();
 </script>
 
 <div

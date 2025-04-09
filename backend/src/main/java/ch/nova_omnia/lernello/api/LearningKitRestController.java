@@ -66,6 +66,6 @@ public class LearningKitRestController {
     public @Valid LearningKitResDTO getById(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
         Optional<LearningKit> savedEntity = learningKitService.findById(entity.getUuid());
-        return savedEntity.map(learningKitMapper::toDTO).orElseThrow(() -> new RuntimeException("Learning kit not found"));
+        return savedEntity.map(learningKitMapper::toDTO).orElseThrow(RuntimeException::new);
     }
 }

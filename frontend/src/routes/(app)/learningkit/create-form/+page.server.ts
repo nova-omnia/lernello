@@ -21,7 +21,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		let learningKit = await serverApiClient.req(createLearningKit, {
+		const learningKit = await serverApiClient.req(createLearningKit, {
 			...form.data,
 			deadlineDate: form.data.deadlineDate
 				? form.data.deadlineDate.toISOString().split('T')[0]

@@ -31,3 +31,21 @@ export const getAllUsers = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+
+export const addTrainee = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/add-trainee`,
+	response: {
+		schema: ParticipantUserSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.object({
+			email: z.string().email().nonempty(),
+			name: z.string().nonempty(),
+			surname: z.string().nonempty()
+		}),
+		defaultValidate: false
+	}
+});

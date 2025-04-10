@@ -17,7 +17,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,9 +42,6 @@ public class Folder {
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Folder> subFolders = new ArrayList<>();
-
-    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LearningKit> learningKits = new ArrayList<>();
 
     public Folder(String name) {
         this.name = name;

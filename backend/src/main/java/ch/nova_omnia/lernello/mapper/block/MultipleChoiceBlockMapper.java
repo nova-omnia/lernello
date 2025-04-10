@@ -10,11 +10,12 @@ import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 @Mapper(componentModel = "spring")
 public interface MultipleChoiceBlockMapper {
 
-
+    @Mapping(target = "type", constant = "MULTIPLE_CHOICE")
     @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
     MultipleChoiceBlock toEntity(CreateMultipleChoiceBlockDTO createMultipleChoiceBlock);
 
+    @Mapping(target = "type", constant = "MULTIPLE_CHOICE")
     @Mapping(target = "position", ignore = true)
     @Mapping(target = "learningUnit", ignore = true)
     MultipleChoiceBlock toEntity(UpdateMultipleChoiceBlockDTO updateMultipleChoiceBlockDTO);

@@ -1,0 +1,18 @@
+{
+	"dashboard.welcome": "Guten Morgen!",
+	"error.title": "Fehler",
+	"error.description": "Hoppla, etwas ist schief gelaufen. ({status})",
+	"login.title": "Anmelden",
+	"login.signIn": "Anmelden",
+	"form.emailLabel": "E-Mail",
+	"form.emailPlaceholder": "email",
+	"form.passwordLabel": "Passwort",
+	"form.passwordPlaceholder": "passwort",
+	"form.newPasswordLabel": "Neues Passwort",
+	"form.newPasswordPlaceholder": "neues passwort",
+	"form.confirmPasswordLabel": "Passwort bestätigen",
+	"form.confirmPasswordPlaceholder": "passwort bestätigen",
+	"changePassword.title": "Ändere dein Passwort",
+	"changePassword.description": "Bitte ändere dein generiertes Passwort in ein eigenes Passwort.",
+	"changePassword.button": "Passwort ändern"
+}

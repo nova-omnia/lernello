@@ -1,8 +1,9 @@
-package ch.nova_omnia.lernello.mapper;
+package ch.nova_omnia.lernello.mapper.user;
+
+import org.mapstruct.Mapper;
 
 import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
 import ch.nova_omnia.lernello.model.data.User;
-import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserLoginMapper {

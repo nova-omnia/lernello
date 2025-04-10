@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import { goto } from '$app/navigation';
-	import { Pencil, Plus, Trash2 } from 'lucide-svelte';
+	import { Plus, Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { deleteLearningKit } from '$lib/api/collections/learningKit';

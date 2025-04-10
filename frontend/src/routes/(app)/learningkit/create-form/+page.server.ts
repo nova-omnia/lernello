@@ -9,11 +9,8 @@ import {
 import { serverApiClient } from '$lib/api/serverApiClient';
 import { createLearningKit } from '$lib/api/collections/learningKit';
 
-let editId: string | null;
 export const load = async () => {
-	let formData;
-
-	const form = await superValidate(formData, zod(EditLearningKitSchema));
+	const form = await superValidate(zod(EditLearningKitSchema));
 	return { form };
 };
 

@@ -18,7 +18,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @Entity
@@ -26,6 +28,11 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor
 public abstract class Block {
+
+
+    @NotNull
+    @Column(name = "type", nullable = false)
+    private BlockType type;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -46,7 +53,8 @@ public abstract class Block {
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
 
-    protected Block(String name, int position, LearningUnit learningUnit) {
+    protected Block(BlockType type, String name, int position, LearningUnit learningUnit) {
+        this.type = type;
         this.name = name;
         this.position = position;
         this.learningUnit = learningUnit;

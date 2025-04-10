@@ -1,10 +1,10 @@
 <script lang="ts">
 	import '../app.css';
-	import { ToastProvider } from '@skeletonlabs/skeleton-svelte';
+	import { Toaster } from '@skeletonlabs/skeleton-svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
-	let { children } = $props();
+	const { children } = $props();
 </script>
 
-<ToastProvider>
-	{@render children()}
-</ToastProvider>
+{@render children()}
+<Toaster {toaster}></Toaster>

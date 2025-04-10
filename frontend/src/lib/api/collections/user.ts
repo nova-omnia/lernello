@@ -3,6 +3,8 @@ import { ParticipantUserSchema } from '$lib/schemas/response/ParticipantUser';
 import { createEndpoint } from '../createEndpoint';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
 import { z } from 'zod';
+import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
+import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -46,6 +48,32 @@ export const addTrainee = createEndpoint({
 			name: z.string().nonempty(),
 			surname: z.string().nonempty()
 		}),
+		defaultValidate: false
+	}
+});
+
+export const getUserInfo = createEndpoint({
+	method: 'GET',
+	getPath: () => `${REQUEST_MAPPING}/info`,
+	response: {
+		schema: UserInfoSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const setUserLocale = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/locale`,
+	response: {
+		schema: UserLocaleSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: UserLocaleSchema,
 		defaultValidate: false
 	}
 });

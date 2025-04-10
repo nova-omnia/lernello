@@ -1,8 +1,7 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	const toast: ToastContext = getContext('toast');
+	import { toaster } from '$lib/states/toasterState.svelte.js';
+
 	// TODO: Re-enable file upload later
 	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	// import IconUpload from '@lucide/svelte/icons/upload';
@@ -11,7 +10,7 @@
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onError: (error) => {
 			console.error('Error:', error.result.error);
-			toast.create({
+			toaster.create({
 				title: 'Error',
 				description: `Uh oh, something went wrong. (${error.result.status})`,
 				type: 'error'

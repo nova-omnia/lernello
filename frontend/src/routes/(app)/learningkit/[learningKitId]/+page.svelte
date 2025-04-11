@@ -5,6 +5,7 @@
 	import TraineeDisplay from "$lib/components/displays/TraineeDisplay.svelte";
 	import FileDisplay from "$lib/components/displays/FileDisplay.svelte";
 	import FileUpload from "$lib/components/FileUpload.svelte";
+	import TraineList from '$lib/components/TraineList.svelte';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
@@ -53,6 +54,7 @@
 	<!-- trainee -->
 	<p class="mt-5 text-sm text-primary-500 font-semibold">Trainees</p>
 	<p class="mt-5 text-sm">These Trainees have access to the course</p>
+	<TraineList/>
 	<!-- foreach trainee-->
 	<div class="flex flex-col gap-2">
 		<TraineeDisplay User={{name: 'Tim'}}/>

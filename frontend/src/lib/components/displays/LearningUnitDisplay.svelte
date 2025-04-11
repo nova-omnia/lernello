@@ -2,9 +2,8 @@
     import { AlignLeft, GripVertical } from 'lucide-svelte';
     import {browserApiClient} from "$lib/api/browserApiClient.js";
     import {getLearningUnitById, deleteLearningUnit, regenerateLearningUnit} from "$lib/api/collections/learningUnit";
-    import {redirect} from "@sveltejs/kit";
     import {goto} from "$app/navigation";
-    //TODO: add dynamic name for file
+
     const {learningUnit} = $props();
 
     async function openLearningUnit() {

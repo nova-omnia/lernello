@@ -1,11 +1,16 @@
 <script lang="ts">
-    import { CircleUser} from 'lucide-svelte';
+    import { Avatar } from '@skeletonlabs/skeleton-svelte';
+
     const {User} = $props();
 </script>
     <div
             class="Trainee-Display preset-filled-surface-100-900 rounded-border border-surface-200-800 flex items-center rounded-lg border-[1px] p-3 text-base w-full"
     >
-            <CircleUser class="h-10 w-10" />
+            <Avatar
+                    name="{User.surname} {User.name}"
+                    src={User.avatar}
+            />
+
             <p class="font-bold text-black-700 text-base ml-2"> {User.name} </p>
 
 

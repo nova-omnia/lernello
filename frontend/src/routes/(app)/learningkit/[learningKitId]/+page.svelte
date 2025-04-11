@@ -83,7 +83,7 @@
 			{#if learningKit.deadlineDate}
 				<p class="mt-2 flex items-center">
 					<Clock class="mr-2 inline-block" />
-					{formatDate(learningKit.deadlineDate)}
+					{formatDate(new Date(learningKit.deadlineDate))}
 				</p>
 			{/if}
 		</div>

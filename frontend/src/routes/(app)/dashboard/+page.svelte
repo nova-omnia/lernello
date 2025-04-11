@@ -28,36 +28,38 @@
 </script>
 
 <div class="p-5">
-	<p class="mb-2.5 text-2xl font-bold text-gray-900 dark:text-white">{$_('dashboard.welcome')}</p>
+	<h1 class="h1">Dashboard</h1>
+	<p class="preset-typo-subtitle">{$_('dashboard.welcome')}</p>
 
 	<div class="mt-5 flex flex-wrap gap-5">
 		<a
 			href="/learningkit/create-form"
-			class="relative flex w-52 flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
+			class="border-surface-400-600 hover:bg-surface-100-900 relative flex w-52 flex-col items-center justify-center rounded-lg border border-dashed p-5 pt-10 text-center transition-colors"
 		>
 			<Plus class="text-primary-500 h-10 w-10" />
-			<p class="text-gray-600 dark:text-gray-300">Create New Kit</p>
+			<p>Create New Kit</p>
 		</a>
 
 		{#each data.kits as kit (kit.uuid)}
 			<a
 				href={`/learningkit/${kit.uuid}`}
-				class="relative w-52 rounded-lg border border-gray-300 p-5 pt-10 text-center transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+				class="border-surface-400-600 hover:bg-surface-100-900 relative w-52 rounded-lg border p-5 pt-10 text-center transition-colors"
 			>
-				<div class="absolute top-2 right-2 flex gap-2">
+				<div class="absolute top-0 right-0 flex gap-2">
 					<button
+						class="p-2"
 						onclick={(e) => {
 							e.preventDefault();
 							kitToDelete = kit;
 							showDeleteDialog = true;
 						}}
 					>
-						<Trash2 class="text-primary-500 h-4 w-4 hover:text-red-800 dark:hover:text-red-400" />
+						<Trash2 class="text-primary-500 h-4 w-4" />
 					</button>
 				</div>
 
-				<h3 class="my-2.5 font-semibold text-gray-900 dark:text-white">{kit.name}</h3>
-				<p class="text-gray-600 dark:text-gray-300">{kit.description}</p>
+				<h3 class="my-2.5 font-semibold">{kit.name}</h3>
+				<p>{kit.description}</p>
 			</a>
 		{/each}
 	</div>

@@ -1,7 +1,7 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +36,7 @@ public class LearningKit {
     private String description;
 
     @Column(name = "deadlineDate")
-    private Date deadlineDate;
+    private ZonedDateTime deadlineDate;
 
 
     @Column(name = "context")

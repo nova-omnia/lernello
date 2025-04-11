@@ -7,7 +7,7 @@
 	import FileUpload from "$lib/components/FileUpload.svelte";
 
 	let { data } = $props();
-	const learningKit = data.kit;
+	const learningKit = data.kitToDisplay;
 
 	const learningUnits = learningKit.learningUnits || [];
 
@@ -66,5 +66,11 @@
 		<FileDisplay />
 		<FileUpload />
 	</div>
+
+	<p class="mt-5 text-sm text-primary-500 font-semibold">Settings</p>
+	<p class="mt-5 text-sm">Make changes to the learning kit</p>
+	<button type="button" class="btn preset-filled-primary-400-600 ml-auto w-full rounded-full p-2" >Publish</button>
+	<button type="button" class="btn preset-filled-error-500 ml-auto w-full rounded-full p-2" >Delete learning kit</button>
+
 
 </div>

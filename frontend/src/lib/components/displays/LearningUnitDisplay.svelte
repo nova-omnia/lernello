@@ -7,10 +7,7 @@
     const {learningUnit} = $props();
 
     async function openLearningUnit() {
-        console.log('openLearningUnit');
-        console.log(learningUnit);
         let unit = await browserApiClient.req(getLearningUnitById, null, learningUnit.id);
-        console.log(unit);
         redirect(303, `/learning-units/${unit.uuid}`);
     }
 

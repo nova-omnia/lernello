@@ -3,12 +3,10 @@
 	import { Combobox } from 'bits-ui';
 	import { ListChecks, Check, ChevronsDown, ChevronsUp, File } from 'lucide-svelte';
 
-	// Define the type for the file objects
 	type FileItem = {
 		name: string;
 	};
 
-	// Explicitly type the files array
 	const files: FileItem[] = [
 		{ name: 'File 1' },
 		{ name: 'File 2' },

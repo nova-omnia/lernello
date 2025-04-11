@@ -3,15 +3,13 @@
 	import LearningUnitDisplay from "$lib/components/displays/LearningUnitDisplay.svelte";
 	import CheckpointDisplay from "$lib/components/displays/CheckpointDisplay.svelte";
 	import TraineeDisplay from "$lib/components/displays/TraineeDisplay.svelte";
-	import FileDisplay from "$lib/components/displays/FileDisplay.svelte";
 	import FileUpload from "$lib/components/FileUpload.svelte";
 	import TraineList from '$lib/components/TraineList.svelte';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
-	const learningUnits = learningKit.learningUnits || [];
-
+	let learningUnits = learningKit.learningUnits || [];
 
 	function formatDate(date: Date): string {
 		const day = String(date.getDate()).padStart(2, '0');
@@ -24,6 +22,12 @@
 		description: 'hushf',
 		id: '1234',
 	};
+
+
+	function handleDelete(deletedUnitId: string) {
+        console.log("Deleted unit ID:", deletedUnitId);
+        learningUnits = learningUnits.filter(unit => unit.uuid !== deletedUnitId);
+    }
 </script>
 
 <div class="p-4 bg-surface-50-950">
@@ -45,7 +49,7 @@
 	<p class="mt-5 text-sm">The contents of the LearningKit</p>
 	<!-- foreach learningUnit-->
 	{#each learningUnits as learningUnit}
-		<LearningUnitDisplay {learningUnit}/>
+		<LearningUnitDisplay {learningUnit} on:delete={e => handleDelete(e.detail)}/>
 	{/each}
 	<LearningUnitDisplay {learningUnit}/>
 	<CheckpointDisplay/>

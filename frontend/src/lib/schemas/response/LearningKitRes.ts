@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { LearningUnitResSchema } from './LearningUnitRes';
 
 export const LearningKitResSchema = z.object({
 	uuid: z.string().uuid().nonempty(),
 	name: z.string().nonempty(),
-	learningUnits: z.array(z.any()).optional().nullable(), //ToDo
+	learningUnits: z.array(LearningUnitResSchema).optional(),
 	description: z.string().optional().nullable(),
 	deadlineDate: z
 		.preprocess((val) => {

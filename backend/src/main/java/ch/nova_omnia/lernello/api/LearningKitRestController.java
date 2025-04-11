@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
@@ -22,20 +22,14 @@ import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
-import org.springframework.web.server.ResponseStatusException;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/learning-kits")
-@Validated
+@RequiredArgsConstructor
 public class LearningKitRestController {
     private final LearningKitService learningKitService;
-
     private final LearningKitMapper learningKitMapper;
-
-    public LearningKitRestController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
-        this.learningKitService = learningKitService;
-        this.learningKitMapper = learningKitMapper;
-    }
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")

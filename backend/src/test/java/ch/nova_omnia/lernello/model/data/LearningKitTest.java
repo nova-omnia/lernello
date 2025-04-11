@@ -4,6 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -11,27 +17,15 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-
 @DataJpaTest
 public class LearningKitTest {
 
-    @Autowired
-    private FolderRepository folderRepository;
 
     @Autowired
     private LearningKitRepository learningKitRepository;
 
     private static Validator validator;
 
-    private Folder testFolder;
 
     @BeforeAll
     public static void setUpValidator() {
@@ -39,48 +33,40 @@ public class LearningKitTest {
         validator = factory.getValidator();
     }
 
-    @BeforeEach
-    public void setUp() {
-        testFolder = new Folder("Test Folder");
-        testFolder = folderRepository.save(testFolder);
-    }
 
     // Helper method to validate constraints
     private void assertConstraintViolation(Set<ConstraintViolation<LearningKit>> violations, String property, Class<?> annotation) {
-        assertThat(violations)
-            .anyMatch(v -> v.getPropertyPath().toString().equals(property) &&
-                           v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals(property) && v.getConstraintDescriptor().getAnnotation().annotationType().equals(annotation));
     }
 
     // Section: Basic LearningKit Creation Tests
     @Test
-    public void testLearningKitCreationWithNameAndFolder() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", testFolder);
+    public void testLearningKitCreationWithName() {
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         assertThat(learningKit).isNotNull();
         assertThat(learningKit.getName()).isEqualTo("Test Learning Kit");
-        assertThat(learningKit.getFolder()).isEqualTo(testFolder);
     }
 
     // Section: Validation Tests
     @Test
     public void testLearningKitNameConstraints() {
-        LearningKit learningKit = new LearningKit("", testFolder);
+        LearningKit learningKit = new LearningKit("");
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", NotBlank.class);
 
-        learningKit = new LearningKit("ab", testFolder);
+        learningKit = new LearningKit("ab");
         violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", Size.class);
 
-        learningKit = new LearningKit("a".repeat(41), testFolder);
+        learningKit = new LearningKit("a".repeat(41));
         violations = validator.validate(learningKit);
         assertConstraintViolation(violations, "name", Size.class);
     }
 
     @Test
     public void testValidationOnUpdate() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", testFolder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         learningKit.setName("ab");
         Set<ConstraintViolation<LearningKit>> violations = validator.validate(learningKit);
@@ -90,7 +76,7 @@ public class LearningKitTest {
     // Section: UUID Generation Test
     @Test
     public void testLearningKitUuidGeneration() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", testFolder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         assertThat(learningKit.getUuid()).isNotNull();
     }
@@ -98,7 +84,7 @@ public class LearningKitTest {
     // Section: Association Tests
     @Test
     public void testLearningUnitsAssociation() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", testFolder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", learningKit);
         learningKit.getLearningUnits().add(learningUnit);
@@ -114,7 +100,7 @@ public class LearningKitTest {
     // Section: Orphan Removal Tests
     @Test
     public void testOrphanRemovalForLearningUnits() {
-        LearningKit learningKit = new LearningKit("Test Learning Kit", testFolder);
+        LearningKit learningKit = new LearningKit("Test Learning Kit");
         learningKit = learningKitRepository.save(learningKit);
         LearningUnit learningUnit = new LearningUnit("Test Learning Unit", learningKit);
         learningKit.getLearningUnits().add(learningUnit);

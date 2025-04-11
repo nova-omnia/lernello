@@ -42,9 +42,11 @@
 		document.body.appendChild(form);
 		form.submit();
 	}
+	import { _ } from 'svelte-i18n';
 </script>
 
 <div class="p-5">
+	<p class="preset-typo-subtitle">{$_('dashboard.welcome')}</p>
 	<p class="mb-2.5 text-2xl font-bold text-gray-900 dark:text-white">Dashboard</p>
 	<div class="mb-2.5 text-xl text-gray-800 dark:text-gray-300">Good morning ...!</div>
 

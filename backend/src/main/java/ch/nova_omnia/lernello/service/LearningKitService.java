@@ -1,16 +1,15 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.Folder;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LearningKitService {

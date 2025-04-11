@@ -42,10 +42,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private List<GrantedAuthority> getUserScopes(User user) {
         List<GrantedAuthority> scopes = new ArrayList<>();
 
+        scopes.add(new SimpleGrantedAuthority("SCOPE_self:read"));
         if (!user.isChangedPassword()) {
             scopes.add(new SimpleGrantedAuthority("SCOPE_password:write"));
             return scopes;
         }
+        scopes.add(new SimpleGrantedAuthority("SCOPE_self:write"));
 
         switch (user.getRole()) {
             case INSTRUCTOR -> {
@@ -57,6 +59,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_blocks:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_user:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
             }
             case TRAINEE -> {

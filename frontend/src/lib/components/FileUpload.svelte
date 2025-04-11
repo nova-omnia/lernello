@@ -6,15 +6,14 @@
 <FileUpload
 	name="file-upload"
 	accept="image/*,text/*,.html,.htm,application/*"
-	subtext="Attach up to 100 files."
 	maxFileSize={1024 * 1024 * 10}
 	maxFiles={100}
 	onFileChange={console.log}
 	onFileReject={console.error}
 	allowDrop
-	classes="w-full"
+	classes="w-full flex flex-col items-center justify-center rounded-border"
 >
 	{#snippet iconInterface()}<IconUpload class="size-8" />{/snippet}
-	{#snippet iconFile()}<IconFile class="size-4" />{/snippet}
-	{#snippet iconFileRemove()}<IconRemove class="size-4" />{/snippet}
+	{#snippet iconFile()}<IconFile class="h-10 w-10" />{/snippet}
+	{#snippet iconFileRemove()}<IconRemove class="h-5 w-5" />{/snippet}
 </FileUpload>

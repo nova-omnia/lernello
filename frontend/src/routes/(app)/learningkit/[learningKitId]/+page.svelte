@@ -62,8 +62,6 @@
 	<p class="mt-5 text-sm">The context provided to the AI assisting tools</p>
 	<!-- foreach context-->
 	<div class="flex flex-col gap-2">
-		<FileDisplay />
-		<FileDisplay />
 		<FileUpload />
 	</div>
 

@@ -113,17 +113,6 @@ public class FolderTest {
         assertThat(parentFolder.getSubFolders()).contains(childFolder);
     }
 
-    @Test
-    public void testLearningKitsAssociation() {
-        Folder folder = new Folder("Test Folder");
-        folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
-        learningKit = learningKitRepository.save(learningKit); // Save the LearningKit entity
-        folder.getLearningKits().add(learningKit);
-        folder = folderRepository.save(folder);
-        assertThat(folder.getLearningKits()).contains(learningKit);
-    }
-
     // Section: Orphan Removal Tests
     @Test
     public void testOrphanRemoval() {
@@ -134,18 +123,6 @@ public class FolderTest {
         parentFolder = folderRepository.save(parentFolder);
         folderRepository.delete(parentFolder);
         assertThat(folderRepository.findById(childFolder.getUuid())).isEmpty();
-    }
-
-    @Test
-    public void testOrphanRemovalForLearningKits() {
-        Folder folder = new Folder("Test Folder");
-        folder = folderRepository.save(folder);
-        LearningKit learningKit = new LearningKit("Test Learning Kit", folder);
-        learningKit = learningKitRepository.save(learningKit);
-        folder.getLearningKits().add(learningKit);
-        folder = folderRepository.save(folder);
-        folderRepository.delete(folder);
-        assertThat(learningKitRepository.findById(learningKit.getUuid())).isEmpty();
     }
 
     // Section: Hierarchy Tests

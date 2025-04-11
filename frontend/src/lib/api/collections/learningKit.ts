@@ -46,7 +46,7 @@ export const deleteLearningKit = createEndpoint({
 
 export const getAllLearningKits = createEndpoint({
 	method: 'GET',
-	getPath: () => `${REQUEST_MAPPING}/getAll`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	response: {
 		schema: LearningKitResSchema.array(),
 		defaultValidate: true

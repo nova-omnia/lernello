@@ -48,9 +48,6 @@ public class LearningKit {
     @Column(name = "deadlineDate")
     private Date deadlineDate;
 
-    @ManyToOne
-    @JoinColumn(name = "folder_id")
-    private Folder folder;
 
     @Column(name = "context")
     private String context;
@@ -60,18 +57,10 @@ public class LearningKit {
 
     @ManyToMany
     @JoinTable(
-            name = "learning_kit_participants",
-            joinColumns = @JoinColumn(name = "learning_kit_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
-
-    // For testing purposes
-    public LearningKit(String name, Folder folder) {
-        this.name = name;
-        this.folder = folder;
-    }
 }

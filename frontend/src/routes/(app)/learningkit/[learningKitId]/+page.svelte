@@ -11,6 +11,7 @@
 
 	const learningUnits = learningKit.learningUnits || [];
 
+
 	function formatDate(date: Date): string {
 		const day = String(date.getDate()).padStart(2, '0');
 		const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based
@@ -30,7 +31,9 @@
 		<div>
 		<h1 class="text-2xl font-bold">Learning Kit: {learningKit.name}</h1>
 		<h2 class="mt-2 text-lg font-semibold">{learningKit.description}</h2>
-		<p class="mt-2 flex items-center"><Clock class="inline-block mr-2" /> {formatDate(learningKit.deadlineDate)}</p>
+			{#if learningKit.deadlineDate}
+				<p class="mt-2 flex items-center"><Clock class="inline-block mr-2" /> {formatDate(learningKit.deadlineDate)}</p>
+			{/if}
 		</div>
 
 		<button type="button" class="btn preset-outlined-surface-500 ml-auto rounded-full p-2"><Settings/>Edit</button>
@@ -69,8 +72,9 @@
 
 	<p class="mt-5 text-sm text-primary-500 font-semibold">Settings</p>
 	<p class="mt-5 text-sm">Make changes to the learning kit</p>
-	<button type="button" class="btn preset-filled-primary-400-600 ml-auto w-full rounded-full p-2" >Publish</button>
-	<button type="button" class="btn preset-filled-error-500 ml-auto w-full rounded-full p-2" >Delete learning kit</button>
-
+	<div class="flex gap-2">
+		<button type="button" class="btn preset-filled-primary-400-600  rounded-full p-2" >Publish</button>
+		<button type="button" class="btn preset-filled-error-500 rounded-full p-2" >Delete learning kit</button>
+	</div>
 
 </div>

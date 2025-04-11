@@ -10,10 +10,12 @@ import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 @Mapper(componentModel = "spring")
 public interface QuestionBlockMapper {
 
+    @Mapping(target = "type", constant = "QUESTION")
     @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
     QuestionBlock toEntity(CreateQuestionBlockDTO createQuestionBlockDTO);
 
+    @Mapping(target = "type", constant = "QUESTION")
     @Mapping(target = "position", ignore = true)
     @Mapping(target = "learningUnit", ignore = true)
     QuestionBlock toEntity(UpdateQuestionBlockDTO updateQuestionBlockDTO);

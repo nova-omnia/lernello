@@ -2,22 +2,24 @@ package ch.nova_omnia.lernello.dto.response.block;
 
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.model.data.block.BlockType;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class QuestionBlockResDTO extends BlockResDTO {
+import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 
-    @NotBlank
-    private String question;
-    @NotBlank
-    private String expectedAnswer;
-
-    public QuestionBlockResDTO(UUID uuid, String name, int position, String question, String expectedAnswer) {
-        super(uuid, name, position);
-        this.question = question;
-        this.expectedAnswer = expectedAnswer;
+public record QuestionBlockResDTO(
+        @NotNull BlockType type,
+        @NotNull UUID uuid,
+        @Size(min = 3, max = 40)
+        @NotBlank String name,
+        @Min(0) int position,
+        @NotBlank String question,
+        @NotBlank String expectedAnswer
+) implements BlockResDTO {
+    public QuestionBlockResDTO {
+        type = QUESTION;
     }
 }

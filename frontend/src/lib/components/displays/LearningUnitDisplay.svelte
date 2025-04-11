@@ -3,12 +3,15 @@
     import {browserApiClient} from "$lib/api/browserApiClient.js";
     import {getLearningUnitById, deleteLearningUnit, regenerateLearningUnit} from "$lib/api/collections/learningUnit";
     import {redirect} from "@sveltejs/kit";
+    import {goto} from "$app/navigation";
     //TODO: add dynamic name for file
     const {learningUnit} = $props();
 
     async function openLearningUnit() {
-        let unit = await browserApiClient.req(getLearningUnitById, null, learningUnit.id);
-        redirect(303, `/learning-units/${unit.uuid}`);
+        let unit = await browserApiClient.req(getLearningUnitById, null, learningUnit.uuid);
+        console.log(unit);
+        console.log(`Current path: ${window.location.pathname}`);
+        await goto('../learningunit/' + unit.uuid);
     }
 
     async function regenerateLearningUnitHandler() {

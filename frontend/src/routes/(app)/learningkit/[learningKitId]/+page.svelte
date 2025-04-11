@@ -30,8 +30,8 @@
 	let selectedTrainees = $state<{ uuid: string; username: string; name: string; surname: string }[]>([]);
 
 	function handleSelect(uuids: string[]) {
-		// Filter the selected trainees from allTrainees based on the uuids
 		selectedTrainees = allTrainees.filter(trainee => uuids.includes(trainee.uuid));
+		// make call to backend to add selected trainees to the learning kit
 	}
 
 </script>
@@ -87,7 +87,7 @@
 	<p class="mt-5 text-sm text-primary-500 font-semibold">Settings</p>
 	<p class="mt-5 text-sm">Make changes to the learning kit</p>
 	<div class="flex gap-2">
-		<button type="button" class="btn preset-filled-primary-400-600  rounded-full p-2" >Publish</button>
+		<button type="button" class="btn preset-filled-primary-500 rounded-full p-2" >Publish</button>
 		<button type="button" class="btn preset-filled-error-500 rounded-full p-2" >Delete learning kit</button>
 	</div>
 

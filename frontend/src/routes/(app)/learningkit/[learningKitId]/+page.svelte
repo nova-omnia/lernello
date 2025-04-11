@@ -2,19 +2,21 @@
 	let { data } = $props();
 	const kit = data.kitToDisplay;
 
-	function formatDate(date: Date | null): string {
-		if (date) {
-			const day = String(date.getDate()).padStart(2, '0');
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const year = date.getFullYear();
-			return `${day}.${month}.${year}`;
-		}
-		return '';
-	}
+	const dateFormatter = new Intl.DateTimeFormat('de-DE', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit'
+	});
 </script>
 
 <div class="p-5">
 	<h1 class="text-2xl font-bold">Learning Kit: {kit?.name}</h1>
 	<p class="mt-2">Description: {kit?.description}</p>
-	<p class="mt-2">Deadline: {formatDate(kit?.deadlineDate)}</p>
+	{#if kit?.deadlineDate}
+		<p class="mt-2">
+			Deadline: {dateFormatter.format(new Date(kit.deadlineDate))}
+		</p>
+	{/if}
 </div>

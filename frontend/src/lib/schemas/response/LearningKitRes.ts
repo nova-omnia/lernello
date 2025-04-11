@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LearningUnitResSchema } from './LearningUnitRes';
+import {LearningUnitResSchema} from "$lib/schemas/response/LearningUnitRes";
 
 export const LearningKitResSchema = z.object({
 	uuid: z.string().uuid().nonempty(),

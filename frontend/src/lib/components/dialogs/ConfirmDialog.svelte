@@ -43,7 +43,13 @@
 				{cancelText}
 			</button>
 
-			<button type="button" class="btn preset-tonal-error" onclick={onConfirm}>
+			<button
+				type="button"
+				class="btn"
+				class:preset-tonal-error={danger}
+				class:preset-filled={!danger}
+				onclick={onConfirm}
+			>
 				{confirmText}
 			</button>
 		</footer>

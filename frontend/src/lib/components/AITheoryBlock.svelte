@@ -24,12 +24,19 @@
 			<Separator.Root class="bg-muted -mx-5 mb-6 mt-5 block h-px" />
 
 			<form>
+				<div class="mb-4 ">
+					<input
+						type="text"
+						placeholder="Enter the Topic here..."
+						class="h-input w-full rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden px-4 py-2"
+					/>
+				</div>
 				<div>
 					<MultiSelect />
 				</div>
 				<div class="flex w-full justify-end">
 					<Dialog.Close
-						class="h-input rounded-input bg-dark text-background shadow-mini hover:bg-dark/95 focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden inline-flex items-center justify-center px-[50px] text-[15px] font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]"
+						class="h-input pt-4 rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden inline-flex justify-center font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]"
 					>
 						Save
 					</Dialog.Close>

@@ -1,17 +1,16 @@
 <script lang="ts">
-	import { Clock,Settings,Plus } from 'lucide-svelte';
+	import { Clock,Settings,Plus, UserRoundPlus } from 'lucide-svelte';
 	import LearningUnitDisplay from "$lib/components/displays/LearningUnitDisplay.svelte";
 	import CheckpointDisplay from "$lib/components/displays/CheckpointDisplay.svelte";
 	import TraineeDisplay from "$lib/components/displays/TraineeDisplay.svelte";
-	import FileDisplay from "$lib/components/displays/FileDisplay.svelte";
 	import FileUpload from "$lib/components/FileUpload.svelte";
-	import TraineList from '$lib/components/TraineList.svelte';
+	import TraineeSelectModal from "$lib/components/dialogs/TraineeSelectModal.svelte";
+	import {writable} from "svelte/store";
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
 	const learningUnits = learningKit.learningUnits || [];
-
 
 	function formatDate(date: Date): string {
 		const day = String(date.getDate()).padStart(2, '0');
@@ -19,11 +18,22 @@
 		const year = date.getFullYear();
 		return `${day}.${month}.${year}`;
 	}
-	let learningUnit = {
-		name: 'test',
-		description: 'hushf',
-		id: '1234',
-	};
+
+	const showModal = writable(false);
+
+	// Dummy data for trainees
+	let allTrainees = [
+		{ uuid: '1', username: 'john.doe@example.com', name: 'Test', surname: 'John' },
+		{ uuid: '2', username: 'jane.doe@example.com', name: 'Doedor', surname: 'Jane' }
+	];
+
+	let selectedTrainees = $state<{ uuid: string; username: string; name: string; surname: string }[]>([]);
+
+	function handleSelect(uuids: string[]) {
+		// Filter the selected trainees from allTrainees based on the uuids
+		selectedTrainees = allTrainees.filter(trainee => uuids.includes(trainee.uuid));
+	}
+
 </script>
 
 <div class="p-4 bg-surface-50-950">
@@ -47,19 +57,23 @@
 	{#each learningUnits as learningUnit}
 		<LearningUnitDisplay {learningUnit}/>
 	{/each}
-	<LearningUnitDisplay {learningUnit}/>
 	<CheckpointDisplay/>
 	<button type="button" class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2" ><Plus></Plus>Create new Learning Kit</button>
 
-	<!-- trainee -->
+	<!-- trainees -->
 	<p class="mt-5 text-sm text-primary-500 font-semibold">Trainees</p>
 	<p class="mt-5 text-sm">These Trainees have access to the course</p>
-	<TraineList/>
-	<!-- foreach trainee-->
-	<div class="flex flex-col gap-2">
-		<TraineeDisplay User={{name: 'Tim'}}/>
 
-		<button type="button" class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2" ><Plus></Plus>Add Trainee</button>
+	<div class="flex flex-col gap-2">
+		{#each selectedTrainees as trainee}
+			<TraineeDisplay User={trainee}/>
+		{/each}
+
+		<button type="button"
+				class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2"
+				on:click={() => showModal.set(true)}>
+				<UserRoundPlus></UserRoundPlus>Add Trainee
+		</button>
 	</div>
 
 	<!-- Context -->
@@ -78,3 +92,13 @@
 	</div>
 
 </div>
+
+<TraineeSelectModal
+		open={$showModal}
+		trainees={allTrainees}
+		onSelect={(e) => {
+		handleSelect(e);
+		showModal.set(false);
+	}}
+		onClose={() => showModal.set(false)}
+/>

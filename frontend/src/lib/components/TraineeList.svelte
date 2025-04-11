@@ -2,8 +2,10 @@
 	import { writable } from 'svelte/store';
 	import { UserRoundPlus } from 'lucide-svelte';
 
+	let trainees = $props()
+
 	// dummy data for trainees
-	let trainees = writable([
+	trainees = writable([
 		{ uuid: '1', username: 'john.doe@example.com', name: 'Doedor', surname: 'John' },
 		{ uuid: '2', username: 'jane.doe@example.com', name: 'Doedor', surname: 'Jane' }
 	]);
@@ -19,11 +21,7 @@
 	}
 </script>
 
-<div class="blox p-4 shadow-md">
-	<h3 class="mb-4 text-lg font-bold">Trainees</h3>
-	<p class="mb-4 text-sm text-gray-500">
-		Select the trainees you want to give access to the course
-	</p>
+<div class="blox p-4 bg-s">
 	<div class="table-wrap">
 		<table class="table caption-bottom">
 			<thead>
@@ -52,15 +50,5 @@
 				{/each}
 			</tbody>
 		</table>
-	</div>
-	<div class="mt-4 flex justify-center">
-		<button
-			type="button"
-			class="btn btn-primary flex w-full max-w-md items-center justify-center gap-2"
-			on:click={addTrainees}
-		>
-			<UserRoundPlus class="h-5 w-5" />
-			<span>Add Trainees</span>
-		</button>
 	</div>
 </div>

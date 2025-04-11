@@ -1,6 +1,5 @@
 <script lang="ts">
     import { CircleUser} from 'lucide-svelte';
-    //TODO: add dynamic name for file
     const {User} = $props();
 </script>
     <div

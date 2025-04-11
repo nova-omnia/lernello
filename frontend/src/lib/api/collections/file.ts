@@ -1,5 +1,4 @@
 import { FileResSchema } from '$lib/schemas/response/FileRes';
-import { MultipartFormDataSchema } from '$lib/schemas/request/MultipartFormDataSchema';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -39,7 +38,7 @@ export const deleteFile = createEndpoint({
         defaultValidate: false
     },
     response: {
-        schema: z.null(),
+        schema: z.string().uuid(),
         defaultValidate: true
     }
 });
@@ -55,16 +54,3 @@ export const getAllFiles = createEndpoint({
         defaultValidate: true
     }
 });
-
-// export const getBinaryFile = createEndpoint({
-//     method: 'GET',
-//     getPath: (id: string) => `${REQUEST_MAPPING}/binary/${id}`,
-//     payload: {
-//         schema: z.null(),
-//         defaultValidate: false
-//     },
-//     response: {
-//         schema: z.instanceof(Blob),
-//         defaultValidate: true
-//     }
-// });

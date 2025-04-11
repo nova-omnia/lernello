@@ -9,9 +9,10 @@
             <Avatar
                     name="{User.surname} {User.name}"
                     src={User.avatar}
+                    classes="h-11 w-11"
             />
 
-            <p class="font-bold text-black-700 text-base ml-2"> {User.name} </p>
+            <p class="font-bold text-black-700 text-xs ml-3"> {User.surname} {User.name}</p>
 
 
         <button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2">Invite</button>

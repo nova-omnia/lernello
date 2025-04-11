@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+public class User{
     public enum Role {
         INSTRUCTOR, TRAINEE
     }
@@ -43,6 +43,14 @@ public class User {
     @Email
     private String username;
 
+    @Column(name = "first_name", nullable = false)
+    @NotBlank
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    @NotBlank
+    private String lastName;
+
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(min = 8)
@@ -55,7 +63,7 @@ public class User {
     private String locale;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, updatable = false)
     @NotNull
     private Role role;
 
@@ -73,9 +81,10 @@ public class User {
     @Transient
     private ZonedDateTime expires;
 
-
-    public User(String username, String password, String locale, Role role) {
+    public User(String username, String firstName, String lastName, String password, String locale, Role role) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.locale = locale;
         this.role = role;

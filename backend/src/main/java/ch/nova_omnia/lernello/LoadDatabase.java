@@ -30,7 +30,7 @@ public class LoadDatabase {
         Folder bilbo = new Folder("Bilbo Baggins");
         bilbo.setParentFolder(bungo);
 
-        User frodo = new User("frodo@gmail.com", encoder.encode("password"), null, User.Role.INSTRUCTOR);
+        User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, User.Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
 
         LearningKit learningKit = new LearningKit("Learning Kit 1");

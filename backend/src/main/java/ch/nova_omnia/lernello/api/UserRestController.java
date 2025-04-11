@@ -46,7 +46,7 @@ public class UserRestController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('SCOPE_user:read')")
-    public @Valid List<ParticipantUserDTO> getAllUsers() {
+    public List<@Valid ParticipantUserDTO> getAllUsers() {
         return userService.findAll().stream().map(user -> participantUserMapper.toDTO(user.getUuid(), user.getUsername())).toList();
     }
 
@@ -66,5 +66,13 @@ public class UserRestController {
     ) {
         User user = userService.findByUsername(userDetails.getUsername());
         return userInfoMapper.toDTO(user);
+    }
+
+    @GetMapping("/trainees")
+    @PreAuthorize("hasAuthority('SCOPE_user:read')")
+    public List<@Valid ParticipantUserDTO> getAllTrainees() {
+        return userService.findAllTrainees().stream()
+                .map(user -> new ParticipantUserDTO(user.getUuid(), user.getUsername()))
+                .toList();
     }
 }

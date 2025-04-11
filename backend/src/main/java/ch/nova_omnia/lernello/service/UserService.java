@@ -61,4 +61,8 @@ public class UserService {
         userRepository.save(user);
         return locale;
     }
+
+    public List<User> findAllTrainees() {
+        return userRepository.findAllByRole(User.Role.TRAINEE);
+    }
 }

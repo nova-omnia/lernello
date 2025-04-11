@@ -2,10 +2,6 @@
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 
-	// TODO: Re-enable file upload later
-	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	// import IconUpload from '@lucide/svelte/icons/upload';
-
 	let { data } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onError: (error) => {
@@ -39,6 +35,7 @@
 			<p class="text-sm text-red-500">{$errors.name}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Description <i>– Optional</i></span>
 		<textarea
@@ -54,6 +51,7 @@
 			<p class="text-sm text-red-500">{$errors.description}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Context <i>– Optional</i></span>
 		<textarea
@@ -69,6 +67,7 @@
 			<p class="text-sm text-red-500">{$errors.context}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Deadline <i>– Optional</i></span>
 		<input
@@ -85,6 +84,7 @@
 			<p class="text-sm text-red-500">{$errors.deadlineDate}</p>
 		{/if}
 	</label>
-	<button class="btn preset-filled-primary-400-600 w-full">Create</button>
+
+	<button class="btn preset-filled-primary-400-600 w-full">Create Learning Kit </button>
 	<SuperDebug data={$form} />
 </form>

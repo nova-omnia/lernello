@@ -52,12 +52,10 @@ public class LearningUnitRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
     public @Valid LearningUnitResDTO getById(@PathVariable UUID id) {
-        return learningUnitService.findById(id)
-                .map(learningUnitMapper::toDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
     public List<@Valid LearningUnitResDTO> getAllLearningUnits() {
         return learningUnitService.findAll().stream().map(learningUnitMapper::toDTO).toList();

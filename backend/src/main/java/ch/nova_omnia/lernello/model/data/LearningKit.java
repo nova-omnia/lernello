@@ -1,7 +1,7 @@
 package ch.nova_omnia.lernello.model.data;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,10 +30,6 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class LearningKit {
-    public enum Language {
-        GERMAN, ENGLISH, ITALIAN, FRENCH
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
@@ -49,9 +45,8 @@ public class LearningKit {
     @Column(name = "description")
     private String description;
 
-
     @Column(name = "deadlineDate")
-    private Date deadlineDate;
+    private ZonedDateTime deadlineDate;
 
 
     @Column(name = "context")

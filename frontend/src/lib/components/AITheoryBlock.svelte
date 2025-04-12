@@ -3,10 +3,8 @@
 	import { WandSparkles, X } from 'lucide-svelte';
 	import MultiSelect from './MultiSelect.svelte';
 
-	// Auswahl-Status
 	let selectedFiles: string[] = [];
 
-	// Beispieloptionen – kannst du natürlich dynamisch machen
 	const files = [
 		{ value: 'math', label: 'Mathematics' },
 		{ value: 'ai', label: 'Artificial Intelligence' },
@@ -44,7 +42,6 @@
 				</div>
 
 				<div class="mb-4">
-					<!-- MultiSelect mit Binding -->
 					<MultiSelect
 						selected={selectedFiles}
 						onSelect={(vals) => (selectedFiles = vals)}

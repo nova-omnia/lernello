@@ -32,7 +32,7 @@
 			{...$constraints.name}
 		/>
 		{#if $errors.name}
-			<p class="text-sm text-red-500">{$errors.name}</p>
+			<p class="text-error-500 text-sm">{$errors.name}</p>
 		{/if}
 	</label>
 
@@ -48,7 +48,7 @@
 			{...$constraints.description}
 		></textarea>
 		{#if $errors.description}
-			<p class="text-sm text-red-500">{$errors.description}</p>
+			<p class="text-error-500 text-sm">{$errors.description}</p>
 		{/if}
 	</label>
 
@@ -64,7 +64,7 @@
 			{...$constraints.context}
 		></textarea>
 		{#if $errors.context}
-			<p class="text-sm text-red-500">{$errors.context}</p>
+			<p class="text-error-500 text-sm">{$errors.context}</p>
 		{/if}
 	</label>
 
@@ -81,7 +81,7 @@
 			{...$constraints.deadlineDate}
 		/>
 		{#if $errors.deadlineDate}
-			<p class="text-sm text-red-500">{$errors.deadlineDate}</p>
+			<p class="text-error-500 text-sm">{$errors.deadlineDate}</p>
 		{/if}
 	</label>
 

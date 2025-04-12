@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import { UserRoundPlus } from 'lucide-svelte';
 
 	let trainees = $props();
 
@@ -28,12 +27,12 @@
 	let selectedTrainees = writable([]);
 
 	// Function to handle adding trainees
-	function addTrainees() {
+	/*function addTrainees() {
 		selectedTrainees.update((selected) => {
 			console.log('Selected trainees:', selected);
 			return [];
 		});
-	}
+	}*/
 </script>
 
 <div class="blox bg-s p-4">

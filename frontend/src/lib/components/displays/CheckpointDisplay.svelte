@@ -45,7 +45,7 @@
 <ConfirmDialog
 	isOpen={showDeleteDialog}
 	title="Confirm Deletion"
-	message={`Are you sure you want to delete this checkpoint?`}
+	message="Are you sure you want to delete this checkpoint?"
 	confirmText="Delete"
 	danger={true}
 	onConfirm={deleteCheckpoint}

@@ -39,7 +39,7 @@
 <ConfirmDialog
 	isOpen={showDeleteDialog}
 	title="Confirm Deletion"
-	message={`Are you sure you want to remove this trainee?`}
+	message="Are you sure you want to remove this trainee?"
 	confirmText="Delete"
 	danger={true}
 	onConfirm={removeTrainee}

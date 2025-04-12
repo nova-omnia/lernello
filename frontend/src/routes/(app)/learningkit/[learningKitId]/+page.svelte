@@ -114,7 +114,7 @@
 	<p class="text-primary-500 mt-5 text-sm font-semibold">Content</p>
 	<p class="mt-5 text-sm">The contents of the LearningKit</p>
 	<!-- foreach learningUnit-->
-	{#each $learningUnits as learningUnit}
+	{#each $learningUnits as learningUnit (learningUnit.uuid)}
 		<LearningUnitDisplay {learningUnit} />
 	{/each}
 	<CheckpointDisplay />
@@ -128,7 +128,7 @@
 	<p class="mt-5 text-sm">These Trainees have access to the course</p>
 
 	<div class="flex flex-col gap-2">
-		{#each selectedTrainees as trainee}
+		{#each selectedTrainees as trainee (trainee.uuid)}
 			<TraineeDisplay User={trainee} />
 		{/each}
 
@@ -146,7 +146,7 @@
 	<p class="text-primary-500 mt-5 text-sm font-semibold">Context</p>
 	<p class="mt-5 text-sm">The context provided to the AI assisting tools</p>
 	<div class="flex flex-col gap-2">
-		{#each selectedFiles as file}
+		{#each selectedFiles as file (file.uuid)}
 			<FileDisplay File={file} />
 		{/each}
 

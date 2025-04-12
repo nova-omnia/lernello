@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
+	import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
 	const { User } = $props();
 
-	function removeTrainee(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
+	let showDeleteDialog = $state(false);
+
+	function removeTrainee() {
 		//todo
+		//if (!trainee) return;
+
+		//await browserApiClient.req(removeTrainee, null, trainee.uuid);
+		//await invalidate('trainees:list');
+
+		showDeleteDialog = false;
 	}
 </script>
 
@@ -20,6 +29,22 @@
 	<button
 		type="button"
 		class="btn preset-filled-error-500 ml-1 rounded-full p-2"
-		onclick={removeTrainee}>Remove</button
+		onclick={(e) => {
+							e.preventDefault();
+							showDeleteDialog = true;
+						}}
+	>Remove</button
 	>
 </div>
+
+<ConfirmDialog
+		isOpen={showDeleteDialog}
+		title="Confirm Deletion"
+		message={`Are you sure you want to remove this trainee?`}
+		confirmText="Delete"
+		danger={true}
+		onConfirm={removeTrainee}
+		onCancel={() => {
+		showDeleteDialog = false;
+	}}
+/>

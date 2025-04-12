@@ -2,7 +2,10 @@
     import { AlignLeft, GripVertical } from 'lucide-svelte';
     import {browserApiClient} from "$lib/api/browserApiClient.js";
     import {getLearningUnitById, deleteLearningUnit, regenerateLearningUnit} from "$lib/api/collections/learningUnit";
-    import {goto} from "$app/navigation";
+    import {goto, invalidate} from "$app/navigation";
+    import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
+
+    let showDeleteDialog = $state(false);
 
     const {learningUnit} = $props();
 
@@ -18,7 +21,12 @@
     }
 
     async function deleteLearningUnitHandler() {
-        await browserApiClient.req(deleteLearningUnit, null, learningUnit.id);
+        if (!learningUnit) return;
+
+        await browserApiClient.req(deleteLearningUnit, null, learningUnit.uuid);
+        await invalidate('learningunits:list');
+
+        showDeleteDialog = false;
     }
 
 </script>
@@ -35,8 +43,24 @@
             </div>
         </div>
 
-        <button type="button" on:click={openLearningUnit} class="btn preset-filled-primary-500 ml-auto rounded-full p-2">Open</button>
-        <button type="button" on:click={regenerateLearningUnitHandler} class="btn preset-outlined-surface-500 bg-gray ml-1 rounded-full p-2">⚡Regenerate</button>
-        <button type="button" on:click={deleteLearningUnitHandler} class="btn preset-filled-error-500 ml-1 rounded-full p-2">Delete</button>
+        <button type="button" onclick={openLearningUnit} class="btn preset-filled-primary-500 ml-auto rounded-full p-2">Open</button>
+        <button type="button" onclick={regenerateLearningUnitHandler} class="btn preset-outlined-surface-500 bg-gray ml-1 rounded-full p-2">⚡Regenerate</button>
+        <button type="button" onclick={(e) => {
+							e.preventDefault();
+							showDeleteDialog = true;
+						}}
+                class="btn preset-filled-error-500 ml-1 rounded-full p-2">Delete</button>
     </div>
 </div>
+
+<ConfirmDialog
+        isOpen={showDeleteDialog}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete "${learningUnit?.name}"?`}
+        confirmText="Delete"
+        danger={true}
+        onConfirm={deleteLearningUnitHandler}
+        onCancel={() => {
+		showDeleteDialog = false;
+	}}
+/>

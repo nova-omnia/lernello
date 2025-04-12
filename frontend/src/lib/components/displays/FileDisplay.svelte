@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { File as FileIcon } from 'lucide-svelte';
-	import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
-	import {browserApiClient} from "$lib/api/browserApiClient";
-	import {invalidate} from "$app/navigation";
-	import {deleteFile} from "$lib/api/collections/file";
+	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { browserApiClient } from '$lib/api/browserApiClient';
+	import { invalidate } from '$app/navigation';
+	import { deleteFile } from '$lib/api/collections/file';
 	const { File } = $props();
 
 	let showDeleteDialog = $state(false);
@@ -24,21 +24,24 @@
 >
 	<FileIcon class="h-10 w-10" />
 	<p class="text-black-700 ml-3 text-xs font-bold">{File.name}</p>
-	<button type="button" onclick={(e) => {
-							e.preventDefault();
-							showDeleteDialog = true;
-						}}
-			class="btn preset-filled-error-500 ml-auto rounded-full p-2">Remove</button>
+	<button
+		type="button"
+		onclick={(e) => {
+			e.preventDefault();
+			showDeleteDialog = true;
+		}}
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2">Remove</button
+	>
 </div>
 
 <ConfirmDialog
-		isOpen={showDeleteDialog}
-		title="Confirm Deletion"
-		message={`Are you sure you want to remove "${File?.name}"?`}
-		confirmText="Delete"
-		danger={true}
-		onConfirm={removeFile}
-		onCancel={() => {
+	isOpen={showDeleteDialog}
+	title="Confirm Deletion"
+	message={`Are you sure you want to remove "${File?.name}"?`}
+	confirmText="Delete"
+	danger={true}
+	onConfirm={removeFile}
+	onCancel={() => {
 		showDeleteDialog = false;
 	}}
 />

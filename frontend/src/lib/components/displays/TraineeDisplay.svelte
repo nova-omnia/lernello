@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
-	import ConfirmDialog from "$lib/components/dialogs/ConfirmDialog.svelte";
+	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	const { User } = $props();
 
 	let showDeleteDialog = $state(false);
@@ -30,21 +30,20 @@
 		type="button"
 		class="btn preset-filled-error-500 ml-1 rounded-full p-2"
 		onclick={(e) => {
-							e.preventDefault();
-							showDeleteDialog = true;
-						}}
-	>Remove</button
+			e.preventDefault();
+			showDeleteDialog = true;
+		}}>Remove</button
 	>
 </div>
 
 <ConfirmDialog
-		isOpen={showDeleteDialog}
-		title="Confirm Deletion"
-		message={`Are you sure you want to remove this trainee?`}
-		confirmText="Delete"
-		danger={true}
-		onConfirm={removeTrainee}
-		onCancel={() => {
+	isOpen={showDeleteDialog}
+	title="Confirm Deletion"
+	message={`Are you sure you want to remove this trainee?`}
+	confirmText="Delete"
+	danger={true}
+	onConfirm={removeTrainee}
+	onCancel={() => {
 		showDeleteDialog = false;
 	}}
 />

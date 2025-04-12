@@ -5,52 +5,52 @@ import { z } from 'zod';
 const REQUEST_MAPPING = '/api/files';
 
 export const uploadFile = createEndpoint({
-    method: 'POST',
-    getPath: () => `${REQUEST_MAPPING}/upload`,
-    payload: {
-        schema: z.null(),
-        defaultValidate: false
-    },
-    response: {
-        schema: FileResSchema,
-        defaultValidate: true
-    }
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/upload`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema: FileResSchema,
+		defaultValidate: true
+	}
 });
 
 export const getById = createEndpoint({
-    method: 'GET',
-    getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
-    payload: {
-        schema: z.null(),
-        defaultValidate: false
-    },
-    response: {
-        schema: FileResSchema,
-        defaultValidate: true
-    }
+	method: 'GET',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema: FileResSchema,
+		defaultValidate: true
+	}
 });
 
 export const deleteFile = createEndpoint({
-    method: 'DELETE',
-    getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
-    payload: {
-        schema: z.null(),
-        defaultValidate: false
-    },
-    response: {
-        schema: z.string().uuid(),
-        defaultValidate: true
-    }
+	method: 'DELETE',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema: z.string().uuid(),
+		defaultValidate: true
+	}
 });
 export const getAllFiles = createEndpoint({
-    method: 'GET',
-    getPath: () => `${REQUEST_MAPPING}/all`,
-    payload: {
-        schema: z.null(),
-        defaultValidate: false
-    },
-    response: {
-        schema: FileResSchema.array(),
-        defaultValidate: true
-    }
+	method: 'GET',
+	getPath: () => `${REQUEST_MAPPING}/all`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema: FileResSchema.array(),
+		defaultValidate: true
+	}
 });

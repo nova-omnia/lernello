@@ -1,6 +1,10 @@
 <script lang="ts">
-	
-    const { trainees = [], open = false, onSelect, onClose } = $props<{
+	const {
+		trainees = [],
+		open = false,
+		onSelect,
+		onClose
+	} = $props<{
 		trainees: { uuid: string; username: string; name: string; surname: string }[];
 		open: boolean;
 		onSelect: (uuids: string[]) => void;

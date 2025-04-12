@@ -4,10 +4,10 @@
 	import MultiSelect from './MultiSelect.svelte';
 
 	// Auswahl-Status
-	let selectedTags: string[] = [];
+	let selectedFiles: string[] = [];
 
 	// Beispieloptionen – kannst du natürlich dynamisch machen
-	const tagOptions = [
+	const files = [
 		{ value: 'math', label: 'Mathematics' },
 		{ value: 'ai', label: 'Artificial Intelligence' },
 		{ value: 'ml', label: 'Machine Learning' },
@@ -46,10 +46,10 @@
 				<div class="mb-4">
 					<!-- MultiSelect mit Binding -->
 					<MultiSelect
-						selected={selectedTags}
-						onSelect={(vals) => (selectedTags = vals)}
-						options={tagOptions}
-						placeholder="Select tags..."
+						selected={selectedFiles}
+						onSelect={(vals) => (selectedFiles = vals)}
+						options={files}
+						placeholder="Select files..."
 					/>
 				</div>
 

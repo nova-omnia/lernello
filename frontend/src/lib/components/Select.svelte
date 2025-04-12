@@ -1,3 +1,4 @@
+<!--frontend/src/lib/components/Select.svelte-->
 <script lang="ts">
 	import { Check, ChevronDown, ChevronUp } from 'lucide-svelte';
 

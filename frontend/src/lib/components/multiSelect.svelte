@@ -1,83 +1,118 @@
-<!--frontend/src/lib/components/multiSelect.svelte-->
 <script lang="ts">
-	import { Combobox } from 'bits-ui';
-	import { ListChecks, Check, ChevronsDown, ChevronsUp, File } from 'lucide-svelte';
+	import { writable, derived } from 'svelte/store';
+	import { Check, ChevronDown, ChevronUp, X } from 'lucide-svelte';
 
-	type FileItem = {
-		name: string;
+	interface Option {
+		value: string;
+		label: string;
+	}
+
+	interface MultiSelectProps {
+		selected?: string[];
+		onSelect: (selected: string[]) => void;
+		options: Option[];
+		placeholder?: string;
+	}
+
+	// Nur Props definieren – nichts selbst überschreiben!
+	let {
+		selected = [],
+		onSelect,
+		options,
+		placeholder = 'Select...'
+	}: MultiSelectProps = $props();
+
+	let open = writable(false);
+	let searchValue = writable('');
+
+	const toggleDropdown = () => {
+		open.update((value) => !value);
 	};
 
-	const files: FileItem[] = [
-		{ name: 'File 1' },
-		{ name: 'File 2' },
-		{ name: 'File 3' },
-		{ name: 'File 4' },
-		{ name: 'File 5' },
-		{ name: 'File 6' },
-		{ name: 'File 7' },
-		{ name: 'File 8' },
-		{ name: 'File 9' },
-		{ name: 'File 10' }
-	];
+	const isSelected = (value: string) => selected.includes(value);
 
-	let searchValue = $state('');
+	const selectOption = (value: string) => {
+		const updated = isSelected(value)
+			? selected.filter((v) => v !== value)
+			: [...selected, value];
+		onSelect(updated);
+	};
 
-	const filteredFiles = $derived(
-		searchValue === ''
-			? files
-			: files.filter((file) => file.name.toLowerCase().includes(searchValue.toLowerCase()))
-	);
+	const removeSelection = (value: string) => {
+		onSelect(selected.filter((v) => v !== value));
+	};
+
+	const clearAll = () => {
+		onSelect([]);
+	};
+
+	// Jetzt wird `options` korrekt benutzt (aus Props)
+	const filteredOptions = derived(searchValue, ($searchValue) => {
+		return $searchValue
+			? options.filter((o) =>
+					o.label.toLowerCase().includes($searchValue.toLowerCase())
+			  )
+			: options;
+	});
 </script>
 
-<Combobox.Root
-	type="multiple"
-	onOpenChange={(o) => {
-		if (!o) searchValue = '';
-	}}
->
-	<div class="relative">
-		<File class="absolute start-3 top-1/2 size-6 -translate-y-1/2" />
-		<Combobox.Input
-			oninput={(e) => (searchValue = e.currentTarget.value)}
-			class="h-input rounded-9px border-border-input bg-surface-100-900 placeholder:text-foreground-alt/50 inline-flex w-full truncate border px-11 text-base transition-colors focus:outline-none focus:ring-0 sm:text-sm"
-			placeholder="Search a file"
-			aria-label="Search a file"
-		/>
-		<Combobox.Trigger class="absolute end-3 top-1/2 size-6 -translate-y-1/2">
-			<ListChecks class="text-muted-foreground size-6" />
-		</Combobox.Trigger>
-	</div>
-	<Combobox.Portal>
-		<Combobox.Content
-			class="focus-override border-muted bg-surface-100-900 shadow-popover outline-hidden z-50 max-h-55 w-[var(--bits-combobox-anchor-width)] min-w-[var(--bits-combobox-anchor-width)] select-none overflow-auto rounded-xl border px-1 py-3"
-			style="height: auto;"
-			sideOffset={10}
-		>
-			<Combobox.ScrollUpButton class="flex w-full items-center justify-center py-1">
-				<ChevronsUp class="size-3" />
-			</Combobox.ScrollUpButton>
-			<Combobox.Viewport class="p-1">
-				{#each filteredFiles as file, i (i + file.name)}
-					<Combobox.Item
-						class="rounded-button data-highlighted:bg-muted outline-hidden flex h-10 w-full select-none items-center py-3 pl-5 pr-1.5 text-sm capitalize"
-						value={file.name}
-					>
-						{#snippet children({ selected })}
-							{file.name}
-							{#if selected}
-								<div class="ml-auto">
-									<Check />
-								</div>
-							{/if}
-						{/snippet}
-					</Combobox.Item>
-				{:else}
-					<span class="block px-5 py-2 text-sm text-muted-foreground"> No results found </span>
+
+<div class="relative inline-block w-full">
+	<button
+		type="button"
+		onclick={toggleDropdown}
+		class="border-surface-200-800 flex w-full flex-wrap items-center justify-between gap-2 rounded border py-2 pr-3 pl-3 text-left focus:outline-none"
+	>
+		<div class="flex flex-wrap gap-1 max-w-[80%]">
+			{#if selected.length > 0}
+				{#each selected as val (val)}
+					<span class="bg-primary-100-900 text-sm rounded px-2 py-0.5 flex items-center gap-1">
+						{options.find((o) => o.value === val)?.label || val}
+						<X class="size-3 cursor-pointer" on:click={() => removeSelection(val)} />
+					</span>
 				{/each}
-			</Combobox.Viewport>
-			<Combobox.ScrollDownButton class="flex w-full items-center justify-center py-1">
-				<ChevronsDown class="size-3" />
-			</Combobox.ScrollDownButton>
-		</Combobox.Content>
-	</Combobox.Portal>
-</Combobox.Root>
+			{:else}
+				<span class="text-gray-400">{placeholder}</span>
+			{/if}
+		</div>
+        <span class="flex items-center gap-2">
+            {#if selected.length > 0}
+                <X size={16} onclick={clearAll} class="cursor-pointer text-muted-foreground" />
+            {/if}
+            {#if $open}
+                <ChevronUp size={20} />
+            {:else}
+                <ChevronDown size={20} />
+            {/if}
+        </span>
+    </button>
+
+    {#if $open}
+        <div class="absolute z-10 mt-1 w-full rounded border bg-surface-100-900 shadow-lg">
+            <input
+                type="text"
+                placeholder="Search..."
+                bind:value={$searchValue}
+                class="w-full border-b px-3 py-2 outline-none"
+            />
+            <ul class="max-h-60 overflow-auto">
+                {#each $filteredOptions as option (option.value)}
+                    <li>
+                        <button
+                            type="button"
+                            onclick={() => selectOption(option.value)}
+                            class="hover:bg-surface-200-800 flex w-full items-center justify-between px-3 py-2 text-left focus:outline-none"
+                        >
+                            <span>{option.label}</span>
+                            {#if isSelected(option.value)}
+                                <Check size={16} class="text-primary-900-100" />
+                            {/if}
+                        </button>
+                    </li>
+                {:else}
+                    <li class="px-3 py-2 text-muted-foreground text-sm">No options found</li>
+                {/each}
+            </ul>
+        </div>
+    {/if}
+</div>

@@ -33,7 +33,7 @@
 			<Separator.Root class="bg-muted -mx-5 mb-6 mt-5 block h-px" />
 
 			<form>
-				<div class="mb-4">
+				<div class="mb-4 text-primary-600-400">
 					<input
 						type="text"
 						placeholder="Enter the Topic here..."
@@ -41,7 +41,7 @@
 					/>
 				</div>
 
-				<div class="mb-4">
+				<div class="mb-4 text-primary-600-400">
 					<MultiSelect
 						selected={selectedFiles}
 						onSelect={(vals) => (selectedFiles = vals)}

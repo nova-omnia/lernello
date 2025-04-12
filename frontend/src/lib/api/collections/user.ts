@@ -5,6 +5,7 @@ import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordDat
 import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
 import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
+import { AddTraineeSchema } from '$lib/schemas/request/AddTraineeSchema';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -55,14 +56,24 @@ export const addTrainee = createEndpoint({
 		defaultValidate: true
 	},
 	payload: {
-		schema: z.object({
-			email: z.string().email().nonempty(),
-			name: z.string().nonempty(),
-			surname: z.string().nonempty()
-		}),
+		schema: AddTraineeSchema,
 		defaultValidate: false
 	}
 });
+
+export const deleteTrainee = createEndpoint({
+	method: 'DELETE',
+	getPath: (id: string) => `${REQUEST_MAPPING}/delete-trainee/${id}`,
+	response: {
+		schema: z.null(),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
 
 export const setUserLocale = createEndpoint({
 	method: 'POST',

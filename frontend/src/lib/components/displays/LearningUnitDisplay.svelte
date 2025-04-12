@@ -37,7 +37,7 @@
 <div class="flex items-center p-1">
 	<GripVertical color="gray" class="h-10 w-10" />
 	<div
-		class="Learning-Unit-Display preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
+		class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
 	>
 		<div class="flex items-start">
 			<AlignLeft class="h-10 w-10" />

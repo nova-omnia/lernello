@@ -21,7 +21,7 @@ export const deleteLearningUnit = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
-		schema: z.string().uuid(),
+		schema: z.null(),
 		defaultValidate: true
 	},
 	payload: {
@@ -54,3 +54,5 @@ export const applyBlockActions = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+

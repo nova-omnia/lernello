@@ -1,23 +1,25 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { browserApiClient } from '$lib/api/browserApiClient';
+	import { deleteTrainee } from '$lib/api/collections/user';
+	import { invalidate } from '$app/navigation';
 	const { User } = $props();
 
 	let showDeleteDialog = $state(false);
 
-	function removeTrainee() {
-		//todo
-		//if (!trainee) return;
+	async function removeTrainee() {
+		if (!User) return;
 
-		//await browserApiClient.req(removeTrainee, null, trainee.uuid);
-		//await invalidate('trainees:list');
+		await browserApiClient.req(deleteTrainee, null, User.uuid);
+		await invalidate('trainees:list');
 
 		showDeleteDialog = false;
 	}
 </script>
 
 <div
-	class="Trainee-Display preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
+	class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
 >
 	<Avatar name="{User.surname} {User.name}" src={User.avatar} classes="h-11 w-11" />
 

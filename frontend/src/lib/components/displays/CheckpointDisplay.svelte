@@ -5,20 +5,19 @@
 	let showDeleteDialog = $state(false);
 
 	function deleteCheckpoint() {
-		//todo
-		//if (!checkpoint) return;
+		// if (!checkpoint) return;
 
-		//await browserApiClient.req(removeCheckpoint, null, checkpoint.uuid);
-		//await invalidate('checkpoints:list');
+		// await browserApiClient.req(removeCheckpoint, null, checkpoint.uuid);
+		// await invalidate('checkpoints:list');
 
-		showDeleteDialog = false;
+		// showDeleteDialog = false;
 	}
 </script>
 
 <div class="flex items-center p-1">
 	<GripVertical color="gray" class="h-10 w-10" />
 	<div
-		class="Learning-Unit-Display preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
+		class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
 	>
 		<div class="flex items-start">
 			<Lock class="h-10 w-10" />

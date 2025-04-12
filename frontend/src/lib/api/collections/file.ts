@@ -38,13 +38,13 @@ export const deleteFile = createEndpoint({
 		defaultValidate: false
 	},
 	response: {
-		schema: z.string().uuid(),
+		schema: z.null(),
 		defaultValidate: true
 	}
 });
 export const getAllFiles = createEndpoint({
 	method: 'GET',
-	getPath: () => `${REQUEST_MAPPING}/all`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	payload: {
 		schema: z.null(),
 		defaultValidate: false

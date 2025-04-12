@@ -9,7 +9,6 @@
 	let showDeleteDialog = $state(false);
 
 	async function removeFile() {
-		//todo
 		if (!File) return;
 
 		await browserApiClient.req(deleteFile, null, File.uuid);

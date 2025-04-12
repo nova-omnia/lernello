@@ -14,6 +14,6 @@
 	classes="w-full flex flex-col items-center justify-center rounded-border"
 >
 	{#snippet iconInterface()}<IconUpload class="size-8" />{/snippet}
-	{#snippet iconFile()}<IconFile class="h-10 w-10" />{/snippet}
-	{#snippet iconFileRemove()}<IconRemove class="h-5 w-5" />{/snippet}
+	{#snippet iconFile()}<IconFile class="size-7" />{/snippet}
+	{#snippet iconFileRemove()}<IconRemove class="size-7" />{/snippet}
 </FileUpload>

@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 
 export const LearningKitResSchema = z.object({
-	uuid: z.string().uuid(),
+	uuid: z.string().uuid().nonempty(),
 	name: z.string().nonempty(),
-	learningUnits: z.array(LearningUnitResSchema).optional(),
-	description: z.string().optional().nullable(),
+	learningUnits: z.array(LearningUnitResSchema).nullable(),
+	description: z.string().nullable(),
 	deadlineDate: z
 		.string()
 		.datetime({

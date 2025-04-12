@@ -1,0 +1,18 @@
+{
+	"dashboard.welcome": "Buongiorno!",
+	"error.title": "Errore",
+	"error.description": "Ops, qualcosa è andato storto. ({status})",
+	"login.title": "Accedi",
+	"login.signIn": "Accedi",
+	"form.emailLabel": "Email",
+	"form.emailPlaceholder": "email",
+	"form.passwordLabel": "Password",
+	"form.passwordPlaceholder": "password",
+	"form.newPasswordLabel": "Nuova password",
+	"form.newPasswordPlaceholder": "nuova password",
+	"form.confirmPasswordLabel": "Conferma password",
+	"form.confirmPasswordPlaceholder": "conferma password",
+	"changePassword.title": "Cambia la tua password",
+	"changePassword.description": "Per favore, cambia la password generata con una tua password.",
+	"changePassword.button": "Cambia la password"
+}

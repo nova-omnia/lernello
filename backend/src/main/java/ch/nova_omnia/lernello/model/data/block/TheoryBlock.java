@@ -9,19 +9,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
+
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class TheoryBlock extends Block {
 
     @Lob
     @NotBlank
-    @Column(name = "content")
+    @Column(name = "content", nullable = true)
     private String content;
 
     public TheoryBlock(String name, int position, LearningUnit learningUnit, String content) {
-        super(name, position, learningUnit);
+        super(THEORY, name, position, learningUnit);
         this.content = content;
     }
 }

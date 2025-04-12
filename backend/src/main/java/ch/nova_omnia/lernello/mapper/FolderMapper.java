@@ -14,6 +14,5 @@ public interface FolderMapper {
     @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "parentFolder", ignore = true)
     @Mapping(target = "subFolders", ignore = true)
-    @Mapping(target = "learningKits", ignore = true)
     Folder toEntity(CreateFolderDTO createFolderDTO);
 }

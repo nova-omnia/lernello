@@ -1,16 +1,15 @@
 import { z } from 'zod';
 
 export const LearningKitResSchema = z.object({
-	uuid: z.string().uuid().nonempty(),
+	uuid: z.string().uuid(),
 	name: z.string().nonempty(),
-	learningUnits: z.array(z.any()).optional(), //ToDo
-	description: z.string().optional(),
-	deadlineDate: z.preprocess(
-		(val) => (typeof val === 'string' ? new Date(val) : undefined),
-		z.date().optional()
-	),
-	language: z.string().nonempty(),
-	participants: z.array(z.string().uuid()),
-	folderId: z.string().uuid().nullable()
+	description: z.string().nullable(),
+	deadlineDate: z
+		.string()
+		.datetime({
+			offset: true
+		})
+		.nullable(),
+	context: z.string().nullable()
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;

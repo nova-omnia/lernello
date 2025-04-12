@@ -1,17 +1,12 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { getContext } from 'svelte';
-	import { type ToastContext } from '@skeletonlabs/skeleton-svelte';
-	const toast: ToastContext = getContext('toast');
-	// TODO: Re-enable file upload later
-	// import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	// import IconUpload from '@lucide/svelte/icons/upload';
+	import { toaster } from '$lib/states/toasterState.svelte.js';
 
 	let { data } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onError: (error) => {
 			console.error('Error:', error.result.error);
-			toast.create({
+			toaster.create({
 				title: 'Error',
 				description: `Uh oh, something went wrong. (${error.result.status})`,
 				type: 'error'
@@ -37,9 +32,10 @@
 			{...$constraints.name}
 		/>
 		{#if $errors.name}
-			<p class="text-sm text-red-500">{$errors.name}</p>
+			<p class="text-error-500 text-sm">{$errors.name}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Description <i>– Optional</i></span>
 		<textarea
@@ -52,9 +48,10 @@
 			{...$constraints.description}
 		></textarea>
 		{#if $errors.description}
-			<p class="text-sm text-red-500">{$errors.description}</p>
+			<p class="text-error-500 text-sm">{$errors.description}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Context <i>– Optional</i></span>
 		<textarea
@@ -67,9 +64,10 @@
 			{...$constraints.context}
 		></textarea>
 		{#if $errors.context}
-			<p class="text-sm text-red-500">{$errors.context}</p>
+			<p class="text-error-500 text-sm">{$errors.context}</p>
 		{/if}
 	</label>
+
 	<label class="label">
 		<span class="label-text">Deadline <i>– Optional</i></span>
 		<input
@@ -83,9 +81,10 @@
 			{...$constraints.deadlineDate}
 		/>
 		{#if $errors.deadlineDate}
-			<p class="text-sm text-red-500">{$errors.deadlineDate}</p>
+			<p class="text-error-500 text-sm">{$errors.deadlineDate}</p>
 		{/if}
 	</label>
-	<button class="btn preset-filled-primary-400-600 w-full">Create</button>
+
+	<button class="btn preset-filled-primary-400-600 w-full">Create Learning Kit </button>
 	<SuperDebug data={$form} />
 </form>

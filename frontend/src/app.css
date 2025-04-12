@@ -28,4 +28,8 @@
 			font-size: var(--text-xl);
 		}
 	}
+
+	.floating {
+		@apply absolute top-0 left-0 max-w-max;
+	}
 }

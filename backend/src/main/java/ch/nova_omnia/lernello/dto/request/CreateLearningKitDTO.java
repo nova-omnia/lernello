@@ -4,11 +4,12 @@ import java.time.ZonedDateTime;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-public record CreateLearningKitDTO(
-                                   @NotNull @Size(min = 3, max = 40) String name,
-                                   String description,
-                                   ZonedDateTime deadlineDate,
-                                   String context
-) {
+@Data
+public class CreateLearningKitDTO {
+    @NotNull @Size(min = 3, max = 40) String name;
+    String description;
+    ZonedDateTime deadlineDate;
+    String context;
 }

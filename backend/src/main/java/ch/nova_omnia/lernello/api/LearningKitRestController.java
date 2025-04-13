@@ -77,7 +77,7 @@ public class LearningKitRestController {
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid LearningKitResDTO update(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
         LearningKit entity = learningKitMapper.toEntity(updateLearningKit);
-        LearningKit savedEntity = learningKitService.update(entity, updateLearningKit.participants(), updateLearningKit.files());
+        LearningKit savedEntity = learningKitService.update(entity, updateLearningKit.getParticipants(), updateLearningKit.getFiles());
         return learningKitMapper.toDTO(savedEntity);
     }
 }

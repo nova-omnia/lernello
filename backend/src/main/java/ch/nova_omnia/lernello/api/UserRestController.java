@@ -82,7 +82,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/trainee/delete/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_user:write')")
     public void deleteTrainee(
                               @PathVariable UUID id
     ) {

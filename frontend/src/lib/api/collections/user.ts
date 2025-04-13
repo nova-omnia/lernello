@@ -50,7 +50,7 @@ export const getUserInfo = createEndpoint({
 
 export const addTrainee = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/add`,
+	getPath: () => `${REQUEST_MAPPING}/trainee/add`,
 	response: {
 		schema: ParticipantUserSchema,
 		defaultValidate: true

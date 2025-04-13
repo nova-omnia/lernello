@@ -14,15 +14,16 @@
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
+	import type {ParticipantUser} from "$lib/schemas/response/ParticipantUser";
+	import type {FileRes} from "$lib/schemas/response/FileRes";
+	import {getAllTrainees} from "$lib/api/collections/user";
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
 	const learningUnits = $state(data.kitToDisplay.learningUnits || []);
-	let selectedTrainees = $state<
-		{ uuid: string; username: string; name: string; surname: string }[]
-	>([]);
-	let selectedFiles = $state<{ uuid: string; name: string }[]>([]);
+	let selectedTrainees = $state<ParticipantUser[]>([]);
+	let selectedFiles = $state<FileRes[]>([]);
 	let showDeleteDialog = $state(false);
 
 	let showTraineeModal = $state(false);
@@ -160,6 +161,7 @@
 		showTraineeModal = false;
 	}}
 	onClose={() => (showTraineeModal = false)}
+	allTrainees={data.allTrainees}
 />
 
 <FileSelectModal

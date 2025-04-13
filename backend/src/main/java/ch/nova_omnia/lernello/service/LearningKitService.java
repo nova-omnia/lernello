@@ -24,7 +24,6 @@ public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
-    private final LearningKitMapper learningKitMapper;
 
     public List<LearningKit> findAll() {
         return learningKitRepository.findAll();

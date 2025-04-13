@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
+import lombok.Data;
 
-public record UpdateLearningKitDTO(
-                                   List<UUID> participants,
-                                   List<UUID> files) {
+@Data
+public class UpdateLearningKitDTO extends CreateLearningKitDTO {
+    List<UUID> participants;
+    List<UUID> files;
 }

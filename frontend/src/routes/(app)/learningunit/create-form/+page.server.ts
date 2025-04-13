@@ -20,6 +20,6 @@ export const actions = {
 
 		const learningUnit = await serverApiClient.req(createLearningUnit, form.data);
 
-		return redirect(303, `/learningUnit/${learningUnit.uuid}`);
+		return redirect(303, `/learningunit/${learningUnit.uuid}`);
 	})
 } satisfies Actions;

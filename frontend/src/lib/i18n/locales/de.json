@@ -1,4 +1,8 @@
 {
+	"common.cancel": "Abbrechen",
+	"common.save": "Speichern",
+	"common.delete": "Löschen",
+	"common.edit": "Bearbeiten",
 	"dashboard.welcome": "Guten Morgen!",
 	"error.title": "Fehler",
 	"error.description": "Hoppla, etwas ist schief gelaufen. ({status})",
@@ -19,5 +23,7 @@
 	"block.theoryBlock": "Theorieblock",
 	"changePassword.title": "Ändere dein Passwort",
 	"changePassword.description": "Bitte ändere dein generiertes Passwort in ein eigenes Passwort.",
-	"changePassword.button": "Passwort ändern"
+	"changePassword.button": "Passwort ändern",
+	"blocks.delete_title": "Block löschen",
+	"blocks.delete_message": "Sind Sie sicher, dass Sie diesen Block löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
 }

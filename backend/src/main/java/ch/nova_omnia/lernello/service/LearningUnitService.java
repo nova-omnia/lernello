@@ -129,7 +129,7 @@ public class LearningUnitService {
         boolean removed = learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(blockUuid));
 
         if (!removed) {
-            System.out.println("Block with ID " + removeAction.blockId() + " not found.");
+            throw new IllegalArgumentException("Block with ID " + removeAction.blockId() + " not found");
         }
     }
 

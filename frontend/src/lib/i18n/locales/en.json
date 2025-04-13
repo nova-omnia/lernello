@@ -14,5 +14,13 @@
 	"form.confirmPasswordPlaceholder": "confirm password",
 	"changePassword.title": "Change your Password",
 	"changePassword.description": "Please change your generated password to your own password.",
-	"changePassword.button": "Change Password"
+	"changePassword.button": "Change Password",
+	"dialog.creationWizardTitle": "Creation Wizard",
+	"dialog.enterTopicPlaceholder": "Enter the Topic here...",
+	"dialog.selectFilesPlaceholder": "Select files...",
+	"dialog.saveButton": "Save",
+	"dialog.closeButton": "Close",
+	"multiSelect.placeholder": "Select...",
+	"multiSelect.searchPlaceholder": "Search...",
+	"multiSelect.noOptionsFound": "No options found"
 }

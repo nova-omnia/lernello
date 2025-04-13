@@ -1,3 +1,4 @@
+<!--frontend/src/lib/components/Select.svelte-->
 <script lang="ts">
 	import { Check, ChevronDown, ChevronUp } from 'lucide-svelte';
 
@@ -58,7 +59,6 @@
 					>
 						<span class="truncate">
 							{@render figure(option.label)}
-							<!-- Pass 'option' to the slot -->
 						</span>
 						<span class="w-5 flex-shrink-0 text-right">
 							{#if option.label === selected}

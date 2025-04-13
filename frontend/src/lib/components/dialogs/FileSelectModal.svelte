@@ -3,6 +3,7 @@
 	import { getAllFiles } from '$lib/api/collections/file';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
+	import { _ } from 'svelte-i18n';
 
 	interface FileSelectModalProps {
 		isOpen: boolean;
@@ -56,14 +57,14 @@
 	{#snippet content()}
 		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded bg-white p-6 shadow-xl">
-				<h2 class="mb-4 text-lg font-bold">Select Files</h2>
+				<h2 class="mb-4 text-lg font-bold">{$_("selectFiles")}</h2>
 
 				<div class="max-h-64 overflow-auto">
 					<table class="table w-full">
 						<thead>
 							<tr>
-								<th>Select</th>
-								<th>Name</th>
+								<th>{$_('select')}</th>
+								<th>{$_('name')}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,14 +86,14 @@
 						onclick={() => {
 							onClose();
 							selectedFiles = [];
-						}}>Cancel</button
+						}}>{$_('cancel')}</button
 					>
 					<button
 						class="btn btn-primary"
 						onclick={() => {
 							onSelect(selectedFiles);
 							selectedFiles = [];
-						}}>Add Selected</button
+						}}>{$_('addSelected')}</button
 					>
 				</div>
 			</div>

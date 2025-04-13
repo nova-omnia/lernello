@@ -30,5 +30,14 @@
 	"trainee.add": "Add Trainee",
 	"edit": "Edit",
 	"delete": "Delete",
-	"content": "Content"
+	"content": "Content",
+	"selectFiles": "Select files",
+	"button.cancel": "Cancel",
+	"button.save": "Save",
+	"button.addSelected": "Add selected",
+	"selectTrainees": "Select trainees",
+	"select" : "Select",
+	"username": "Username",
+	"name": "Name",
+	"surname" : "Surname"
 }

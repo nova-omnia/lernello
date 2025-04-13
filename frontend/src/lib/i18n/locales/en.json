@@ -1,4 +1,8 @@
 {
+	"common.cancel": "Cancel",
+	"common.save": "Save",
+	"common.delete": "Delete",
+	"common.edit": "Edit",
 	"dashboard.welcome": "Good Morning!",
 	"error.title": "Error",
 	"error.description": "Uh oh, something went wrong. ({status})",
@@ -17,5 +21,7 @@
 	"learningunit.createButton": "Create Learning Unit",
 	"changePassword.title": "Change your Password",
 	"changePassword.description": "Please change your generated password to your own password.",
-	"changePassword.button": "Change Password"
+	"changePassword.button": "Change Password",
+	"blocks.delete_title": "Delete Block",
+	"blocks.delete_message": "Are you sure you want to delete this block? This action cannot be undone."
 }

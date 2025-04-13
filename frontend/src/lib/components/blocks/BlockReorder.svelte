@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import BlockReorderItem from '$lib/components/blocks/BlockReorderItem.svelte';
@@ -41,7 +42,7 @@
 </script>
 
 <div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
-	<h2 class="h2">Reorder Blocks</h2>
+	<h2 class="h2">{$_('learningunit.reorderBlocks')}</h2>
 	<div
 		class="space-y-2 rounded-lg"
 		use:dragHandleZone={{

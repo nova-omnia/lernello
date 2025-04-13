@@ -11,6 +11,7 @@
 		useInteractions,
 		useRole
 	} from '@skeletonlabs/floating-ui-svelte';
+	import { _ } from 'svelte-i18n';
 	import { PlusCircle } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
@@ -132,7 +133,7 @@
 						addTheoryBlock();
 					}}
 				>
-					Theory Block
+					{$_('block.theoryBlock')}
 				</button>
 				<button
 					type="button"
@@ -141,7 +142,7 @@
 						addMultipleChoiceBlock();
 					}}
 				>
-					Multiple Choice Quiz
+					{$_('block.multipleChoiceQuiz')}
 				</button>
 				<button
 					type="button"
@@ -153,7 +154,7 @@
 						);
 					}}
 				>
-					Text Answer Quiz
+					{$_('block.textAnswerQuiz')}
 				</button>
 			</div>
 			<FloatingArrow bind:ref={elemArrow} context={floating.context} fill="#575969" />

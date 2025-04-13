@@ -12,36 +12,36 @@
 
 	const { isOpen, onSelect, onClose }: FileSelectModalProps = $props();
 
+	let availableFiles = $state<FileRes[]>([]);
 	let selectedFiles = $state<string[]>([]);
 
 	// browserApiClient.on('fileSelected', (uuids: string[]) => {
 	// 	selectedFiles = uuids;
 	// });
 
-	// Dummy data for files
-	let availableFiles = $state<FileRes[]>([]);
 
 	$effect(() => {
 		if (isOpen) {
 			async function asyncWrapper() {
-				// const data = await browserApiClient.req(getAllFiles);
-				availableFiles = [
-					{ uuid: '1', name: 'File 1' },
-					{ uuid: '2', name: 'File 2' },
-					{ uuid: '3', name: 'File 3' },
-					{ uuid: '4', name: 'File 4' },
-					{ uuid: '5', name: 'File 5' },
-					{ uuid: '6', name: 'File 6' },
-					{ uuid: '7', name: 'File 7' },
-					{ uuid: '8', name: 'File 8' },
-					{ uuid: '9', name: 'File 9' },
-					{ uuid: '10', name: 'File 10' },
-					{ uuid: '11', name: 'File 11' },
-					{ uuid: '12', name: 'File 12' },
-					{ uuid: '13', name: 'File 13' },
-					{ uuid: '14', name: 'File 14' },
-					{ uuid: '15', name: 'File 15' }
-				];
+				const data = await browserApiClient.req(getAllFiles, null);
+				// availableFiles = [
+				// 	{ uuid: '1', name: 'File 1' },
+				// 	{ uuid: '2', name: 'File 2' },
+				// 	{ uuid: '3', name: 'File 3' },
+				// 	{ uuid: '4', name: 'File 4' },
+				// 	{ uuid: '5', name: 'File 5' },
+				// 	{ uuid: '6', name: 'File 6' },
+				// 	{ uuid: '7', name: 'File 7' },
+				// 	{ uuid: '8', name: 'File 8' },
+				// 	{ uuid: '9', name: 'File 9' },
+				// 	{ uuid: '10', name: 'File 10' },
+				// 	{ uuid: '11', name: 'File 11' },
+				// 	{ uuid: '12', name: 'File 12' },
+				// 	{ uuid: '13', name: 'File 13' },
+				// 	{ uuid: '14', name: 'File 14' },
+				// 	{ uuid: '15', name: 'File 15' }
+				// ];
+				availableFiles = data;
 			}
 			asyncWrapper();
 		}
@@ -54,7 +54,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded bg-white p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">Select Files</h2>
 

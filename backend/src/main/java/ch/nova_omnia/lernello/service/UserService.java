@@ -2,6 +2,7 @@ package ch.nova_omnia.lernello.service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,5 +65,35 @@ public class UserService {
 
     public List<User> findAllTrainees() {
         return userRepository.findAllByRole(User.Role.TRAINEE);
+    }
+
+    public User addTrainee(String username, String name, String surname) {
+        User user = new User();
+        user.setUsername(username);
+        user.setSurname(surname);
+        user.setName(name);
+        user.setRole(User.Role.TRAINEE);
+        user.setPassword(passwordEncoder.encode("defaultPassword"));
+        user.setChangedPassword(false);
+        userRepository.save(user);
+        return user;
+    }
+
+    public void deleteTrainee(UUID uuid) {
+        User user = userRepository.findByUuid(uuid);
+        if (user != null) {
+            userRepository.delete(user);
+        }
+    }
+
+    public User editTrainee(String username, String name, String surname) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            user.setUsername(username);
+            user.setName(name);
+            user.setSurname(surname);
+            userRepository.save(user);
+        }
+        return user;
     }
 }

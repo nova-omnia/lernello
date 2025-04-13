@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { browserApiClient } from '$lib/api/browserApiClient';
+	import { getAllTrainees } from '$lib/api/collections/user';
+	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	interface TraineeSelectModalProps {
 		isOpen: boolean;
@@ -8,9 +11,7 @@
 
 	const { isOpen, onSelect, onClose }: TraineeSelectModalProps = $props();
 
-	let existingTrainees = $state<
-		{ uuid: string; username: string; name: string; surname: string }[]
-	>([]);
+	let existingTrainees = $state<ParticipantUser[]>([]);
 	let selectedTrainees = $state<string[]>([]);
 
 	// browserApiClient.on('traineeSelected', (uuids: string[]) => {
@@ -20,21 +21,8 @@
 	$effect(() => {
 		if (isOpen) {
 			async function asyncWrapper() {
-				// const data = await browserApiClient.req(getAllUsers);
-				existingTrainees = [
-					{ uuid: '1', username: 'john.doe@example.com', name: 'Garbor', surname: 'John' },
-					{ uuid: '2', username: 'jane.doe@example.com', name: 'Doedor', surname: 'Jane' },
-					{ uuid: '3', username: 'jane.doe@example.com', name: 'Max', surname: 'Sander' },
-					{ uuid: '4', username: 'jane.doe@example.com', name: 'Bea', surname: 'Tilder' },
-					{ uuid: '5', username: 'jane.doe@example.com', name: 'Tony', surname: 'Blair' },
-					{ uuid: '6', username: 'jane.doe@example.com', name: 'John', surname: 'Clark' },
-					{ uuid: '7', username: 'jane.doe@example.com', name: 'Adam', surname: 'Smith' },
-					{ uuid: '8', username: 'jane.doe@example.com', name: 'Friz', surname: 'Taylor' },
-					{ uuid: '9', username: 'jane.doe@example.com', name: 'Sasha', surname: 'Leon' },
-					{ uuid: '10', username: 'jane.doe@example.com', name: 'Selina', surname: 'Brown' },
-					{ uuid: '11', username: 'jane.doe@example.com', name: 'Carola', surname: 'Brown' },
-					{ uuid: '12', username: 'jane.doe@example.com', name: 'Tom', surname: 'Frisch' }
-				];
+				const data = await browserApiClient.req(getAllTrainees, null);
+				existingTrainees = data;
 			}
 			asyncWrapper();
 		}
@@ -47,7 +35,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded bg-white p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">Select Trainees</h2>
 
@@ -76,7 +64,16 @@
 					</table>
 				</div>
 
-				<div class="mt-4 flex justify-end gap-2">
+				<div class="mt-4 flex justify-betweeen items-center">
+					<button
+                        class="btn btn-secondary flex items-center gap-2 "
+                        onclick={() => {
+            
+                
+                        }}
+                    >
+                        <span class="text-xl font-bold">+</span> Add New Trainee
+                    </button>
 					<button
 						class="btn"
 						onclick={() => {

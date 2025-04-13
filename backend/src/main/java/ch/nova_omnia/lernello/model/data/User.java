@@ -43,13 +43,13 @@ public class User{
     @Email
     private String username;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
-    private String firstName;
+    private String name;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "surname", nullable = false)
     @NotBlank
-    private String lastName;
+    private String surname;
 
     @Column(name = "password", nullable = false)
     @NotBlank
@@ -81,10 +81,10 @@ public class User{
     @Transient
     private ZonedDateTime expires;
 
-    public User(String username, String firstName, String lastName, String password, String locale, Role role) {
+    public User(String username, String surname, String name, String password, String locale, Role role) {
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.surname = surname;
+        this.name = name;
         this.password = password;
         this.locale = locale;
         this.role = role;

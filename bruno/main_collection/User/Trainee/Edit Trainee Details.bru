@@ -1,0 +1,20 @@
+meta {
+  name: Edit Trainee Details
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/user/trainee/edit
+  body: json
+  auth: inherit
+}
+
+body:json {
+  
+  {
+    "username": "test@example.com",
+    "name": "Sebastian",
+    "surname": "Doe"
+  }
+}

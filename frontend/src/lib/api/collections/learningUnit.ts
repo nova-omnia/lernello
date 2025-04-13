@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { BlockActionSchema } from '$lib/schemas/request/BlockAction';
 import { createEndpoint } from '../createEndpoint';
+import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUnit';
 
 const REQUEST_MAPPING = '/api/learning-unit';
 
@@ -27,6 +28,19 @@ export const applyBlockActions = createEndpoint({
 	},
 	payload: {
 		schema: z.array(BlockActionSchema),
+		defaultValidate: false
+	}
+});
+
+export const createLearningUnit = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/create`,
+	response: {
+		schema: LearningUnitResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: CreateLearningUnitSchema,
 		defaultValidate: false
 	}
 });

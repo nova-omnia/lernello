@@ -16,7 +16,6 @@
 		mutationKey: ['learning-kit', 'delete'],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ['learning-kits-list'] });
-			console.log('Invalidating learning-kits list');
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});

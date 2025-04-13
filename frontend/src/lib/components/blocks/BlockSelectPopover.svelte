@@ -20,8 +20,9 @@
 
 	interface BlockSelectPopoverProps {
 		index: number;
+		learningUnitId: string;
 	}
-	const { index }: BlockSelectPopoverProps = $props();
+	const { index, learningUnitId }: BlockSelectPopoverProps = $props();
 	const insertIndex = index + 1;
 
 	// State
@@ -70,7 +71,7 @@
 				type: BlockType.Enum.THEORY,
 				name: 'Theory Block',
 				position: 0,
-				learningUnitId: '',
+				learningUnitId: learningUnitId,
 				content: 'placeholder'
 			}
 		};
@@ -87,7 +88,7 @@
 				type: BlockType.Enum.MULTIPLE_CHOICE,
 				name: 'Multiple Choice Quiz',
 				position: 0,
-				learningUnitId: '',
+				learningUnitId: learningUnitId,
 				question: 'placeholder question?',
 				possibleAnswers: ['A', 'B'],
 				correctAnswers: ['A']

@@ -5,9 +5,9 @@ import { message, setError, superValidate, type Infer } from 'sveltekit-superfor
 import { zod } from 'sveltekit-superforms/adapters';
 import { isLoggedIn, parseRedirectTo } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
-import { publicApiClient } from '$lib/api/publicApiClient';
 import { signin } from '$lib/api/collections/auth';
 import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
+import { api } from '$lib/api/apiClient.js';
 
 export const load = async ({ url }) => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
@@ -24,7 +24,7 @@ export const load = async ({ url }) => {
 type Message = { redirectTo: string; tokenInfo?: LoggedInUser };
 
 export const actions = {
-	login: handleApiError(async ({ request, cookies, url }) => {
+	login: handleApiError(async ({ request, cookies, url, fetch }) => {
 		const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(
 			request,
 			zod(UserLoginSchema)
@@ -33,7 +33,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 		try {
-			const loggedInUserRes = await publicApiClient.reqRaw(signin, form.data, undefined);
+			const loggedInUserRes = await api(fetch).req(signin, form.data, undefined).response;
 			const loggedInUserResJson = await loggedInUserRes.json();
 			const loggedInUser = signin.response.schema.parse(loggedInUserResJson);
 			const expiresDate = new Date(loggedInUser.expires);

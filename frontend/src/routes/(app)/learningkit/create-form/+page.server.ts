@@ -3,8 +3,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail, redirect } from '@sveltejs/kit';
 import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
-import { serverApiClient } from '$lib/api/serverApiClient';
 import { createLearningKit } from '$lib/api/collections/learningKit';
+import { api } from '$lib/api/apiClient';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateLearningKitSchema));
@@ -12,13 +12,13 @@ export const load = async () => {
 };
 
 export const actions = {
-	create: handleApiError(async ({ request }) => {
+	create: handleApiError(async ({ request, fetch }) => {
 		const form = await superValidate(request, zod(CreateLearningKitSchema));
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		const learningKit = await serverApiClient.req(createLearningKit, form.data);
+		const learningKit = await api(fetch).req(createLearningKit, form.data).parse();
 
 		return redirect(303, `/learningkit/${learningKit.uuid}`);
 	})

@@ -2,15 +2,25 @@
 	import { _ } from 'svelte-i18n';
 	import { Plus, Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { deleteLearningKit, getAllLearningKits } from '$lib/api/collections/learningKit';
-	import { invalidate } from '$app/navigation';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 
+	const client = useQueryClient();
+
+	$inspect(client);
+
 	const kitsQuery = createQuery({
-		queryKey: ['learning-kits', 'list'],
+		queryKey: ['learning-kits-list'],
 		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
+	});
+	const deleteKitMutation = createMutation({
+		mutationKey: ['learning-kit', 'delete'],
+		onMutate: () => {
+			client.invalidateQueries({ queryKey: ['learning-kits-list'] });
+			console.log('Invalidating learning-kits list');
+		},
+		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});
 
 	interface Kit {
@@ -24,8 +34,7 @@
 	async function handleConfirmDelete() {
 		if (!kitToDelete) return;
 
-		await browserApiClient.req(deleteLearningKit, null, kitToDelete.uuid);
-		await invalidate('learningkits:list');
+		await $deleteKitMutation.mutateAsync(kitToDelete.uuid);
 
 		showDeleteDialog = false;
 		kitToDelete = null;

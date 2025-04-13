@@ -5,8 +5,8 @@ import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
-import { serverApiClient } from '$lib/api/serverApiClient.js';
 import { changePassword } from '$lib/api/collections/user';
+import { api } from '$lib/api/apiClient.js';
 
 export const load = async ({ url }) => {
 	requireLogin();
@@ -22,13 +22,13 @@ export const load = async ({ url }) => {
 };
 
 export const actions = {
-	changePassword: handleApiError(async ({ request, url }) => {
+	changePassword: handleApiError(async ({ request, url, fetch }) => {
 		const form = await superValidate(request, zod(ChangePasswordDataSchema));
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		const { success } = await serverApiClient.req(changePassword, form.data);
+		const { success } = await api(fetch).req(changePassword, form.data).parse();
 		if (!success) {
 			return setError(form, 'confirmPassword', 'Change password failed');
 		}

@@ -44,7 +44,6 @@ export function api(fetchFn: typeof fetch) {
 		>(
 			endpoint: TRestEndpoint,
 			payload: z.infer<TRestEndpoint['payload']['schema']>,
-			requestInit?: RequestInit,
 			...pathArgs: TPathArgs
 		): {
 			response: Promise<Response>;
@@ -58,10 +57,9 @@ export function api(fetchFn: typeof fetch) {
 				method: endpoint.method,
 				requestInit: payload
 					? {
-							...requestInit,
 							body: JSON.stringify(payload)
 						}
-					: requestInit
+					: undefined
 			});
 
 			if (browser) {

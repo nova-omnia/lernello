@@ -5,11 +5,11 @@
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 
-	let props = $props();
+	let { children, data } = $props();
 </script>
 
-<QueryClientProvider client={props.data.queryClient}>
-	{@render props.children()}
+<QueryClientProvider client={data.queryClient}>
+	{@render children()}
 	<Toaster {toaster}></Toaster>
 	<SvelteQueryDevtools />
 </QueryClientProvider>

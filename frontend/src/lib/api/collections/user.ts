@@ -5,7 +5,7 @@ import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordDat
 import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
 import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
-import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUserSchema';
+import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -90,7 +90,7 @@ export const setUserLocale = createEndpoint({
 
 export const editTrainee = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/edit-trainee`,
+	getPath: () => `${REQUEST_MAPPING}/edit`,
 	response: {
 		schema: ParticipantUserSchema,
 		defaultValidate: true

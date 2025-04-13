@@ -2,6 +2,7 @@
 	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { getAllTrainees } from '$lib/api/collections/user';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import { SquarePlus } from 'lucide-svelte';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	interface TraineeSelectModalProps {
 		isOpen: boolean;
@@ -14,7 +15,7 @@
 	let existingTrainees = $state<ParticipantUser[]>([]);
 	let selectedTrainees = $state<string[]>([]);
 
-	// browserApiClient.on('traineeSelected', (uuids: string[]) => {
+	// browserApiClient.req('traineeSelected', (uuids: string[]) => {
 	// 	selectedTrainees = uuids;
 	// });
 
@@ -64,30 +65,32 @@
 					</table>
 				</div>
 
-				<div class="mt-4 flex justify-betweeen items-center">
+				<div class="mt-4 flex justify-between items-center">
 					<button
-                        class="btn btn-secondary flex items-center gap-2 "
+                        class="btn btn-secondary flex items-center gap-2 ml-0"
                         onclick={() => {
             
                 
                         }}
                     >
-                        <span class="text-xl font-bold">+</span> Add New Trainee
+						<SquarePlus class="size-6" />
                     </button>
-					<button
-						class="btn"
-						onclick={() => {
-							onClose();
-							selectedTrainees = [];
-						}}>Cancel</button
-					>
-					<button
-						class="btn btn-primary"
-						onclick={() => {
-							onSelect(selectedTrainees);
-							selectedTrainees = [];
-						}}>Add Selected</button
-					>
+					<div class="flex gap-2">
+						<button
+							class="btn"
+							onclick={() => {
+								onClose();
+								selectedTrainees = [];
+							}}>Cancel</button
+						>
+						<button
+							class="btn btn-primary"
+							onclick={() => {
+								onSelect(selectedTrainees);
+								selectedTrainees = [];
+							}}>Add Selected</button
+						>
+						</div>
 				</div>
 			</div>
 		</div>

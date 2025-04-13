@@ -8,7 +8,7 @@
 	}
 	const { block }: BlockIconHeaderProps = $props();
 
-	let blockType: string = $state(block.type);
+	let blockType: string = $derived(block.type);
 
 	switch (block.type) {
 		case 'THEORY':

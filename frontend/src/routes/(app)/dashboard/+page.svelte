@@ -25,7 +25,6 @@
 		showDeleteDialog = false;
 		kitToDelete = null;
 	}
-	import AITheoryBlock from './../../../lib/components/AITheoryBlock.svelte';
 </script>
 
 <div class="p-5">

@@ -64,6 +64,7 @@ public class LearningUnitService {
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
         }
+        blockRepository.flush();
         learningUnitRepository.saveAndFlush(learningUnit);
         return temporaryKeyMap;
     }
@@ -113,16 +114,17 @@ public class LearningUnitService {
     }
 
     private void removeBlock(LearningUnit learningUnit, RemoveBlockActionDTO removeAction) {
+        if (removeAction.blockId() == null) {
+            throw new IllegalArgumentException("Block ID cannot be null");
+        } else if (removeAction.blockId().isEmpty()) {
+            throw new IllegalArgumentException("Block ID cannot be empty");
+        }
 
-        if (learningUnit.getBlocks().stream().anyMatch(block -> block.getUuid().equals(removeAction.blockId()))) {
-            learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(removeAction.blockId()));
-        } else {
-            if (removeAction.blockId() == null) {
-                throw new IllegalArgumentException("Block ID cannot be null");
-            } else if (removeAction.blockId().isEmpty()) {
-                throw new IllegalArgumentException("Block ID cannot be empty");
-            }
-            learningUnit.getBlocks().remove(UUID.fromString(removeAction.blockId()));
+        UUID blockUuid = UUID.fromString(removeAction.blockId());
+        boolean removed = learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(blockUuid));
+
+        if (!removed) {
+            throw new IllegalArgumentException("Block with ID " + removeAction.blockId() + " not found");
         }
     }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
-	import QuizBlockComponent from './BlockQuizItem.svelte';
+	//import QuizBlockComponent from './BlockQuizItem.svelte';
 	import MultipleChoiceBlockComponent from './BlockMultipleChoiceItem.svelte'
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';

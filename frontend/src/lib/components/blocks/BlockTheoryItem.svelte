@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { MarkdownEditor } from 'carta-md';
 	import { carta } from '$lib/components/blocks/carta';
-	import { _ } from 'svelte-i18n'
+	import { _ } from 'svelte-i18n';
 
 	// Define the `data` prop with a default value
 	export let data: { markdown: string; html: string } = {

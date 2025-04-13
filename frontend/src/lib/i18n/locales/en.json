@@ -23,8 +23,5 @@
 	"select" : "Select",
 	"username": "Username",
 	"name": "Name",
-	"surname" : "Surname",
-	
-
-
+	"surname" : "Surname"
 }

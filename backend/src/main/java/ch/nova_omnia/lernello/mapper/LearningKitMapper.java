@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
@@ -13,5 +14,8 @@ public interface LearningKitMapper {
     LearningKitResDTO toDTO(LearningKit learningKit);
 
     LearningKit toEntity(CreateLearningKitDTO createLearningKitResDto);
+
+    @Mapping(target = "participants", ignore = true)
+    @Mapping(target = "files", ignore = true)
     LearningKit toEntity(UpdateLearningKitDTO updateLearningKitDTO);
 }

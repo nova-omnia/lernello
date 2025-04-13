@@ -1,8 +1,7 @@
-import { z } from "zod";
-import { ParticipantUserSchema } from "../response/ParticipantUser";
-import { FileResSchema } from "../response/FileRes";
+import {z} from "zod";
+import {CreateLearningKitSchema} from "$lib/schemas/request/CreateLearningKit";
 
-export const UpdateLearningKitSchema = z.object({
-    participant: z.array(ParticipantUserSchema).nonempty(),
-    files: z.array(FileResSchema).nullable()
+export const UpdateLearningKitSchema = CreateLearningKitSchema.extend({
+    participants: z.array(z.string().uuid()).nullable(),
+    files: z.array(z.string().uuid()).nullable()
 });

@@ -36,13 +36,17 @@
 	}
 
 	async function handleSelectedTrainees(uuids: string[]) {
-		await browserApiClient.req(updateLearningKit, {selectedTrainees: uuids}, learningKit.uuid)
+		learningKit.participants = uuids;
+		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit)
 		await invalidate('learningkits:list');
+		selectedTrainees = updatedLearningKit.participants;
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
-		await browserApiClient.req(updateLearningKit, {selectedFiles: uuids}, learningKit.uuid)
+		learningKit.files = uuids;
+		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit)
 		await invalidate('learningkits:list');
+		selectedFiles = updatedLearningKit.files;
 	}
 
 	async function handleCreateNewLearningUnit() {

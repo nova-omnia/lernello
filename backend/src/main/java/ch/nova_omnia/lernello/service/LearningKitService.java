@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.File;
+import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.repository.FileRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +19,12 @@ import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
-
-    public LearningKitService(LearningKitRepository learningKitRepository) {
-        this.learningKitRepository = learningKitRepository;
-    }
+    private final UserRepository userRepository;
+    private final FileRepository fileRepository;
+    private final LearningKitMapper learningKitMapper;
 
     public List<LearningKit> findAll() {
         return learningKitRepository.findAll();
@@ -45,7 +52,11 @@ public class LearningKitService {
         learningKitRepository.deleteById(id);
     }
 
-    public LearningKit update(LearningKit learningKit) {
+    public LearningKit update(LearningKit learningKit, List<UUID> participantIds, List<UUID> fileIds) {
+        List<User> participants = userRepository.findAllById(participantIds);
+        List<File> files = fileRepository.findAllById(fileIds);
+        learningKit.setParticipants(participants);
+        learningKit.setFiles(files);
         return learningKitRepository.save(learningKit);
     }
 }

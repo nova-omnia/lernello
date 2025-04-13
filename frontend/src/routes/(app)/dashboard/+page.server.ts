@@ -1,8 +1,9 @@
+import { apiClient } from '$lib/api/apiClient.js';
 import { getAllLearningKits } from '$lib/api/collections/learningKit';
-import { serverApiClient } from '$lib/api/serverApiClient.js';
 
-export async function load({ depends }) {
+export async function load({ depends, fetch }) {
 	depends('learningkits:list');
-	const kits = await serverApiClient.req(getAllLearningKits, null);
+	const kits = await apiClient(getAllLearningKits, null).load(fetch).parse();
+
 	return { kits };
 }

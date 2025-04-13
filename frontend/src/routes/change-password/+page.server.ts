@@ -1,6 +1,6 @@
 import type { Actions } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
-import { ApiError, handleApiError } from '$lib/api/apiError';
+import { handleApiError } from '$lib/api/apiError';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
@@ -28,25 +28,9 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		try {
-			const { success } = await serverApiClient.req(changePassword, form.data);
-			if (!success) {
-				return setError(form, 'confirmPassword', 'Change password failed');
-			}
-		} catch (error) {
-			if (error instanceof ApiError) {
-				// switch (error.status) {
-				// 	case 400:
-				// 		return setError(form, 'newPassword', 'Invalid password');
-				// 	case 401:
-				// 		return setError(form, 'confirmPassword', 'Unauthorized: Please log in');
-				// 	case 403:
-				// 		return setError(form, 'confirmPassword', 'Not allowed, permission denied');
-				// 	default:
-				// 		return setError(form, 'confirmPassword', error.message || 'An unknown error occurred');
-				// }
-			}
-			throw error;
+		const { success } = await serverApiClient.req(changePassword, form.data);
+		if (!success) {
+			return setError(form, 'confirmPassword', 'Change password failed');
 		}
 
 		const redirectTo = parseRedirectTo(url);

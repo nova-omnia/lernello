@@ -1,22 +1,19 @@
 import type { Actions } from '@sveltejs/kit';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseRedirectTo, recoverAuthToken } from '$lib/server/auth';
+import { parseRedirectTo, isLoggedIn } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
 import { publicApiClient } from '$lib/api/publicApiClient';
 import { signin } from '$lib/api/collections/auth';
 import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
 
-export const load = async () => {
+export const load = async ({ url }) => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
-	const tokenInfo = recoverAuthToken();
-	if (tokenInfo) {
-		message(form, {
-			redirectTo: '/',
-			tokenInfo
-		});
+
+	if (isLoggedIn()) {
+		redirect(303, parseRedirectTo(url));
 	}
 	return { form };
 };
@@ -42,7 +39,7 @@ export const actions = {
 				throw new Error('Newly retrieved token is expired');
 			}
 
-			cookies.set('lernello_auth_token', JSON.stringify(loggedInUser), {
+			cookies.set('lernello_auth_token', loggedInUser.token, {
 				httpOnly: true,
 				path: '/',
 				maxAge: Math.floor(expiresMs / 1000)

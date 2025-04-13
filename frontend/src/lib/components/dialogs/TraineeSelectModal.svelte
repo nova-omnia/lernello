@@ -5,6 +5,8 @@
 	import { SquarePlus } from 'lucide-svelte';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
+	import AddTraineeModal from './AddTraineeModal.svelte';
+
 	interface TraineeSelectModalProps {
 		isOpen: boolean;
 		onSelect: (uuids: string[]) => void;
@@ -15,10 +17,7 @@
 
 	let existingTrainees = $state<ParticipantUser[]>([]);
 	let selectedTrainees = $state<string[]>([]);
-
-	// browserApiClient.req('traineeSelected', (uuids: string[]) => {
-	// 	selectedTrainees = uuids;
-	// });
+	let isAddTraineeModalOpen = $state<boolean>(false);
 
 	$effect(() => {
 		if (isOpen) {
@@ -29,6 +28,15 @@
 			asyncWrapper();
 		}
 	});
+
+	async function handleAddTrainee(username: string, name: string, surname: string) {
+		console.log('Adding trainee:');
+		existingTrainees = [
+			...existingTrainees,
+			{ uuid: crypto.randomUUID(), username, name, surname }
+		];
+		isAddTraineeModalOpen = false;
+	}
 </script>
 
 <Modal
@@ -38,7 +46,7 @@
 >
 	{#snippet content()}
 		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
-			<div class="w-full max-w-3xl rounded bg-white p-6 shadow-xl">
+			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 
 				<div class="max-h-64 overflow-auto">
@@ -66,16 +74,15 @@
 					</table>
 				</div>
 
-				<div class="mt-4 flex justify-between items-center">
+				<div class="mt-4 flex items-center justify-between">
 					<button
-                        class="btn btn-secondary flex items-center gap-2 ml-0"
-                        onclick={() => {
-            
-                
-                        }}
-                    >
+						class="btn btn-secondary ml-0 flex items-center gap-2"
+						onclick={() => {
+							isAddTraineeModalOpen = true;
+						}}
+					>
 						<SquarePlus class="size-6" />
-                    </button>
+					</button>
 					<div class="flex gap-2">
 						<button
 							class="btn"
@@ -91,9 +98,15 @@
 								selectedTrainees = [];
 							}}>{$_('addSelected')}</button
 						>
-						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	{/snippet}
 </Modal>
+
+<AddTraineeModal
+	isOpen={isAddTraineeModalOpen}
+	onConfirm={handleAddTrainee}
+	onCancel={() => (isAddTraineeModalOpen = false)}
+/>

@@ -16,10 +16,6 @@
 	let availableFiles = $state<FileRes[]>([]);
 	let selectedFiles = $state<string[]>([]);
 
-	// browserApiClient.on('fileSelected', (uuids: string[]) => {
-	// 	selectedFiles = uuids;
-	// });
-
 
 	$effect(() => {
 		if (isOpen) {
@@ -56,7 +52,7 @@
 >
 	{#snippet content()}
 		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
-			<div class="w-full max-w-3xl rounded bg-white p-6 shadow-xl">
+			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_("selectFiles")}</h2>
 
 				<div class="max-h-64 overflow-auto">

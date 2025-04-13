@@ -13,6 +13,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
+	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
@@ -34,16 +35,14 @@
 		return `${day}.${month}.${year}`;
 	}
 
-	function handleSelectedTrainees(uuids: string[]) {
-		// make call to backend to add selected trainees to the learning kit
-		//await browserApiClient.req(learningUnitUpdate, {trainees: uuids}, learningKit.uuid)
-		//await invalidate('learningkits:list');
+	async function handleSelectedTrainees(uuids: string[]) {
+		await browserApiClient.req(updateLearningKit, {selectedTrainees: uuids}, learningKit.uuid)
+		await invalidate('learningkits:list');
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
-		// make call to backend to add selected files to the learning kit
-		//await browserApiClient.req(learningUnitUpdate, {files: uuids}, learningKit.uuid)
-		// await invalidate('learningkits:list');
+		await browserApiClient.req(updateLearningKit, {selectedFiles: uuids}, learningKit.uuid)
+		await invalidate('learningkits:list');
 	}
 
 	async function handleCreateNewLearningUnit() {

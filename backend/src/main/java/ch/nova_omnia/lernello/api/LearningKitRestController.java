@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
@@ -70,5 +71,13 @@ public class LearningKitRestController {
         return learningKitService.findById(learningKitId)
                 .map(learningKitMapper::toDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+    }
+
+    @PutMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid LearningKitResDTO update(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
+        LearningKit entity = learningKitMapper.toEntity(updateLearningKit);
+        LearningKit savedEntity = learningKitService.update(entity);
+        return learningKitMapper.toDTO(savedEntity);
     }
 }

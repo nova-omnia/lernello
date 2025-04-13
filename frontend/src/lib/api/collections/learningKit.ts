@@ -1,5 +1,7 @@
 import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
+import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
 import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
+import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -69,3 +71,18 @@ export const getLearningKitById = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const updateLearningKit = createEndpoint({
+	method: 'PUT',
+	getPath: () => `${REQUEST_MAPPING}/`,
+	response: {
+		schema: LearningKitResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: UpdateLearningKitSchema,
+		defaultValidate: false
+	}
+});
+
+

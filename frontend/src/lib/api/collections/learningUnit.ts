@@ -54,5 +54,3 @@ export const applyBlockActions = createEndpoint({
 		defaultValidate: false
 	}
 });
-
-

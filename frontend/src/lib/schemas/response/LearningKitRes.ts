@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
+import { ParticipantUserSchema } from './ParticipantUser';
+import { FileResSchema } from './FileRes';
 
 export const LearningKitResSchema = z.object({
 	uuid: z.string().uuid().nonempty(),
@@ -12,6 +14,8 @@ export const LearningKitResSchema = z.object({
 			offset: true
 		})
 		.nullable(),
-	context: z.string().nullable()
+	context: z.string().nullable(),
+	participants: z.array(ParticipantUserSchema).nullable(),
+	files: z.array(FileResSchema).nullable(),
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;

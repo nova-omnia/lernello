@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import { getUserInfo } from '$lib/api/collections/user';
-import { apiClient } from '$lib/api/apiClient';
+import { api } from '$lib/api/apiClient';
 
 export function isLoggedIn() {
 	const { locals, cookies } = getRequestEvent();
@@ -26,7 +26,7 @@ export async function loadUserInfo() {
 	}
 	const { locals, fetch } = getRequestEvent();
 	if (!locals.userInfo) {
-		const userInfo = await apiClient(getUserInfo, null).load(fetch).parse();
+		const userInfo = await api(fetch).req(getUserInfo, null).parse();
 		locals.userInfo = userInfo;
 	}
 	return locals.userInfo;

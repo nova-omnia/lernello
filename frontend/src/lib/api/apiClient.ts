@@ -2,9 +2,10 @@ import type { z } from 'zod';
 import type { RestEndpoint } from './createEndpoint';
 import { ApiError, isApiErrorResponse } from './apiError';
 import { browser } from '$app/environment';
+import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
 
 // TODO handle different environments
-const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'http://localhost:8080';
 
 export type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -33,47 +34,45 @@ function buildRequestInit({
 	};
 }
 
-export function apiClient<
-	TResSchema,
-	TPathArgs extends unknown[],
-	TPayload,
-	TRestEndpoint extends RestEndpoint<TResSchema, TPathArgs, TPayload>
->(
-	endpoint: TRestEndpoint,
-	payload: z.infer<TRestEndpoint['payload']['schema']>,
-	requestInit?: RequestInit,
-	...pathArgs: TPathArgs
-): {
-	url: string;
-	init: RequestInit;
-	load: (fetchFn: typeof fetch) => {
-		response: Promise<Response>;
-		parse: () => Promise<z.infer<TRestEndpoint['response']['schema']>>;
-	};
-} {
-	if (endpoint.payload?.defaultValidate) {
-		endpoint.payload.schema.parse(payload);
-	}
-	const { url, init } = buildRequestInit({
-		endpoint: endpoint.getPath(...pathArgs),
-		method: endpoint.method,
-		requestInit: payload
-			? {
-					...requestInit,
-					body: JSON.stringify(payload)
-				}
-			: requestInit
-	});
+export function api(fetchFn: typeof fetch) {
 	return {
-		url,
-		init: init,
-		load: (fetchFn: typeof fetch) => {
+		req: <
+			TResSchema,
+			TPathArgs extends unknown[],
+			TPayload,
+			TRestEndpoint extends RestEndpoint<TResSchema, TPathArgs, TPayload>
+		>(
+			endpoint: TRestEndpoint,
+			payload: z.infer<TRestEndpoint['payload']['schema']>,
+			requestInit?: RequestInit,
+			...pathArgs: TPathArgs
+		): {
+			response: Promise<Response>;
+			parse: (shouldValidate?: boolean) => Promise<z.infer<TRestEndpoint['response']['schema']>>;
+		} => {
+			if (endpoint.payload?.defaultValidate) {
+				endpoint.payload.schema.parse(payload);
+			}
+			const { url, init } = buildRequestInit({
+				endpoint: endpoint.getPath(...pathArgs),
+				method: endpoint.method,
+				requestInit: payload
+					? {
+							...requestInit,
+							body: JSON.stringify(payload)
+						}
+					: requestInit
+			});
+
 			if (browser) {
 				const token = localStorage.getItem('lernello_auth_token');
 				if (token) {
+					console.log(token);
+
+					const parsedToken = LoggedInUserSchema.parse(JSON.parse(token));
 					init.headers = {
 						...init.headers,
-						Authorization: `Bearer ${token}`
+						Authorization: `Bearer ${parsedToken.token}`
 					};
 				}
 			}

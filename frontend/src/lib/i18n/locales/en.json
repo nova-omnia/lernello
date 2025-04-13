@@ -14,5 +14,17 @@
 	"form.confirmPasswordPlaceholder": "confirm password",
 	"changePassword.title": "Change your Password",
 	"changePassword.description": "Please change your generated password to your own password.",
-	"changePassword.button": "Change Password"
+	"changePassword.button": "Change Password",
+	"selectFiles": "Select files",
+	"button.cancel": "Cancel",
+	"button.save": "Save",
+	"button.addSelected": "Add selected",
+	"selectTrainees": "Select trainees",
+	"select" : "Select",
+	"username": "Username",
+	"name": "Name",
+	"surname" : "Surname",
+	
+
+
 }

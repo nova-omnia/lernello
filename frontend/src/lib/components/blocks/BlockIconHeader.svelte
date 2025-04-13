@@ -12,10 +12,8 @@
 		switch (block.type) {
 			case 'THEORY':
 				return 'block.theoryBlock';
-				break;
 			case 'MULTIPLE_CHOICE':
 				return 'block.multipleChoiceQuiz';
-				break;
 			default:
 				return 'Unknown Block';
 		}

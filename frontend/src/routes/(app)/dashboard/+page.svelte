@@ -8,15 +8,13 @@
 
 	const client = useQueryClient();
 
-	$inspect(client);
-
 	const kitsQuery = createQuery({
 		queryKey: ['learning-kits-list'],
 		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
 	});
 	const deleteKitMutation = createMutation({
 		mutationKey: ['learning-kit', 'delete'],
-		onMutate: () => {
+		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ['learning-kits-list'] });
 			console.log('Invalidating learning-kits list');
 		},

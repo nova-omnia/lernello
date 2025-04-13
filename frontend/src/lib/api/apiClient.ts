@@ -67,8 +67,6 @@ export function api(fetchFn: typeof fetch) {
 			if (browser) {
 				const token = localStorage.getItem('lernello_auth_token');
 				if (token) {
-					console.log(token);
-
 					const parsedToken = LoggedInUserSchema.parse(JSON.parse(token));
 					init.headers = {
 						...init.headers,

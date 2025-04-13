@@ -2,9 +2,14 @@
 	import '../app.css';
 	import { Toaster } from '@skeletonlabs/skeleton-svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { QueryClientProvider } from '@tanstack/svelte-query';
+	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 
-	const { children } = $props();
+	let props = $props();
 </script>
 
-{@render children()}
-<Toaster {toaster}></Toaster>
+<QueryClientProvider client={props.data.queryClient}>
+	{@render props.children()}
+	<Toaster {toaster}></Toaster>
+	<SvelteQueryDevtools />
+</QueryClientProvider>

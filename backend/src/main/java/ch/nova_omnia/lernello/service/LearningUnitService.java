@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
@@ -18,8 +17,6 @@ import ch.nova_omnia.lernello.dto.request.blockActions.RemoveBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.blockActions.ReorderBlockActionDTO;
 import ch.nova_omnia.lernello.model.data.block.*;
 import ch.nova_omnia.lernello.repository.BlockRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +51,6 @@ public class LearningUnitService {
 
     @Transactional
     public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
-
         actions = filterCorrelatedActions(actions);
 
         LearningUnit learningUnit = getLearningUnit(id);
@@ -150,17 +146,26 @@ public class LearningUnitService {
             throw new IllegalArgumentException("Block not found: " + tempKey);
         }
 
-        if (newIndex >= blocks.size()) {
-            throw new IllegalArgumentException("Invalid index: " + newIndex);
+        if (newIndex < 0) {
+            newIndex = 0;
+        }
+        if (newIndex > blocks.size() - 1) {
+            newIndex = blocks.size() - 1;
+        }
+        if (currentIndex < newIndex) {
+            newIndex = newIndex - 1;
         }
 
         Block blockToMove = blocks.remove(currentIndex);
+        blocks.add(newIndex, blockToMove);
 
-        if (currentIndex < newIndex) {
-            newIndex--;
+        for (int i = 0; i < blocks.size(); i++) {
+            Block block = blocks.get(i);
+            block.setPosition(i);
+            blockRepository.save(block);
         }
 
-        blocks.add(newIndex, blockToMove);
+        blockRepository.flush();
     }
 
     private LearningUnit getLearningUnit(UUID id) {
@@ -173,20 +178,33 @@ public class LearningUnitService {
 
     private List<BlockActionDTO> filterCorrelatedActions(List<BlockActionDTO> actions) {
         Map<String, List<BlockActionDTO>> groupedActions = new HashMap<>();
+        List<BlockActionDTO> nonGroupedActions = new ArrayList<>();
+
         for (BlockActionDTO action : actions) {
             String key = getActionKey(action);
             if (key != null) {
                 groupedActions.computeIfAbsent(key, k -> new ArrayList<>()).add(action);
+            } else {
+                nonGroupedActions.add(action);
             }
         }
-        List<BlockActionDTO> filtered = new ArrayList<>();
+
+        List<BlockActionDTO> filtered = new ArrayList<>(nonGroupedActions);
+
         for (List<BlockActionDTO> group : groupedActions.values()) {
-            boolean hasAdd = group.stream().anyMatch(a -> a instanceof AddBlockActionDTO);
-            boolean hasRemove = group.stream().anyMatch(a -> a instanceof RemoveBlockActionDTO);
-            if (!(hasAdd && hasRemove)) {
+            boolean blockExists = false;
+            for (BlockActionDTO action : group) {
+                if (action instanceof AddBlockActionDTO) {
+                    blockExists = true;
+                } else if (action instanceof RemoveBlockActionDTO) {
+                    blockExists = false;
+                }
+            }
+            if (blockExists) {
                 filtered.addAll(group);
             }
         }
+
         return filtered;
     }
 
@@ -198,6 +216,10 @@ public class LearningUnitService {
         } else if (action instanceof RemoveBlockActionDTO removeAction) {
             if (isTemporaryId(removeAction.blockId())) {
                 return removeAction.blockId();
+            }
+        } else if (action instanceof ReorderBlockActionDTO reorderAction) {
+            if (isTemporaryId(reorderAction.blockId())) {
+                return reorderAction.blockId();
             }
         }
         return null;

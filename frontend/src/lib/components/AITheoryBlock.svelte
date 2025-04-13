@@ -1,16 +1,22 @@
+<!--AITheoryBlock.svelte-->
 <script lang="ts">
 	import { Dialog, Separator } from 'bits-ui';
 	import { WandSparkles, X } from 'lucide-svelte';
 	import MultiSelect from './MultiSelect.svelte';
 
-	let selectedFiles: string[] = [];
+	interface Option {
+		uuid: string;
+		label: string;
+	}
 
-	const files = [
-		{ value: 'math', label: 'Mathematics' },
-		{ value: 'ai', label: 'Artificial Intelligence' },
-		{ value: 'ml', label: 'Machine Learning' },
-		{ value: 'cv', label: 'Computer Vision' },
-		{ value: 'nlp', label: 'NLP' }
+	let selectedFiles: Option[] = [];
+
+	const files: Option[] = [
+		{ uuid: '550e8400-e29b-41d4-a716-446655440000', label: 'Mathematics' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440001', label: 'Artificial Intelligence' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440002', label: 'Machine Learning' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440003', label: 'Computer Vision' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440004', label: 'NLP' }
 	];
 </script>
 
@@ -20,50 +26,28 @@
 	</Dialog.Trigger>
 
 	<Dialog.Portal>
-		<Dialog.Overlay
-			class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80"
-		/>
-		<Dialog.Content
-			class="rounded-card-lg preset-filled-surface-100-900 shadow-popover data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 outline-hidden fixed left-[50%] top-[50%] z-50 w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] border p-5 sm:max-w-[490px] md:w-full"
-		>
-			<Dialog.Title
-				class="flex w-full items-center justify-center text-lg font-semibold tracking-tight"
-			>
+		<Dialog.Overlay class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80" />
+		<Dialog.Content class="rounded-card-lg preset-filled-surface-100-900 shadow-popover data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 outline-hidden fixed left-[50%] top-[50%] z-50 w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] border p-5 sm:max-w-[490px] md:w-full">
+			<Dialog.Title class="flex w-full items-center justify-center text-lg font-semibold tracking-tight">
 				Creation Wizard
 			</Dialog.Title>
-
 			<Separator.Root class="bg-muted -mx-5 mb-6 mt-5 block h-px" />
-
 			<form>
 				<div class="text-primary-600-400 mb-4">
-					<input
-						type="text"
-						placeholder="Enter the Topic here..."
-						class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden w-full px-4 py-2"
-					/>
+					<input type="text" placeholder="Enter the Topic here..." class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden w-full px-4 py-2" />
 				</div>
 
 				<div class="text-primary-600-400 mb-4">
-					<MultiSelect
-						selected={selectedFiles}
-						onSelect={(vals) => (selectedFiles = vals)}
-						options={files}
-						placeholder="Select files..."
-					/>
+					<MultiSelect selected={selectedFiles} onSelect={(vals) => (selectedFiles = vals)} options={files} placeholder="Select files..." />
 				</div>
 
 				<div class="flex w-full justify-end">
-					<Dialog.Close
-						class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden inline-flex justify-center pt-4 font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]"
-					>
+					<Dialog.Close class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden inline-flex justify-center pt-4 font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]">
 						Save
 					</Dialog.Close>
 				</div>
 			</form>
-
-			<Dialog.Close
-				class="focus-visible:ring-foreground focus-visible:ring-offset-background focus-visible:outline-hidden absolute right-5 top-5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]"
-			>
+			<Dialog.Close class="focus-visible:ring-foreground focus-visible:ring-offset-background focus-visible:outline-hidden absolute right-5 top-5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98]">
 				<div>
 					<X class="text-foreground size-5" />
 					<span class="sr-only">Close</span>

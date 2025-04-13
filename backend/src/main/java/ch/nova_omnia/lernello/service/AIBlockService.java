@@ -29,7 +29,7 @@ public class AIBlockService {
         String content = aiClient.generateTheoryBlock(context, topic);
 
         LearningUnit unit = learningUnitRepository.findById(learningUnitId)
-                .orElseThrow(() -> new RuntimeException("LearningUnit not found"));
+                .orElseThrow(() -> new RuntimeException());
 
         TheoryBlock block = new TheoryBlock(topic, position, unit, content);
         blockService.createBlock(block, learningUnitId);

@@ -21,18 +21,23 @@ public class AIBlockService {
     private final LearningUnitRepository learningUnitRepository;
 
     public TheoryBlock generateTheoryBlockFromAI(List<UUID> fileIds, String topic, int position, UUID learningUnitId) {
+        String context = loadContext(fileIds);
+        String generatedContent = aiClient.generateTheoryBlock(context, topic);
+
+        LearningUnit unit = learningUnitRepository.findById(learningUnitId)
+                .orElseThrow(() -> new RuntimeException());
+
+        TheoryBlock block = new TheoryBlock(topic, position, unit, generatedContent);
+        blockService.createBlock(block, learningUnitId);
+        return block;
+    }
+
+    private String loadContext(List<UUID> fileIds) {
         String context = "";
         for (UUID fileId : fileIds) {
             String fileContent = fileService.getFileContent(fileId);
             context = context == null ? fileContent : context + "\n" + fileContent;
         }
-        String content = aiClient.generateTheoryBlock(context, topic);
-
-        LearningUnit unit = learningUnitRepository.findById(learningUnitId)
-                .orElseThrow(() -> new RuntimeException());
-
-        TheoryBlock block = new TheoryBlock(topic, position, unit, content);
-        blockService.createBlock(block, learningUnitId);
-        return block;
+        return context;
     }
 }

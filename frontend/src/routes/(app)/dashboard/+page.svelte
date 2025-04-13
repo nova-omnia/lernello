@@ -64,9 +64,6 @@
 			</a>
 		{/each}
 	</div>
-	<div>
-		<AITheoryBlock />
-	</div>
 </div>
 
 <ConfirmDialog

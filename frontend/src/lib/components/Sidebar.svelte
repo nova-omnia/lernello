@@ -53,15 +53,15 @@
 		<div class="flex flex-col items-center">
 			<a class="flex w-full items-center py-2" href="/dashboard" aria-label="Dashboard">
 				<LayoutDashboard size={24} />
-				{@render sidebarItemLabel($_('sidebar.Dashboard'))}
+				{@render sidebarItemLabel($_('sidebar.dashboard'))}
 			</a>
 			<a class="flex w-full items-center py-2" href="/folders" aria-label="Folders">
 				<Folder size={24} />
-				{@render sidebarItemLabel($_('sidebar.Folders'))}
+				{@render sidebarItemLabel($_('sidebar.folders'))}
 			</a>
 			<a class="flex w-full items-center py-2" href="/statistics" aria-label="Statistics">
 				<ChartLine size={24} />
-				{@render sidebarItemLabel($_('sidebar.Statistics'))}
+				{@render sidebarItemLabel($_('sidebar.statistics'))}
 			</a>
 		</div>
 
@@ -71,16 +71,16 @@
 	<div class="mt-auto flex flex-col items-center">
 		<a class="flex w-full items-center py-2" href="/settings" aria-label="Settings">
 			<Settings size={24} />
-			{@render sidebarItemLabel($_('sidebar.Settings'))}
+			{@render sidebarItemLabel($_('sidebar.settings'))}
 		</a>
 		<a class="flex w-full items-center py-2" href="/profile" aria-label="Profile">
 			<User size={24} />
-			{@render sidebarItemLabel($_('sidebar.Profile'))}
+			{@render sidebarItemLabel($_('sidebar.profile'))}
 		</a>
 		<form method="POST" action="/logout" class="flex w-full items-center py-2">
 			<button class="flex" aria-label="Logout">
 				<LogOut size={24} />
-				{@render sidebarItemLabel($_('sidebar.Logout'))}
+				{@render sidebarItemLabel($_('sidebar.logout'))}
 			</button>
 		</form>
 	</div>

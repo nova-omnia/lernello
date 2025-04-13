@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { Check, X } from 'lucide-svelte';
+	import { _ } from 'svelte-i18n';
 
 	let question = '';
 	let answers: { value: string; isCorrect: boolean }[] = [
@@ -22,10 +23,10 @@
 </script>
 
 <div class="rounded border border-green-300 bg-green-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-green-800">Multiple-Choice Block</h2>
+	<h2 class="text-xl font-bold text-green-800">{$_('block.multipleChoiceQuiz')}</h2>
 	<input
 		type="text"
-		placeholder="Type Question"
+		placeholder={$_('block.multipleChoiceBBlocks.question')}
 		bind:value={question}
 		class="input col-span-12 mb-4 w-full border p-2"
 	/>
@@ -43,13 +44,13 @@
 			</Switch>
 			<input
 				type="text"
-				placeholder={`Answer ${idx + 1}`}
+				placeholder={`${$_('block.multipleChoiceBlocks.answer')} ${idx + 1}`}
 				class="input col-span-11 p-2"
 				bind:value={answer.value}
 			/>
 		</div>
 	{/each}
 	<button on:click={addAnswerField} class="bg-primary-100-900 col-span-12 mt-4 rounded p-4">
-		Add more possible answers
+		{$_('block.multipleChoiceBBlocks.addButton')}
 	</button>
 </div>

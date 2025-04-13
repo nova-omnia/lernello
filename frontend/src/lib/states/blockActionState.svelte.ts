@@ -51,14 +51,34 @@ export function addBlockActionListener(onBlockAction: (event: CustomBlockActionE
 function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
 		case 'ADD_BLOCK': {
-			const newBlock = {
-				type: action.data.type,
-				name: action.data.name,
-				uuid: action.blockId
-			};
+			let newBlock: BlockRes;
+
+			if (action.data.type === BlockType.Enum.THEORY) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0,
+					content: action.data.content || 'placeholder'
+				};
+			} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0,
+					question: action.data.question || 'placeholder question',
+					possibleAnswers: action.data.possibleAnswers || [],
+					correctAnswers: action.data.correctAnswers || []
+				};
+			} else {
+				throw new Error('Unsupported block type.');
+			}
 
 			if (action.index !== undefined) {
 				blocks.splice(action.index, 0, newBlock);
+			} else {
+				blocks.push(newBlock);
 			}
 			break;
 		}

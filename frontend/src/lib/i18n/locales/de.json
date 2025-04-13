@@ -12,6 +12,11 @@
 	"form.newPasswordPlaceholder": "neues passwort",
 	"form.confirmPasswordLabel": "Passwort bestätigen",
 	"form.confirmPasswordPlaceholder": "passwort bestätigen",
+	"learningunit.details": "Lerneinheit Details",
+	"learningunit.reorderBlocks": "Blöcke neu anordnen",
+	"block.textAnswerQuiz": "Textantwort-Quiz",
+	"block.multipleChoiceQuiz": "Multiple-Choice-Quiz",
+	"block.theoryBlock": "Theorieblock",
 	"changePassword.title": "Ändere dein Passwort",
 	"changePassword.description": "Bitte ändere dein generiertes Passwort in ein eigenes Passwort.",
 	"changePassword.button": "Passwort ändern"

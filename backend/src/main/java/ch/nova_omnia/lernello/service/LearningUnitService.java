@@ -149,7 +149,7 @@ public class LearningUnitService {
         }
 
         if (newIndex < 0) {
-            newIndex = 0;
+            throw new IllegalArgumentException("New index cannot be negative");
         }
         if (newIndex > blocks.size() - 1) {
             newIndex = blocks.size() - 1;

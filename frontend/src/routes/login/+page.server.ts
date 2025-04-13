@@ -1,9 +1,9 @@
 import type { Actions } from '@sveltejs/kit';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseRedirectTo, isLoggedIn } from '$lib/server/auth';
+import { isLoggedIn, parseRedirectTo } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
 import { publicApiClient } from '$lib/api/publicApiClient';
 import { signin } from '$lib/api/collections/auth';
@@ -13,12 +13,15 @@ export const load = async ({ url }) => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
 
 	if (isLoggedIn()) {
-		redirect(303, parseRedirectTo(url));
+		message(form, {
+			redirectTo: parseRedirectTo(url)
+		});
 	}
+
 	return { form };
 };
 
-type Message = { redirectTo: string; tokenInfo: LoggedInUser };
+type Message = { redirectTo: string; tokenInfo?: LoggedInUser };
 
 export const actions = {
 	login: handleApiError(async ({ request, cookies, url }) => {

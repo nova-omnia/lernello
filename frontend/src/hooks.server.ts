@@ -1,3 +1,4 @@
+import { BASE_URL } from '$lib/api/apiClient';
 import { initi18n } from '$lib/i18n/i18n';
 import { loadUserInfo, isLoggedIn } from '$lib/server/auth';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
@@ -20,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
-	if (request.url.startsWith('http://localhost:8080/')) {
+	if (request.url.startsWith(BASE_URL)) {
 		request.headers.set('cookie', event.request.headers.get('cookie')!);
 	}
 

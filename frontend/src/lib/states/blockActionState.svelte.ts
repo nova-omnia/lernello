@@ -67,7 +67,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			const blockToMove = blocks.find((block) => block.uuid === action.blockId);
 			if (blockToMove) {
 				blocks = blocks.filter((block) => block.uuid !== action.blockId);
-				blocks.splice(action.data.newIndex, 0, blockToMove);
+				blocks.splice(action.newIndex, 0, blockToMove);
 			}
 			break;
 		}
@@ -119,6 +119,12 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 		} else {
 			throw new Error('Unsupported block type.');
 		}
+	} else if (action.type === ActionType.Enum.REORDER_BLOCK) {
+		parsedAction = {
+			type: 'REORDER_BLOCK',
+			blockId: action.blockId,
+			newIndex: action.newIndex
+		};
 	} else {
 		parsedAction = action;
 	}

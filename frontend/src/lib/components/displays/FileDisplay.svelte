@@ -4,6 +4,7 @@
 	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { invalidate } from '$app/navigation';
 	import { deleteFile } from '$lib/api/collections/file';
+	import { _ } from 'svelte-i18n';
 	const { File } = $props();
 
 	let showDeleteDialog = $state(false);
@@ -29,7 +30,7 @@
 			e.preventDefault();
 			showDeleteDialog = true;
 		}}
-		class="btn preset-filled-error-500 ml-auto rounded-full p-2">Remove</button
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2">{$_('remove')}</button
 	>
 </div>
 

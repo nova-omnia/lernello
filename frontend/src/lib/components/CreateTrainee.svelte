@@ -1,6 +1,7 @@
 <script lang="ts">
-    import SuperDebug, {superForm, superValidate} from 'sveltekit-superforms';
+    import SuperDebug, {superForm} from 'sveltekit-superforms';
     import { toaster } from '$lib/states/toasterState.svelte.js';
+    import { _ } from 'svelte-i18n';
 
     let { data } = $props();
     const { form, errors, constraints, enhance } = superForm(data.form, {
@@ -17,10 +18,10 @@
 </script>
 
 <form method="POST" use:enhance class="mx-auto max-w-lg space-y-4">
-    <h1 class="h1">Add a Trainee</h1>
+    <h1 class="h1">{$_('addTrainee')}</h1>
 
     <label class="label">
-        <span class="label-text">Surname</span>
+        <span class="label-text">{$_('surname')}</span>
         <input
                 id="surname"
                 type="text"
@@ -37,7 +38,7 @@
     </label>
 
     <label class="label">
-        <span class="label-text">Name</span>
+        <span class="label-text">{$_('name')}</span>
         <input
                 id="name"
                 type="text"
@@ -54,7 +55,7 @@
     </label>
 
     <label class="label">
-        <span class="label-text">Username</span>
+        <span class="label-text">{$_('username')}</span>
         <input
                 id="username"
                 type="text"
@@ -70,6 +71,6 @@
         {/if}
     </label>
 
-    <button class="btn preset-filled-primary-400-600 w-full">Create Trainee</button>
+    <button class="btn preset-filled-primary-400-600 w-full">{$_('createTrainee')}</button>
     <SuperDebug data={$form} />
 </form>

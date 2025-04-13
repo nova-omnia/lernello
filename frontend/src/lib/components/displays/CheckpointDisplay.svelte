@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { GripVertical, Lock } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let showDeleteDialog = $state(false);
 
 	function deleteCheckpoint() {
 		// if (!checkpoint) return;
-
 		// await browserApiClient.req(removeCheckpoint, null, checkpoint.uuid);
 		// await invalidate('checkpoints:list');
-
 		// showDeleteDialog = false;
 	}
 </script>
@@ -22,9 +21,9 @@
 		<div class="flex items-start">
 			<Lock class="h-10 w-10" />
 			<div class="ml-2 flex flex-col justify-center">
-				<p class="text-black-700 text-xs font-bold">Checkpoint</p>
+				<p class="text-black-700 text-xs font-bold">{$_('checkpoint')}</p>
 				<p class="text-xs text-gray-700">
-					Trainees must complete all the above Learning Units, before gaining access to the rest.
+					{$_('checkpointDescription')}
 				</p>
 			</div>
 		</div>

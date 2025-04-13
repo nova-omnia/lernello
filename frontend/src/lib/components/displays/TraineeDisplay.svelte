@@ -4,6 +4,7 @@
 	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { deleteTrainee } from '$lib/api/collections/user';
 	import { invalidate } from '$app/navigation';
+	import { _ } from 'svelte-i18n';
 	const { User } = $props();
 
 	let showDeleteDialog = $state(false);
@@ -34,7 +35,7 @@
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;
-		}}>Remove</button
+		}}>{$_('remove')}</button
 	>
 </div>
 

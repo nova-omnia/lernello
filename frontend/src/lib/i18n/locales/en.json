@@ -23,5 +23,9 @@
 	"select" : "Select",
 	"username": "Username",
 	"name": "Name",
-	"surname" : "Surname"
+	"surname" : "Surname",
+	"createTrainee": "Create Trainee",
+	"button.remove": "Remove",
+	"checkpoint": "Checkpoint",
+	"checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest."
 }

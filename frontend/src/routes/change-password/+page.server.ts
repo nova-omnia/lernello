@@ -3,15 +3,16 @@ import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseRedirectTo, requireLogin } from '$lib/server/auth';
+import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
 import { serverApiClient } from '$lib/api/serverApiClient.js';
 import { changePassword } from '$lib/api/collections/user';
 
 export const load = async ({ url }) => {
-	const user = requireLogin();
+	requireLogin();
+	const userInfo = await loadUserInfo();
 
-	if (user.changedPassword) {
+	if (userInfo.changedPassword) {
 		const redirectTo = parseRedirectTo(url);
 		redirect(303, redirectTo);
 	}
@@ -21,9 +22,7 @@ export const load = async ({ url }) => {
 };
 
 export const actions = {
-	changePassword: handleApiError(async ({ request, url, cookies }) => {
-		requireLogin();
-
+	changePassword: handleApiError(async ({ request, url }) => {
 		const form = await superValidate(request, zod(ChangePasswordDataSchema));
 		if (!form.valid) {
 			return fail(400, { form });
@@ -34,9 +33,6 @@ export const actions = {
 			if (!success) {
 				return setError(form, 'confirmPassword', 'Change password failed');
 			}
-			cookies.delete('shouldChangePw', {
-				path: '/'
-			});
 		} catch (error) {
 			if (error instanceof ApiError) {
 				// switch (error.status) {

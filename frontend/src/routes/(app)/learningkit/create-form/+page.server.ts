@@ -8,7 +8,6 @@ import { createLearningKit } from '$lib/api/collections/learningKit';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateLearningKitSchema));
-
 	return { form };
 };
 

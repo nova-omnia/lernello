@@ -47,11 +47,6 @@ export const actions = {
 				path: '/',
 				maxAge: Math.floor(expiresMs / 1000)
 			});
-			if (!loggedInUser.changedPassword) {
-				cookies.set('shouldChangePw', 'true', {
-					path: '/'
-				});
-			}
 
 			return message(form, {
 				redirectTo: parseRedirectTo(url),

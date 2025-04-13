@@ -13,7 +13,7 @@
 	<div>
 		<input
 			type="text"
-			placeholder="add answer"
+			placeholder="{$_('')}"
 			bind:value={answer}
 			class="input w-full border p-2"
 		/>

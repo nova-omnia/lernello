@@ -26,7 +26,7 @@
 	<h2 class="text-xl font-bold text-green-800">{$_('block.multipleChoiceQuiz')}</h2>
 	<input
 		type="text"
-		placeholder={$_('block.multipleChoiceBBlocks.question')}
+		placeholder={$_('block.multipleChoiceBlocks.question')}
 		bind:value={question}
 		class="input col-span-12 mb-4 w-full border p-2"
 	/>
@@ -51,6 +51,6 @@
 		</div>
 	{/each}
 	<button on:click={addAnswerField} class="bg-primary-100-900 col-span-12 mt-4 rounded p-4">
-		{$_('block.multipleChoiceBBlocks.addButton')}
+		{$_('block.multipleChoiceBlocks.addButton')}
 	</button>
 </div>

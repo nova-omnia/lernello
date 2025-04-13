@@ -27,13 +27,15 @@
 	}
 </script>
 
-<div class="relative group card bg-surface-100 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 space-y-5 p-4 shadow transition-all duration-200 hover:shadow-lg">
+<div
+	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
+>
 	<BlockIconHeader {block} />
 	<Component />
 
 	<button
 		type="button"
-		class="btn preset-filled-error-500 absolute -top-2 -right-2 size-8 p-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+		class="btn preset-filled-error-500 absolute -top-2 -right-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 		onclick={() => (isConfirmDialogOpen = true)}
 	>
 		<X class="h-4 w-4" />

@@ -1,0 +1,41 @@
+<script lang="ts">
+	import { _ } from 'svelte-i18n';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { toaster } from '$lib/states/toasterState.svelte.js';
+
+	let { data } = $props();
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		onError: (error) => {
+			console.error('Error:', error.result.error);
+			toaster.create({
+				title: $_('error.title'),
+				description: $_('error.description', { values: { status: error.result.status } }),
+				type: 'error'
+			});
+		}
+	});
+</script>
+
+<form method="POST" use:enhance action="?/create" class="mx-auto max-w-lg space-y-4">
+	<h1 class="h1">$_('learningunit.createTitle')</h1>
+
+	<label class="label">
+		<span class="label-text">$_('form.nameLabel')</span>
+		<input
+			id="name"
+			type="text"
+			class="input"
+			name="name"
+			placeholder="Learning Kit Name"
+			aria-invalid={$errors.name ? 'true' : undefined}
+			bind:value={$form.name}
+			{...$constraints.name}
+		/>
+		{#if $errors.name}
+			<p class="text-error-500 text-sm">{$errors.name}</p>
+		{/if}
+	</label>
+
+	<button class="btn preset-filled-primary-400-600 w-full">$_('learningunit.createButton')</button>
+	<SuperDebug data={$form} />
+</form>

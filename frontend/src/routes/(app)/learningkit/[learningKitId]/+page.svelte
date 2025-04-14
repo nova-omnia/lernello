@@ -9,7 +9,7 @@
 	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import { browserApiClient } from '$lib/api/browserApiClient';
-	import { deleteLearningKit, removeParticipantFromKit } from '$lib/api/collections/learningKit';
+	import { deleteLearningKit } from '$lib/api/collections/learningKit';
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';

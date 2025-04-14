@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
-	import { _ } from 'svelte-i18n';
 	const { user } = $props();
 </script>
 

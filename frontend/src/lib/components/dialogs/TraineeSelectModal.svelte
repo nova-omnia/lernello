@@ -40,10 +40,10 @@
                 <table class="table w-full">
                     <thead>
                     <tr>
-                        <th>{$_('select')}</th>
-                        <th>{$_('username')}</th>
-                        <th>{$_('name')}</th>
-                        <th>{$_('surname')}</th>
+                        <th>{$_('multiSelect.select')}</th>
+                        <th>{$_('multiSelect.username')}</th>
+                        <th>{$_('multiSelect.name')}</th>
+                        <th>{$_('multiSelect.surname')}</th>
                     </tr>
                     </thead>
                     <tbody>

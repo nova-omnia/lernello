@@ -8,6 +8,7 @@
 	} from '$lib/api/collections/learningUnit';
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { _ } from 'svelte-i18n';
 
 	let showDeleteDialog = $state(false);
 
@@ -50,12 +51,12 @@
 		<button
 			type="button"
 			onclick={openLearningUnit}
-			class="btn preset-filled-primary-500 ml-auto rounded-full p-2">Open</button
+			class="btn preset-filled-primary-500 ml-auto rounded-full p-2">{$_('button.open')}</button
 		>
 		<button
 			type="button"
 			onclick={regenerateLearningUnitHandler}
-			class="btn preset-outlined-surface-500 bg-gray ml-1 rounded-full p-2">⚡Regenerate</button
+			class="btn preset-outlined-surface-500 bg-gray ml-1 rounded-full p-2">{$_('button.regenerate')}</button
 		>
 		<button
 			type="button"
@@ -63,7 +64,7 @@
 				e.preventDefault();
 				showDeleteDialog = true;
 			}}
-			class="btn preset-filled-error-500 ml-1 rounded-full p-2">Delete</button
+			class="btn preset-filled-error-500 ml-1 rounded-full p-2">{$_('button.delete')}</button
 		>
 	</div>
 </div>

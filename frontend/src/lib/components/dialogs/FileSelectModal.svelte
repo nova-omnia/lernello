@@ -58,8 +58,8 @@
 					<table class="table w-full">
 						<thead>
 							<tr>
-								<th>{$_('select')}</th>
-								<th>{$_('name')}</th>
+								<th>{$_('multiSelect.select')}</th>
+								<th>{$_('multiSelect.name')}</th>
 							</tr>
 						</thead>
 						<tbody>

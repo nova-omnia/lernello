@@ -25,17 +25,17 @@
 	<Avatar name="{User.surname} {User.name}" src={User.avatar} classes="h-11 w-11" />
 
 	<p class="text-black-700 ml-3 text-xs font-bold">{User.surname} {User.name}</p>
-
-	<button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2"
-		>Invite</button
-	>
+	<!-- todo> -->
+	<!-- <button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2"
+		>{$_('button.edit')}</button
+	>	 -->
 	<button
 		type="button"
-		class="btn preset-filled-error-500 ml-1 rounded-full p-2"
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;
-		}}>{$_('remove')}</button
+		}}>{$_('button.remove')}</button
 	>
 </div>
 

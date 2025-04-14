@@ -21,9 +21,9 @@
 		<div class="flex items-start">
 			<Lock class="h-10 w-10" />
 			<div class="ml-2 flex flex-col justify-center">
-				<p class="text-black-700 text-xs font-bold">{$_('checkpoint')}</p>
+				<p class="text-black-700 text-xs font-bold">{$_('learningKit.checkpoint')}</p>
 				<p class="text-xs text-gray-700">
-					{$_('checkpoint.description')}
+					{$_('learningKit.checkpoint.description')}
 				</p>
 			</div>
 		</div>

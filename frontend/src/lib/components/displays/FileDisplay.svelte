@@ -30,7 +30,7 @@
 			e.preventDefault();
 			showDeleteDialog = true;
 		}}
-		class="btn preset-filled-error-500 ml-auto rounded-full p-2">{$_('remove')}</button
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2">{$_('button.remove')}</button
 	>
 </div>
 

@@ -81,7 +81,7 @@
 
 		<button type="button" class="btn preset-outlined-surface-500 ml-auto rounded-full p-2">
 			<Settings />
-			{$_('edit')}
+			{$_('button.edit')}
 		</button>
 	</div>
 

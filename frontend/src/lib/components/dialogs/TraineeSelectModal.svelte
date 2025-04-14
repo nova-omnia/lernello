@@ -76,14 +76,14 @@
                             onclick={() => {
 								onClose();
 								selectedTrainees = [];
-							}}>{$_('cancel')}</button
+							}}>{$_('button.cancel')}</button
                     >
                     <button
                             class="btn btn-primary"
                             onclick={() => {
 								onSelect(selectedTrainees);
 								selectedTrainees = [];
-							}}>{$_('addSelected')}</button
+							}}>{$_('button.addSelected')}</button
                     >
                 </div>
             </div>

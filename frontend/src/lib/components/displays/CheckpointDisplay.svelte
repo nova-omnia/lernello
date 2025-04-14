@@ -23,7 +23,7 @@
 			<div class="ml-2 flex flex-col justify-center">
 				<p class="text-black-700 text-xs font-bold">{$_('checkpoint')}</p>
 				<p class="text-xs text-gray-700">
-					{$_('checkpointDescription')}
+					{$_('checkpoint.description')}
 				</p>
 			</div>
 		</div>

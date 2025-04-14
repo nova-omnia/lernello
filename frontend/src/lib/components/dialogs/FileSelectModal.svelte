@@ -16,7 +16,6 @@
 	let availableFiles = $state<FileRes[]>([]);
 	let selectedFiles = $state<string[]>([]);
 
-
 	$effect(() => {
 		if (isOpen) {
 			async function asyncWrapper() {
@@ -53,7 +52,7 @@
 	{#snippet content()}
 		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
-				<h2 class="mb-4 text-lg font-bold">{$_("selectFiles")}</h2>
+				<h2 class="mb-4 text-lg font-bold">{$_('selectFiles')}</h2>
 
 				<div class="max-h-64 overflow-auto">
 					<table class="table w-full">
@@ -82,14 +81,14 @@
 						onclick={() => {
 							onClose();
 							selectedFiles = [];
-						}}>{$_('cancel')}</button
+						}}>{$_('button.cancel')}</button
 					>
 					<button
 						class="btn btn-primary"
 						onclick={() => {
 							onSelect(selectedFiles);
 							selectedFiles = [];
-						}}>{$_('addSelected')}</button
+						}}>{$_('button.addSelected')}</button
 					>
 				</div>
 			</div>

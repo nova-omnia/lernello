@@ -1,4 +1,5 @@
 import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
+import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
 import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
@@ -35,7 +36,7 @@ export const deleteLearningKit = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
-		schema: z.string().uuid(),
+		schema: z.null(),
 		defaultValidate: true
 	},
 	payload: {
@@ -66,6 +67,19 @@ export const getLearningKitById = createEndpoint({
 	},
 	payload: {
 		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const updateLearningKit = createEndpoint({
+	method: 'PUT',
+	getPath: () => `${REQUEST_MAPPING}/`,
+	response: {
+		schema: LearningKitResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: UpdateLearningKitSchema,
 		defaultValidate: false
 	}
 });

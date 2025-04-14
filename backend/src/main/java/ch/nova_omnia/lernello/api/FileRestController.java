@@ -30,9 +30,9 @@ public class FileRestController {
     private final FileSystemService fileService;
     private final FileMapper fileMapper;
 
-    @GetMapping()
+    @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
-    public List<@Valid FileResDTO> loadAll() {
+    public List<@Valid FileResDTO> getAllFiles() {
         return fileService.findAll().stream().map(fileMapper::toDTO).toList();
     }
 

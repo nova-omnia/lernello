@@ -1,18 +1,22 @@
 package ch.nova_omnia.lernello.api;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
@@ -44,12 +48,6 @@ public class UserRestController {
         return new PasswordStatusDTO(status);
     }
 
-    @GetMapping("/users")
-    @PreAuthorize("hasAuthority('SCOPE_user:read')")
-    public @Valid List<ParticipantUserDTO> getAllUsers() {
-        return userService.findAll().stream().map(user -> participantUserMapper.toDTO(user.getUuid(), user.getUsername())).toList();
-    }
-
     @PostMapping("/locale")
     @PreAuthorize("hasAuthority('SCOPE_self:write')")
     public @Valid UserLocaleDTO setLocale(
@@ -66,5 +64,38 @@ public class UserRestController {
     ) {
         User user = userService.findByUsername(userDetails.getUsername());
         return userInfoMapper.toDTO(user);
+    }
+
+    @GetMapping("/trainees")
+    @PreAuthorize("hasAuthority('SCOPE_user:read')")
+    public List<@Valid ParticipantUserDTO> getAllTrainees() {
+        return userService.findAllTrainees().stream().map(participantUserMapper::toDTO).toList();
+    }
+
+    @PostMapping("/trainee/add")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public @Valid ParticipantUserDTO addTrainee(
+                                                @RequestBody @Valid CreateParticipantDTO traineeDetails
+    ) {
+        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        return participantUserMapper.toDTO(trainee);
+    }
+
+    @DeleteMapping("/trainee/delete/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public void deleteTrainee(
+                              @PathVariable UUID id
+    ) {
+        userService.deleteTrainee(id);
+    }
+
+
+    @PostMapping("/trainee/edit")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public @Valid ParticipantUserDTO editTrainee(
+                                                 @RequestBody @Valid CreateParticipantDTO traineeDetails
+    ) {
+        User trainee = userService.editTrainee( traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        return participantUserMapper.toDTO(trainee);
     }
 }

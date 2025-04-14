@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,9 +53,9 @@ public class LearningKitRestController {
 
     @DeleteMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid UUID delete(@Valid @PathVariable UUID learningKitId) {
+    public @Valid ResponseEntity<Void> delete(@Valid @PathVariable UUID learningKitId) {
         learningKitService.deleteById(learningKitId);
-        return learningKitId;
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/")
@@ -68,9 +69,7 @@ public class LearningKitRestController {
     @GetMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid LearningKitResDTO getById(@Valid @PathVariable UUID learningKitId) {
-        return learningKitService.findById(learningKitId)
-                .map(learningKitMapper::toDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        return learningKitService.findById(learningKitId).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
     }
 
     @PutMapping("/")
@@ -79,5 +78,12 @@ public class LearningKitRestController {
         LearningKit entity = learningKitMapper.toEntity(updateLearningKit);
         LearningKit savedEntity = learningKitService.update(entity, updateLearningKit.getParticipants(), updateLearningKit.getFiles());
         return learningKitMapper.toDTO(savedEntity);
+    }
+
+    @DeleteMapping("/participants/{kitId}")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid ResponseEntity<Void> removeParticipantFromKit(@Valid @PathVariable UUID kitId, @RequestBody UUID userId) {
+        learningKitService.removeParticipant(kitId, userId);
+        return ResponseEntity.noContent().build();
     }
 }

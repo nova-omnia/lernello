@@ -21,7 +21,7 @@
 	const learningKit = data.kitToDisplay;
 
 	const learningUnits = $state(data.kitToDisplay.learningUnits || []);
-	let selectedTrainees = $state<ParticipantUser[]>([]);
+	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
 	let selectedFiles = $state<FileRes[]>([]);
 	let showDeleteDialog = $state(false);
 
@@ -38,6 +38,7 @@
 	async function handleSelectedTrainees(uuids: string[]) {
 		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
 			...learningKit,
+			learningKitId: learningKit.uuid,
 			participants: uuids,
 			files: learningKit.files?.map((file) => file.uuid) ?? []
 		});
@@ -48,6 +49,7 @@
 	async function handleSelectedFiles(uuids: string[]) {
 		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
 			...learningKit,
+			learningKitId: learningKit.uuid,
 			participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
 			files: uuids
 		});
@@ -114,7 +116,7 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay User={trainee} />
+			<TraineeDisplay User={trainee} learningKitId={learningKit.uuid} />
 		{/each}
 
 		<button

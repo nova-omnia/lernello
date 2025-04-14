@@ -2,17 +2,17 @@
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { browserApiClient } from '$lib/api/browserApiClient';
-	import { deleteTrainee } from '$lib/api/collections/user';
 	import { invalidate } from '$app/navigation';
 	import { _ } from 'svelte-i18n';
-	const { User } = $props();
+	import { removeParticipantFromKit } from '$lib/api/collections/learningKit';
+	const { User, learningKitId } = $props();
 
 	let showDeleteDialog = $state(false);
 
 	async function removeTrainee() {
 		if (!User) return;
 
-		await browserApiClient.req(deleteTrainee, null, User.uuid);
+		await browserApiClient.req(removeParticipantFromKit, User.uuid, learningKitId);
 		await invalidate('trainees:list');
 
 		showDeleteDialog = false;

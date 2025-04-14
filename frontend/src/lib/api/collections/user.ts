@@ -63,7 +63,7 @@ export const addTrainee = createEndpoint({
 
 export const deleteTrainee = createEndpoint({
 	method: 'DELETE',
-	getPath: (id: string) => `${REQUEST_MAPPING}/delete-trainee/${id}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/trainee/delete/${id}`,
 	response: {
 		schema: z.null(),
 		defaultValidate: true

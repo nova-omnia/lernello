@@ -15,6 +15,7 @@ public interface LearningKitMapper {
 
     LearningKit toEntity(CreateLearningKitDTO createLearningKitResDto);
 
+    @Mapping(source = "learningKitId", target = "uuid")
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "files", ignore = true)
     LearningKit toEntity(UpdateLearningKitDTO updateLearningKitDTO);

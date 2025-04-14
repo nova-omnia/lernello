@@ -4,7 +4,7 @@
 
 	interface KitContentItemProps {
 		name: string;
-		description: string;
+		description?: string;
 		actions: Snippet;
 	}
 	const { name, description, actions }: KitContentItemProps = $props();

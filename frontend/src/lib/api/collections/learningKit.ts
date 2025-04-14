@@ -1,7 +1,6 @@
 import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
 import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
 import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
-import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -84,5 +83,3 @@ export const updateLearningKit = createEndpoint({
 		defaultValidate: false
 	}
 });
-
-

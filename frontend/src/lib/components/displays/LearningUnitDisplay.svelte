@@ -12,7 +12,7 @@
 	interface LearningUnitProps {
 		learningUnit: {
 			name: string;
-			description: string;
+			// description: string;
 			uuid: string;
 		};
 	}
@@ -32,7 +32,7 @@
 	}
 </script>
 
-<KitContentItem name={learningUnit.name} description={learningUnit.description}>
+<KitContentItem name={learningUnit.name}>
 	{#snippet actions()}
 		<a
 			type="button"

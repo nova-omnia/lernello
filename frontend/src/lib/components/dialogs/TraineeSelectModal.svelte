@@ -12,12 +12,22 @@
 		onSelect: (uuids: string[]) => void;
 		onClose: () => void;
 		allTrainees: ParticipantUser[];
+		selectedParticipants: ParticipantUser[];
 	}
 
-	let { isOpen, onSelect, onClose, allTrainees }: TraineeSelectModalProps = $props();
+	let { isOpen, onSelect, onClose, allTrainees, selectedParticipants }: TraineeSelectModalProps =
+		$props();
 
-	let selectedTrainees = $state<string[]>([]);
+	let selectedTrainees = $state<string[]>(
+		selectedParticipants.map((participant) => participant.uuid) ?? []
+	);
 	let isAddTraineeModalOpen = $state<boolean>(false);
+
+	$effect(() => {
+		if (selectedParticipants) {
+			selectedTrainees = selectedParticipants.map((participant) => participant.uuid) ?? [];
+		}
+	});
 
 	async function handleAddTrainee() {
 		allTrainees = await browserApiClient.req(getAllTrainees, null);
@@ -31,7 +41,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
+		<div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 

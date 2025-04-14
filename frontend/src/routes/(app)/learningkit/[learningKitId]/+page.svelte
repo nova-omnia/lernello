@@ -9,7 +9,7 @@
 	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import { browserApiClient } from '$lib/api/browserApiClient';
-	import { deleteLearningKit } from '$lib/api/collections/learningKit';
+	import { deleteLearningKit, removeParticipantFromKit } from '$lib/api/collections/learningKit';
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
@@ -116,7 +116,7 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay User={trainee} learningKitId={learningKit.uuid} />
+			<TraineeDisplay user={trainee} />
 		{/each}
 
 		<button
@@ -168,12 +168,13 @@
 
 <TraineeSelectModal
 	isOpen={showTraineeModal}
-	onSelect={(selectedTrainees) => {
-		handleSelectedTrainees(selectedTrainees);
+	onSelect={async (selectedTrainees) => {
+		await handleSelectedTrainees(selectedTrainees);
 		showTraineeModal = false;
 	}}
 	onClose={() => (showTraineeModal = false)}
 	allTrainees={data.allTrainees}
+	selectedParticipants={selectedTrainees}
 />
 
 <FileSelectModal

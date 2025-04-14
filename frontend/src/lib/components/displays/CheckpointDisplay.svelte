@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { GripVertical, Lock } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
+	import KitContentItem from './KitContentItem.svelte';
 
 	let showDeleteDialog = $state(false);
 
@@ -13,32 +13,23 @@
 	}
 </script>
 
-<div class="flex items-center p-1">
-	<GripVertical color="gray" class="h-10 w-10" />
-	<div
-		class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
-	>
-		<div class="flex items-start">
-			<Lock class="h-10 w-10" />
-			<div class="ml-2 flex flex-col justify-center">
-				<p class="text-black-700 text-xs font-bold">{$_('learningKit.checkpoint')}</p>
-				<p class="text-xs text-gray-700">
-					{$_('learningKit.checkpoint.description')}
-				</p>
-			</div>
-		</div>
-
+<KitContentItem
+	name={$_('learningKit.checkpoint')}
+	description={$_('learningKit.checkpoint.description')}
+>
+	{#snippet actions()}
 		<button
 			type="button"
-			class="btn preset-filled-error-500 ml-auto rounded-full p-2"
+			class="btn preset-filled-error-500 rounded-full"
 			onclick={(e) => {
 				e.preventDefault();
 				showDeleteDialog = true;
 			}}
-			>Delete
+		>
+			{$_('button.delete')}
 		</button>
-	</div>
-</div>
+	{/snippet}
+</KitContentItem>
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}

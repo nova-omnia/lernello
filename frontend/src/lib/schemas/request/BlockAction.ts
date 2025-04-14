@@ -9,15 +9,13 @@ const BaseBlockActionSchema = z.object({
 
 export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal(ActionType.Enum.ADD_BLOCK),
-	index: z.number().min(0),
+	index: z.number().min(-1),
 	data: z.discriminatedUnion('type', [CreateTheoryBlockSchema, CreateMultipleChoiceBlockSchema])
 });
 
 export const ReorderBlockActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal('REORDER_BLOCK'),
-	data: z.object({
-		newIndex: z.number().min(0)
-	})
+	newIndex: z.number().min(-1)
 });
 
 export const RemoveBlockActionSchema = BaseBlockActionSchema.extend({

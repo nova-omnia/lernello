@@ -7,7 +7,7 @@
 <div
 	class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
 >
-	<Avatar name="{user.surname} {user.name}" classes="h-11 w-11" /> 
+	<Avatar name="{user.surname} {user.name}" classes="h-11 w-11" />
 
 	<p class="text-black-700 ml-3 text-xs font-bold">{user.surname} {user.name}</p>
 	<!-- todo> -->

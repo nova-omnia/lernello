@@ -55,12 +55,5 @@
 		"vite": "^6.2.4",
 		"zod": "^3.24.2"
 	},
-	"dependencies": {
-		"@cartamd/plugin-math": "^4.3.1",
-		"highlight.js": "^11.11.1",
-		"install": "^0.13.0",
-		"katex": "^0.16.22",
-		"marked": "^15.0.8",
-		"npm": "^11.3.0"
-	}
+	"dependencies": {}
 }

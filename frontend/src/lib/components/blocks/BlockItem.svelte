@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
-	import QuizBlockComponent from './BlockQuizItem.svelte';
+	import MultipleChoiceBlockComponent from './BlockMultipleChoiceItem.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -11,10 +11,11 @@
 	interface BlockItemProps {
 		block: BlockRes;
 	}
+
 	const { block }: BlockItemProps = $props();
 
 	// TODO: Improve mapping similar to BlockIcon.svelte
-	let Component = block.type === 'THEORY' ? TheoryBlockComponent : QuizBlockComponent;
+	let Component = block.type === 'THEORY' ? TheoryBlockComponent : MultipleChoiceBlockComponent;
 
 	let isConfirmDialogOpen: boolean = $state(false);
 

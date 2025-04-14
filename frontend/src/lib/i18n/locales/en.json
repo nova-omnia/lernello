@@ -16,6 +16,7 @@
 	"common.save": "Save",
 	"common.delete": "Delete",
 	"common.edit": "Edit",
+	"common.loading": "Loading...",
 	"common.preview": "Preview",
 	"changePassword.title": "Change your Password",
 	"changePassword.description": "Please change your generated password to your own password.",

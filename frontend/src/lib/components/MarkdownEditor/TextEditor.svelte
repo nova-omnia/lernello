@@ -3,6 +3,7 @@
 	import DOMPurify from 'dompurify';
 	import Toolbar from './Toolbar.svelte';
 	import { _ } from 'svelte-i18n';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	interface TextEditorProps {
 		content: string;
@@ -39,6 +40,15 @@
 	const previewContent = async (): Promise<string> => {
 		const parsed = await marked.parse(content);
 		return DOMPurify.sanitize(parsed);
+	};
+
+	const throwError = (message: string) => {
+		console.error('Error:', message);
+		toaster.create({
+			title: $_('error.title'),
+			description: message,
+			type: 'error'
+		});
 	};
 </script>
 
@@ -77,9 +87,24 @@
 			placeholder={$_('markdownEditor.placeholder')}
 		>
 		</textarea>
-	{:else}
-		<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
-			{@html previewContent()}
-		</div>
+	{/if}
+	{#if activeTab === Tab.PREVIEW}
+		{#await previewContent()}
+			<div class="p-4">{$_('common.loading')}</div>
+		{:then safeHtml}
+			<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
+				{@html safeHtml}
+			</div>
+		{:catch error}
+			{(() => {
+				throwError(error.message);
+				return '';
+			})()}
+			<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
+				{$_('error.description', {
+					values: { status: 'unknown' }
+				})}
+			</div>
+		{/await}
 	{/if}
 </div>

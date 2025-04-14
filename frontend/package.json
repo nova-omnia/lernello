@@ -55,5 +55,7 @@
 		"vite": "^6.2.4",
 		"zod": "^3.24.2"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"marked": "^15.0.8"
+	}
 }

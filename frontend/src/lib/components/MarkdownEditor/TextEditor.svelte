@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { marked } from 'marked';
+	import DOMPurify from 'dompurify';
 	import Toolbar from './Toolbar.svelte';
 	import { _ } from 'svelte-i18n';
 
@@ -35,8 +36,9 @@
 		}, 0);
 	};
 
-	const previewContent = () => {
-		return marked.parse(content);
+	const previewContent = async (): Promise<string> => {
+		const parsed = await marked.parse(content);
+		return DOMPurify.sanitize(parsed);
 	};
 </script>
 

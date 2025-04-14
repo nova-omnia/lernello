@@ -22,8 +22,7 @@
 	}
 </script>
 
-<div class="rounded border border-green-300 bg-green-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-green-800">{$_('block.multipleChoiceQuiz')}</h2>
+<div class="bg-white dark:bg-gray-800 rounded-lg p-4">
 	<input
 		type="text"
 		placeholder={$_('block.multipleChoiceBlocks.question')}
@@ -32,7 +31,7 @@
 	/>
 
 	{#each answers as answer, idx (idx)}
-		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4">
+		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4 pl-4">
 			<Switch
 				name="correct-{idx}"
 				controlActive="bg-primary-400"
@@ -50,7 +49,7 @@
 			/>
 		</div>
 	{/each}
-	<button on:click={addAnswerField} class="bg-primary-100-900 col-span-12 mt-4 rounded p-4">
+	<button onclick={addAnswerField} type="button" class="btn preset-filled-primary-500">
 		{$_('block.multipleChoiceBlocks.addButton')}
 	</button>
 </div>

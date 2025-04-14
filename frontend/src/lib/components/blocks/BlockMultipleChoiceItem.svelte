@@ -3,11 +3,14 @@
 	import { Check, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
-	let question = '';
-	let answers: { value: string; isCorrect: boolean }[] = [
+	let question = $state('');
+	let answers = $state<{ value: string; isCorrect: boolean }[]>([
 		{ value: '', isCorrect: false },
 		{ value: '', isCorrect: false }
-	];
+	]);
+
+	const possibleAnswers = $derived(answers.map(a => a.value));
+	const correctAnswers = $derived(answers.filter(a => a.isCorrect).map(a => a.value));
 
 	function addAnswerField() {
 		answers = [...answers, { value: '', isCorrect: false }];
@@ -33,7 +36,7 @@
 	{#each answers as answer, idx (idx)}
 		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4 pl-4">
 			<Switch
-				name="correct-{idx}"
+				name={`correct-${idx}`}
 				controlActive="bg-primary-400"
 				classes="col-span-1"
 				onCheckedChange={() => toggleCorrect(idx)}

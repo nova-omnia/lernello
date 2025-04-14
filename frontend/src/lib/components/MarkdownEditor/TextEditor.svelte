@@ -3,6 +3,11 @@
 	import Toolbar from './Toolbar.svelte';
 	import { _ } from 'svelte-i18n';
 
+	interface TextEditorProps {
+		content: string;
+	}
+	let { content }: TextEditorProps = $props();
+
 	const Tab = {
 		EDIT: 'edit',
 		PREVIEW: 'preview'
@@ -11,7 +16,6 @@
 	type Tab = typeof Tab[keyof typeof Tab];
 
 	let activeTab: Tab = Tab.EDIT;
-	let content = '';
 
 	const insertSyntax = (syntax: string) => {
 		const textarea = document.getElementById('editor') as HTMLTextAreaElement;

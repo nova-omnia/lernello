@@ -59,32 +59,22 @@
 		>
 			{$_('common.preview')}
 		</button>
-		<Toolbar {insertSyntax} />
+		{#if activeTab === Tab.EDIT}
+				<Toolbar {insertSyntax} />
+		{/if}
 	</div>
 
 	{#if activeTab === Tab.EDIT}
     <textarea
 			id="editor"
 			bind:value={content}
-			class="w-full h-[calc(100%-44px)] p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none focus:outline-none"
+			class="w-full min-h-[300px] h-[calc(100%-44px)] p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none focus:outline-none"
 			placeholder={$_('markdownEditor.placeholder')}
-		/>
+		>
+    </textarea>
 	{:else}
 		<div class="prose dark:prose-invert max-w-none p-4 h-[calc(100%-44px)] overflow-y-auto">
 			{@html previewContent()}
 		</div>
 	{/if}
 </div>
-
-<style global>
-    /* Add basic Markdown styling */
-    .prose pre {
-        @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto;
-    }
-    .prose code {
-        @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm;
-    }
-    .prose blockquote {
-        @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 text-gray-600 dark:text-gray-400;
-    }
-</style>

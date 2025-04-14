@@ -1,0 +1,21 @@
+meta {
+  name: Create Learning Kit
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/learning-kits/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "uuid": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "Learning Kit Name",
+    "description": "This is a description of the learning kit.",
+    "deadlineDate": "2025-12-31",
+    "context": "Some context for the learning kit"
+  }
+}

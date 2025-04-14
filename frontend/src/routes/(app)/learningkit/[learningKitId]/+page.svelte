@@ -14,9 +14,8 @@
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
-	import type {ParticipantUser} from "$lib/schemas/response/ParticipantUser";
-	import type {FileRes} from "$lib/schemas/response/FileRes";
-	import {getAllTrainees} from "$lib/api/collections/user";
+	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import type { FileRes } from '$lib/schemas/response/FileRes';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
@@ -38,14 +37,14 @@
 
 	async function handleSelectedTrainees(uuids: string[]) {
 		learningKit.participants = uuids;
-		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit)
+		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit);
 		await invalidate('learningkits:list');
 		selectedTrainees = updatedLearningKit.participants;
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
 		learningKit.files = uuids;
-		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit)
+		const updatedLearningKit = await browserApiClient.req(updateLearningKit, learningKit);
 		await invalidate('learningkits:list');
 		selectedFiles = updatedLearningKit.files;
 	}
@@ -67,7 +66,7 @@
 
 <div class="bg-surface-50-950 p-4">
 	<!--header-->
-	<div class="space-between flex items-start p-1">
+	<div class="space-between flex items-start justify-between p-1">
 		<div>
 			<h1 class="text-2xl font-bold">{$_('learningKit.title')}: {learningKit.name}</h1>
 			<h2 class="mt-2 text-lg font-semibold">{learningKit.description}</h2>
@@ -79,7 +78,7 @@
 			{/if}
 		</div>
 
-		<button type="button" class="btn preset-outlined-surface-500 ml-auto rounded-full p-2">
+		<button type="button" class="btn preset-outlined-surface-500 rounded-full">
 			<Settings />
 			{$_('button.edit')}
 		</button>
@@ -87,22 +86,25 @@
 
 	<!--content-->
 	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('content')}</p>
-	<p class="mt-5 text-sm">{$_("learningKit.content")}</p>
-	<!-- foreach learningUnit-->
-	{#each learningUnits as learningUnit (learningUnit.uuid)}
-		<LearningUnitDisplay {learningUnit} />
-	{/each}
-	<CheckpointDisplay />
-	<button type="button"
-			class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2"
-			onclick={() => handleCreateNewLearningUnit()}>
+	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
+	<div class="grid gap-2">
+		{#each learningUnits as learningUnit (learningUnit.uuid)}
+			<LearningUnitDisplay {learningUnit} />
+		{/each}
+		<CheckpointDisplay />
+	</div>
+	<button
+		type="button"
+		class="btn preset-outlined-surface-500 w-full"
+		onclick={() => handleCreateNewLearningUnit()}
+	>
 		<Plus></Plus>
-		{$_("learningUnit.create")}
+		{$_('learningUnit.create')}
 	</button>
 
 	<!-- trainees -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_("trainee.title")}</p>
-	<p class="mt-5 text-sm">{$_("trainee.access")}</p>
+	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
+	<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
@@ -111,17 +113,17 @@
 
 		<button
 			type="button"
-			class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2"
+			class="btn preset-outlined-surface-500 w-full"
 			onclick={() => (showTraineeModal = true)}
 		>
 			<UserRoundPlus></UserRoundPlus>
-			{$_("trainee.add")}
+			{$_('trainee.add')}
 		</button>
 	</div>
 
 	<!-- Context -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_("learningKit.context")}</p>
-	<p class="mt-5 text-sm">{$_("learningKit.context.description")}</p>
+	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
+	<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 	<div class="flex flex-col gap-2">
 		{#each selectedFiles as file (file.uuid)}
 			<FileDisplay File={file} />
@@ -129,27 +131,29 @@
 
 		<button
 			type="button"
-			class="btn preset-outlined-surface-500 ml-auto w-full rounded-xl p-2"
+			class="btn preset-outlined-surface-500 w-full"
 			onclick={() => (showFileModal = true)}
 		>
 			<Upload></Upload>
-			{$_("learningKit.addFile")}
+			{$_('learningKit.addFile')}
 		</button>
 		<FileUpload />
 	</div>
 
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_("learningKit.settings")}</p>
-	<p class="mt-5 text-sm">{$_("learningKit.settings.change")}</p>
+	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
+	<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 	<div class="flex gap-2">
-		<button type="button" class="btn preset-filled-primary-500 rounded-full p-2">{$_("learningKit.publish")}</button>
+		<button type="button" class="btn preset-filled-primary-500 rounded-full"
+			>{$_('learningKit.publish')}</button
+		>
 		<button
 			onclick={(e) => {
 				e.preventDefault();
 				showDeleteDialog = true;
 			}}
 			type="button"
-			class="btn preset-filled-error-500 rounded-full p-2"
-			>{$_("learningKit.delete")}
+			class="btn preset-filled-error-500 rounded-full"
+			>{$_('learningKit.delete')}
 		</button>
 	</div>
 </div>

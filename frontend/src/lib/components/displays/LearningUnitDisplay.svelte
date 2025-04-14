@@ -1,28 +1,25 @@
 <script lang="ts">
-	import { AlignLeft, GripVertical } from 'lucide-svelte';
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
-	import {
-		getLearningUnitById,
-		deleteLearningUnit,
-		regenerateLearningUnit
-	} from '$lib/api/collections/learningUnit';
-	import { goto, invalidate } from '$app/navigation';
+	import { deleteLearningUnit, regenerateLearningUnit } from '$lib/api/collections/learningUnit';
+	import { invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
+	import KitContentItem from './KitContentItem.svelte';
+	import { Sparkles } from 'lucide-svelte';
 
 	let showDeleteDialog = $state(false);
 
-	const { learningUnit } = $props();
-
-	async function openLearningUnit() {
-		let unit = await browserApiClient.req(getLearningUnitById, null, learningUnit.uuid);
-		console.log(unit);
-		console.log(`Current path: ${window.location.pathname}`);
-		await goto('../learningunit/' + unit.uuid);
+	interface LearningUnitProps {
+		learningUnit: {
+			name: string;
+			description: string;
+			uuid: string;
+		};
 	}
+	const { learningUnit }: LearningUnitProps = $props();
 
 	async function regenerateLearningUnitHandler() {
-		await browserApiClient.req(regenerateLearningUnit, null, learningUnit.id);
+		await browserApiClient.req(regenerateLearningUnit, null, learningUnit.uuid);
 	}
 
 	async function deleteLearningUnitHandler() {
@@ -35,39 +32,35 @@
 	}
 </script>
 
-<div class="flex items-center p-1">
-	<GripVertical color="gray" class="h-10 w-10" />
-	<div
-		class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
-	>
-		<div class="flex items-start">
-			<AlignLeft class="h-10 w-10" />
-			<div class="ml-2 flex flex-col justify-center">
-				<p class="text-black-700 text-xs font-bold">{learningUnit.name}</p>
-				<p class="text-xs text-gray-700">{learningUnit.description}</p>
-			</div>
-		</div>
-
-		<button
+<KitContentItem name={learningUnit.name} description={learningUnit.description}>
+	{#snippet actions()}
+		<a
 			type="button"
-			onclick={openLearningUnit}
-			class="btn preset-filled-primary-500 ml-auto rounded-full p-2">{$_('button.open')}</button
+			href={`/learningunit/${learningUnit.uuid}`}
+			class="btn preset-filled-primary-500 rounded-full"
 		>
+			{$_('button.open')}
+		</a>
 		<button
 			type="button"
 			onclick={regenerateLearningUnitHandler}
-			class="btn preset-outlined-surface-500 bg-gray ml-1 rounded-full p-2">{$_('button.regenerate')}</button
+			class="btn preset-outlined-surface-500 bg-gray rounded-full"
 		>
+			<Sparkles />
+			{$_('button.regenerate')}
+		</button>
 		<button
 			type="button"
 			onclick={(e) => {
 				e.preventDefault();
 				showDeleteDialog = true;
 			}}
-			class="btn preset-filled-error-500 ml-1 rounded-full p-2">{$_('button.delete')}</button
+			class="btn preset-filled-error-500 rounded-full"
 		>
-	</div>
-</div>
+			{$_('button.delete')}
+		</button>
+	{/snippet}
+</KitContentItem>
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}

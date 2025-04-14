@@ -15,7 +15,7 @@
 
 	type Tab = typeof Tab[keyof typeof Tab];
 
-	let activeTab: Tab = Tab.EDIT;
+	let activeTab: Tab = $state(Tab.EDIT);
 
 	const insertSyntax = (syntax: string) => {
 		const textarea = document.getElementById('editor') as HTMLTextAreaElement;

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
 
-	let content:string = '';
+	let content: string = '';
 </script>
 
 <!-- Add main-container class to the root div -->
-<div class="bg-white dark:bg-gray-800 rounded-lg">
-	<TextEditor {content}/>
+<div class="rounded-lg bg-white dark:bg-gray-800">
+	<TextEditor {content} />
 </div>

@@ -9,8 +9,8 @@
 		{ value: '', isCorrect: false }
 	]);
 
-	const possibleAnswers = $derived(answers.map(a => a.value));
-	const correctAnswers = $derived(answers.filter(a => a.isCorrect).map(a => a.value));
+	const possibleAnswers = $derived(answers.map((a) => a.value));
+	const correctAnswers = $derived(answers.filter((a) => a.isCorrect).map((a) => a.value));
 
 	function addAnswerField() {
 		answers = [...answers, { value: '', isCorrect: false }];
@@ -25,7 +25,7 @@
 	}
 </script>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+<div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	<input
 		type="text"
 		placeholder={$_('block.multipleChoiceBlocks.question')}

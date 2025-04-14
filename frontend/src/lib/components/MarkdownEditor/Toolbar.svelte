@@ -7,14 +7,14 @@
 	const { insertSyntax }: ToolbarProps = $props();
 </script>
 
-<div class="absolute right-0 top-0 flex items-center space-x-2 p-2">
+<div class="absolute top-0 right-0 flex items-center space-x-2 p-2">
 	<button
 		type="button"
 		onclick={() => insertSyntax('**{{selection}}**')}
 		class="btn preset-tonal-surface hover:"
 		title="Bold"
 	>
-		<Bold class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+		<Bold class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 	</button>
 	<button
 		type="button"
@@ -22,7 +22,7 @@
 		class="btn preset-tonal-surface hover:"
 		title="Italic"
 	>
-		<Italic class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+		<Italic class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 	</button>
 	<button
 		type="button"
@@ -30,7 +30,7 @@
 		class="btn preset-tonal-surface hover:"
 		title="Code block"
 	>
-		<Code class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+		<Code class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 	</button>
 	<button
 		type="button"
@@ -38,7 +38,7 @@
 		class="btn preset-tonal-surface hover:"
 		title="Unordered list"
 	>
-		<List class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+		<List class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 	</button>
 	<button
 		type="button"
@@ -46,6 +46,6 @@
 		class="btn preset-tonal-surface hover:"
 		title="Ordered list"
 	>
-		<ListOrdered class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+		<ListOrdered class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 	</button>
 </div>

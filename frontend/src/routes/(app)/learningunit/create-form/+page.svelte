@@ -17,7 +17,7 @@
 </script>
 
 <form method="POST" use:enhance action="?/create" class="mx-auto max-w-lg space-y-4">
-	<h1 class="h1">{$_('learningunit.createTitle')}</h1>
+	<h1 class="h1">{$_('learningUnit.createTitle')}</h1>
 
 	<label class="label">
 		<span class="label-text">{$_('form.nameLabel')} </span>
@@ -36,7 +36,7 @@
 		{/if}
 	</label>
 
-	<button class="btn preset-filled-primary-400-600 w-full">{$_('learningunit.createButton')}</button
+	<button class="btn preset-filled-primary-400-600 w-full">{$_('learningUnit.createButton')}</button
 	>
 	<SuperDebug data={$form} />
 </form>

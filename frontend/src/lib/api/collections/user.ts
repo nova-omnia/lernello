@@ -74,7 +74,6 @@ export const deleteTrainee = createEndpoint({
 	}
 });
 
-
 export const setUserLocale = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}/locale`,

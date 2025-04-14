@@ -61,10 +61,10 @@
 	"selectFiles": "Select files",
 	"selectTrainees": "Select trainees",
 	"createTrainee": "Create Trainee",
-	"multiSelect.select" : "Select",
+	"multiSelect.select": "Select",
 	"multiSelect.username": "Username",
 	"multiSelect.name": "Name",
-	"multiSelect.surname" : "Surname",
+	"multiSelect.surname": "Surname",
 	"multiSelect.placeholder": "Select...",
 	"multiSelect.searchPlaceholder": "Search...",
 	"multiSelect.noOptionsFound": "No options found"

@@ -51,14 +51,34 @@ export function addBlockActionListener(onBlockAction: (event: CustomBlockActionE
 function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
 		case 'ADD_BLOCK': {
-			const newBlock = {
-				type: action.data.type,
-				name: action.data.name,
-				uuid: action.blockId
-			};
+			let newBlock: BlockRes;
+
+			if (action.data.type === BlockType.Enum.THEORY) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0,
+					content: action.data.content || 'placeholder'
+				};
+			} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0,
+					question: action.data.question || 'placeholder question',
+					possibleAnswers: action.data.possibleAnswers || [],
+					correctAnswers: action.data.correctAnswers || []
+				};
+			} else {
+				throw new Error('Unsupported block type.');
+			}
 
 			if (action.index !== undefined) {
 				blocks.splice(action.index, 0, newBlock);
+			} else {
+				blocks.push(newBlock);
 			}
 			break;
 		}
@@ -67,7 +87,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			const blockToMove = blocks.find((block) => block.uuid === action.blockId);
 			if (blockToMove) {
 				blocks = blocks.filter((block) => block.uuid !== action.blockId);
-				blocks.splice(action.data.newIndex, 0, blockToMove);
+				blocks.splice(action.newIndex, 0, blockToMove);
 			}
 			break;
 		}
@@ -119,6 +139,12 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 		} else {
 			throw new Error('Unsupported block type.');
 		}
+	} else if (action.type === ActionType.Enum.REORDER_BLOCK) {
+		parsedAction = {
+			type: 'REORDER_BLOCK',
+			blockId: action.blockId,
+			newIndex: action.newIndex
+		};
 	} else {
 		parsedAction = action;
 	}

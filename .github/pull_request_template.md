@@ -1,8 +1,14 @@
 # Description
 
-Provide a summary of the key changes introduced in this pull request.
+## ✨ Key Changes
 
-Highlight any areas of the code that are incomplete or require further discussion for better understanding.
+> _Replace this section with a summary of the key changes introduced in this pull request._
+
+---
+
+## 🚧 Incomplete Areas / Discussion Points
+
+> _Replace this section to highlight any areas of the code that are incomplete or require further discussion for better understanding._
 
 ## Checklist
 

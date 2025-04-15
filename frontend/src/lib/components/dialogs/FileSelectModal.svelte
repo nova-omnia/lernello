@@ -52,7 +52,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
+		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectFiles')}</h2>
 
@@ -64,7 +64,7 @@
 					disabled={$loading}
 				/>
 
-				<div class="min-h-70 max-h-64 overflow-auto">
+				<div class="max-h-64 min-h-70 overflow-auto">
 					{#if $loading}
 						<p class="text-center">{$_('loading')}</p>
 					{:else}

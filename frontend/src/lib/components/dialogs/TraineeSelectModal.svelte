@@ -23,7 +23,7 @@
 		selectedParticipants.map((participant) => participant.uuid) ?? []
 	);
 	let isAddTraineeModalOpen = $state<boolean>(false);
-	let searchValue = writable('');
+	let searchValue = writable(''); //TODO: dont use store
 
 	// Filter trainees based on the search value
 	const filteredTrainees = derived(searchValue, ($searchValue) => {
@@ -54,7 +54,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
+		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 
@@ -62,10 +62,10 @@
 					type="text"
 					placeholder={$_('multiSelect.searchPlaceholder')}
 					bind:value={$searchValue}
-					class="w-full bg-surface-200-800 text-surface-800-200 px-3 py-2 "
+					class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
 				/>
 
-				<div class="max-h-64 overflow-auto min-h-70">
+				<div class="max-h-64 min-h-70 overflow-auto">
 					<table class="table w-full">
 						<thead>
 							<tr>

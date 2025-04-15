@@ -16,20 +16,17 @@
 
 	let availableFiles = $state<FileRes[]>([]);
 	let selectedFiles = $state<string[]>([]);
-	let searchValue = writable('');
-	let loading = writable(true);
+	let searchValue = writable(''); //TODO: dont use store
+	let loading = writable(true); //TODO: dont use store
 
-	const filteredFiles = derived(
-		[searchValue, loading],
-		([$searchValue, $loading]) => {
-			if ($loading) return [];
-			return $searchValue
-				? availableFiles.filter((file) =>
-						file.name.toLowerCase().includes($searchValue.toLowerCase())
-				  )
-				: availableFiles;
-		}
-	);
+	const filteredFiles = derived([searchValue, loading], ([$searchValue, $loading]) => {
+		if ($loading) return [];
+		return $searchValue
+			? availableFiles.filter((file) =>
+					file.name.toLowerCase().includes($searchValue.toLowerCase())
+				)
+			: availableFiles;
+	});
 
 	$effect(() => {
 		if (isOpen) {
@@ -63,11 +60,11 @@
 					type="text"
 					placeholder={$_('multiSelect.searchPlaceholder')}
 					bind:value={$searchValue}
-					class="w-full bg-surface-200-800 text-surface-800-200 px-3 py-2"
+					class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
 					disabled={$loading}
 				/>
 
-				<div class="max-h-64 overflow-auto min-h-70">
+				<div class="max-h-64 min-h-70 overflow-auto">
 					{#if $loading}
 						<p class="text-center">{$_('loading')}</p>
 					{:else}

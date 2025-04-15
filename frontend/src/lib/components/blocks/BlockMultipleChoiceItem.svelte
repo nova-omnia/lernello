@@ -3,11 +3,15 @@
 	import { Check, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
-	let question = '';
-	let answers: { value: string; isCorrect: boolean }[] = [
+	let question = $state('');
+	let answers = $state<{ value: string; isCorrect: boolean }[]>([
 		{ value: '', isCorrect: false },
 		{ value: '', isCorrect: false }
-	];
+	]);
+
+	//TODO: for future use when implementing update action
+	//const possibleAnswers = $derived(answers.map((a) => a.value));
+	//const correctAnswers = $derived(answers.filter((a) => a.isCorrect).map((a) => a.value));
 
 	function addAnswerField() {
 		answers = [...answers, { value: '', isCorrect: false }];
@@ -22,8 +26,7 @@
 	}
 </script>
 
-<div class="rounded border border-green-300 bg-green-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-green-800">{$_('block.multipleChoiceQuiz')}</h2>
+<div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	<input
 		type="text"
 		placeholder={$_('block.multipleChoiceBlocks.question')}
@@ -32,9 +35,9 @@
 	/>
 
 	{#each answers as answer, idx (idx)}
-		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4">
+		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4 pl-4">
 			<Switch
-				name="correct-{idx}"
+				name={`correct-${idx}`}
 				controlActive="bg-primary-400"
 				classes="col-span-1"
 				onCheckedChange={() => toggleCorrect(idx)}
@@ -50,7 +53,7 @@
 			/>
 		</div>
 	{/each}
-	<button on:click={addAnswerField} class="bg-primary-100-900 col-span-12 mt-4 rounded p-4">
+	<button onclick={addAnswerField} type="button" class="btn preset-filled-primary-500">
 		{$_('block.multipleChoiceBlocks.addButton')}
 	</button>
 </div>

@@ -1,16 +1,10 @@
 <script lang="ts">
-	import { MarkdownEditor } from 'carta-md';
-	import { carta } from '$lib/components/blocks/carta';
-	import { _ } from 'svelte-i18n';
+	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
 
-	// Define the `data` prop with a default value
-	export let data: { markdown: string; html: string } = {
-		markdown: '',
-		html: ''
-	};
+	let content: string = '';
 </script>
 
-<div class="rounded border border-blue-300 bg-blue-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-blue-800">{$_('block.theoryBlock')}</h2>
-	<MarkdownEditor bind:value={data.markdown} mode="tabs" {carta} />
+<!-- Add main-container class to the root div -->
+<div class="rounded-lg bg-white dark:bg-gray-800">
+	<TextEditor {content} />
 </div>

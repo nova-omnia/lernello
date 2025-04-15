@@ -34,6 +34,7 @@
 		{#if $errors.name}
 			<p class="text-error-500 text-sm">{$errors.name}</p>
 		{/if}
+		<input type="hidden" name="learningKitId" bind:value={$form.learningKitId} />
 	</label>
 
 	<button class="btn preset-filled-primary-400-600 w-full">{$_('learningUnit.createButton')}</button

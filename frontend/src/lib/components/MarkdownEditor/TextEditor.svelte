@@ -93,6 +93,7 @@
 			<div class="p-4">{$_('common.loading')}</div>
 		{:then safeHtml}
 			<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html safeHtml}
 			</div>
 		{:catch error}

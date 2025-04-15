@@ -16,11 +16,12 @@
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
+	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
-	const learningUnits = $state(data.kitToDisplay.learningUnits || []);
+	let learningUnits = $state(data.kitToDisplay.learningUnits || []);
 	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
 	let selectedFiles = $state<FileRes[]>([]);
 	let showDeleteDialog = $state(false);
@@ -74,6 +75,11 @@
 		showDeleteDialog = false;
 		await goto('/dashboard');
 	}
+
+	async function deleteLearningUnitFromKit(learningUnitId: string) {
+		await browserApiClient.req(deleteLearningUnit, null, learningUnitId);
+		learningUnits = learningUnits?.filter(learningUnit => learningUnit.uuid != learningUnitId);
+	}
 </script>
 
 <div class="bg-surface-50-950 p-4">
@@ -101,7 +107,7 @@
 	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
 	<div class="grid gap-2">
 		{#each learningUnits as learningUnit (learningUnit.uuid)}
-			<LearningUnitDisplay {learningUnit} />
+			<LearningUnitDisplay {learningUnit} onDeleteLearningUnit={async () => {deleteLearningUnitFromKit(learningUnit.uuid)}} />
 		{/each}
 		<CheckpointDisplay />
 	</div>

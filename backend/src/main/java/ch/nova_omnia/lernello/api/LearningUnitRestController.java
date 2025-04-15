@@ -42,8 +42,7 @@ public class LearningUnitRestController {
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
 
-        LearningKit learningKit = learningKitRepository.findById(createLearningUnitDTO.learningKitId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        LearningKit learningKit = learningKitRepository.findById(createLearningUnitDTO.learningKitId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO, learningKit);
         LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit);
@@ -52,8 +51,9 @@ public class LearningUnitRestController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
-    public void deleteById(@PathVariable UUID id) {
+    public UUID deleteById(@PathVariable UUID id) {
         learningUnitService.deleteById(id);
+        return id;
     }
 
     @GetMapping("/{id}")

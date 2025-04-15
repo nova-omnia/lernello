@@ -27,7 +27,7 @@
 	<!-- todo> -->
 	<!-- <button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2"
 		>{$_('button.edit')}</button
-	>-->	 
+	>-->
 	<button
 		type="button"
 		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
@@ -44,7 +44,10 @@
 	message="Are you sure you want to remove this trainee?"
 	confirmText="Delete"
 	danger={true}
-	onConfirm={() => {removeTrainee(); onRemoveTrainee();}}
+	onConfirm={() => {
+		removeTrainee();
+		onRemoveTrainee();
+	}}
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}

@@ -48,7 +48,9 @@
 	}
 
 	async function removeTrainee(uuid: string) {
-		handleSelectedTrainees(selectedTrainees.filter(trainee => trainee.uuid != uuid).map(trainee => trainee.uuid));
+		handleSelectedTrainees(
+			selectedTrainees.filter((trainee) => trainee.uuid != uuid).map((trainee) => trainee.uuid)
+		);
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
@@ -78,7 +80,7 @@
 
 	async function deleteLearningUnitFromKit(learningUnitId: string) {
 		await browserApiClient.req(deleteLearningUnit, null, learningUnitId);
-		learningUnits = learningUnits?.filter(learningUnit => learningUnit.uuid != learningUnitId);
+		learningUnits = learningUnits?.filter((learningUnit) => learningUnit.uuid != learningUnitId);
 	}
 </script>
 
@@ -107,7 +109,12 @@
 	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
 	<div class="grid gap-2">
 		{#each learningUnits as learningUnit (learningUnit.uuid)}
-			<LearningUnitDisplay {learningUnit} onDeleteLearningUnit={async () => {deleteLearningUnitFromKit(learningUnit.uuid)}} />
+			<LearningUnitDisplay
+				{learningUnit}
+				onDeleteLearningUnit={async () => {
+					deleteLearningUnitFromKit(learningUnit.uuid);
+				}}
+			/>
 		{/each}
 		<CheckpointDisplay />
 	</div>
@@ -126,7 +133,10 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay user={trainee} onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}/>
+			<TraineeDisplay
+				user={trainee}
+				onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}
+			/>
 		{/each}
 
 		<button

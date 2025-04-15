@@ -64,7 +64,10 @@
 	message={`Are you sure you want to delete "${learningUnit?.name}"?`}
 	confirmText="Delete"
 	danger={true}
-	onConfirm={() => {deleteLearningUnitHandler(); onDeleteLearningUnit()} }
+	onConfirm={() => {
+		deleteLearningUnitHandler();
+		onDeleteLearningUnit();
+	}}
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}

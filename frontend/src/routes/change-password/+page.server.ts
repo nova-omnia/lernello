@@ -34,7 +34,6 @@ export const actions = {
 		}
 
 		const redirectTo = parseRedirectTo(url);
-		console.log('redirectTo', redirectTo);
 
 		redirect(303, redirectTo);
 	})

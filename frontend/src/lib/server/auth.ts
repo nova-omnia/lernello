@@ -48,8 +48,7 @@ export function requireLogin() {
 
 export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {
 	const redirectTo = url.searchParams.get('redirectTo');
-	if (!redirectTo?.startsWith('/')) {
-		console.error('Only relative redirects are allowed');
+	if (redirectTo && !redirectTo.startsWith('/')) {
 		return fallback;
 	}
 

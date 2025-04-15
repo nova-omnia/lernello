@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
-	import { deleteLearningUnit, regenerateLearningUnit } from '$lib/api/collections/learningUnit';
-	import { invalidate } from '$app/navigation';
+	import { regenerateLearningUnit } from '$lib/api/collections/learningUnit';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import KitContentItem from './KitContentItem.svelte';

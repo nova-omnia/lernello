@@ -87,5 +87,7 @@
 	"multiSelect.placeholder": "Select...",
 	"multiSelect.searchPlaceholder": "Search...",
 	"multiSelect.noOptionsFound": "No options found",
-	"markdownEditor.placeholder": "Write your markdown here..."
+	"markdownEditor.placeholder": "Write your markdown here...",
+	"errorIllustration.alt": "Error Illustration with a red X",
+	"errorIllustration.title": "Error"
 }

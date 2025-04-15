@@ -1,7 +1,7 @@
 import type { Actions } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
 import { handleApiError } from '$lib/api/apiError';
-import { setError, superValidate } from 'sveltekit-superforms';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
@@ -28,10 +28,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const { success } = await api(fetch).req(changePassword, form.data).parse();
-		if (!success) {
-			return setError(form, 'confirmPassword', 'Change password failed');
-		}
+		await api(fetch).req(changePassword, form.data).parse();
 
 		const redirectTo = parseRedirectTo(url);
 

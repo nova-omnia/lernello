@@ -16,6 +16,8 @@
 	"common.save": "Save",
 	"common.delete": "Delete",
 	"common.edit": "Edit",
+	"common.loading": "Loading...",
+	"common.preview": "Preview",
 	"changePassword.title": "Change your Password",
 	"changePassword.description": "Please change your generated password to your own password.",
 	"changePassword.button": "Change Password",
@@ -82,5 +84,6 @@
 	"block.textAnswerBlock.answer": "Answer",
 	"multiSelect.placeholder": "Select...",
 	"multiSelect.searchPlaceholder": "Search...",
-	"multiSelect.noOptionsFound": "No options found"
+	"multiSelect.noOptionsFound": "No options found",
+	"markdownEditor.placeholder": "Write your markdown here..."
 }

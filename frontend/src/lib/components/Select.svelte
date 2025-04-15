@@ -33,7 +33,9 @@
 	>
 		<span class="truncate">
 			{#if selected}
-				{@render figure(options.find((option) => option.value === selected)?.label || selected)}
+				{@render figure(
+					options.find((option) => selected.includes(option.value))?.label || selected
+				)}
 			{:else}
 				Select...
 			{/if}

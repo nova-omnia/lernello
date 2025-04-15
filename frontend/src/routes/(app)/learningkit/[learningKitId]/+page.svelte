@@ -47,7 +47,7 @@
 	}
 
 	async function removeTrainee(uuid: string) {
-		handleSelectedTrainees(selectedTrainees.filter(trainee => trainee.uuid == uuid).map(trainee => trainee.uuid));
+		handleSelectedTrainees(selectedTrainees.filter(trainee => trainee.uuid != uuid).map(trainee => trainee.uuid));
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
@@ -120,7 +120,7 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay user={trainee} onRemoveTrainee={removeTrainee(trainee.uuid)}/>
+			<TraineeDisplay user={trainee} onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}/>
 		{/each}
 
 		<button

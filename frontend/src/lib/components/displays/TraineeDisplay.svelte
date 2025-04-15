@@ -13,7 +13,7 @@
 
 	let showDeleteDialog = $state(false);
 
-	async function removeTrainee() {
+	function removeTrainee() {
 		showDeleteDialog = false;
 	}
 </script>

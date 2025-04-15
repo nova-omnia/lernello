@@ -1,6 +1,4 @@
-# Description
-
-## ✨ Key Changes
+# ✨ Key Changes
 
 > _Replace this section with a summary of the key changes introduced in this pull request._
 

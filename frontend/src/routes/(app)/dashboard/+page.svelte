@@ -5,6 +5,7 @@
 	import { deleteLearningKit, getAllLearningKits } from '$lib/api/collections/learningKit';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
+	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 
 	const client = useQueryClient();
 
@@ -43,9 +44,17 @@
 	<p class="preset-typo-subtitle">{$_('dashboard.welcome')}</p>
 
 	{#if $kitsQuery.status === 'pending'}
-		<span>Loading...</span>
+		<div class="mt-5 flex flex-wrap gap-5">
+			{#each Array(3) as _}
+				<div class="card preset-filled-surface-100-900 grid w-52 gap-2 p-5">
+					<div class="placeholder animate-pulse"></div>
+					<div class="placeholder animate-pulse"></div>
+					<div class="placeholder animate-pulse"></div>
+				</div>
+			{/each}
+		</div>
 	{:else if $kitsQuery.status === 'error'}
-		<span>Error: {$kitsQuery.error.message}</span>
+		<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 	{:else}
 		<div class="mt-5 flex flex-wrap gap-5">
 			<a
@@ -53,7 +62,7 @@
 				class="border-surface-400-600 hover:bg-surface-100-900 relative flex w-52 flex-col items-center justify-center rounded-lg border border-dashed p-5 pt-10 text-center transition-colors"
 			>
 				<Plus class="text-primary-500 h-10 w-10" />
-				<p>Create New Kit</p>
+				<p>{$_('learningKit.create')}</p>
 			</a>
 
 			{#each $kitsQuery.data as kit (kit.uuid)}
@@ -61,7 +70,7 @@
 					href={`/learningkit/${kit.uuid}`}
 					class="border-surface-400-600 hover:bg-surface-100-900 relative w-52 rounded-lg border p-5 pt-10 text-center transition-colors"
 				>
-					<div class="absolute top-0 right-0 flex gap-2">
+					<div class="absolute right-0 top-0 flex gap-2">
 						<button
 							class="p-2"
 							onclick={(e) => {

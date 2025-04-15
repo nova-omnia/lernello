@@ -54,6 +54,8 @@
 	"learningKit.delete": "Delete learning kit",
 	"learningKit.publish": "Publish",
 	"learningUnit.create": "Create new Learning Unit",
+	"learningKit.create": "Create new Kit",
+	"learningKit.error.loadList": "Failed to load Learning Kits",
 	"learningKit.checkpoint": "Checkpoint",
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
 	"trainee.title": "Trainees",

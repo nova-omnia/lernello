@@ -2,6 +2,8 @@ package ch.nova_omnia.lernello.mapper;
 
 import java.util.Comparator;
 import java.util.List;
+
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.block.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -19,8 +21,10 @@ import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LearningUnitMapper {
-        LearningUnit toEntity(CreateLearningUnitDTO createLearningUnitDTO);
 
+    default LearningUnit toEntity(CreateLearningUnitDTO dto, LearningKit learningKit) {
+        return new LearningUnit(dto.name(), learningKit);
+    }
     default LearningUnitResDTO toDTO(LearningUnit learningUnit) {
         List<BlockResDTO> sortedBlocks = learningUnit.getBlocks().stream()
                 .sorted(Comparator.comparingInt(Block::getPosition))

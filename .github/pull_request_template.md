@@ -8,8 +8,7 @@
 
 > _Replace this section to highlight any areas of the code that are incomplete or require further discussion for better understanding._
 
-## Checklist
+## 🚨 Checklist
 
 - [ ] I have reviewed my own code changes.
-- [ ] All automated checks have successfully passed.
 - [ ] The pull request is small and manageable for review.

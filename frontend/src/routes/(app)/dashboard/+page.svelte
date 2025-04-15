@@ -45,7 +45,7 @@
 
 	{#if $kitsQuery.status === 'pending'}
 		<div class="mt-5 flex flex-wrap gap-5">
-			{#each Array(3) as _}
+			{#each Array(3) as _, idx (idx)}
 				<div class="card preset-filled-surface-100-900 grid w-52 gap-2 p-5">
 					<div class="placeholder animate-pulse"></div>
 					<div class="placeholder animate-pulse"></div>
@@ -70,7 +70,7 @@
 					href={`/learningkit/${kit.uuid}`}
 					class="border-surface-400-600 hover:bg-surface-100-900 relative w-52 rounded-lg border p-5 pt-10 text-center transition-colors"
 				>
-					<div class="absolute top-0 right-0 flex gap-2">
+					<div class="absolute right-0 top-0 flex gap-2">
 						<button
 							class="p-2"
 							onclick={(e) => {

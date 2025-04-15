@@ -6,8 +6,10 @@ import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUni
 import { serverApiClient } from '$lib/api/serverApiClient';
 import { createLearningUnit } from '$lib/api/collections/learningUnit';
 
-export const load = async () => {
+export const load = async ({ url }) => {
+	const learningKitId = url.searchParams.get('learningKitId') ?? '';
 	const form = await superValidate(zod(CreateLearningUnitSchema));
+	form.data.learningKitId = learningKitId;
 	return { form };
 };
 

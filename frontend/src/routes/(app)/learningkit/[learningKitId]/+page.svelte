@@ -56,7 +56,7 @@
 	}
 
 	async function handleCreateNewLearningUnit() {
-		await goto('../learningunit/create-form/');
+		await goto(`../../learningunit/create-form?learningKitId=${learningKit.uuid}`);
 	}
 
 	async function handleConfirmDelete() {

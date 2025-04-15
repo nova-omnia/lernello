@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { browserApiClient } from '$lib/api/browserApiClient';
+	import { api } from '$lib/api/apiClient';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
@@ -33,7 +33,7 @@
 			async function fetchFiles() {
 				loading.set(true);
 				try {
-					const data = await browserApiClient.req(getAllFiles, null);
+					const data = await api(fetch).req(getAllFiles, null).parse();
 					availableFiles = data;
 				} catch (error) {
 					console.error('Error fetching files:', error);

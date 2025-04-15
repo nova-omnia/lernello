@@ -8,7 +8,6 @@
 	import FileSelectModal from '$lib/components/dialogs/FileSelectModal.svelte';
 	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { deleteLearningKit } from '$lib/api/collections/learningKit';
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -17,6 +16,7 @@
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
+	import { api } from '$lib/api/apiClient.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
@@ -37,12 +37,14 @@
 	}
 
 	async function handleSelectedTrainees(uuids: string[]) {
-		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
-			...learningKit,
-			learningKitId: learningKit.uuid,
-			participants: uuids,
-			files: learningKit.files?.map((file) => file.uuid) ?? []
-		});
+		const updatedLearningKit = await api(fetch)
+			.req(updateLearningKit, {
+				...learningKit,
+				learningKitId: learningKit.uuid,
+				participants: uuids,
+				files: learningKit.files?.map((file) => file.uuid) ?? []
+			})
+			.parse();
 		await invalidate('learningkits:list');
 		selectedTrainees = updatedLearningKit.participants ?? [];
 	}
@@ -54,12 +56,14 @@
 	}
 
 	async function handleSelectedFiles(uuids: string[]) {
-		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
-			...learningKit,
-			learningKitId: learningKit.uuid,
-			participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
-			files: uuids
-		});
+		const updatedLearningKit = await api(fetch)
+			.req(updateLearningKit, {
+				...learningKit,
+				learningKitId: learningKit.uuid,
+				participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
+				files: uuids
+			})
+			.parse();
 		await invalidate('learningkits:list');
 		selectedFiles = updatedLearningKit.files ?? [];
 	}
@@ -71,7 +75,7 @@
 	async function handleConfirmDelete() {
 		if (!learningKit) return;
 
-		await browserApiClient.req(deleteLearningKit, null, learningKit.uuid);
+		await api(fetch).req(deleteLearningKit, null, learningKit.uuid).parse();
 		await invalidate('learningkits:list');
 
 		showDeleteDialog = false;
@@ -79,7 +83,7 @@
 	}
 
 	async function deleteLearningUnitFromKit(learningUnitId: string) {
-		await browserApiClient.req(deleteLearningUnit, null, learningUnitId);
+		await api(fetch).req(deleteLearningUnit, null, learningUnitId).parse();
 		learningUnits = learningUnits?.filter((learningUnit) => learningUnit.uuid != learningUnitId);
 	}
 </script>

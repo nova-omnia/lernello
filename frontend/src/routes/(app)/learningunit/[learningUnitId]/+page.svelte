@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { api } from '$lib/api/apiClient.js';
 	import { isApiErrorResponse } from '$lib/api/apiError.js';
-	import { browserApiClient } from '$lib/api/browserApiClient.js';
 	import { applyBlockActions, getLearningUnitById } from '$lib/api/collections/learningUnit.js';
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
@@ -28,11 +28,9 @@
 				const queue = blockActionState.queue; // Get the current queue
 				blockActionState.clearQueue(); // Clear the queue
 				try {
-					const applyResult = await browserApiClient.req(
-						applyBlockActions,
-						queue,
-						data.learningUnitId
-					);
+					const applyResult = await api(fetch)
+						.req(applyBlockActions, queue, data.learningUnitId)
+						.parse();
 					// applyResult is a map of temporary block ids to permanent block ids, lets reflect this in our blockActionState
 					blockActionState.setBlocks(
 						blockActionState.blocks.map((block) => {
@@ -51,11 +49,9 @@
 						type: 'error'
 					});
 					dataLoading = true;
-					const refetchedData = await browserApiClient.req(
-						getLearningUnitById,
-						null,
-						data.learningUnitId
-					);
+					const refetchedData = await api(fetch)
+						.req(getLearningUnitById, null, data.learningUnitId)
+						.parse();
 					blockActionState.setBlocks(refetchedData.blocks);
 					dataLoading = false;
 				}

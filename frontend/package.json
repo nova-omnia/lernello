@@ -33,6 +33,8 @@
 		"@tailwindcss/forms": "^0.5.10",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.0.17",
+		"@tanstack/svelte-query": "^5.73.3",
+		"@tanstack/svelte-query-devtools": "^5.73.3",
 		"bits-ui": "^1.3.18",
 		"carta-md": "^4.9.0",
 		"eslint": "^9.23.0",

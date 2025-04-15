@@ -1,9 +1,7 @@
-import { loadUserInfo, recoverAuthToken } from '$lib/server/auth';
+import { loadUserInfo, isLoggedIn } from '$lib/server/auth';
 
 export const load = async () => {
-	const tokenInfo = recoverAuthToken();
-
-	if (tokenInfo) {
+	if (isLoggedIn()) {
 		const userInfo = await loadUserInfo();
 		return {
 			userInfo

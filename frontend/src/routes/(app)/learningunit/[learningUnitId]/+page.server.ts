@@ -1,11 +1,11 @@
+import { api } from '$lib/api/apiClient.js';
 import { handleApiError } from '$lib/api/apiError.js';
 import { getLearningUnitById } from '$lib/api/collections/learningUnit';
-import { serverApiClient } from '$lib/api/serverApiClient.js';
 
-export const load = handleApiError(async ({ params }) => {
+export const load = handleApiError(async ({ params, fetch }) => {
 	const { learningUnitId } = params;
 
-	const learningUnit = await serverApiClient.req(getLearningUnitById, null, learningUnitId);
+	const learningUnit = await api(fetch).req(getLearningUnitById, null, learningUnitId).parse();
 
 	return {
 		learningUnitId,

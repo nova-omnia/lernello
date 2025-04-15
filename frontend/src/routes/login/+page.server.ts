@@ -3,28 +3,28 @@ import { fail } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseRedirectTo, recoverAuthToken } from '$lib/server/auth';
+import { isLoggedIn, parseRedirectTo } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
-import { publicApiClient } from '$lib/api/publicApiClient';
 import { signin } from '$lib/api/collections/auth';
 import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
+import { api } from '$lib/api/apiClient.js';
 
-export const load = async () => {
+export const load = async ({ url }) => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
-	const tokenInfo = recoverAuthToken();
-	if (tokenInfo) {
+
+	if (isLoggedIn()) {
 		message(form, {
-			redirectTo: '/',
-			tokenInfo
+			redirectTo: parseRedirectTo(url)
 		});
 	}
+
 	return { form };
 };
 
-type Message = { redirectTo: string; tokenInfo: LoggedInUser };
+type Message = { redirectTo: string; tokenInfo?: LoggedInUser };
 
 export const actions = {
-	login: handleApiError(async ({ request, cookies, url }) => {
+	login: handleApiError(async ({ request, cookies, url, fetch }) => {
 		const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(
 			request,
 			zod(UserLoginSchema)
@@ -33,7 +33,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 		try {
-			const loggedInUserRes = await publicApiClient.reqRaw(signin, form.data, undefined);
+			const loggedInUserRes = await api(fetch).req(signin, form.data, undefined).response;
 			const loggedInUserResJson = await loggedInUserRes.json();
 			const loggedInUser = signin.response.schema.parse(loggedInUserResJson);
 			const expiresDate = new Date(loggedInUser.expires);
@@ -42,7 +42,7 @@ export const actions = {
 				throw new Error('Newly retrieved token is expired');
 			}
 
-			cookies.set('lernello_auth_token', JSON.stringify(loggedInUser), {
+			cookies.set('lernello_auth_token', loggedInUser.token, {
 				httpOnly: true,
 				path: '/',
 				maxAge: Math.floor(expiresMs / 1000)

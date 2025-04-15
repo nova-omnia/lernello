@@ -1,5 +1,6 @@
-import type { ZodSchema } from 'zod';
-import type { AllowedMethod } from './createApiClient';
+import { type ZodSchema } from 'zod';
+
+export type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export function createEndpoint<TResSchema, TPathArgs extends unknown[], TPayloadSchema>({
 	method,
@@ -17,7 +18,7 @@ export function createEndpoint<TResSchema, TPathArgs extends unknown[], TPayload
 		schema: ZodSchema<TResSchema>;
 		defaultValidate: boolean;
 	};
-}): RestEndpoint<TResSchema, TPathArgs, TPayloadSchema> {
+}): Endpoint<TResSchema, TPathArgs, TPayloadSchema> {
 	return {
 		method,
 		getPath,
@@ -26,7 +27,7 @@ export function createEndpoint<TResSchema, TPathArgs extends unknown[], TPayload
 	};
 }
 
-export type RestEndpoint<TResSchema, TPathArgs extends unknown[], TPayloadSchema> = {
+export type Endpoint<TResSchema, TPathArgs extends unknown[], TPayloadSchema> = {
 	method: AllowedMethod;
 	getPath: (...pathArgs: TPathArgs) => `/${string}`;
 	payload: {

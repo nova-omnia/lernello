@@ -1,11 +1,14 @@
-# Description
+# ✨ Key Changes
 
-Provide a summary of the key changes introduced in this pull request.
+> _Replace this section with a summary of the key changes introduced in this pull request._
 
-Highlight any areas of the code that are incomplete or require further discussion for better understanding.
+---
 
-## Checklist
+## 🚧 Incomplete Areas / Discussion Points
+
+> _Replace this section to highlight any areas of the code that are incomplete or require further discussion for better understanding._
+
+## 🚨 Checklist
 
 - [ ] I have reviewed my own code changes.
-- [ ] All automated checks have successfully passed.
 - [ ] The pull request is small and manageable for review.

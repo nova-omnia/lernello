@@ -1,11 +1,11 @@
 package ch.nova_omnia.lernello.mapper.user;
 
-import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import org.mapstruct.Mapper;
 
-import java.util.UUID;
+import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
+import ch.nova_omnia.lernello.model.data.User;
 
 @Mapper(componentModel = "spring")
 public interface ParticipantUserMapper {
-    ParticipantUserDTO toDTO(UUID uuid, String username);
+    ParticipantUserDTO toDTO(User user);
 }

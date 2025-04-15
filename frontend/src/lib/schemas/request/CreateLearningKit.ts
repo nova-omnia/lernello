@@ -1,7 +1,9 @@
 import { z } from 'zod';
+import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 
 export const CreateLearningKitSchema = z.object({
 	name: z.string().nonempty(),
+	learningUnits: z.array(LearningUnitResSchema).nullable(),
 	description: z.string().optional().nullable(),
 	deadlineDate: z
 		.string()

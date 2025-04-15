@@ -18,6 +18,30 @@ export const getLearningUnitById = createEndpoint({
 		defaultValidate: false
 	}
 });
+export const deleteLearningUnit = createEndpoint({
+	method: 'DELETE',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	response: {
+		schema: z.string().uuid(),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+export const regenerateLearningUnit = createEndpoint({
+	method: 'POST',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/regenerate`,
+	response: {
+		schema: LearningUnitResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
 
 export const applyBlockActions = createEndpoint({
 	method: 'POST',

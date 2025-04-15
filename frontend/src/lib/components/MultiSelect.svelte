@@ -23,8 +23,8 @@
 		placeholder = $_('multiSelect.placeholder')
 	}: MultiSelectProps = $props();
 
-	let open = writable(false);
-	let searchValue = writable('');
+	let open = writable(false); //TODO: dont use store
+	let searchValue = writable(''); //TODO: dont use store
 
 	const toggleDropdown = () => open.update((val) => !val);
 

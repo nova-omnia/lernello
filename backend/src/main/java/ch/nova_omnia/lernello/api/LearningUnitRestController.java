@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class LearningUnitRestController {
+    private final LearningKitRepository learningKitRepository;
     private final LearningUnitService learningUnitService;
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
@@ -38,15 +41,19 @@ public class LearningUnitRestController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
-        LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO);
+
+        LearningKit learningKit = learningKitRepository.findById(createLearningUnitDTO.learningKitId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO, learningKit);
         LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit);
         return learningUnitMapper.toDTO(learningUnit);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
-    public void deleteById(@PathVariable UUID id) {
+    public UUID deleteById(@PathVariable UUID id) {
         learningUnitService.deleteById(id);
+        return id;
     }
 
     @GetMapping("/{id}")

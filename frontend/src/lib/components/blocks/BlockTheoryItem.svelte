@@ -1,4 +1,10 @@
-<div class="rounded border border-blue-300 bg-blue-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-blue-800">Theory Block</h2>
-	<p class="mt-2 text-sm text-blue-700">Placeholder content for the theory block.</p>
+<script lang="ts">
+	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
+
+	let content: string = '';
+</script>
+
+<!-- Add main-container class to the root div -->
+<div class="rounded-lg bg-white dark:bg-gray-800">
+	<TextEditor {content} />
 </div>

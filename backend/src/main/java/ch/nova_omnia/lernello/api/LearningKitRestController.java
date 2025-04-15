@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,27 +16,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
-import org.springframework.web.server.ResponseStatusException;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/learning-kits")
 @Validated
+@RequiredArgsConstructor
 public class LearningKitRestController {
     private final LearningKitService learningKitService;
-
     private final LearningKitMapper learningKitMapper;
-
-    public LearningKitRestController(LearningKitService learningKitService, LearningKitMapper learningKitMapper) {
-        this.learningKitService = learningKitService;
-        this.learningKitMapper = learningKitMapper;
-    }
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
@@ -55,7 +53,7 @@ public class LearningKitRestController {
 
     @DeleteMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid UUID delete(@Valid @PathVariable UUID learningKitId) {
+    public UUID delete(@PathVariable UUID learningKitId) {
         learningKitService.deleteById(learningKitId);
         return learningKitId;
     }
@@ -71,8 +69,21 @@ public class LearningKitRestController {
     @GetMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid LearningKitResDTO getById(@Valid @PathVariable UUID learningKitId) {
-        return learningKitService.findById(learningKitId)
-                .map(learningKitMapper::toDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        return learningKitService.findById(learningKitId).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+    }
+
+    @PutMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid LearningKitResDTO update(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
+        LearningKit entity = learningKitMapper.toEntity(updateLearningKit);
+        LearningKit savedEntity = learningKitService.update(entity, updateLearningKit.getParticipants(), updateLearningKit.getFiles());
+        return learningKitMapper.toDTO(savedEntity);
+    }
+
+    @DeleteMapping("/participants/{kitId}")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public UUID removeParticipantFromKit(@PathVariable UUID kitId, @RequestBody UUID userId) {
+        learningKitService.removeParticipant(kitId, userId);
+        return kitId;
     }
 }

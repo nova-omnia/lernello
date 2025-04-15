@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -14,6 +15,8 @@ public record LearningKitResDTO(
                                 List<LearningUnitResDTO> learningUnits,
                                 String description,
                                 ZonedDateTime deadlineDate,
-                                String context
+                                String context,
+                                List<ParticipantUserDTO> participants,
+                                List<FileResDTO> files
 ) {
 }

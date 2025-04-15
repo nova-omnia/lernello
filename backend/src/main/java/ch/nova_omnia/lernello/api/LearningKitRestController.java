@@ -53,8 +53,9 @@ public class LearningKitRestController {
 
     @DeleteMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public void delete(@Valid @PathVariable UUID learningKitId) {
+    public UUID delete(@Valid @PathVariable UUID learningKitId) {
         learningKitService.deleteById(learningKitId);
+        return learningKitId;
     }
 
     @GetMapping("/")
@@ -81,7 +82,8 @@ public class LearningKitRestController {
 
     @DeleteMapping("/participants/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public void removeParticipantFromKit(@Valid @PathVariable UUID kitId, @RequestBody UUID userId) {
+    public UUID removeParticipantFromKit(@Valid @PathVariable UUID kitId, @RequestBody UUID userId) {
         learningKitService.removeParticipant(kitId, userId);
+        return kitId;
     }
 }

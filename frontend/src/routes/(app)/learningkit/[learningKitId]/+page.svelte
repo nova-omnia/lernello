@@ -46,6 +46,10 @@
 		selectedTrainees = updatedLearningKit.participants ?? [];
 	}
 
+	async function removeTrainee(uuid: string) {
+		handleSelectedTrainees(selectedTrainees.filter(trainee => trainee.uuid == uuid).map(trainee => trainee.uuid));
+	}
+
 	async function handleSelectedFiles(uuids: string[]) {
 		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
 			...learningKit,
@@ -116,7 +120,7 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay user={trainee} />
+			<TraineeDisplay user={trainee} onRemoveTrainee={removeTrainee(trainee.uuid)}/>
 		{/each}
 
 		<button

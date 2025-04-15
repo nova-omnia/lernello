@@ -36,7 +36,7 @@ export const deleteLearningKit = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
-		schema: z.null(),
+		schema: z.string().uuid(),
 		defaultValidate: true
 	},
 	payload: {
@@ -88,7 +88,7 @@ export const removeParticipantFromKit = createEndpoint({
 	method: 'DELETE',
 	getPath: (kitId: string) => `${REQUEST_MAPPING}/participants/${kitId}`,
 	response: {
-		schema: z.null(),
+		schema: z.string().uuid(),
 		defaultValidate: false
 	},
 	payload: {

@@ -14,10 +14,12 @@
 		method="POST"
 		use:enhance
 		action="?/changePassword"
-		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+		class="card preset-filled-surface-100-900 w-full max-w-lg space-y-8 p-8"
 	>
-		<h1 class="h2">{$_('changePassword.title')}</h1>
-		<p>{$_('changePassword.description')}</p>
+		<div class="space-y-2">
+			<h2 class="h2">{$_('changePassword.title')}</h2>
+			<p>{$_('changePassword.description')}</p>
+		</div>
 		<div class="space-y-4">
 			<label class="label">
 				<span class="label-text">{$_('form.newPasswordLabel')}</span>
@@ -31,7 +33,7 @@
 					{...$constraints.newPassword}
 				/>
 				{#if $errors.newPassword}
-					<span class="text-error-50-950">{$errors.newPassword}</span>
+					<span class="text-error-500">{$errors.newPassword}</span>
 				{/if}
 			</label>
 			<label class="label">
@@ -46,7 +48,7 @@
 					{...$constraints.confirmPassword}
 				/>
 				{#if $errors.confirmPassword}
-					<span class="text-error-50-950">{$errors.confirmPassword}</span>
+					<span class="text-error-500">{$errors.confirmPassword}</span>
 				{/if}
 			</label>
 		</div>

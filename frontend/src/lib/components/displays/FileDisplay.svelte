@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { File as FileIcon } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { invalidate } from '$app/navigation';
 	import { deleteFile } from '$lib/api/collections/file';
 	import { _ } from 'svelte-i18n';
+	import { api } from '$lib/api/apiClient';
 	const { File } = $props();
 
 	let showDeleteDialog = $state(false);
@@ -12,7 +12,7 @@
 	async function removeFile() {
 		if (!File) return;
 
-		await browserApiClient.req(deleteFile, null, File.uuid);
+		await api(fetch).req(deleteFile, null, File.uuid).parse();
 		await invalidate('files:list');
 
 		showDeleteDialog = false;

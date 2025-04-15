@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { browserApiClient } from '$lib/api/browserApiClient.js';
 	import { regenerateLearningUnit } from '$lib/api/collections/learningUnit';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import KitContentItem from './KitContentItem.svelte';
 	import { Sparkles } from 'lucide-svelte';
+	import { api } from '$lib/api/apiClient';
 
 	let showDeleteDialog = $state(false);
 
@@ -19,7 +19,7 @@
 	const { learningUnit, onDeleteLearningUnit }: LearningUnitProps = $props();
 
 	async function regenerateLearningUnitHandler() {
-		await browserApiClient.req(regenerateLearningUnit, null, learningUnit.uuid);
+		await api(fetch).req(regenerateLearningUnit, null, learningUnit.uuid).parse();
 	}
 
 	async function deleteLearningUnitHandler() {

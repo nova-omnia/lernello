@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { addTrainee } from '$lib/api/collections/user';
+	import { api } from '$lib/api/apiClient';
 
 	interface AddTraineeModalProps {
 		isOpen: boolean;
@@ -17,7 +17,7 @@
 
 	async function handleAddTrainee() {
 		const createdTrainee = { username, name, surname };
-		await browserApiClient.req(addTrainee, createdTrainee);
+		await api(fetch).req(addTrainee, createdTrainee).parse();
 	}
 </script>
 

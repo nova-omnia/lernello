@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { getAllTrainees } from '$lib/api/collections/user';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import { SquarePlus } from 'lucide-svelte';
@@ -7,6 +6,7 @@
 	import { _ } from 'svelte-i18n';
 	import AddTraineeModal from './AddTraineeModal.svelte';
 	import { writable, derived } from 'svelte/store';
+	import { api } from '$lib/api/apiClient';
 
 	interface TraineeSelectModalProps {
 		isOpen: boolean;
@@ -43,7 +43,7 @@
 	});
 
 	async function handleAddTrainee() {
-		allTrainees = await browserApiClient.req(getAllTrainees, null);
+		allTrainees = await api(fetch).req(getAllTrainees, null).parse();
 		isAddTraineeModalOpen = false;
 	}
 </script>
@@ -54,7 +54,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
+		<div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 
@@ -65,7 +65,7 @@
 					class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
 				/>
 
-				<div class="max-h-64 min-h-70 overflow-auto">
+				<div class="min-h-70 max-h-64 overflow-auto">
 					<table class="table w-full">
 						<thead>
 							<tr>

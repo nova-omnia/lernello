@@ -16,12 +16,13 @@
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
+	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
-	const learningUnits = $state(data.kitToDisplay.learningUnits || []);
-	let selectedTrainees = $state<ParticipantUser[]>([]);
+	let learningUnits = $state(data.kitToDisplay.learningUnits || []);
+	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
 	let selectedFiles = $state<FileRes[]>([]);
 	let showDeleteDialog = $state(false);
 
@@ -38,6 +39,7 @@
 	async function handleSelectedTrainees(uuids: string[]) {
 		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
 			...learningKit,
+			learningKitId: learningKit.uuid,
 			participants: uuids,
 			files: learningKit.files?.map((file) => file.uuid) ?? []
 		});
@@ -45,9 +47,16 @@
 		selectedTrainees = updatedLearningKit.participants ?? [];
 	}
 
+	async function removeTrainee(uuid: string) {
+		handleSelectedTrainees(
+			selectedTrainees.filter((trainee) => trainee.uuid != uuid).map((trainee) => trainee.uuid)
+		);
+	}
+
 	async function handleSelectedFiles(uuids: string[]) {
 		const updatedLearningKit = await browserApiClient.req(updateLearningKit, {
 			...learningKit,
+			learningKitId: learningKit.uuid,
 			participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
 			files: uuids
 		});
@@ -67,6 +76,11 @@
 
 		showDeleteDialog = false;
 		await goto('/dashboard');
+	}
+
+	async function deleteLearningUnitFromKit(learningUnitId: string) {
+		await browserApiClient.req(deleteLearningUnit, null, learningUnitId);
+		learningUnits = learningUnits?.filter((learningUnit) => learningUnit.uuid != learningUnitId);
 	}
 </script>
 
@@ -95,7 +109,12 @@
 	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
 	<div class="grid gap-2">
 		{#each learningUnits as learningUnit (learningUnit.uuid)}
-			<LearningUnitDisplay {learningUnit} />
+			<LearningUnitDisplay
+				{learningUnit}
+				onDeleteLearningUnit={async () => {
+					deleteLearningUnitFromKit(learningUnit.uuid);
+				}}
+			/>
 		{/each}
 		<CheckpointDisplay />
 	</div>
@@ -114,7 +133,10 @@
 
 	<div class="flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay User={trainee} />
+			<TraineeDisplay
+				user={trainee}
+				onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}
+			/>
 		{/each}
 
 		<button
@@ -166,12 +188,13 @@
 
 <TraineeSelectModal
 	isOpen={showTraineeModal}
-	onSelect={(selectedTrainees) => {
-		handleSelectedTrainees(selectedTrainees);
+	onSelect={async (selectedTrainees) => {
+		await handleSelectedTrainees(selectedTrainees);
 		showTraineeModal = false;
 	}}
 	onClose={() => (showTraineeModal = false)}
 	allTrainees={data.allTrainees}
+	selectedParticipants={selectedTrainees}
 />
 
 <FileSelectModal

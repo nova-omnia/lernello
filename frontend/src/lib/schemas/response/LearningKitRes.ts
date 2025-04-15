@@ -15,7 +15,7 @@ export const LearningKitResSchema = z.object({
 		})
 		.nullable(),
 	context: z.string().nullable(),
-	participants: z.array(ParticipantUserSchema).nullable(),
+	participants: z.array(ParticipantUserSchema),
 	files: z.array(FileResSchema).nullable()
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;

@@ -71,8 +71,8 @@
 				</button>
 				<button
 					class="btn btn-primary"
-					onclick={() => {
-						handleAddTrainee();
+					onclick={async () => {
+						await handleAddTrainee();
 						onConfirm();
 					}}
 					>Submit

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { browserApiClient } from '$lib/api/browserApiClient.js';
-	import { deleteLearningUnit, regenerateLearningUnit } from '$lib/api/collections/learningUnit';
-	import { invalidate } from '$app/navigation';
+	import { regenerateLearningUnit } from '$lib/api/collections/learningUnit';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import KitContentItem from './KitContentItem.svelte';
@@ -15,19 +14,15 @@
 			// description: string;
 			uuid: string;
 		};
+		onDeleteLearningUnit: () => void;
 	}
-	const { learningUnit }: LearningUnitProps = $props();
+	const { learningUnit, onDeleteLearningUnit }: LearningUnitProps = $props();
 
 	async function regenerateLearningUnitHandler() {
 		await browserApiClient.req(regenerateLearningUnit, null, learningUnit.uuid);
 	}
 
 	async function deleteLearningUnitHandler() {
-		if (!learningUnit) return;
-
-		await browserApiClient.req(deleteLearningUnit, null, learningUnit.uuid);
-		await invalidate('learningunits:list');
-
 		showDeleteDialog = false;
 	}
 </script>
@@ -68,7 +63,10 @@
 	message={`Are you sure you want to delete "${learningUnit?.name}"?`}
 	confirmText="Delete"
 	danger={true}
-	onConfirm={deleteLearningUnitHandler}
+	onConfirm={() => {
+		deleteLearningUnitHandler();
+		onDeleteLearningUnit();
+	}}
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}

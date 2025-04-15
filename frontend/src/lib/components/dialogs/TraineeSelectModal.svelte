@@ -12,12 +12,22 @@
 		onSelect: (uuids: string[]) => void;
 		onClose: () => void;
 		allTrainees: ParticipantUser[];
+		selectedParticipants: ParticipantUser[];
 	}
 
-	let { isOpen, onSelect, onClose, allTrainees }: TraineeSelectModalProps = $props();
+	let { isOpen, onSelect, onClose, allTrainees, selectedParticipants }: TraineeSelectModalProps =
+		$props();
 
-	let selectedTrainees = $state<string[]>([]);
+	let selectedTrainees = $state<string[]>(
+		selectedParticipants.map((participant) => participant.uuid) ?? []
+	);
 	let isAddTraineeModalOpen = $state<boolean>(false);
+
+	$effect(() => {
+		if (selectedParticipants) {
+			selectedTrainees = selectedParticipants.map((participant) => participant.uuid) ?? [];
+		}
+	});
 
 	async function handleAddTrainee() {
 		allTrainees = await browserApiClient.req(getAllTrainees, null);

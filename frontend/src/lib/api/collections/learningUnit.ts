@@ -22,7 +22,7 @@ export const deleteLearningUnit = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
-		schema: z.null(),
+		schema: z.string().uuid(),
 		defaultValidate: true
 	},
 	payload: {

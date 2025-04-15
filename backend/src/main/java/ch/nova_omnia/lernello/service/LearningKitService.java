@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.File;
 import ch.nova_omnia.lernello.model.data.User;
 import ch.nova_omnia.lernello.repository.FileRepository;
@@ -51,11 +49,25 @@ public class LearningKitService {
         learningKitRepository.deleteById(id);
     }
 
+    @Transactional
     public LearningKit update(LearningKit learningKit, List<UUID> participantIds, List<UUID> fileIds) {
         List<User> participants = userRepository.findAllById(participantIds);
         List<File> files = fileRepository.findAllById(fileIds);
         learningKit.setParticipants(participants);
         learningKit.setFiles(files);
         return learningKitRepository.save(learningKit);
+    }
+
+    @Transactional
+    public void removeParticipant(UUID learningKitId, UUID userId) {
+        LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+
+        boolean removed = kit.getParticipants().removeIf(user -> user.getUuid().equals(userId));
+
+        if (removed) {
+            learningKitRepository.save(kit);
+        } else {
+            throw new IllegalArgumentException("Participant not found in this LearningKit");
+        }
     }
 }

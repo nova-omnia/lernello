@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { _, locale, locales } from 'svelte-i18n';
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import { setUserLocale } from '$lib/api/collections/user';
+	import { api } from '$lib/api/apiClient';
 
 	const selectLocale = async (loc: string) => {
 		try {
-			await browserApiClient.req(setUserLocale, { locale: loc });
+			await api(fetch).req(setUserLocale, { locale: loc }).parse();
 			locale.set(loc);
 		} catch (error) {
 			console.error('Error:', error);

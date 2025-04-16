@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browserApiClient } from '$lib/api/browserApiClient';
 	import { getAllTrainees } from '$lib/api/collections/user';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import { SquarePlus } from 'lucide-svelte';
@@ -7,6 +6,7 @@
 	import { _ } from 'svelte-i18n';
 	import AddTraineeModal from './AddTraineeModal.svelte';
 	import { writable, derived } from 'svelte/store';
+	import { api } from '$lib/api/apiClient';
 
 	interface TraineeSelectModalProps {
 		isOpen: boolean;
@@ -43,7 +43,7 @@
 	});
 
 	async function handleAddTrainee() {
-		allTrainees = await browserApiClient.req(getAllTrainees, null);
+		allTrainees = await api(fetch).req(getAllTrainees, null).parse();
 		isAddTraineeModalOpen = false;
 	}
 </script>

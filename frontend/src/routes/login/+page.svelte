@@ -20,7 +20,9 @@
 
 	$effect(() => {
 		if ($message) {
-			localStorage.setItem('lernello_auth_token', JSON.stringify($message.tokenInfo));
+			if ($message.tokenInfo) {
+				localStorage.setItem('lernello_auth_token', JSON.stringify($message.tokenInfo));
+			}
 			goto($message.redirectTo);
 		}
 	});

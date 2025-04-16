@@ -26,7 +26,7 @@
 
 	const filteredOptions = $derived(() =>
 		searchValue
-			? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
+			? options.filter((option) => option.label.toLowerCase().includes(searchValue.toLowerCase()))
 			: options
 	);
 
@@ -34,10 +34,10 @@
 	const isSelected = (uuid: string) => selectedSet().has(uuid);
 
 	const selectOption = (uuid: string) => {
-		const found = options.find((opt) => opt.uuid === uuid);
+		const found = options.find((option) => option.uuid === uuid);
 		if (!found) return;
 
-		onSelect(isSelected(uuid) ? selected.filter((o) => o.uuid !== uuid) : [...selected, found]);
+		onSelect(isSelected(uuid) ? selected.filter((option) => option.uuid !== uuid) : [...selected, found]);
 
 		searchValue = '';
 	};

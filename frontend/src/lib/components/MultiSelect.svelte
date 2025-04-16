@@ -14,27 +14,18 @@
 		placeholder?: string;
 	}
 
-	const {
-		selected = [],
-		onSelect,
-		options,
-		placeholder
-	}: MultiSelectProps = $props();
+	const { selected = [], onSelect, options, placeholder }: MultiSelectProps = $props();
 
 	let open = $state(false);
 	let searchValue = $state('');
 	let container: HTMLElement;
 	let inputRef: HTMLInputElement | null = null;
 
-	const placeHolder = $derived(() =>
-		placeholder ?? $_('multiSelect.placeholder')
-	);
+	const placeHolder = $derived(() => placeholder ?? $_('multiSelect.placeholder'));
 
 	const filteredOptions = $derived(() =>
 		searchValue
-			? options.filter((o) =>
-					o.label.toLowerCase().includes(searchValue.toLowerCase())
-			  )
+			? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
 			: options
 	);
 
@@ -45,11 +36,7 @@
 		const found = options.find((opt) => opt.uuid === uuid);
 		if (!found) return;
 
-		onSelect(
-			isSelected(uuid)
-				? selected.filter((o) => o.uuid !== uuid)
-				: [...selected, found]
-		);
+		onSelect(isSelected(uuid) ? selected.filter((o) => o.uuid !== uuid) : [...selected, found]);
 
 		searchValue = '';
 	};
@@ -86,7 +73,7 @@
 		bind:value={searchValue}
 		bind:this={inputRef}
 		onfocus={() => (open = true)}
-		class="bg-surface-100-900 w-full rounded border px-3 py-2 outline-none focus:outline-none focus:ring-0 focus:shadow-none focus:border-transparent"
+		class="bg-surface-100-900 w-full rounded border px-3 py-2 outline-none focus:border-transparent focus:shadow-none focus:ring-0 focus:outline-none"
 		aria-label="Search or select"
 	/>
 
@@ -98,7 +85,7 @@
 						<button
 							type="button"
 							onclick={() => selectOption(option.uuid)}
-							class={`flex w-full items-center justify-between px-3 py-2 text-left focus:outline-none hover:bg-surface-200-800 ${
+							class={`hover:bg-surface-200-800 flex w-full items-center justify-between px-3 py-2 text-left focus:outline-none ${
 								isSelected(option.uuid) ? 'bg-surface-200-800' : ''
 							}`}
 						>

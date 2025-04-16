@@ -1,6 +1,5 @@
 <!-- MultiSelect.svelte -->
 <script lang="ts">
-	import { writable, derived } from 'svelte/store';
 	import { Check, ChevronDown, ChevronUp, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
@@ -23,10 +22,19 @@
 		placeholder = $_('multiSelect.placeholder')
 	}: MultiSelectProps = $props();
 
-	let open = writable(false); //TODO: dont use store
-	let searchValue = writable(''); //TODO: dont use store
+	let open = $state(false);
+	let searchValue = $state('');
+	let filteredOptions = $state(options); // Initialize with all options
 
-	const toggleDropdown = () => open.update((val) => !val);
+	$effect(() => {
+		filteredOptions = searchValue
+			? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
+			: options;
+	});
+
+	const toggleDropdown = () => {
+		open = !open;
+	};
 
 	const isSelected = (uuid: string) => selected.some((opt) => opt.uuid === uuid);
 
@@ -39,12 +47,6 @@
 	const removeSelection = (uuid: string) => onSelect(selected.filter((o) => o.uuid !== uuid));
 
 	const clearAll = () => onSelect([]);
-
-	const filteredOptions = derived(searchValue, ($searchValue) => {
-		return $searchValue
-			? options.filter((o) => o.label.toLowerCase().includes($searchValue.toLowerCase()))
-			: options;
-	});
 </script>
 
 <div class="relative inline-block w-full">
@@ -69,7 +71,7 @@
 			{#if selected.length > 0}
 				<X size={16} onclick={clearAll} class="text-muted-foreground cursor-pointer" />
 			{/if}
-			{#if $open}
+			{#if open}
 				<ChevronUp size={20} />
 			{:else}
 				<ChevronDown size={20} />
@@ -77,16 +79,16 @@
 		</span>
 	</button>
 
-	{#if $open}
+	{#if open}
 		<div class="bg-surface-100-900 absolute z-10 mt-1 w-full rounded border shadow-lg">
 			<input
 				type="text"
 				placeholder={$_('multiSelect.searchPlaceholder')}
-				bind:value={$searchValue}
+				bind:value={searchValue}
 				class="w-full border-b px-3 py-2 outline-none"
 			/>
 			<ul class="max-h-60 overflow-auto">
-				{#each $filteredOptions as option (option.uuid)}
+				{#each filteredOptions as option (option.uuid)}
 					<li>
 						<button
 							type="button"

@@ -134,23 +134,18 @@
 
 	<MultiSelect
 		options={[
-			{ uuid: '__add__', label: '+ Add new trainee' },
-			...allTrainees.map((t) => ({
-				uuid: t.uuid,
-				label: `${t.username} | ${t.name} ${t.surname}`
+			{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
+			...allTrainees.map((trainee) => ({
+				uuid: trainee.uuid,
+				label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
 			}))
 		]}
-		selected={selectedTrainees.map((t) => ({
-			uuid: t.uuid,
-			label: `${t.username} | ${t.name} ${t.surname}`
+		selected={selectedTrainees.map((trainee) => ({
+			uuid: trainee.uuid,
+			label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
 		}))}
-		onSelect={async (options) => {
-			const last = options.at(-1);
-			if (last?.uuid === '__add__') {
-				showAddTraineeModal = true;
-				return;
-			}
-			await handleSelectedTrainees(options.map((o) => o.uuid));
+		onSelect={async (trainee) => {
+			await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
 		}}
 	/>
 
@@ -168,16 +163,16 @@
 	<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 
 	<MultiSelect
-		options={data.allFiles.map((f) => ({
-			uuid: f.uuid,
-			label: `${f.name}`
+		options={data.allFiles.map((file) => ({
+			uuid: file.uuid,
+			label: `${file.name}`
 		}))}
-		selected={selectedFiles.map((f) => ({
-			uuid: f.uuid,
-			label: `${f.name}`
+		selected={selectedFiles.map((file) => ({
+			uuid: file.uuid,
+			label: `${file.name}`
 		}))}
-		onSelect={async (options) => {
-			await handleSelectedFiles(options.map((o) => o.uuid));
+		onSelect={async (file) => {
+			await handleSelectedFiles(file.map((file) => file.uuid));
 		}}
 	/>
 
@@ -230,7 +225,7 @@
 
 		const last = updatedTrainees.at(-1);
 		if (last) {
-			await handleSelectedTrainees([...selectedTrainees.map((t) => t.uuid), last.uuid]);
+			await handleSelectedTrainees([...selectedTrainees.map((trainee) => trainee.uuid), last.uuid]);
 		}
 	}}
 	onCancel={() => (showAddTraineeModal = false)}

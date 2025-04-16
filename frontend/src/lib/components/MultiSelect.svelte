@@ -53,7 +53,7 @@
 	<button
 		type="button"
 		onclick={toggleDropdown}
-		class="border-surface-200-800 flex w-full flex-wrap items-center justify-between gap-2 rounded border py-2 pl-3 pr-3 text-left focus:outline-none"
+		class="border-surface-200-800 flex w-full flex-wrap items-center justify-between gap-2 rounded border py-2 pr-3 pl-3 text-left focus:outline-none"
 	>
 		<div class="flex max-w-[80%] flex-wrap gap-1">
 			{#if selected.length > 0}

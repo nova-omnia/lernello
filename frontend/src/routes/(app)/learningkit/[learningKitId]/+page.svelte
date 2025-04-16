@@ -15,14 +15,19 @@
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
+	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
+	import { getAllTrainees } from '$lib/api/collections/user';
 
 	let { data } = $props();
+	let allTrainees = $state(data.allTrainees);
+	let allFiles = $state(data.allFiles);
 	const learningKit = data.kitToDisplay;
 
 	let learningUnits = $state(data.kitToDisplay.learningUnits || []);
 	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
 	let selectedFiles = $state<FileRes[]>(data.kitToDisplay.files ?? []);
 	let showDeleteDialog = $state(false);
+	let showAddTraineeModal = $state(false);
 
 	async function handleSelectedTrainees(uuids: string[]) {
 		const updatedLearningKit = await api(fetch)
@@ -128,15 +133,23 @@
 	<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 	<MultiSelect
-		options={data.allTrainees.map((t) => ({
-			uuid: t.uuid,
-			label: `${t.username} | ${t.name} ${t.surname}`
-		}))}
+		options={[
+			{ uuid: '__add__', label: '+ Add new trainee' },
+			...allTrainees.map((t) => ({
+				uuid: t.uuid,
+				label: `${t.username} | ${t.name} ${t.surname}`
+			}))
+		]}
 		selected={selectedTrainees.map((t) => ({
 			uuid: t.uuid,
 			label: `${t.username} | ${t.name} ${t.surname}`
 		}))}
 		onSelect={async (options) => {
+			const last = options.at(-1);
+			if (last?.uuid === '__add__') {
+				showAddTraineeModal = true;
+				return;
+			}
 			await handleSelectedTrainees(options.map((o) => o.uuid));
 		}}
 	/>
@@ -205,4 +218,20 @@
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}
+/>
+
+<AddTraineeModal
+	isOpen={showAddTraineeModal}
+	onConfirm={async () => {
+		showAddTraineeModal = false;
+
+		const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
+		allTrainees = updatedTrainees;
+
+		const last = updatedTrainees.at(-1);
+		if (last) {
+			await handleSelectedTrainees([...selectedTrainees.map((t) => t.uuid), last.uuid]);
+		}
+	}}
+	onCancel={() => (showAddTraineeModal = false)}
 />

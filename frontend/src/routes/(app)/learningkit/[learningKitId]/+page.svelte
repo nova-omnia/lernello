@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { Clock, Settings, Plus, Upload } from 'lucide-svelte';
+	import { Clock, Settings, Plus } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
 	import CheckpointDisplay from '$lib/components/displays/CheckpointDisplay.svelte';
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
@@ -20,7 +20,6 @@
 
 	let { data } = $props();
 	let allTrainees = $state(data.allTrainees);
-	let allFiles = $state(data.allFiles);
 	const learningKit = data.kitToDisplay;
 
 	let learningUnits = $state(data.kitToDisplay.learningUnits || []);

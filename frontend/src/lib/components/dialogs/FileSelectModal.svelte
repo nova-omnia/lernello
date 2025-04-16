@@ -9,7 +9,7 @@
 		isOpen: boolean;
 		onSelect: (uuids: string[]) => void;
 		onClose: () => void;
-		selectedFileUUIDs: string[]; // <-- Neu
+		selectedFileUUIDs: string[];
 	}
 
 	const { isOpen, onSelect, onClose, selectedFileUUIDs }: FileSelectModalProps = $props();

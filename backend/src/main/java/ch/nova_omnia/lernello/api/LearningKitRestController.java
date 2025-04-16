@@ -5,14 +5,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +34,7 @@ public class LearningKitRestController {
     private final LearningKitService learningKitService;
     private final LearningKitMapper learningKitMapper;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid LearningKitResDTO create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
@@ -43,11 +42,12 @@ public class LearningKitRestController {
         return learningKitMapper.toDTO(savedEntity);
     }
 
-    @PutMapping("/edit")
+    @PatchMapping("/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid LearningKitResDTO edit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
-        LearningKit entity = learningKitMapper.toEntity(learningKit);
-        LearningKit savedEntity = learningKitService.edit(entity);
+    public @Valid LearningKitResDTO update(@PathVariable UUID learningKitId, @Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
+        LearningKit destination = learningKitService.findById(learningKitId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitMapper.update(updateLearningKit, destination);
+        LearningKit savedEntity = learningKitService.save(destination);
         return learningKitMapper.toDTO(savedEntity);
     }
 
@@ -72,13 +72,6 @@ public class LearningKitRestController {
         return learningKitService.findById(learningKitId).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
     }
 
-    @PutMapping("/")
-    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid LearningKitResDTO update(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
-        LearningKit entity = learningKitMapper.toEntity(updateLearningKit);
-        LearningKit savedEntity = learningKitService.update(entity, updateLearningKit.getParticipants(), updateLearningKit.getFiles());
-        return learningKitMapper.toDTO(savedEntity);
-    }
 
     @DeleteMapping("/participants/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")

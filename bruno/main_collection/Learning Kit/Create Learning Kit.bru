@@ -5,17 +5,16 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/learning-kits/create
+  url: {{baseUrl}}/api/learning-kits/
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "uuid": "123e4567-e89b-12d3-a456-426614174000",
     "name": "Learning Kit Name",
     "description": "This is a description of the learning kit.",
-    "deadlineDate": "2025-12-31",
+    "deadlineDate": "2025-04-16T12:50:56.441Z",
     "context": "Some context for the learning kit"
   }
 }

@@ -1,0 +1,21 @@
+meta {
+  name: Update Learning Kit
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/api/learning-kits/{{id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "UPDATE"
+  }
+}
+
+vars:pre-request {
+  id: a80332b9-9137-4c9b-afb2-ffd1bb3c77da
+}

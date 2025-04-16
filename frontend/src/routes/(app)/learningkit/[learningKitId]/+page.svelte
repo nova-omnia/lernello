@@ -203,11 +203,12 @@
 
 <FileSelectModal
 	isOpen={showFileModal}
-	onSelect={(selectedFiles) => {
-		handleSelectedFiles(selectedFiles);
+	onSelect={async (selectedFiles) => {
+		await handleSelectedFiles(selectedFiles);
 		showFileModal = false;
 	}}
 	onClose={() => (showFileModal = false)}
+	selectedFileUUIDs={selectedFiles.map((file) => file.uuid)}
 />
 
 <ConfirmDialog

@@ -5,7 +5,6 @@
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
 	import AddTraineeModal from './AddTraineeModal.svelte';
-	import { writable, derived } from 'svelte/store';
 	import { api } from '$lib/api/apiClient';
 
 	interface TraineeSelectModalProps {
@@ -22,18 +21,16 @@
 	let selectedTrainees = $state<string[]>(
 		selectedParticipants.map((participant) => participant.uuid) ?? []
 	);
-	let isAddTraineeModalOpen = $state<boolean>(false);
-	let searchValue = writable(''); //TODO: dont use store
 
-	// Filter trainees based on the search value
-	const filteredTrainees = derived(searchValue, ($searchValue) => {
-		return $searchValue
-			? allTrainees.filter((trainee) =>
-					`${trainee.name} ${trainee.surname} ${trainee.username}`
-						.toLowerCase()
-						.includes($searchValue.toLowerCase())
-				)
-			: allTrainees;
+	let isAddTraineeModalOpen = $state(false);
+	let searchValue = $state('');
+
+	const filteredTrainees = $derived(() => {
+		if (!searchValue) return allTrainees;
+		const lower = searchValue.toLowerCase();
+		return allTrainees.filter((trainee) =>
+			`${trainee.name} ${trainee.surname} ${trainee.username}`.toLowerCase().includes(lower)
+		);
 	});
 
 	$effect(() => {
@@ -54,18 +51,18 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center">
+		<div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50">
 			<div class="w-full max-w-3xl rounded p-6 shadow-xl">
 				<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 
 				<input
 					type="text"
 					placeholder={$_('multiSelect.searchPlaceholder')}
-					bind:value={$searchValue}
+					bind:value={searchValue}
 					class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
 				/>
 
-				<div class="max-h-64 min-h-70 overflow-auto">
+				<div class="min-h-70 max-h-64 overflow-auto">
 					<table class="table w-full">
 						<thead>
 							<tr>
@@ -76,7 +73,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each $filteredTrainees as trainee (trainee.uuid)}
+							{#each filteredTrainees() as trainee (trainee.uuid)}
 								<tr>
 									<td>
 										<input type="checkbox" bind:group={selectedTrainees} value={trainee.uuid} />

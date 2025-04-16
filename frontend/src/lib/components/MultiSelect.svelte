@@ -37,7 +37,9 @@
 		const found = options.find((option) => option.uuid === uuid);
 		if (!found) return;
 
-		onSelect(isSelected(uuid) ? selected.filter((option) => option.uuid !== uuid) : [...selected, found]);
+		onSelect(
+			isSelected(uuid) ? selected.filter((option) => option.uuid !== uuid) : [...selected, found]
+		);
 
 		searchValue = '';
 	};

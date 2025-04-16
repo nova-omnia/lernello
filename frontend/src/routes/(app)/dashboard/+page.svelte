@@ -14,7 +14,6 @@
 		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
 	});
 	const deleteKitMutation = createMutation({
-		mutationKey: ['learning-kit', 'delete'],
 		onSuccess: () => {
 			client.invalidateQueries({ queryKey: ['learning-kits-list'] });
 		},

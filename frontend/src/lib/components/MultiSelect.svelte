@@ -3,19 +3,15 @@
 	import { Check, ChevronDown, ChevronUp, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
-	export interface Option {
-		uuid: string;
-		label: string;
-	}
 
-	export interface MultiSelectProps {
+	interface MultiSelectProps {
 		selected?: Option[];
 		onSelect: (selected: Option[]) => void;
-		options: Option[];
+		options?: Option[];
 		placeholder?: string;
 	}
 
-	let {
+	const {
 		selected = [],
 		onSelect,
 		options,
@@ -27,14 +23,15 @@
 	let filteredOptions = $state(options); // Initialize with all options
 
 	$effect(() => {
+		const search = searchValue.toLowerCase();
 		filteredOptions = searchValue
-			? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
+			? options.filter((o) =>
+				[o.username, o.name, o.surname].some((field) =>
+					field.toLowerCase().includes(search)
+				)
+			)
 			: options;
 	});
-
-	const toggleDropdown = () => {
-		open = !open;
-	};
 
 	const isSelected = (uuid: string) => selected.some((opt) => opt.uuid === uuid);
 
@@ -43,40 +40,22 @@
 		if (!found) return;
 		onSelect(isSelected(uuid) ? selected.filter((o) => o.uuid !== uuid) : [...selected, found]);
 	};
-
-	const removeSelection = (uuid: string) => onSelect(selected.filter((o) => o.uuid !== uuid));
-
-	const clearAll = () => onSelect([]);
 </script>
 
 <div class="relative inline-block w-full">
 	<button
 		type="button"
-		onclick={toggleDropdown}
-		class="border-surface-200-800 flex w-full flex-wrap items-center justify-between gap-2 rounded border py-2 pr-3 pl-3 text-left focus:outline-none"
+		onclick={() => (open = !open)}
+		class="border-surface-200-800 flex w-full flex-wrap items-center justify-between gap-2 rounded border py-2 pl-3 pr-3 text-left focus:outline-none"
 	>
-		<div class="flex max-w-[80%] flex-wrap gap-1">
-			{#if selected.length > 0}
-				{#each selected as option (option.uuid)}
-					<span class="bg-primary-100-900 flex items-center gap-1 rounded px-2 py-0.5 text-sm">
-						{option.label}
-						<X class="size-3 cursor-pointer" on:click={() => removeSelection(option.uuid)} />
-					</span>
-				{/each}
-			{:else}
-				<span>{placeholder}</span>
-			{/if}
+		<div class="flex-wrap gap-1">
+			<p>{placeholder}</p>
 		</div>
-		<span class="flex items-center gap-2">
-			{#if selected.length > 0}
-				<X size={16} onclick={clearAll} class="text-muted-foreground cursor-pointer" />
-			{/if}
-			{#if open}
-				<ChevronUp size={20} />
-			{:else}
-				<ChevronDown size={20} />
-			{/if}
-		</span>
+		{#if open}
+			<ChevronUp size={20} />
+		{:else}
+			<ChevronDown size={20} />
+		{/if}
 	</button>
 
 	{#if open}
@@ -95,7 +74,7 @@
 							onclick={() => selectOption(option.uuid)}
 							class="hover:bg-surface-200-800 flex w-full items-center justify-between px-3 py-2 text-left focus:outline-none"
 						>
-							<span>{option.label}</span>
+							<span>{option.name}</span>
 							{#if isSelected(option.uuid)}
 								<Check size={16} class="text-primary-900-100" />
 							{/if}

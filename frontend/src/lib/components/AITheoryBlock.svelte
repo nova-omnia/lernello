@@ -7,17 +7,17 @@
 
 	interface Option {
 		uuid: string;
-		label: string;
+		name: string;
 	}
 
 	let selectedFiles: Option[] = [];
 
 	const files: Option[] = [
-		{ uuid: '550e8400-e29b-41d4-a716-446655440000', label: 'Mathematics' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440001', label: 'Artificial Intelligence' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440002', label: 'Machine Learning' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440003', label: 'Computer Vision' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440004', label: 'NLP' }
+		{ uuid: '550e8400-e29b-41d4-a716-446655440000', name: 'Mathematics' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440001', name: 'Artificial Intelligence' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440002', name: 'Machine Learning' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440003', name: 'Computer Vision' },
+		{ uuid: '550e8400-e29b-41d4-a716-446655440004', name: 'NLP' }
 	];
 </script>
 

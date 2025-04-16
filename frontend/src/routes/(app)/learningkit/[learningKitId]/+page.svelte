@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ParticipantUser } from './../../../../lib/schemas/response/ParticipantUser.ts';
 	import { Clock, Settings, Plus, UserRoundPlus } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
 	import CheckpointDisplay from '$lib/components/displays/CheckpointDisplay.svelte';
@@ -17,6 +18,9 @@
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import { api } from '$lib/api/apiClient.js';
+	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import { handle } from '../../../../hooks.server.js';
+	import { getAllTrainees } from '$lib/api/collections/user.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
@@ -189,10 +193,20 @@
 		</button>
 	</div>
 </div>
+<MultiSelect
+	placeholder={$_('multiSelect.selectTrainees')}
+	options={ParticipantUser}
+	onSelect={async (selectedTrainees) => {
+		const selectedUUIDs = selectedOptions.map((option) => option.value);
+		await handleSelectedTrainees(selectedUUIDs);
+		}}
+	selected={selectedTrainees}
+/>
 
 <TraineeSelectModal
 	isOpen={showTraineeModal}
 	onSelect={async (selectedTrainees) => {
+	
 		await handleSelectedTrainees(selectedTrainees);
 		showTraineeModal = false;
 	}}

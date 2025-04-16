@@ -1,44 +1,28 @@
 <script lang="ts">
-	import { ParticipantUser } from './../../../../lib/schemas/response/ParticipantUser.ts';
-	import { Clock, Settings, Plus, UserRoundPlus } from 'lucide-svelte';
+	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import { Clock, Settings, Plus, Upload } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
 	import CheckpointDisplay from '$lib/components/displays/CheckpointDisplay.svelte';
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
-	import TraineeSelectModal from '$lib/components/dialogs/TraineeSelectModal.svelte';
-	import FileSelectModal from '$lib/components/dialogs/FileSelectModal.svelte';
-	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
-	import { deleteLearningKit } from '$lib/api/collections/learningKit';
-	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
+	import { goto, invalidate } from '$app/navigation';
+	import { api } from '$lib/api/apiClient.js';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
+	import { deleteLearningKit } from '$lib/api/collections/learningKit';
+	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
-	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
-	import { api } from '$lib/api/apiClient.js';
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { handle } from '../../../../hooks.server.js';
-	import { getAllTrainees } from '$lib/api/collections/user.js';
 
 	let { data } = $props();
 	const learningKit = data.kitToDisplay;
 
 	let learningUnits = $state(data.kitToDisplay.learningUnits || []);
 	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
-	let selectedFiles = $state<FileRes[]>([]);
+	let selectedFiles = $state<FileRes[]>(data.kitToDisplay.files ?? []);
 	let showDeleteDialog = $state(false);
-
-	let showTraineeModal = $state(false);
-	let showFileModal = $state(false);
-
-	function formatDate(date: Date): string {
-		const day = String(date.getDate()).padStart(2, '0');
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const year = date.getFullYear();
-		return `${day}.${month}.${year}`;
-	}
 
 	async function handleSelectedTrainees(uuids: string[]) {
 		const updatedLearningKit = await api(fetch)
@@ -64,12 +48,16 @@
 			.req(updateLearningKit, {
 				...learningKit,
 				learningKitId: learningKit.uuid,
-				participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
+				participants: learningKit.participants?.map((p) => p.uuid) ?? [],
 				files: uuids
 			})
 			.parse();
 		await invalidate('learningkits:list');
 		selectedFiles = updatedLearningKit.files ?? [];
+	}
+
+	async function removeFile(uuid: string) {
+		handleSelectedFiles(selectedFiles.filter((file) => file.uuid != uuid).map((file) => file.uuid));
 	}
 
 	async function handleCreateNewLearningUnit() {
@@ -88,12 +76,12 @@
 
 	async function deleteLearningUnitFromKit(learningUnitId: string) {
 		await api(fetch).req(deleteLearningUnit, null, learningUnitId).parse();
-		learningUnits = learningUnits?.filter((learningUnit) => learningUnit.uuid != learningUnitId);
+		learningUnits = learningUnits?.filter((lu) => lu.uuid != learningUnitId);
 	}
 </script>
 
 <div class="bg-surface-50-950 p-4">
-	<!--header-->
+	<!-- Header -->
 	<div class="space-between flex items-start justify-between p-1">
 		<div>
 			<h1 class="text-2xl font-bold">{$_('learningKit.title')}: {learningKit.name}</h1>
@@ -101,7 +89,7 @@
 			{#if learningKit.deadlineDate}
 				<p class="mt-2 flex items-center">
 					<Clock class="mr-2 inline-block" />
-					{formatDate(new Date(learningKit.deadlineDate))}
+					{new Date(learningKit.deadlineDate).toLocaleDateString()}
 				</p>
 			{/if}
 		</div>
@@ -112,7 +100,7 @@
 		</button>
 	</div>
 
-	<!--content-->
+	<!-- Content -->
 	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('content')}</p>
 	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
 	<div class="grid gap-2">
@@ -131,57 +119,69 @@
 		class="btn preset-outlined-surface-500 w-full"
 		onclick={() => handleCreateNewLearningUnit()}
 	>
-		<Plus></Plus>
+		<Plus />
 		{$_('learningUnit.create')}
 	</button>
 
-	<!-- trainees -->
+	<!-- Trainees -->
 	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
 	<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
-	<div class="flex flex-col gap-2">
+	<MultiSelect
+		options={data.allTrainees.map((t) => ({
+			uuid: t.uuid,
+			label: `${t.username} | ${t.name} ${t.surname}`
+		}))}
+		selected={selectedTrainees.map((t) => ({
+			uuid: t.uuid,
+			label: `${t.username} | ${t.name} ${t.surname}`
+		}))}
+		onSelect={async (options) => {
+			await handleSelectedTrainees(options.map((o) => o.uuid));
+		}}
+	/>
+
+	<div class="mt-2 flex flex-col gap-2">
 		{#each selectedTrainees as trainee (trainee.uuid)}
 			<TraineeDisplay
 				user={trainee}
 				onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}
 			/>
 		{/each}
-
-		<button
-			type="button"
-			class="btn preset-outlined-surface-500 w-full"
-			onclick={() => (showTraineeModal = true)}
-		>
-			<UserRoundPlus></UserRoundPlus>
-			{$_('trainee.add')}
-		</button>
 	</div>
 
-	<!-- Context -->
+	<!-- Context / Files -->
 	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
 	<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
-	<div class="flex flex-col gap-2">
-		{#each selectedFiles as file (file.uuid)}
-			<FileDisplay File={file} />
-		{/each}
 
-		<button
-			type="button"
-			class="btn preset-outlined-surface-500 w-full"
-			onclick={() => (showFileModal = true)}
-		>
-			<Upload></Upload>
-			{$_('learningKit.addFile')}
-		</button>
+	<MultiSelect
+		options={data.allFiles.map((f) => ({
+			uuid: f.uuid,
+			label: `${f.name}`
+		}))}
+		selected={selectedFiles.map((f) => ({
+			uuid: f.uuid,
+			label: `${f.name}`
+		}))}
+		onSelect={async (options) => {
+			await handleSelectedFiles(options.map((o) => o.uuid));
+		}}
+	/>
+
+	<div class="mt-2 flex flex-col gap-2">
+		{#each selectedFiles as file (file.uuid)}
+			<FileDisplay File={file} onRemoveFile={async () => await removeFile(file.uuid)} />
+		{/each}
 		<FileUpload />
 	</div>
 
+	<!-- Settings -->
 	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
 	<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 	<div class="flex gap-2">
-		<button type="button" class="btn preset-filled-primary-500 rounded-full"
-			>{$_('learningKit.publish')}</button
-		>
+		<button type="button" class="btn preset-filled-primary-500 rounded-full">
+			{$_('learningKit.publish')}
+		</button>
 		<button
 			onclick={(e) => {
 				e.preventDefault();
@@ -189,41 +189,11 @@
 			}}
 			type="button"
 			class="btn preset-filled-error-500 rounded-full"
-			>{$_('learningKit.delete')}
+		>
+			{$_('learningKit.delete')}
 		</button>
 	</div>
 </div>
-<MultiSelect
-	placeholder={$_('multiSelect.selectTrainees')}
-	options={ParticipantUser}
-	onSelect={async (selectedTrainees) => {
-		const selectedUUIDs = selectedOptions.map((option) => option.value);
-		await handleSelectedTrainees(selectedUUIDs);
-		}}
-	selected={selectedTrainees}
-/>
-
-<TraineeSelectModal
-	isOpen={showTraineeModal}
-	onSelect={async (selectedTrainees) => {
-	
-		await handleSelectedTrainees(selectedTrainees);
-		showTraineeModal = false;
-	}}
-	onClose={() => (showTraineeModal = false)}
-	allTrainees={data.allTrainees}
-	selectedParticipants={selectedTrainees}
-/>
-
-<FileSelectModal
-	isOpen={showFileModal}
-	onSelect={async (selectedFiles) => {
-		await handleSelectedFiles(selectedFiles);
-		showFileModal = false;
-	}}
-	onClose={() => (showFileModal = false)}
-	selectedFileUUIDs={selectedFiles.map((file) => file.uuid)}
-/>
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}

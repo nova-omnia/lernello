@@ -35,7 +35,7 @@
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
 		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
 	>
-		<h1 class="h2">{$_('login.title')}</h1>
+		<h1 class="preset-typo-headline">{$_('login.title')}</h1>
 
 		<div class="space-y-4">
 			<label class="label">
@@ -62,7 +62,7 @@
 					bind:value={$form.password}
 					{...$constraints.password}
 				/>
-				{#if $errors.password}<span class="text-error-50-950">{$errors.password}</span>{/if}
+				{#if $errors.password}<p class="text-error-50-950">{$errors.password}</p>{/if}
 			</label>
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">{$_('login.signIn')}</button>

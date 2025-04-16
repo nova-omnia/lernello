@@ -92,8 +92,6 @@
 	{/if}
 </div>
 
-<AiTheoryBlock></AiTheoryBlock>
-
 <ConfirmDialog
 	isOpen={showDeleteDialog}
 	title="Confirm Deletion"

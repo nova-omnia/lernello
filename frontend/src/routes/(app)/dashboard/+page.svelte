@@ -6,7 +6,6 @@
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
-	import AiTheoryBlock from '$lib/components/AITheoryBlock.svelte';
 
 	const client = useQueryClient();
 

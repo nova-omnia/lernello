@@ -1,12 +1,12 @@
 meta {
-  name: Update Learning Kit
+  name: Get Learning Kit
   type: http
-  seq: 2
+  seq: 3
 }
 
-patch {
+get {
   url: {{baseUrl}}/api/learning-kits/{{id}}
-  body: json
+  body: none
   auth: inherit
 }
 

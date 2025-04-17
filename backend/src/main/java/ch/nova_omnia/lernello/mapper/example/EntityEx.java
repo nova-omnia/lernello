@@ -1,5 +1,7 @@
 package ch.nova_omnia.lernello.mapper.example;
 
+import java.util.List;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,4 +20,5 @@ public class EntityEx {
     private Integer quantity;
     private String description;
     private String manufacturer;
+    private List<Double> price;
 }

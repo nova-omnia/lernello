@@ -1,13 +1,21 @@
 package ch.nova_omnia.lernello.dto.request;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.Data;
+import org.openapitools.jackson.nullable.JsonNullable;
 
-@Data
-public class UpdateLearningKitDTO extends CreateLearningKitDTO {
-    UUID learningKitId;
-    List<UUID> participants;
-    List<UUID> files;
+import jakarta.validation.constraints.Size;
+
+
+public record UpdateLearningKitDTO(
+                                   @Size(min = 3, max = 40) String name,
+                                   JsonNullable<String> description,
+                                   JsonNullable<ZonedDateTime> deadlineDate,
+                                   JsonNullable<String> context,
+                                   List<UUID> files,
+                                   List<UUID> participants
+) {
+
 }

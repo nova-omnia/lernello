@@ -2,134 +2,183 @@
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
 	import { Clock, Settings, Plus } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
-	import CheckpointDisplay from '$lib/components/displays/CheckpointDisplay.svelte';
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
+	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
+	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { _ } from 'svelte-i18n';
-	import { goto, invalidate } from '$app/navigation';
-	import { api } from '$lib/api/apiClient.js';
+	import { _, locale } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
-	import { deleteLearningKit } from '$lib/api/collections/learningKit';
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
-	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
-	import type { FileRes } from '$lib/schemas/response/FileRes';
-	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
-	import { getAllTrainees } from '$lib/api/collections/user';
+	import { api } from '$lib/api/apiClient.js';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { page } from '$app/state';
+	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
+	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 
-	let { data } = $props();
-	let allTrainees = $state(data.allTrainees);
-	const learningKit = data.kitToDisplay;
+	const client = useQueryClient();
+	const learningKitId = page.params.learningKitId;
 
-	let learningUnits = $state(data.kitToDisplay.learningUnits || []);
-	let selectedTrainees = $state<ParticipantUser[]>(data.kitToDisplay.participants ?? []);
-	let selectedFiles = $state<FileRes[]>(data.kitToDisplay.files ?? []);
+	const learningKitQuery = createQuery({
+		queryKey: ['learning-kit', learningKitId],
+		queryFn: () => api(fetch).req(getLearningKitById, null, learningKitId).parse()
+	});
+	const updateLearningKitMutation = createMutation({
+		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
+			api(fetch).req(updateLearningKit, data, id).parse(),
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ['learning-kit', learningKitId]
+			});
+		}
+	});
+	const deleteLearningKitMutation = createMutation({
+		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ['learning-kit', learningKitId]
+			});
+			goto('/dashboard');
+		}
+	});
+	const deletLearningUnitMutation = createMutation({
+		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ['learning-kit', learningKitId]
+			});
+		}
+	});
+
 	let showDeleteDialog = $state(false);
-	let showAddTraineeModal = $state(false);
+	let showTraineeModal = $state(false);
+	let showFileModal = $state(false);
 
-	async function handleSelectedTrainees(uuids: string[]) {
-		const updatedLearningKit = await api(fetch)
-			.req(updateLearningKit, {
-				...learningKit,
-				learningKitId: learningKit.uuid,
-				participants: uuids,
-				files: learningKit.files?.map((file) => file.uuid) ?? []
-			})
-			.parse();
-		await invalidate('learningkits:list');
-		selectedTrainees = updatedLearningKit.participants ?? [];
-	}
-
-	async function removeTrainee(uuid: string) {
-		handleSelectedTrainees(
-			selectedTrainees.filter((trainee) => trainee.uuid != uuid).map((trainee) => trainee.uuid)
-		);
-	}
-
-	async function handleSelectedFiles(uuids: string[]) {
-		const updatedLearningKit = await api(fetch)
-			.req(updateLearningKit, {
-				...learningKit,
-				learningKitId: learningKit.uuid,
-				participants: learningKit.participants?.map((p) => p.uuid) ?? [],
-				files: uuids
-			})
-			.parse();
-		await invalidate('learningkits:list');
-		selectedFiles = updatedLearningKit.files ?? [];
-	}
-
-	async function removeFile(uuid: string) {
-		handleSelectedFiles(selectedFiles.filter((file) => file.uuid != uuid).map((file) => file.uuid));
-	}
-
-	async function handleCreateNewLearningUnit() {
-		await goto(`../../learningunit/create-form?learningKitId=${learningKit.uuid}`);
-	}
-
-	async function handleConfirmDelete() {
-		if (!learningKit) return;
-
-		await api(fetch).req(deleteLearningKit, null, learningKit.uuid).parse();
-		await invalidate('learningkits:list');
-
-		showDeleteDialog = false;
-		await goto('/dashboard');
-	}
-
-	async function deleteLearningUnitFromKit(learningUnitId: string) {
-		await api(fetch).req(deleteLearningUnit, null, learningUnitId).parse();
-		learningUnits = learningUnits?.filter((lu) => lu.uuid != learningUnitId);
-	}
+	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit'
+	});
 </script>
 
-<div class="bg-surface-50-950 p-4">
-	<!-- Header -->
-	<div class="space-between flex items-start justify-between p-1">
-		<div>
-			<h1 class="text-2xl font-bold">{$_('learningKit.title')}: {learningKit.name}</h1>
-			<h2 class="mt-2 text-lg font-semibold">{learningKit.description}</h2>
-			{#if learningKit.deadlineDate}
-				<p class="mt-2 flex items-center">
-					<Clock class="mr-2 inline-block" />
-					{new Date(learningKit.deadlineDate).toLocaleDateString()}
-				</p>
-			{/if}
+{#if $learningKitQuery.status === 'pending'}
+	<div class="space-y-4 p-5">
+		<p class="placeholder h-8 max-w-64"></p>
+		<p class="placeholder max-w-48"></p>
+		<p class="placeholder"></p>
+		<p class="placeholder"></p>
+		<p class="placeholder"></p>
+		<p class="placeholder"></p>
+	</div>
+{:else if $learningKitQuery.status === 'error'}
+	<ErrorIllustration>{$_('learningKit.error.loadSingle')}</ErrorIllustration>
+{:else}
+	<div class="p-5">
+		<!--header-->
+		<div class="space-between flex items-start justify-between p-1">
+			<div>
+				<h1 class="h1">{$_('learningKit.title')}: {$learningKitQuery.data.name}</h1>
+				{#if $learningKitQuery.data.description}
+					<h2 class="preset-typo-subtitle">{$learningKitQuery.data.description}</h2>
+				{/if}
+				{#if $learningKitQuery.data.deadlineDate}
+					<p class="mt-2 flex items-center">
+						<Clock class="mr-2 inline-block" />
+						{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
+					</p>
+				{/if}
+			</div>
+
+			<button type="button" class="btn preset-outlined-surface-500 rounded-full">
+				<Settings />
+				{$_('button.edit')}
+			</button>
 		</div>
 
-		<button type="button" class="btn preset-outlined-surface-500 rounded-full">
-			<Settings />
-			{$_('button.edit')}
-		</button>
-	</div>
+		<!--content-->
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('content')}</p>
+		<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
+		<div class="grid gap-2">
+			{#each $learningKitQuery.data.learningUnits ?? [] as learningUnit (learningUnit.uuid)}
+				<LearningUnitDisplay
+					{learningUnit}
+					onDeleteLearningUnit={() => {
+						$deletLearningUnitMutation.mutate(learningUnit.uuid);
+					}}
+				/>
+			{/each}
+		</div>
+		<a
+			class="btn preset-outlined-surface-500 w-full"
+			href={`/learningunit/create-form?learningKitId=${$learningKitQuery.data.uuid}`}
+		>
+			<Plus />
+			{$_('learningUnit.create')}
+		</a>
 
-	<!-- Content -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('content')}</p>
-	<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
-	<div class="grid gap-2">
-		{#each learningUnits as learningUnit (learningUnit.uuid)}
-			<LearningUnitDisplay
-				{learningUnit}
-				onDeleteLearningUnit={async () => {
-					deleteLearningUnitFromKit(learningUnit.uuid);
+		<!-- trainees -->
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
+		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
+
+		<div class="flex flex-col gap-2">
+			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
+				<TraineeDisplay
+					user={trainee}
+					onRemoveTrainee={() => {
+						alert('remove trainee not implemented');
+					}}
+				/>
+			{/each}
+
+			<button
+				type="button"
+				class="btn preset-outlined-surface-500 w-full"
+				onclick={() => (showTraineeModal = true)}
+			>
+				<UserRoundPlus></UserRoundPlus>
+				{$_('trainee.add')}
+			</button>
+		</div>
+
+		<!-- Context -->
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
+		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
+		<div class="flex flex-col gap-2">
+			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
+				<FileDisplay File={file} />
+			{/each}
+
+			<button
+				type="button"
+				class="btn preset-outlined-surface-500 w-full"
+				onclick={() => (showFileModal = true)}
+			>
+				<Upload></Upload>
+				{$_('learningKit.addFile')}
+			</button>
+			<FileUpload />
+		</div>
+
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
+		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
+		<div class="flex gap-2">
+			<button type="button" class="btn preset-filled-primary-500 rounded-full"
+				>{$_('learningKit.publish')}</button
+			>
+			<button
+				onclick={(e) => {
+					e.preventDefault();
+					showDeleteDialog = true;
 				}}
-			/>
-		{/each}
-		<CheckpointDisplay />
+				type="button"
+				class="btn preset-filled-error-500 rounded-full"
+				>{$_('learningKit.delete')}
+			</button>
+		</div>
 	</div>
-	<button
-		type="button"
-		class="btn preset-outlined-surface-500 w-full"
-		onclick={() => handleCreateNewLearningUnit()}
-	>
-		<Plus />
-		{$_('learningUnit.create')}
-	</button>
-
-	<!-- Trainees -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
-	<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 	<MultiSelect
 		options={[
@@ -145,26 +194,12 @@
 		}))}
 		onSelect={async (trainee) => {
 			if (trainee.some((t) => t.uuid === '__add__')) {
-            showAddTraineeModal = true; // Open the modal
-        } else {
-            await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
-        }
+				showAddTraineeModal = true; // Open the modal
+			} else {
+				await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
+			}
 		}}
 	/>
-
-	<div class="mt-2 flex flex-col gap-2">
-		{#each selectedTrainees as trainee (trainee.uuid)}
-			<TraineeDisplay
-				user={trainee}
-				onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}
-			/>
-		{/each}
-	</div>
-
-	<!-- Context / Files -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
-	<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
-
 	<MultiSelect
 		options={data.allFiles.map((file) => ({
 			uuid: file.uuid,
@@ -179,57 +214,18 @@
 		}}
 	/>
 
-	<div class="mt-2 flex flex-col gap-2">
-		{#each selectedFiles as file (file.uuid)}
-			<FileDisplay File={file} onRemoveFile={async () => await removeFile(file.uuid)} />
-		{/each}
-		<FileUpload />
-	</div>
-
-	<!-- Settings -->
-	<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
-	<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
-	<div class="flex gap-2">
-		<button type="button" class="btn preset-filled-primary-500 rounded-full">
-			{$_('learningKit.publish')}
-		</button>
-		<button
-			onclick={(e) => {
-				e.preventDefault();
-				showDeleteDialog = true;
-			}}
-			type="button"
-			class="btn preset-filled-error-500 rounded-full"
-		>
-			{$_('learningKit.delete')}
-		</button>
-	</div>
-</div>
-
-<ConfirmDialog
-	isOpen={showDeleteDialog}
-	title="Confirm Deletion"
-	message={`Are you sure you want to delete "${learningKit?.name}"?`}
-	confirmText="Delete"
-	danger={true}
-	onConfirm={handleConfirmDelete}
-	onCancel={() => {
-		showDeleteDialog = false;
-	}}
-/>
-
-<AddTraineeModal
-	isOpen={showAddTraineeModal}
-	onConfirm={async () => {
-		showAddTraineeModal = false;
-
-		const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
-		allTrainees = updatedTrainees;
-
-		const last = updatedTrainees.at(-1);
-		if (last) {
-			await handleSelectedTrainees([...selectedTrainees.map((trainee) => trainee.uuid), last.uuid]);
-		}
-	}}
-	onCancel={() => (showAddTraineeModal = false)}
-/>
+	<ConfirmDialog
+		isOpen={showDeleteDialog}
+		title="Confirm Deletion"
+		message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
+		confirmText="Delete"
+		danger={true}
+		onConfirm={() => {
+			$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);
+			showDeleteDialog = false;
+		}}
+		onCancel={() => {
+			showDeleteDialog = false;
+		}}
+	/>
+{/if}

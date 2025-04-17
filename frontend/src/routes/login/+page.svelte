@@ -62,7 +62,7 @@
 					bind:value={$form.password}
 					{...$constraints.password}
 				/>
-				{#if $errors.password}<p class="text-error-50-950">{$errors.password}</p>{/if}
+				{#if $errors.password}<p class="text-error-500">{$errors.password}</p>{/if}
 			</label>
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">{$_('login.signIn')}</button>

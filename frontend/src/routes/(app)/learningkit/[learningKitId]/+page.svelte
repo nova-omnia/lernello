@@ -211,6 +211,7 @@
 			showFileModal = false;
 		}}
 		onClose={() => (showFileModal = false)}
+		selectedFileUUIDs={[]}
 	/>
 
 	<ConfirmDialog

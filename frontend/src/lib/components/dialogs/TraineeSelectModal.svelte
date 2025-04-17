@@ -47,7 +47,7 @@
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-200-800 shadow-lg max-w-3xl w-full"
+	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-3xl w-full"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}

@@ -8,7 +8,7 @@
 	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';

@@ -16,6 +16,8 @@
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
+	import { getAllFiles } from '$lib/api/collections/file';
+	import { getAllTrainees } from '$lib/api/collections/user';
 
 	const client = useQueryClient();
 	const learningKitId = page.params.learningKitId;
@@ -52,8 +54,6 @@
 	});
 
 	let showDeleteDialog = $state(false);
-	let showTraineeModal = $state(false);
-	let showFileModal = $state(false);
 
 	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
 		year: 'numeric',
@@ -61,6 +61,15 @@
 		day: '2-digit',
 		hour: '2-digit',
 		minute: '2-digit'
+	});
+
+	const availableFilesQuery = createQuery({
+		queryKey: ['files-list'],
+		queryFn: () => api(fetch).req(getAllFiles, null).parse()
+	});
+	const availableTrainesQuery = createQuery({
+		queryKey: ['trainees-list'],
+		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
 	});
 </script>
 
@@ -127,10 +136,10 @@
 			<MultiSelect
 				options={[
 					{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
-					...$learningKitQuery.data.participants.map((trainee) => ({
+					...($availableTrainesQuery.data?.map((trainee) => ({
 						uuid: trainee.uuid,
 						label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
-					}))
+					})) ?? [])
 				]}
 				selected={$learningKitQuery.data.participants.map((trainee) => ({
 					uuid: trainee.uuid,
@@ -143,7 +152,6 @@
 							participants: options.map((options) => options.uuid)
 						}
 					});
-					showTraineeModal = false;
 				}}
 			/>
 			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
@@ -161,11 +169,11 @@
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">
 			<MultiSelect
-				options={$updateLearningKitMutation.data?.files?.map((file) => ({
+				options={$availableFilesQuery.data?.map((file) => ({
 					uuid: file.uuid,
 					label: `${file.name}`
 				})) ?? []}
-				selected={$updateLearningKitMutation.data.files?.map((file) => ({
+				selected={$updateLearningKitMutation.data?.files?.map((file) => ({
 					uuid: file.uuid,
 					label: `${file.name}`
 				})) ?? []}
@@ -176,8 +184,6 @@
 							files: options.map((options) => options.uuid)
 						}
 					});
-
-					showFileModal = false;
 				}}
 			/>
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}

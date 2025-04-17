@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
+	class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
 >
 	<FileUpload
 		classes="w-full"

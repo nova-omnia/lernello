@@ -4,46 +4,46 @@
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
-	import { writable, derived } from 'svelte/store';
 
 	interface FileSelectModalProps {
 		isOpen: boolean;
 		onSelect: (uuids: string[]) => void;
 		onClose: () => void;
+		selectedFileUUIDs: string[];
 	}
 
-	const { isOpen, onSelect, onClose }: FileSelectModalProps = $props();
+	const { isOpen, onSelect, onClose, selectedFileUUIDs }: FileSelectModalProps = $props();
 
 	let availableFiles = $state<FileRes[]>([]);
-	let selectedFiles = $state<string[]>([]);
-	let searchValue = writable(''); //TODO: dont use store
-	let loading = writable(true); //TODO: dont use store
-
-	const filteredFiles = derived([searchValue, loading], ([$searchValue, $loading]) => {
-		if ($loading) return [];
-		return $searchValue
-			? availableFiles.filter((file) =>
-					file.name.toLowerCase().includes($searchValue.toLowerCase())
-				)
-			: availableFiles;
+	let selectedFiles = $state<string[]>([...selectedFileUUIDs]);
+	let searchValue = $state('');
+	let loading = $state(true);
+	let filteredFiles = $derived(() => {
+		if (loading) return [];
+		if (!searchValue) return availableFiles;
+		const search = searchValue.toLowerCase();
+		return availableFiles.filter((file) => file.name.toLowerCase().includes(search));
 	});
 
+	// Zustand synchronisieren beim Öffnen
 	$effect(() => {
 		if (isOpen) {
-			async function fetchFiles() {
-				loading.set(true);
-				try {
-					const data = await api(fetch).req(getAllFiles, null).parse();
-					availableFiles = data;
-				} catch (error) {
-					console.error('Error fetching files:', error);
-				} finally {
-					loading.set(false);
-				}
-			}
-			fetchFiles();
+			selectedFiles = [...selectedFileUUIDs];
+			loadFiles();
 		}
 	});
+
+	async function loadFiles() {
+		loading = true;
+		try {
+			const data = await api(fetch).req(getAllFiles, null).parse();
+			availableFiles = data;
+		} catch (error) {
+			console.error('Error fetching files:', error);
+		} finally {
+			loading = false;
+		}
+	}
 </script>
 
 <Modal
@@ -53,17 +53,16 @@
 >
 	{#snippet content()}
 		<h2 class="mb-4 text-lg font-bold">{$_('selectFiles')}</h2>
-
 		<input
 			type="text"
 			placeholder={$_('multiSelect.searchPlaceholder')}
-			bind:value={$searchValue}
+			bind:value={searchValue}
 			class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
-			disabled={$loading}
+			disabled={loading}
 		/>
 
 		<div class="max-h-64 min-h-70 overflow-auto">
-			{#if $loading}
+			{#if loading}
 				<p class="text-center">{$_('loading')}</p>
 			{:else}
 				<table class="table w-full">
@@ -74,7 +73,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each $filteredFiles as file (file.uuid)}
+						{#each filteredFiles() as file (file.uuid)}
 							<tr>
 								<td>
 									<input type="checkbox" bind:group={selectedFiles} value={file.uuid} />
@@ -92,14 +91,12 @@
 				class="btn"
 				onclick={() => {
 					onClose();
-					selectedFiles = [];
 				}}>{$_('button.cancel')}</button
 			>
 			<button
 				class="btn btn-primary"
 				onclick={() => {
 					onSelect(selectedFiles);
-					selectedFiles = [];
 				}}>{$_('button.addSelected')}</button
 			>
 		</div>

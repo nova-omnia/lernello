@@ -5,7 +5,6 @@
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
 	import AddTraineeModal from './AddTraineeModal.svelte';
-	import { writable, derived } from 'svelte/store';
 	import { api } from '$lib/api/apiClient';
 
 	interface TraineeSelectModalProps {
@@ -22,18 +21,16 @@
 	let selectedTrainees = $state<string[]>(
 		selectedParticipants.map((participant) => participant.uuid) ?? []
 	);
-	let isAddTraineeModalOpen = $state<boolean>(false);
-	let searchValue = writable(''); //TODO: dont use store
 
-	// Filter trainees based on the search value
-	const filteredTrainees = derived(searchValue, ($searchValue) => {
-		return $searchValue
-			? allTrainees.filter((trainee) =>
-					`${trainee.name} ${trainee.surname} ${trainee.username}`
-						.toLowerCase()
-						.includes($searchValue.toLowerCase())
-				)
-			: allTrainees;
+	let isAddTraineeModalOpen = $state(false);
+	let searchValue = $state('');
+
+	const filteredTrainees = $derived(() => {
+		if (!searchValue) return allTrainees;
+		const lower = searchValue.toLowerCase();
+		return allTrainees.filter((trainee) =>
+			`${trainee.name} ${trainee.surname} ${trainee.username}`.toLowerCase().includes(lower)
+		);
 	});
 
 	$effect(() => {
@@ -54,66 +51,64 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="rounded p-6 shadow-xl">
-			<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
+		<h2 class="mb-4 text-lg font-bold">{$_('selectTrainees')}</h2>
 
-			<input
-				type="text"
-				placeholder={$_('multiSelect.searchPlaceholder')}
-				bind:value={$searchValue}
-				class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
-			/>
+		<input
+			type="text"
+			placeholder={$_('multiSelect.searchPlaceholder')}
+			bind:value={searchValue}
+			class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
+		/>
 
-			<div class="max-h-64 min-h-70 overflow-auto">
-				<table class="table w-full">
-					<thead>
+		<div class="max-h-64 min-h-70 overflow-auto">
+			<table class="table w-full">
+				<thead>
+					<tr>
+						<th>{$_('multiSelect.select')}</th>
+						<th>{$_('multiSelect.username')}</th>
+						<th>{$_('multiSelect.name')}</th>
+						<th>{$_('multiSelect.surname')}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each filteredTrainees() as trainee (trainee.uuid)}
 						<tr>
-							<th>{$_('multiSelect.select')}</th>
-							<th>{$_('multiSelect.username')}</th>
-							<th>{$_('multiSelect.name')}</th>
-							<th>{$_('multiSelect.surname')}</th>
+							<td>
+								<input type="checkbox" bind:group={selectedTrainees} value={trainee.uuid} />
+							</td>
+							<td>{trainee.username}</td>
+							<td>{trainee.name}</td>
+							<td>{trainee.surname}</td>
 						</tr>
-					</thead>
-					<tbody>
-						{#each $filteredTrainees as trainee (trainee.uuid)}
-							<tr>
-								<td>
-									<input type="checkbox" bind:group={selectedTrainees} value={trainee.uuid} />
-								</td>
-								<td>{trainee.username}</td>
-								<td>{trainee.name}</td>
-								<td>{trainee.surname}</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 
-			<div class="mt-4 flex items-center justify-between">
+		<div class="mt-4 flex items-center justify-between">
+			<button
+				class="btn btn-secondary ml-0 flex items-center gap-2"
+				onclick={() => {
+					isAddTraineeModalOpen = true;
+				}}
+			>
+				<SquarePlus class="size-6" />
+			</button>
+			<div class="flex gap-2">
 				<button
-					class="btn btn-secondary ml-0 flex items-center gap-2"
+					class="btn"
 					onclick={() => {
-						isAddTraineeModalOpen = true;
-					}}
+						onClose();
+						selectedTrainees = [];
+					}}>{$_('button.cancel')}</button
 				>
-					<SquarePlus class="size-6" />
-				</button>
-				<div class="flex gap-2">
-					<button
-						class="btn"
-						onclick={() => {
-							onClose();
-							selectedTrainees = [];
-						}}>{$_('button.cancel')}</button
-					>
-					<button
-						class="btn btn-primary"
-						onclick={() => {
-							onSelect(selectedTrainees);
-							selectedTrainees = [];
-						}}>{$_('button.addSelected')}</button
-					>
-				</div>
+				<button
+					class="btn btn-primary"
+					onclick={() => {
+						onSelect(selectedTrainees);
+						selectedTrainees = [];
+					}}>{$_('button.addSelected')}</button
+				>
 			</div>
 		</div>
 	{/snippet}

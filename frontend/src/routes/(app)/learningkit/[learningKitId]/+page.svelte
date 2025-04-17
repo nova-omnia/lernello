@@ -18,6 +18,7 @@
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { getAllTrainees } from '$lib/api/collections/user';
+	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
 
 	const client = useQueryClient();
 	const learningKitId = page.params.learningKitId;
@@ -44,7 +45,7 @@
 			goto('/dashboard');
 		}
 	});
-	const deletLearningUnitMutation = createMutation({
+	const deleteLearningUnitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			client.invalidateQueries({
@@ -54,6 +55,7 @@
 	});
 
 	let showDeleteDialog = $state(false);
+	let showAddTraineeModal = $state(false);
 
 	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
 		year: 'numeric',
@@ -67,7 +69,7 @@
 		queryKey: ['files-list'],
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
-	const availableTrainesQuery = createQuery({
+	const availableTraineesQuery = createQuery({
 		queryKey: ['trainees-list'],
 		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
 	});
@@ -115,7 +117,7 @@
 				<LearningUnitDisplay
 					{learningUnit}
 					onDeleteLearningUnit={() => {
-						$deletLearningUnitMutation.mutate(learningUnit.uuid);
+						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
 					}}
 				/>
 			{/each}
@@ -134,13 +136,10 @@
 
 		<div class="flex flex-col gap-2">
 			<MultiSelect
-				options={[
-					{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
-					...($availableTrainesQuery.data?.map((trainee) => ({
-						uuid: trainee.uuid,
-						label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
-					})) ?? [])
-				]}
+				options={$availableTraineesQuery.data?.map((trainee) => ({
+					uuid: trainee.uuid,
+					label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
+				})) ?? []}
 				selected={$learningKitQuery.data.participants.map((trainee) => ({
 					uuid: trainee.uuid,
 					label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
@@ -149,11 +148,17 @@
 					$updateLearningKitMutation.mutate({
 						id: learningKitId,
 						data: {
-							participants: options.map((options) => options.uuid)
+							participants: options.map((opt) => opt.uuid)
 						}
 					});
 				}}
 			/>
+			<button
+				class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-base text-center"
+				onclick={() => (showAddTraineeModal = true)}
+				>
+				{$_('learningKit.addNewTrainee')}
+			</button>
 			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
 				<TraineeDisplay
 					user={trainee}
@@ -228,5 +233,27 @@
 		onCancel={() => {
 			showDeleteDialog = false;
 		}}
+	/>
+
+	<AddTraineeModal
+		isOpen={showAddTraineeModal}
+		onConfirm={async () => {
+			showAddTraineeModal = false;
+
+			await client.invalidateQueries({ queryKey: ['trainees-list'] });
+			const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
+			const last = updatedTrainees.at(-1);
+
+			if (last) {
+				const currentParticipants = $learningKitQuery.data.participants.map((t) => t.uuid);
+				await $updateLearningKitMutation.mutate({
+					id: learningKitId,
+					data: {
+						participants: [...currentParticipants, last.uuid]
+					}
+				});
+			}
+		}}
+		onCancel={() => (showAddTraineeModal = false)}
 	/>
 {/if}

@@ -186,6 +186,7 @@
 					});
 				}}
 			/>
+			<FileUpload/>
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
 				<FileDisplay
 					File={file}
@@ -194,7 +195,6 @@
 					}}
 				/>
 			{/each}
-			<FileUpload />
 		</div>
 
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>

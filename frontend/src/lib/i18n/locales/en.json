@@ -91,5 +91,6 @@
 	"multiSelect.noOptionsFound": "No options found",
 	"markdownEditor.placeholder": "Write your markdown here...",
 	"errorIllustration.alt": "Error Illustration with a red X",
-	"errorIllustration.title": "Error"
+	"errorIllustration.title": "Error",
+	"addNewFile": "Add new file"
 }

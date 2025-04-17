@@ -8,7 +8,7 @@ export const uploadFile = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}/upload`,
 	payload: {
-		schema: z.null(),
+		schema: z.null(), //Multipartfile josi todo
 		defaultValidate: false
 	},
 	response: {

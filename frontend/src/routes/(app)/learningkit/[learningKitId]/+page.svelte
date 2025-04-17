@@ -144,7 +144,11 @@
 			label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
 		}))}
 		onSelect={async (trainee) => {
-			await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
+			if (trainee.some((t) => t.uuid === '__add__')) {
+            showAddTraineeModal = true; // Open the modal
+        } else {
+            await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
+        }
 		}}
 	/>
 

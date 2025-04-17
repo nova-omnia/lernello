@@ -3,6 +3,7 @@
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { addTrainee } from '$lib/api/collections/user';
 	import { api } from '$lib/api/apiClient';
+	import { _ } from 'svelte-i18n';
 
 	interface AddTraineeModalProps {
 		isOpen: boolean;
@@ -28,10 +29,10 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<h2 class="text-lg font-bold">Add Trainee</h2>
+		<h2 class="text-lg font-bold">{$_('addTrainee')}</h2>
 		<div class="space-y-2">
 			<label class="block">
-				<span class="text-sm font-medium">Username</span>
+				<span class="text-sm font-medium">{$_('username')}</span>
 				<input
 					type="text"
 					bind:value={username}
@@ -40,7 +41,7 @@
 				/>
 			</label>
 			<label class="block">
-				<span class="text-sm font-medium">Name</span>
+				<span class="text-sm font-medium">{$_('name')}</span>
 				<input
 					type="text"
 					bind:value={name}
@@ -49,7 +50,7 @@
 				/>
 			</label>
 			<label class="block">
-				<span class="text-sm font-medium">Surname</span>
+				<span class="text-sm font-medium">{$_('surname')}</span>
 				<input
 					type="text"
 					bind:value={surname}

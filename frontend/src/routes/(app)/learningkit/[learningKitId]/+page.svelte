@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { Clock, Settings, Plus } from 'lucide-svelte';
+	import { Clock, Settings, Plus, UserPlus } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
@@ -133,9 +133,10 @@
 		<!-- trainees -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
 		<button
-			class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
+			class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center gap-2 rounded-lg border-[1px] p-2 text-center text-base"
 			onclick={() => (showAddTraineeModal = true)}
 		>
+			<UserPlus />
 			{$_('learningKit.addNewTrainee')}
 		</button>
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
@@ -164,9 +165,7 @@
 					user={trainee}
 					onRemoveTrainee={() => {
 						const current = $learningKitQuery.data.participants;
-						const updated = current
-							.filter((trainee) => trainee.uuid !== trainee.uuid)
-							.map((trainee) => trainee.uuid);
+						const updated = current.filter((t) => t.uuid !== trainee.uuid).map((t) => t.uuid);
 
 						$updateLearningKitMutation.mutate({
 							id: learningKitId,
@@ -181,6 +180,7 @@
 
 		<!-- Context -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
+		<FileUpload />
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">
 			<MultiSelect
@@ -188,10 +188,11 @@
 					uuid: file.uuid,
 					label: `${file.name}`
 				})) ?? []}
-				selected={$updateLearningKitMutation.data?.files?.map((file) => ({
+				selected={$learningKitQuery.data.files?.map((file) => ({
+					//gives a warning when not using ?
 					uuid: file.uuid,
 					label: `${file.name}`
-				})) ?? []}
+				}))}
 				onSelect={(options) => {
 					$updateLearningKitMutation.mutate({
 						id: learningKitId,
@@ -201,15 +202,23 @@
 					});
 				}}
 			/>
+
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
 				<FileDisplay
 					File={file}
 					onRemoveFile={() => {
-						alert('remove file not implemented');
+						const current = $learningKitQuery.data.files ?? []; //gives a warning when not using ??
+						const updated = current.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
+
+						$updateLearningKitMutation.mutate({
+							id: learningKitId,
+							data: {
+								files: updated
+							}
+						});
 					}}
 				/>
 			{/each}
-			<FileUpload />
 		</div>
 
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>

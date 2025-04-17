@@ -45,7 +45,7 @@
 	"learningunit.details": "Learning Unit Details",
 	"learningunit.reorderBlocks": "Reorder Blocks",
 	"learningKit.title": "Learning Kits",
-	"learningKit.addNewTrainee": "+ Add new trainee",
+	"learningKit.addNewTrainee": "Add new trainee",
 	"learningKit.content": "The contents of the LearningKit",
 	"learningKit.context": "Context",
 	"learningKit.context.description": "The context provided to the AI assisting tools",
@@ -91,5 +91,10 @@
 	"multiSelect.noOptionsFound": "No options found",
 	"markdownEditor.placeholder": "Write your markdown here...",
 	"errorIllustration.alt": "Error Illustration with a red X",
-	"errorIllustration.title": "Error"
+	"errorIllustration.title": "Error",
+	"addNewFile": "Add new file",
+	"addTrainee": "Add Trainee",
+	"name": "Name",
+	"surname": "surname",
+	"username": "Username"
 }

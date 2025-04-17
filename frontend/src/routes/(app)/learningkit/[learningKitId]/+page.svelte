@@ -10,16 +10,13 @@
 	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
 	import { goto, invalidate } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { _, getLocaleFromNavigator, locale } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
-	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
-	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import { api } from '$lib/api/apiClient.js';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
-	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 
 	const client = useQueryClient();
@@ -56,8 +53,6 @@
 		}
 	});
 
-	let selectedFiles = $state<FileRes[]>([]);
-
 	let showDeleteDialog = $state(false);
 	let showTraineeModal = $state(false);
 	let showFileModal = $state(false);
@@ -69,38 +64,6 @@
 		hour: '2-digit',
 		minute: '2-digit'
 	});
-
-	function handleSelectedTrainees(uuids: string[]) {
-		// const updatedLearningKit = await api(fetch)
-		// 	.req(updateLearningKit, {
-		// 		...learningKit,
-		// 		learningKitId: learningKit.uuid,
-		// 		participants: uuids,
-		// 		files: learningKit.files?.map((file) => file.uuid) ?? []
-		// 	})
-		// 	.parse();
-		// await invalidate('learningkits:list');
-		// selectedTrainees = updatedLearningKit.participants ?? [];
-	}
-
-	function removeTrainee(uuid: string) {
-		// handleSelectedTrainees(
-		// 	selectedTrainees.filter((trainee) => trainee.uuid != uuid).map((trainee) => trainee.uuid)
-		// );
-	}
-
-	function handleSelectedFiles(uuids: string[]) {
-		// const updatedLearningKit = await api(fetch)
-		// 	.req(updateLearningKit, {
-		// 		...learningKit,
-		// 		learningKitId: learningKit.uuid,
-		// 		participants: learningKit.participants?.map((participant) => participant.uuid) ?? [],
-		// 		files: uuids
-		// 	})
-		// 	.parse();
-		// await invalidate('learningkits:list');
-		// selectedFiles = updatedLearningKit.files ?? [];
-	}
 </script>
 
 {#if $learningKitQuery.status === 'pending'}
@@ -163,12 +126,14 @@
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 		<div class="flex flex-col gap-2">
-			<!-- {#each selectedTrainees as trainee (trainee.uuid)}
+			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
 				<TraineeDisplay
 					user={trainee}
-					onRemoveTrainee={async () => await removeTrainee(trainee.uuid)}
+					onRemoveTrainee={() => {
+						alert('remove trainee not implemented');
+					}}
 				/>
-			{/each} -->
+			{/each}
 
 			<button
 				type="button"
@@ -184,7 +149,7 @@
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">
-			{#each selectedFiles as file (file.uuid)}
+			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
 				<FileDisplay File={file} />
 			{/each}
 
@@ -220,7 +185,12 @@
 	<TraineeSelectModal
 		isOpen={showTraineeModal}
 		onSelect={(selectedTrainees) => {
-			// await handleSelectedTrainees(selectedTrainees);
+			$updateLearningKitMutation.mutate({
+				id: learningKitId,
+				data: {
+					participants: selectedTrainees
+				}
+			});
 			showTraineeModal = false;
 		}}
 		onClose={() => (showTraineeModal = false)}
@@ -230,8 +200,14 @@
 
 	<FileSelectModal
 		isOpen={showFileModal}
-		onSelect={(selectedFiles) => {
-			handleSelectedFiles(selectedFiles);
+		onSelect={(uuids) => {
+			$updateLearningKitMutation.mutate({
+				id: learningKitId,
+				data: {
+					files: uuids
+				}
+			});
+
 			showFileModal = false;
 		}}
 		onClose={() => (showFileModal = false)}

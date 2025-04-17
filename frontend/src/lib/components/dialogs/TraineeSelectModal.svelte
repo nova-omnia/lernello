@@ -64,7 +64,7 @@
 				class="bg-surface-200-800 text-surface-800-200 w-full px-3 py-2"
 			/>
 
-			<div class="min-h-70 max-h-64 overflow-auto">
+			<div class="max-h-64 min-h-70 overflow-auto">
 				<table class="table w-full">
 					<thead>
 						<tr>

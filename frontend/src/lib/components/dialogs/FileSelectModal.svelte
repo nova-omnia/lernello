@@ -62,7 +62,7 @@
 			disabled={$loading}
 		/>
 
-		<div class="min-h-70 max-h-64 overflow-auto">
+		<div class="max-h-64 min-h-70 overflow-auto">
 			{#if $loading}
 				<p class="text-center">{$_('loading')}</p>
 			{:else}

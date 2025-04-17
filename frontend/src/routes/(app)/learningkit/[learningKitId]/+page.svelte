@@ -132,6 +132,12 @@
 
 		<!-- trainees -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
+		<button
+			class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
+			onclick={() => (showAddTraineeModal = true)}
+		>
+			{$_('learningKit.addNewTrainee')}
+		</button>
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 		<div class="flex flex-col gap-2">
@@ -153,17 +159,21 @@
 					});
 				}}
 			/>
-			<button
-				class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-base text-center"
-				onclick={() => (showAddTraineeModal = true)}
-				>
-				{$_('learningKit.addNewTrainee')}
-			</button>
 			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
 				<TraineeDisplay
 					user={trainee}
 					onRemoveTrainee={() => {
-						alert('remove trainee not implemented');
+						const current = $learningKitQuery.data.participants;
+						const updated = current
+							.filter((trainee) => trainee.uuid !== trainee.uuid)
+							.map((trainee) => trainee.uuid);
+
+						$updateLearningKitMutation.mutate({
+							id: learningKitId,
+							data: {
+								participants: updated
+							}
+						});
 					}}
 				/>
 			{/each}

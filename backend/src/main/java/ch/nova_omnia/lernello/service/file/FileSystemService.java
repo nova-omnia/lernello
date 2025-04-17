@@ -35,6 +35,14 @@ public class FileSystemService implements FileService {
     }
 
     @Override
+    public List<File> findAllByIds(List<UUID> uuids) {
+        if (uuids == null) {
+            return null;
+        }
+        return fileRepository.findAllById(uuids);
+    }
+
+    @Override
     public Optional<File> findById(UUID uuid) {
         return fileRepository.findById(uuid);
     }

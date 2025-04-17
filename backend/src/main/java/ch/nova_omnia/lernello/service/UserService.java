@@ -56,6 +56,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findAllByIds(List<UUID> uuids) {
+        if (uuids == null) {
+            return null;
+        }
+        return userRepository.findAllById(uuids);
+    }
+
     public String setLocale(String username, String locale) {
         User user = userRepository.findByUsername(username);
         user.setLocale(locale);

@@ -1,0 +1,23 @@
+meta {
+  name: Update Learning Kit
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/api/learning-kits/{{id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "UPDATE",
+    "files": ["e6ac657b-188b-4485-87a6-6e740f08177e"],
+    "participants": ["08eb1613-8bd3-426c-8151-d39e74239541"]
+  }
+}
+
+vars:pre-request {
+  id: bb9d1df6-6995-48fe-8ccf-084f12cf1bf6
+}

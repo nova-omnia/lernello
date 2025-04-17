@@ -13,6 +13,8 @@ import ch.nova_omnia.lernello.model.data.File;
 public interface FileService {
     public List<File> findAll();
 
+    public List<File> findAllByIds(List<UUID> uuids);
+
     public Optional<File> findById(UUID uuid);
 
     public void deleteById(UUID uuid);

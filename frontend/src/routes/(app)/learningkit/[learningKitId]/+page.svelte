@@ -133,10 +133,10 @@
 		<!-- trainees -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
 		<button
-			class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base gap-2"
+			class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center gap-2 rounded-lg border-[1px] p-2 text-center text-base"
 			onclick={() => (showAddTraineeModal = true)}
 		>
-		<UserPlus/>
+			<UserPlus />
 			{$_('learningKit.addNewTrainee')}
 		</button>
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
@@ -202,7 +202,7 @@
 					});
 				}}
 			/>
-		
+
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
 				<FileDisplay
 					File={file}

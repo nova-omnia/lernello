@@ -1,11 +1,7 @@
 <script lang="ts">
-	import { api } from '$lib/api/apiClient';
-	import { uploadFile } from '$lib/api/collections/file';
 	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	import { Upload as IconUpload, XCircle as IconRemove } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
-
-	let name = $state<string>('');
 
 	// JOSI: TODO
 	// async function handleUploadFile() {

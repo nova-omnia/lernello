@@ -173,10 +173,10 @@
 					uuid: file.uuid,
 					label: `${file.name}`
 				})) ?? []}
-				selected={$updateLearningKitMutation.data?.files?.map((file) => ({
+				selected={$learningKitQuery.data.files?.map((file) => ({ //gives a warning when not using ? 
 					uuid: file.uuid,
 					label: `${file.name}`
-				})) ?? []}
+				}))} 
 				onSelect={(options) => {
 					$updateLearningKitMutation.mutate({
 						id: learningKitId,

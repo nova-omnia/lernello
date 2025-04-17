@@ -8,20 +8,7 @@ const REQUEST_MAPPING = '/api/learning-kits';
 
 export const createLearningKit = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/create`,
-	response: {
-		schema: LearningKitResSchema,
-		defaultValidate: true
-	},
-	payload: {
-		schema: CreateLearningKitSchema,
-		defaultValidate: false
-	}
-});
-
-export const editLearningKit = createEndpoint({
-	method: 'PUT',
-	getPath: () => `${REQUEST_MAPPING}/edit`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	response: {
 		schema: LearningKitResSchema,
 		defaultValidate: true
@@ -72,8 +59,8 @@ export const getLearningKitById = createEndpoint({
 });
 
 export const updateLearningKit = createEndpoint({
-	method: 'PUT',
-	getPath: () => `${REQUEST_MAPPING}/`,
+	method: 'PATCH',
+	getPath: (learningKitId: string) => `${REQUEST_MAPPING}/${learningKitId}`,
 	response: {
 		schema: LearningKitResSchema,
 		defaultValidate: true

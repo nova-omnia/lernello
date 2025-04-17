@@ -20,8 +20,8 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const learningUnit = await api(fetch).req(createLearningUnit, form.data).parse();
+		await api(fetch).req(createLearningUnit, form.data).parse();
 
-		return redirect(303, `/learningunit/${learningUnit.uuid}`);
+		return redirect(303, `/learningkit/${form.data.learningKitId}`);
 	})
 } satisfies Actions;

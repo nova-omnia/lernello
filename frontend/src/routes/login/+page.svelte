@@ -33,7 +33,7 @@
 		method="POST"
 		use:enhance
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
-		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+		class="card preset-filled-surface-100-900 w-full max-w-lg space-y-8 p-8"
 	>
 		<h1 class="preset-typo-headline">{$_('login.title')}</h1>
 
@@ -49,7 +49,7 @@
 					bind:value={$form.username}
 					{...$constraints.username}
 				/>
-				{#if $errors.username}<span class="text-error-50-950">{$errors.username}</span>{/if}
+				{#if $errors.username}<span class="text-error-500">{$errors.username}</span>{/if}
 			</label>
 			<label class="label">
 				<span class="label-text">{$_('form.passwordLabel')}</span>

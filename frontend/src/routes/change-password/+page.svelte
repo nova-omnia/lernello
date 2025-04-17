@@ -14,7 +14,7 @@
 		method="POST"
 		use:enhance
 		action="?/changePassword"
-		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+		class="card preset-filled-surface-100-900 w-full max-w-lg space-y-8 p-8"
 	>
 		<h1 class="preset-typo-headline">{$_('changePassword.title')}</h1>
 		<p>{$_('changePassword.description')}</p>
@@ -31,7 +31,7 @@
 					{...$constraints.newPassword}
 				/>
 				{#if $errors.newPassword}
-					<p class="text-error-50-950">{$errors.newPassword}</p>
+					<p class="text-error-500">{$errors.newPassword}</p>
 				{/if}
 			</label>
 			<label class="label">
@@ -46,7 +46,7 @@
 					{...$constraints.confirmPassword}
 				/>
 				{#if $errors.confirmPassword}
-					<p class="text-error-50-950">{$errors.confirmPassword}</p>
+					<p class="text-error-500">{$errors.confirmPassword}</p>
 				{/if}
 			</label>
 		</div>

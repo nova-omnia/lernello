@@ -1,20 +1,19 @@
 <script lang="ts">
 	import { File as FileIcon } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { invalidate } from '$app/navigation';
-	import { deleteFile } from '$lib/api/collections/file';
 	import { _ } from 'svelte-i18n';
-	import { api } from '$lib/api/apiClient';
-	const { File } = $props();
+	import type { FileRes } from '$lib/schemas/response/FileRes';
+
+	interface FileDisplayProps {
+		File: FileRes;
+		onRemoveFile: () => void;
+	}
+
+	const { File, onRemoveFile }: FileDisplayProps = $props();
 
 	let showDeleteDialog = $state(false);
 
-	async function removeFile() {
-		if (!File) return;
-
-		await api(fetch).req(deleteFile, null, File.uuid).parse();
-		await invalidate('files:list');
-
+	function removeFile() {
 		showDeleteDialog = false;
 	}
 </script>
@@ -30,8 +29,10 @@
 			e.preventDefault();
 			showDeleteDialog = true;
 		}}
-		class="btn preset-filled-error-500 ml-auto rounded-full p-2">{$_('button.remove')}</button
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
 	>
+		{$_('button.remove')}
+	</button>
 </div>
 
 <ConfirmDialog
@@ -40,7 +41,10 @@
 	message={`Are you sure you want to remove "${File?.name}"?`}
 	confirmText="Delete"
 	danger={true}
-	onConfirm={removeFile}
+	onConfirm={() => {
+		removeFile();
+		onRemoveFile();
+	}}
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}

@@ -124,6 +124,28 @@
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 		<div class="flex flex-col gap-2">
+			<MultiSelect
+				options={[
+					{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
+					...$learningKitQuery.data.participants.map((trainee) => ({
+						uuid: trainee.uuid,
+						label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
+					}))
+				]}
+				selected={$learningKitQuery.data.participants.map((trainee) => ({
+					uuid: trainee.uuid,
+					label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
+				}))}
+				onSelect={(options) => {
+					$updateLearningKitMutation.mutate({
+						id: learningKitId,
+						data: {
+							participants: options.map((options) => options.uuid)
+						}
+					});
+					showTraineeModal = false;
+				}}
+			/>
 			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
 				<TraineeDisplay
 					user={trainee}
@@ -132,33 +154,40 @@
 					}}
 				/>
 			{/each}
-
-			<button
-				type="button"
-				class="btn preset-outlined-surface-500 w-full"
-				onclick={() => (showTraineeModal = true)}
-			>
-				<UserRoundPlus></UserRoundPlus>
-				{$_('trainee.add')}
-			</button>
 		</div>
 
 		<!-- Context -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">
-			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
-				<FileDisplay File={file} />
-			{/each}
+			<MultiSelect
+				options={$updateLearningKitMutation.data?.files?.map((file) => ({
+					uuid: file.uuid,
+					label: `${file.name}`
+				})) ?? []}
+				selected={$updateLearningKitMutation.data.files?.map((file) => ({
+					uuid: file.uuid,
+					label: `${file.name}`
+				})) ?? []}
+				onSelect={(options) => {
+					$updateLearningKitMutation.mutate({
+						id: learningKitId,
+						data: {
+							files: options.map((options) => options.uuid)
+						}
+					});
 
-			<button
-				type="button"
-				class="btn preset-outlined-surface-500 w-full"
-				onclick={() => (showFileModal = true)}
-			>
-				<Upload></Upload>
-				{$_('learningKit.addFile')}
-			</button>
+					showFileModal = false;
+				}}
+			/>
+			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
+				<FileDisplay
+					File={file}
+					onRemoveFile={() => {
+						alert('remove file not implemented');
+					}}
+				/>
+			{/each}
 			<FileUpload />
 		</div>
 
@@ -179,40 +208,6 @@
 			</button>
 		</div>
 	</div>
-
-	<MultiSelect
-		options={[
-			{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
-			...allTrainees.map((trainee) => ({
-				uuid: trainee.uuid,
-				label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
-			}))
-		]}
-		selected={selectedTrainees.map((trainee) => ({
-			uuid: trainee.uuid,
-			label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
-		}))}
-		onSelect={async (trainee) => {
-			if (trainee.some((t) => t.uuid === '__add__')) {
-				showAddTraineeModal = true; // Open the modal
-			} else {
-				await handleSelectedTrainees(trainee.map((trainee) => trainee.uuid));
-			}
-		}}
-	/>
-	<MultiSelect
-		options={data.allFiles.map((file) => ({
-			uuid: file.uuid,
-			label: `${file.name}`
-		}))}
-		selected={selectedFiles.map((file) => ({
-			uuid: file.uuid,
-			label: `${file.name}`
-		}))}
-		onSelect={async (file) => {
-			await handleSelectedFiles(file.map((file) => file.uuid));
-		}}
-	/>
 
 	<ConfirmDialog
 		isOpen={showDeleteDialog}

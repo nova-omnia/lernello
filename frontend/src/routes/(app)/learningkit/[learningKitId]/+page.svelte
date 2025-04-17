@@ -164,9 +164,7 @@
 					user={trainee}
 					onRemoveTrainee={() => {
 						const current = $learningKitQuery.data.participants;
-						const updated = current
-							.filter((trainee) => trainee.uuid !== trainee.uuid)
-							.map((trainee) => trainee.uuid);
+						const updated = current.filter((t) => t.uuid !== trainee.uuid).map((t) => t.uuid);
 
 						$updateLearningKitMutation.mutate({
 							id: learningKitId,
@@ -188,10 +186,11 @@
 					uuid: file.uuid,
 					label: `${file.name}`
 				})) ?? []}
-				selected={$learningKitQuery.data.files?.map((file) => ({ //gives a warning when not using ? 
+				selected={$learningKitQuery.data.files?.map((file) => ({
+					//gives a warning when not using ?
 					uuid: file.uuid,
 					label: `${file.name}`
-				}))} 
+				}))}
 				onSelect={(options) => {
 					$updateLearningKitMutation.mutate({
 						id: learningKitId,
@@ -201,12 +200,20 @@
 					});
 				}}
 			/>
-			<FileUpload/>
+			<FileUpload />
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
 				<FileDisplay
 					File={file}
 					onRemoveFile={() => {
-						alert('remove file not implemented');
+						const current = $learningKitQuery.data.files ?? []; //gives a warning when not using ??
+						const updated = current.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
+
+						$updateLearningKitMutation.mutate({
+							id: learningKitId,
+							data: {
+								files: updated
+							}
+						});
 					}}
 				/>
 			{/each}

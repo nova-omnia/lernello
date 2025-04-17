@@ -1,3 +1,4 @@
+<!--AddTraineeModal.svelte-->
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { addTrainee } from '$lib/api/collections/user';

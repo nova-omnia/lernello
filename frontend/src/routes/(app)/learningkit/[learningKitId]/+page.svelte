@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { Clock, Settings, Plus, UserRoundPlus } from 'lucide-svelte';
+	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import { Clock, Settings, Plus } from 'lucide-svelte';
 	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
-	import TraineeSelectModal from '$lib/components/dialogs/TraineeSelectModal.svelte';
-	import FileSelectModal from '$lib/components/dialogs/FileSelectModal.svelte';
-	import { Upload } from 'lucide-svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
@@ -18,6 +16,8 @@
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
+	import { getAllFiles } from '$lib/api/collections/file';
+	import { getAllTrainees } from '$lib/api/collections/user';
 
 	const client = useQueryClient();
 	const learningKitId = page.params.learningKitId;
@@ -54,8 +54,6 @@
 	});
 
 	let showDeleteDialog = $state(false);
-	let showTraineeModal = $state(false);
-	let showFileModal = $state(false);
 
 	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
 		year: 'numeric',
@@ -63,6 +61,15 @@
 		day: '2-digit',
 		hour: '2-digit',
 		minute: '2-digit'
+	});
+
+	const availableFilesQuery = createQuery({
+		queryKey: ['files-list'],
+		queryFn: () => api(fetch).req(getAllFiles, null).parse()
+	});
+	const availableTrainesQuery = createQuery({
+		queryKey: ['trainees-list'],
+		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
 	});
 </script>
 
@@ -126,6 +133,27 @@
 		<p class="mt-5 text-sm">{$_('trainee.access')}</p>
 
 		<div class="flex flex-col gap-2">
+			<MultiSelect
+				options={[
+					{ uuid: '__add__', label: $_('learningKit.addNewTrainee') },
+					...($availableTrainesQuery.data?.map((trainee) => ({
+						uuid: trainee.uuid,
+						label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
+					})) ?? [])
+				]}
+				selected={$learningKitQuery.data.participants.map((trainee) => ({
+					uuid: trainee.uuid,
+					label: `${trainee.username} | ${trainee.name} ${trainee.surname}`
+				}))}
+				onSelect={(options) => {
+					$updateLearningKitMutation.mutate({
+						id: learningKitId,
+						data: {
+							participants: options.map((options) => options.uuid)
+						}
+					});
+				}}
+			/>
 			{#each $learningKitQuery.data.participants ?? [] as trainee (trainee.uuid)}
 				<TraineeDisplay
 					user={trainee}
@@ -134,33 +162,38 @@
 					}}
 				/>
 			{/each}
-
-			<button
-				type="button"
-				class="btn preset-outlined-surface-500 w-full"
-				onclick={() => (showTraineeModal = true)}
-			>
-				<UserRoundPlus></UserRoundPlus>
-				{$_('trainee.add')}
-			</button>
 		</div>
 
 		<!-- Context -->
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">
+			<MultiSelect
+				options={$availableFilesQuery.data?.map((file) => ({
+					uuid: file.uuid,
+					label: `${file.name}`
+				})) ?? []}
+				selected={$updateLearningKitMutation.data?.files?.map((file) => ({
+					uuid: file.uuid,
+					label: `${file.name}`
+				})) ?? []}
+				onSelect={(options) => {
+					$updateLearningKitMutation.mutate({
+						id: learningKitId,
+						data: {
+							files: options.map((options) => options.uuid)
+						}
+					});
+				}}
+			/>
 			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
-				<FileDisplay File={file} />
+				<FileDisplay
+					File={file}
+					onRemoveFile={() => {
+						alert('remove file not implemented');
+					}}
+				/>
 			{/each}
-
-			<button
-				type="button"
-				class="btn preset-outlined-surface-500 w-full"
-				onclick={() => (showFileModal = true)}
-			>
-				<Upload></Upload>
-				{$_('learningKit.addFile')}
-			</button>
 			<FileUpload />
 		</div>
 
@@ -181,38 +214,6 @@
 			</button>
 		</div>
 	</div>
-
-	<TraineeSelectModal
-		isOpen={showTraineeModal}
-		onSelect={(selectedTrainees) => {
-			$updateLearningKitMutation.mutate({
-				id: learningKitId,
-				data: {
-					participants: selectedTrainees
-				}
-			});
-			showTraineeModal = false;
-		}}
-		onClose={() => (showTraineeModal = false)}
-		allTrainees={$learningKitQuery.data.participants}
-		selectedParticipants={[]}
-	/>
-
-	<FileSelectModal
-		isOpen={showFileModal}
-		onSelect={(uuids) => {
-			$updateLearningKitMutation.mutate({
-				id: learningKitId,
-				data: {
-					files: uuids
-				}
-			});
-
-			showFileModal = false;
-		}}
-		onClose={() => (showFileModal = false)}
-		selectedFileUUIDs={[]}
-	/>
 
 	<ConfirmDialog
 		isOpen={showDeleteDialog}

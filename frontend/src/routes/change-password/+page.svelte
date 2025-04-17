@@ -16,10 +16,8 @@
 		action="?/changePassword"
 		class="card preset-filled-surface-100-900 w-full max-w-lg space-y-8 p-8"
 	>
-		<div class="space-y-2">
-			<h2 class="h2">{$_('changePassword.title')}</h2>
-			<p>{$_('changePassword.description')}</p>
-		</div>
+		<h1 class="preset-typo-headline">{$_('changePassword.title')}</h1>
+		<p>{$_('changePassword.description')}</p>
 		<div class="space-y-4">
 			<label class="label">
 				<span class="label-text">{$_('form.newPasswordLabel')}</span>
@@ -33,7 +31,7 @@
 					{...$constraints.newPassword}
 				/>
 				{#if $errors.newPassword}
-					<span class="text-error-500">{$errors.newPassword}</span>
+					<p class="text-error-500">{$errors.newPassword}</p>
 				{/if}
 			</label>
 			<label class="label">
@@ -48,7 +46,7 @@
 					{...$constraints.confirmPassword}
 				/>
 				{#if $errors.confirmPassword}
-					<span class="text-error-500">{$errors.confirmPassword}</span>
+					<p class="text-error-500">{$errors.confirmPassword}</p>
 				{/if}
 			</label>
 		</div>

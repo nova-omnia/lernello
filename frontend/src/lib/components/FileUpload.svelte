@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	import { Upload as IconUpload} from 'lucide-svelte';
+	import { Upload as IconUpload } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
 	// JOSI: TODO

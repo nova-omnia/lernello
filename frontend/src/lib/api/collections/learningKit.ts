@@ -83,3 +83,16 @@ export const removeParticipantFromKit = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const addParticipantsToKit = createEndpoint({
+	method: 'POST',
+	getPath: (kitId: string) => `${REQUEST_MAPPING}/participants/${kitId}`,
+	response: {
+		schema: z.string().uuid(),
+		defaultValidate: false
+	},
+	payload: {
+		schema: z.string().uuid().array(),
+		defaultValidate: false
+	}
+});

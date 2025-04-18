@@ -60,6 +60,8 @@
 	"learningKit.error.loadSingle": "Failed to load Learning Kit",
 	"learningKit.checkpoint": "Checkpoint",
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
+	"learningKit.Publish.ConfirmationText": "Are you finished with configuring and want to publish ",
+	"learningKit.Publish.Text": "Publish",
 	"trainee.title": "Trainees",
 	"trainee.access": "These Trainees have access to the course",
 	"trainee.add": "Manage Trainees",

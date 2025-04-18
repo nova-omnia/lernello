@@ -5,7 +5,7 @@
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
-	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
+	import {addParticipantsToKit, deleteLearningKit, getLearningKitById} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
@@ -55,6 +55,7 @@
 	});
 
 	let showDeleteDialog = $state(false);
+	let showPublishDialog = $state(false);
 	let showAddTraineeModal = $state(false);
 
 	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
@@ -225,7 +226,12 @@
 		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 		<div class="flex gap-2">
 			<button type="button" class="btn preset-filled-primary-500 rounded-full"
-				>{$_('learningKit.publish')}</button
+					onclick={(e) => {
+						e.preventDefault();
+						showPublishDialog = true;
+					}}
+				>{$_('learningKit.publish')}
+			</button
 			>
 			<button
 				onclick={(e) => {
@@ -253,6 +259,26 @@
 			showDeleteDialog = false;
 		}}
 	/>
+
+	<ConfirmDialog
+			isOpen={showPublishDialog}
+			title="Confirm Publishing"
+			message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
+			confirmText={$_("learningKit.Publish.Text")}
+			danger={false}
+			onConfirm={async () => {
+				showPublishDialog = false;
+
+				const selectedTrainees = await api(fetch).req(getAllTrainees, null).parse();
+				const selectedTraineesUUIDs = selectedTrainees.map((trainee) => trainee.uuid);
+
+				await api(fetch).req(addParticipantsToKit, selectedTraineesUUIDs, learningKitId ).parse();
+			}}
+			onCancel={() => {
+				showPublishDialog = false;
+			}}
+	/>
+
 
 	<AddTraineeModal
 		isOpen={showAddTraineeModal}

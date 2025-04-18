@@ -5,11 +5,7 @@
 	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
-	import {
-		addParticipantsToKit,
-		deleteLearningKit,
-		getLearningKitById
-	} from '$lib/api/collections/learningKit';
+	import {addParticipantsToKit, deleteLearningKit, getLearningKitById} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
@@ -229,15 +225,14 @@
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
 		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 		<div class="flex gap-2">
-			<button
-				type="button"
-				class="btn preset-filled-primary-500 rounded-full"
-				onclick={(e) => {
-					e.preventDefault();
-					showPublishDialog = true;
-				}}
+			<button type="button" class="btn preset-filled-primary-500 rounded-full"
+					onclick={(e) => {
+						e.preventDefault();
+						showPublishDialog = true;
+					}}
 				>{$_('learningKit.publish')}
-			</button>
+			</button
+			>
 			<button
 				onclick={(e) => {
 					e.preventDefault();
@@ -266,23 +261,24 @@
 	/>
 
 	<ConfirmDialog
-		isOpen={showPublishDialog}
-		title={$_('learningKit.Publish.ConfirmationTitle')}
-		message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
-		confirmText={$_('learningKit.Publish.Text')}
-		danger={false}
-		onConfirm={async () => {
-			showPublishDialog = false;
+			isOpen={showPublishDialog}
+			title={$_("learningKit.Publish.ConfirmationTitle")}
+			message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
+			confirmText={$_("learningKit.Publish.Text")}
+			danger={false}
+			onConfirm={async () => {
+				showPublishDialog = false;
 
-			const selectedTrainees = await api(fetch).req(getAllTrainees, null).parse();
-			const selectedTraineesUUIDs = selectedTrainees.map((trainee) => trainee.uuid);
+				const selectedTrainees = await api(fetch).req(getAllTrainees, null).parse();
+				const selectedTraineesUUIDs = selectedTrainees.map((trainee) => trainee.uuid);
 
-			await api(fetch).req(addParticipantsToKit, selectedTraineesUUIDs, learningKitId).parse();
-		}}
-		onCancel={() => {
-			showPublishDialog = false;
-		}}
+				await api(fetch).req(addParticipantsToKit, selectedTraineesUUIDs, learningKitId ).parse();
+			}}
+			onCancel={() => {
+				showPublishDialog = false;
+			}}
 	/>
+
 
 	<AddTraineeModal
 		isOpen={showAddTraineeModal}

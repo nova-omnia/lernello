@@ -262,7 +262,7 @@
 
 	<ConfirmDialog
 			isOpen={showPublishDialog}
-			title="Confirm Publishing"
+			title={$_("learningKit.Publish.ConfirmationTitle")}
 			message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
 			confirmText={$_("learningKit.Publish.Text")}
 			danger={false}

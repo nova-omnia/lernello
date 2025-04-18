@@ -62,6 +62,7 @@
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
 	"learningKit.Publish.ConfirmationText": "Are you finished with configuring and want to publish ",
 	"learningKit.Publish.Text": "Publish",
+	"learningKit.Publish.ConfirmationTitle": "Publish Learning Kit",
 	"trainee.title": "Trainees",
 	"trainee.access": "These Trainees have access to the course",
 	"trainee.add": "Manage Trainees",

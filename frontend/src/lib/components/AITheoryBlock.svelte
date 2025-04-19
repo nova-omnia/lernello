@@ -78,7 +78,10 @@
 			<button
 				class="btn btn-primary"
 				onclick={() => {
+					// TODO:Implement If input is Valid create the AI theory block
 					showModal = false;
+					input = '';
+					selectedFiles = [];
 				}}
 			>
 				{$_('dialog.saveButton')}

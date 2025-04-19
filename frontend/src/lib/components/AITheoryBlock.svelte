@@ -1,8 +1,12 @@
+<!--AITheoryBlock-->
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
-	import MultiSelect from './MultiSelect.svelte';
+	import MultiSelect from '$lib/components/MultiSelect.svelte';
 	import { WandSparkles } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
+	import { createQuery } from '@tanstack/svelte-query';
+	import { api } from '$lib/api/apiClient.js';
+	import { getAllFiles } from '$lib/api/collections/file';
 
 	interface Option {
 		uuid: string;
@@ -12,13 +16,10 @@
 	let selectedFiles: Option[] = [];
 	let showModal = false;
 
-	const files: Option[] = [
-		{ uuid: '550e8400-e29b-41d4-a716-446655440000', label: 'Mathematics' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440001', label: 'Artificial Intelligence' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440002', label: 'Machine Learning' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440003', label: 'Computer Vision' },
-		{ uuid: '550e8400-e29b-41d4-a716-446655440004', label: 'NLP' }
-	];
+	const availableFilesQuery = createQuery({
+		queryKey: ['files-list'],
+		queryFn: () => api(fetch).req(getAllFiles, null).parse()
+	});
 </script>
 
 <button onclick={() => (showModal = true)} aria-label="Open Wizard">
@@ -31,19 +32,22 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<h2 class="text-lg font-bold text-center">{$_('dialog.creationWizardTitle')}</h2>
+		<h2 class="text-center text-lg font-bold">{$_('dialog.creationWizardTitle')}</h2>
 
 		<div class="space-y-4">
 			<input
 				type="text"
 				placeholder={$_('dialog.enterTopicPlaceholder')}
-				class="h-input w-full rounded-input px-4 py-2 shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden"
+				class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden w-full px-4 py-2"
 			/>
 
 			<MultiSelect
+				options={$availableFilesQuery.data?.map((file) => ({
+					uuid: file.uuid,
+					label: file.name
+				})) ?? []}
 				selected={selectedFiles}
 				onSelect={(vals) => (selectedFiles = vals)}
-				options={files}
 				placeholder={$_('dialog.selectFilesPlaceholder')}
 			/>
 		</div>

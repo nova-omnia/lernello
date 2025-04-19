@@ -14,6 +14,7 @@
 		label: string;
 	}
 
+	let input: string = '';
 	let selectedFiles: Option[] = [];
 	let showModal = false;
 
@@ -38,8 +39,9 @@
 		<div class="space-y-4">
 			<input
 				type="text"
+				bind:value={input}
+				class="input input-bordered w-full"
 				placeholder={$_('dialog.enterTopicPlaceholder')}
-				class="h-input rounded-input shadow-mini focus-visible:ring-dark focus-visible:ring-offset-background focus-visible:outline-hidden w-full px-4 py-2"
 			/>
 
 			<MultiSelect
@@ -67,7 +69,16 @@
 			{/if}
 		</div>
 
-		<div class="flex justify-end pt-4">
+		<div class="flex justify-end space-x-2">
+			<button
+				class="btn btn-secondary"
+				onclick={() => {
+					showModal = false;
+					input = '';
+					selectedFiles = [];
+				}}
+				>Cancel
+			</button>
 			<button class="btn btn-primary" onclick={() => (showModal = false)}>
 				{$_('dialog.saveButton')}
 			</button>

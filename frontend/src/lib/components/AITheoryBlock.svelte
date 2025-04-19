@@ -9,13 +9,8 @@
 	import { getAllFiles } from '$lib/api/collections/file';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 
-	interface Option {
-		uuid: string;
-		label: string;
-	}
-
 	let input: string = '';
-	let selectedFiles: Option[] = [];
+	let selectedFiles: { uuid: string; label: string }[] = [];
 	let showModal = false;
 
 	const availableFilesQuery = createQuery({
@@ -24,7 +19,7 @@
 	});
 </script>
 
-<button onclick={() => (showModal = true)} aria-label="Open Wizard">
+<button onclick={() => (showModal = true)}>
 	<WandSparkles />
 </button>
 
@@ -55,7 +50,7 @@
 			/>
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
+					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileDisplay
 								File={{ uuid: file.uuid, name: file.label }}
@@ -71,15 +66,21 @@
 
 		<div class="flex justify-end space-x-2">
 			<button
-				class="btn btn-secondary"
+				class="btn btn-primary"
 				onclick={() => {
 					showModal = false;
 					input = '';
 					selectedFiles = [];
 				}}
-				>Cancel
+			>
+				{$_('dialog.cancelButton')}
 			</button>
-			<button class="btn btn-primary" onclick={() => (showModal = false)}>
+			<button
+				class="btn btn-primary"
+				onclick={() => {
+					showModal = false;
+				}}
+			>
 				{$_('dialog.saveButton')}
 			</button>
 		</div>

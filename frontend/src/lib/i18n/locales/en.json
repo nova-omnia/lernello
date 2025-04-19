@@ -26,7 +26,7 @@
 	"dialog.enterTopicPlaceholder": "Enter the Topic here...",
 	"dialog.selectFilesPlaceholder": "Select files...",
 	"dialog.saveButton": "Save",
-	"dialog.closeButton": "Close",
+	"dialog.cancelButton": "Cancel",
 	"error.title": "Error",
 	"error.description": "Uh oh, something went wrong. ({status})",
 	"form.nameLabel": "Name",

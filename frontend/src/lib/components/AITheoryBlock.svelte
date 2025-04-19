@@ -7,6 +7,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { getAllFiles } from '$lib/api/collections/file';
+	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 
 	interface Option {
 		uuid: string;
@@ -50,6 +51,20 @@
 				onSelect={(vals) => (selectedFiles = vals)}
 				placeholder={$_('dialog.selectFilesPlaceholder')}
 			/>
+			{#if selectedFiles.length > 0}
+				<div class="mt-1">
+					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
+						{#each selectedFiles as file (file.uuid)}
+							<FileDisplay
+								File={{ uuid: file.uuid, name: file.label }}
+								onRemoveFile={() => {
+									selectedFiles = selectedFiles.filter((f) => f.uuid !== file.uuid);
+								}}
+							/>
+						{/each}
+					</div>
+				</div>
+			{/if}
 		</div>
 
 		<div class="flex justify-end pt-4">

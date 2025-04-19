@@ -2,29 +2,32 @@
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { WandSparkles } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 
-	let input: string = '';
-	let selectedFiles: { uuid: string; label: string }[] = [];
-	let showModal = false;
+	interface AddAITheoryBlockModalProps {
+		isOpen: boolean;
+		onConfirm: () => void;
+		onCancel: () => void;
+	}
+
+	let input = $state<string>('');
+	let selectedFiles = $state<{ uuid: string; label: string }[]>([]);
 
 	const availableFilesQuery = createQuery({
 		queryKey: ['files-list'],
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
+
+	const { isOpen = false, onConfirm, onCancel }: AddAITheoryBlockModalProps = $props();
+
 </script>
 
-<button onclick={() => (showModal = true)}>
-	<WandSparkles />
-</button>
-
 <Modal
-	open={showModal}
+	open={isOpen}
 	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-lg w-full"
 	backdropClasses="backdrop-blur-sm"
 >
@@ -68,7 +71,7 @@
 			<button
 				class="btn btn-primary"
 				onclick={() => {
-					showModal = false;
+					onCancel();
 					input = '';
 					selectedFiles = [];
 				}}
@@ -78,8 +81,7 @@
 			<button
 				class="btn btn-primary"
 				onclick={() => {
-					// TODO:Implement If input is Valid create the AI theory block
-					showModal = false;
+					onConfirm();
 					input = '';
 					selectedFiles = [];
 				}}

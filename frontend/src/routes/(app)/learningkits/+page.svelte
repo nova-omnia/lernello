@@ -17,7 +17,7 @@
 
 <DashboardBase title={$_('learningKit.title')}>
 	<div class="container flex space-y-4">
-		<div class="container flex h-36 flex-wrap gap-4">
+		<div class="container flex h-36 flex-wrap gap-2">
 			{#if $kitsQuery.status === 'pending'}
 				{#each Array(3)}
 					<PlaceholderLearningKit />

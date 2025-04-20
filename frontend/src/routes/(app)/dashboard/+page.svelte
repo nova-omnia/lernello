@@ -20,10 +20,10 @@
 	<div class="container flex space-y-4">
 		<div class="container flex-col space-y-2">
 			<a href="/learningkits" class="preset-typo-subtitle-navigation flex w-fit items-center">
-				<h2>{$_('dashboard.manageLearningKits')}</h2>
+				<h2>{$_('dashboard.allLearningKits')}</h2>
 				<ChevronRight size={24} />
 			</a>
-			<div class="container flex h-36 flex-wrap gap-4">
+			<div class="container flex h-36 flex-wrap gap-2">
 				{#if $kitsQuery.status === 'pending'}
 					{#each Array(3)}
 						<PlaceholderLearningKit />

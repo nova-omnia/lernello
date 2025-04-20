@@ -1,4 +1,5 @@
 {
+	"app.companyName": "Lernello",
 	"button.cancel": "Cancel",
 	"button.save": "Save",
 	"button.remove": "Remove",
@@ -74,6 +75,8 @@
 	"sidebar.dashboard": "Dashboard",
 	"sidebar.folders": "Files",
 	"sidebar.statistics": "Statistics",
+	"sidebar.general": "General",
+	"sidebar.configuration": "Configuration",
 	"sidebar.settings": "Settings",
 	"sidebar.profile": "Profile",
 	"sidebar.logout": "Logout",

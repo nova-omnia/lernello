@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { ChevronRight } from 'lucide-svelte';
-	import { getAllLearningKits } from '$lib/api/collections/learningKit';
+	import { getLatestFiveLearningKits } from '$lib/api/collections/learningKit';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
@@ -10,9 +10,10 @@
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import DashboardBase from '$lib/components/DashboardBase.svelte';
 
+	const queryKey = 'latest-learning-kits-list';
 	const kitsQuery = createQuery({
-		queryKey: ['learning-kits-list'],
-		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
+		queryKey: [queryKey],
+		queryFn: () => api(fetch).req(getLatestFiveLearningKits, null).parse()
 	});
 </script>
 
@@ -23,7 +24,7 @@
 				<h2>{$_('dashboard.allLearningKits')}</h2>
 				<ChevronRight size={24} />
 			</a>
-			<div class="container flex h-36 flex-wrap gap-2">
+			<div class="container flex flex-wrap gap-2">
 				{#if $kitsQuery.status === 'pending'}
 					{#each Array(3)}
 						<PlaceholderLearningKit />
@@ -32,7 +33,7 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data as kit (kit.uuid)}
-						<LearningKit title={kit.name} uuid={kit.uuid} />
+						<LearningKit title={kit.name} uuid={kit.uuid} {queryKey} />
 					{/each}
 					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}

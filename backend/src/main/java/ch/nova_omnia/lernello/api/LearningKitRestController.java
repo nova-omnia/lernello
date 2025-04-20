@@ -62,8 +62,14 @@ public class LearningKitRestController {
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid List<LearningKitResDTO> getAll() {
         List<LearningKit> learningKits = learningKitService.findAll();
-        List<LearningKitResDTO> learningKitResDTOs = learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
-        return learningKitResDTOs;
+        return learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @GetMapping("/latest-five")
+    @PreAuthorize("hasAuthority('SCOPE_kits:read')")
+    public @Valid List<LearningKitResDTO> getLatestFive() {
+        List<LearningKit> learningKits = learningKitService.findLatestFive();
+        return learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/{learningKitId}")

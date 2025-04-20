@@ -53,12 +53,16 @@ public class LearningKit {
     @Column(name = "context")
     private String context;
 
+    @Column(name = "createdAt", nullable = false)
+    @NotNull
+    private ZonedDateTime createdAt = ZonedDateTime.now();
+
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LearningUnit> learningUnits = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
+        name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants = new ArrayList<>();
 

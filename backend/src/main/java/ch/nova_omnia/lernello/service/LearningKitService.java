@@ -1,28 +1,32 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.repository.FileRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
-    private final UserRepository userRepository;
-    private final FileRepository fileRepository;
 
     public List<LearningKit> findAll() {
-        return learningKitRepository.findAll();
+        return learningKitRepository.findAll().stream()
+            .sorted((kit1, kit2) -> kit2.getCreatedAt().compareTo(kit1.getCreatedAt()))
+            .toList();
+    }
+
+    public List<LearningKit> findLatestFive() {
+        return learningKitRepository.findAll().stream()
+            .sorted((kit1, kit2) -> kit2.getCreatedAt().compareTo(kit1.getCreatedAt()))
+            .limit(5)
+            .toList();
     }
 
     public Optional<LearningKit> findById(UUID id) {

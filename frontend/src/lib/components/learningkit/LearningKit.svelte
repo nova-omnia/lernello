@@ -11,14 +11,15 @@
 	interface LearningKitProps {
 		title: string;
 		uuid: string;
+		queryKey: string;
 	}
 
-	const { title, uuid }: LearningKitProps = $props();
+	const { title, uuid, queryKey }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
-			client.invalidateQueries({ queryKey: ['learning-kits-list'] });
+			client.invalidateQueries({ queryKey: [queryKey] });
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});
@@ -33,7 +34,7 @@
 </script>
 
 <a
-	class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center"
+	class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center"
 	href="/learningkit/{uuid}"
 >
 	<button

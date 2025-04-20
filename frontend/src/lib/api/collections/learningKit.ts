@@ -45,6 +45,19 @@ export const getAllLearningKits = createEndpoint({
 	}
 });
 
+export const getLatestFiveLearningKits = createEndpoint({
+	method: 'GET',
+	getPath: () => `${REQUEST_MAPPING}/latest-five`,
+	response: {
+		schema: LearningKitResSchema.array(),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
 export const getLearningKitById = createEndpoint({
 	method: 'GET',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,

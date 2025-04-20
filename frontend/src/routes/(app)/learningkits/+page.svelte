@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import DashboardBase from "$lib/components/DashboardBase.svelte";
-	import PlaceholderLearningKit from "$lib/components/learningkit/PlaceholderLearningKit.svelte";
-	import AddLearningKit from "$lib/components/learningkit/AddLearningKit.svelte";
-	import ErrorIllustration from "$lib/components/ErrorIllustration.svelte";
-	import LearningKit from "$lib/components/learningkit/LearningKit.svelte";
-	import { createQuery } from "@tanstack/svelte-query";
-	import { api } from "$lib/api/apiClient";
-	import { getAllLearningKits } from "$lib/api/collections/learningKit";
+	import DashboardBase from '$lib/components/DashboardBase.svelte';
+	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
+	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
+	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
+	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
+	import { createQuery } from '@tanstack/svelte-query';
+	import { api } from '$lib/api/apiClient';
+	import { getAllLearningKits } from '$lib/api/collections/learningKit';
 
+	const queryKey = 'all-learning-kits-list';
 	const kitsQuery = createQuery({
-		queryKey: [ 'learning-kits-list' ],
+		queryKey: [queryKey],
 		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
 	});
 </script>
@@ -26,7 +27,7 @@
 				<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 			{:else}
 				{#each $kitsQuery.data as kit (kit.uuid)}
-					<LearningKit title={kit.name} uuid={kit.uuid} />
+					<LearningKit title={kit.name} uuid={kit.uuid} {queryKey} />
 				{/each}
 				<AddLearningKit title={$_('learningKit.create')} />
 			{/if}

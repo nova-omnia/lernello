@@ -1,5 +1,6 @@
 {
 	"app.companyName": "Lernello",
+	"app.searchPlaceholder": "Search...",
 	"button.cancel": "Cancel",
 	"button.save": "Save",
 	"button.remove": "Remove",
@@ -90,7 +91,6 @@
 	"block.textAnswerBlock.question": "Type question",
 	"block.textAnswerBlock.answer": "Answer",
 	"multiSelect.placeholder": "Select...",
-	"multiSelect.searchPlaceholder": "Search...",
 	"multiSelect.noOptionsFound": "No options found",
 	"markdownEditor.placeholder": "Write your markdown here...",
 	"errorIllustration.alt": "Error Illustration with a red X",

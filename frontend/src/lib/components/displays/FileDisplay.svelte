@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { File as FileIcon } from 'lucide-svelte';
-	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 
@@ -10,12 +9,6 @@
 	}
 
 	const { File, onRemoveFile }: FileDisplayProps = $props();
-
-	let showDeleteDialog = $state(false);
-
-	function removeFile() {
-		showDeleteDialog = false;
-	}
 </script>
 
 <div
@@ -27,25 +20,10 @@
 		type="button"
 		onclick={(e) => {
 			e.preventDefault();
-			showDeleteDialog = true;
+			onRemoveFile();
 		}}
 		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
 	>
 		{$_('button.remove')}
 	</button>
 </div>
-
-<ConfirmDialog
-	isOpen={showDeleteDialog}
-	title="Confirm Deletion"
-	message={`Are you sure you want to remove "${File?.name}"?`}
-	confirmText="Delete"
-	danger={true}
-	onConfirm={() => {
-		removeFile();
-		onRemoveFile();
-	}}
-	onCancel={() => {
-		showDeleteDialog = false;
-	}}
-/>

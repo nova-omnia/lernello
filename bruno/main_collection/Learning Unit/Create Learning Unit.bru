@@ -1,0 +1,18 @@
+meta {
+  name: Create Learning Unit
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/learning-unit/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Sample Learning Unit",
+    "learningKitId": "3a5a748d-ea65-4107-b954-6a9fa399bb54"
+  }
+}

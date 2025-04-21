@@ -1,0 +1,26 @@
+meta {
+  name: Generate Theory Block
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/ai-block/{{id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fileIds": [
+      "cf379e54-d437-41ad-9776-4962d154484e",
+      "c5372d63-2c0e-41f0-b1f2-856183c01120"
+    ],
+    "topic": "Intro",
+    "position": 1
+  }
+}
+
+vars:pre-request {
+  id: c1ba5f1b-b423-4bab-bb9f-6d5e7ca4de37
+}

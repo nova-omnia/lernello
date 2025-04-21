@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +28,7 @@ public class AIBlockRestController {
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public TheoryBlockResDTO generateTheoryBlock(@Valid @RequestBody CreateAITheoryBlockDTO createAITheoryBlockDTO) {
-        UUID learningUnitId = createAITheoryBlockDTO.learningUnitId();
+    public TheoryBlockResDTO generateTheoryBlock(@Valid @RequestBody CreateAITheoryBlockDTO createAITheoryBlockDTO, @PathVariable UUID learningUnitId) {
         List<UUID> fileIds = createAITheoryBlockDTO.fileIds();
         TheoryBlock createdTheoryBlock = aiBlockService.createAiTheoryBlock(aiBlockMapper.toEntity(createAITheoryBlockDTO), learningUnitId, fileIds);
         return aiBlockMapper.toTheoryBlockResDTO(createdTheoryBlock);

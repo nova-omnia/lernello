@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 public record CreateAITheoryBlockDTO(
                                      @NotNull List<UUID> fileIds,
                                      @NotBlank String topic,
-                                     int position,
-                                     @NotNull UUID learningUnitId
+                                     int position
 ) {
 }

@@ -8,7 +8,12 @@ export const uploadFile = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}/upload`,
 	payload: {
-		schema: z.null(),
+		schema: z.custom<FormData>((val: unknown) => {
+			if (val instanceof FormData) {
+				return val.has('file');
+			}
+			return false;
+		}),
 		defaultValidate: false
 	},
 	response: {

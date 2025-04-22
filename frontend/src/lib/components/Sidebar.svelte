@@ -89,9 +89,9 @@
 		<form
 			method="POST"
 			action="/logout"
-			class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4"
+			class="card hover:preset-filled-surface-50-950 flex w-full items-center"
 		>
-			<button class="flex" aria-label={$_('sidebar.logout')}>
+			<button class="flex w-full p-4" aria-label={$_('sidebar.logout')}>
 				<LogOut size={iconSize} />
 				{@render sidebarItemStyle($_('sidebar.logout'))}
 			</button>

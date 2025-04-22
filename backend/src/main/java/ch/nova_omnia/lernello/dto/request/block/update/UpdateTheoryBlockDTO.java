@@ -8,6 +8,6 @@ import jakarta.validation.constraints.NotNull;
 public record UpdateTheoryBlockDTO(
                                    @NotNull UUID uuid,
                                    @NotBlank String name,
-                                   @NotBlank String content) {
-
+                                   @NotBlank String content
+) {
 }

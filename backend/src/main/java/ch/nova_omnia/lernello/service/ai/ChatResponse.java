@@ -11,11 +11,17 @@ public class ChatResponse {
 
     public static class Choice {
         private Message message;
-        public Message getMessage() { return message; }
+
+        public Message getMessage() {
+            return message;
+        }
     }
 
     public static class Message {
         private String content;
-        public String getContent() { return content; }
+
+        public String getContent() {
+            return content;
+        }
     }
 }

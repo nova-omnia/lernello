@@ -11,5 +11,6 @@ public record FolderResDTO(
                            @NotNull UUID uuid,
                            @NotBlank @Size(min = 3, max = 40) String name,
                            ParentFolderResDTO parentFolder,
-                           List<SubFolderResDTO> subFolders) {
+                           List<SubFolderResDTO> subFolders
+) {
 }

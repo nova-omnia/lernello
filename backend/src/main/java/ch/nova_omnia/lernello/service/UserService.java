@@ -15,8 +15,8 @@ import ch.nova_omnia.lernello.repository.UserRepository;
 import ch.nova_omnia.lernello.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;

@@ -143,6 +143,34 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 			blockId: action.blockId,
 			newIndex: action.newIndex
 		};
+	} else if (action.type === ActionType.Enum.UPDATE_BLOCK) {
+		if (action.data.type === BlockType.Enum.THEORY) {
+			parsedAction = {
+				type: 'UPDATE_BLOCK',
+				blockId: action.blockId,
+				data: {
+					type: action.data.type,
+					name: action.data.name,
+					learningUnitId: action.data.learningUnitId,
+					content: action.data.content
+				}
+			};
+		} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
+			parsedAction = {
+				type: 'UPDATE_BLOCK',
+				blockId: action.blockId,
+				data: {
+					type: action.data.type,
+					name: action.data.name,
+					learningUnitId: action.data.learningUnitId,
+					question: action.data.question,
+					possibleAnswers: action.data.possibleAnswers,
+					correctAnswers: action.data.correctAnswers
+				}
+			};
+		} else {
+			throw new Error('Unsupported update block type.');
+		}
 	} else {
 		parsedAction = action;
 	}

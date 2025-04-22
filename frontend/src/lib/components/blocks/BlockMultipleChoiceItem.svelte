@@ -2,6 +2,28 @@
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { Check, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
+
+	interface BlockMultipleChoiceItemProps {
+		blockState: BlockRes;
+	}
+
+	const { blockState }: BlockMultipleChoiceItemProps = $props();
+
+	const block = blockState;
+
+	$effect(() => {
+		question = block.type === 'QUESTION' ? block.question : '';
+		answers =
+			block.type === 'MULTIPLE_CHOICE' && Array.isArray(block.possibleAnswers)
+				? block.possibleAnswers.map((answer) =>
+						typeof answer === 'string' ? { value: answer, isCorrect: false } : answer
+					)
+				: [
+						{ value: '', isCorrect: false },
+						{ value: '', isCorrect: false }
+					];
+	});
 
 	let question = $state('');
 	let answers = $state<{ value: string; isCorrect: boolean }[]>([

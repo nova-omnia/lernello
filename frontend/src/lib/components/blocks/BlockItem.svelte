@@ -14,10 +14,29 @@
 
 	const { block }: BlockItemProps = $props();
 
+	let blockState = $state(block);
+
 	// TODO: Improve mapping similar to BlockIcon.svelte
-	let Component = block.type === 'THEORY' ? TheoryBlockComponent : MultipleChoiceBlockComponent;
+	let Component =
+		blockState.type === 'THEORY' ? TheoryBlockComponent : MultipleChoiceBlockComponent;
 
 	let isConfirmDialogOpen: boolean = $state(false);
+
+	function debounce(func: () => void, delay: number) {
+		let timer: ReturnType<typeof setTimeout>;
+		return () => {
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				func();
+			}, delay);
+		};
+	}
+
+	const debouncedUpdate = debounce(updateBlock, 750);
+
+	$effect(() => {
+		debouncedUpdate();
+	});
 
 	function removeBlock() {
 		queueBlockAction({
@@ -26,13 +45,40 @@
 		});
 		isConfirmDialogOpen = false;
 	}
+
+	function updateBlock() {
+		if (blockState.type === 'THEORY') {
+			queueBlockAction({
+				type: 'UPDATE_BLOCK',
+				blockId: blockState.uuid,
+				data: {
+					type: blockState.type,
+					name: blockState.name,
+					content: blockState.content
+				}
+			});
+		}
+		if (blockState.type === 'MULTIPLE_CHOICE') {
+			queueBlockAction({
+				type: 'UPDATE_BLOCK',
+				blockId: blockState.uuid,
+				data: {
+					type: blockState.type,
+					name: blockState.name,
+					question: blockState.question,
+					possibleAnswers: blockState.possibleAnswers,
+					correctAnswers: blockState.correctAnswers
+				}
+			});
+		}
+	}
 </script>
 
 <div
 	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
 	<BlockIconHeader {block} />
-	<Component />
+	<Component {blockState} />
 
 	<button
 		type="button"

@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import { CreateTheoryBlockSchema, CreateMultipleChoiceBlockSchema } from './CreateBlock';
+import {
+	UpdateMultipleChoiceBlockSchema,
+	UpdateTheoryBlockSchema
+} from '$lib/schemas/request/UpdateBlock';
 
-export const ActionType = z.enum(['ADD_BLOCK', 'REORDER_BLOCK', 'REMOVE_BLOCK']);
+export const ActionType = z.enum(['ADD_BLOCK', 'REORDER_BLOCK', 'REMOVE_BLOCK', 'UPDATE_BLOCK']);
 
 const BaseBlockActionSchema = z.object({
 	blockId: z.string()
@@ -22,10 +26,16 @@ export const RemoveBlockActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal('REMOVE_BLOCK')
 });
 
+export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
+	type: z.literal('UPDATE_BLOCK'),
+	data: z.discriminatedUnion('type', [UpdateTheoryBlockSchema, UpdateMultipleChoiceBlockSchema])
+});
+
 export const BlockActionSchema = z.discriminatedUnion('type', [
 	AddBlockActionSchema,
 	ReorderBlockActionSchema,
-	RemoveBlockActionSchema
+	RemoveBlockActionSchema,
+	UpdateBlockActionSchema
 ]);
 
 type AddBlockActionNoId = Omit<z.infer<typeof AddBlockActionSchema>, 'blockId'>;

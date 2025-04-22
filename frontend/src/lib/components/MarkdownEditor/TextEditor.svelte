@@ -5,10 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
 
-	interface TextEditorProps {
-		content: string;
-	}
-	let { content }: TextEditorProps = $props();
+	let { content = $bindable() } = $props();
 
 	const Tab = {
 		EDIT: 'edit',

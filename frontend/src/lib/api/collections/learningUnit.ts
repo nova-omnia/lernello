@@ -46,7 +46,7 @@ export const applyBlockActions = createEndpoint({
 
 export const createLearningUnit = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/create`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	response: {
 		schema: LearningUnitResSchema,
 		defaultValidate: true

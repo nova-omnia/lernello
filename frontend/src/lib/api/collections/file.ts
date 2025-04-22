@@ -6,7 +6,7 @@ const REQUEST_MAPPING = '/api/files';
 
 export const uploadFile = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/upload`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	payload: {
 		schema: z.null(),
 		defaultValidate: false

@@ -12,7 +12,7 @@ public interface QuestionBlockMapper {
 
     @Mapping(target = "type", constant = "QUESTION")
     @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
+    @Mapping(target = "learningUnit", ignore = true)
     QuestionBlock toEntity(CreateQuestionBlockDTO createQuestionBlockDTO);
 
     @Mapping(target = "type", constant = "QUESTION")

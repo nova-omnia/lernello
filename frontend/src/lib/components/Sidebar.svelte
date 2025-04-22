@@ -1,53 +1,100 @@
 <script lang="ts">
-	import { Navigation } from '@skeletonlabs/skeleton-svelte';
 	import logo from '$lib/assets/Lernello_Logo.svg';
+	import {
+		ChartLine,
+		Folder,
+		type IconProps,
+		LayoutDashboard,
+		LogOut,
+		Settings,
+		SidebarClose,
+		User
+	} from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
-	import { ChartLine, Folder, LayoutDashboard, LogOut, Settings, User } from 'lucide-svelte';
+	import { sidebarState } from '$lib/states/sidebarState.svelte';
+	import type { SvelteComponent } from 'svelte';
 
-	const { children } = $props();
+	const iconSize = 24;
 </script>
 
-<div class="card grid h-screen w-full grid-cols-[auto_1fr]">
-	<!-- Component -->
-	<Navigation.Rail expanded={true} tilesClasses="!h-12 !min-h-12 !justify-start !gap-1">
-		<!-- Header -->
-		{#snippet header()}
-			<div class="flex h-20 w-full items-center px-4">
-				<img alt="Lernello" src={logo} width="36" class="object-cover object-center" />
-				<p class="preset-typo-subtitle !text-black">{$_('app.companyName')}</p>
-			</div>
-		{/snippet}
+{#snippet sidebarItemStyle(label: string)}
+	<span
+		class:visible={sidebarState.isExpanded}
+		class:ml-3={sidebarState.isExpanded}
+		class:w-max={sidebarState.isExpanded}
+		class:opacity-100={sidebarState.isExpanded}
+		class:invisible={!sidebarState.isExpanded}
+		class:w-0={!sidebarState.isExpanded}
+		class:opacity-0={!sidebarState.isExpanded}
+	>
+		{label}
+	</span>
+{/snippet}
 
-		<!-- Main Tiles -->
-		{#snippet tiles()}
+{#snippet sidebarItem(label: string, href: string, Icon: typeof SvelteComponent<IconProps>)}
+	<a
+		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4"
+		{href}
+		aria-label={label}
+	>
+		<Icon size={iconSize} />
+		{@render sidebarItemStyle(label)}
+	</a>
+{/snippet}
+
+<!-- Sidebar -->
+<div
+	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden px-4"
+	class:w-64={sidebarState.isExpanded}
+	class:w-fit={!sidebarState.isExpanded}
+>
+	<!-- Logo Section -->
+	<div class="flex h-20 w-full items-center px-4">
+		<img alt="Lernello" src={logo} width="24" class="object-cover object-center" />
+		{@render sidebarItemStyle($_('app.companyName'))}
+		{#if sidebarState.isExpanded}
+			<button
+				class="ml-auto items-center justify-center"
+				onclick={sidebarState.toggleSidebar}
+				aria-label={$_('sidebar.toggleSidebar')}
+				aria-expanded={sidebarState.isExpanded}
+			>
+				<SidebarClose size={24} />
+			</button>
+		{/if}
+	</div>
+	<hr class="hr" />
+
+	<!-- Buttons Section -->
+	<div class="flex w-full flex-col items-center gap-1">
+		{#if sidebarState.isExpanded}
 			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.general')}</p>
-			<Navigation.Tile labelExpanded={$_('sidebar.dashboard')} href="/dashboard">
-				<LayoutDashboard size={24} />
-			</Navigation.Tile>
-			<Navigation.Tile labelExpanded={$_('sidebar.folders')} href="/folders">
-				<Folder size={24} />
-			</Navigation.Tile>
-			<Navigation.Tile labelExpanded={$_('sidebar.statistics')} href="/statistics">
-				<ChartLine size={24} />
-			</Navigation.Tile>
+		{:else}
+			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+		{/if}
+		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
+		{@render sidebarItem($_('sidebar.folders'), '/folders', Folder)}
+		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
+		{#if sidebarState.isExpanded}
 			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
-			<Navigation.Tile labelExpanded={$_('sidebar.settings')} href="/settings">
-				<Settings size={24} />
-			</Navigation.Tile>
-			<Navigation.Tile labelExpanded={$_('sidebar.profile')} href="/profile">
-				<User size={24} />
-			</Navigation.Tile>
-		{/snippet}
+		{:else}
+			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+		{/if}
+		{@render sidebarItem($_('sidebar.settings'), '/settings', Settings)}
+		{@render sidebarItem($_('sidebar.profile'), '/profile', User)}
+	</div>
 
-		<!-- Footer -->
-		{#snippet footer()}
-			<Navigation.Tile labelExpanded={$_('sidebar.logout')} href="/logout">
-				<LogOut size={24} />
-			</Navigation.Tile>
-		{/snippet}
-	</Navigation.Rail>
-	<!-- Content -->
-	<div class="flex flex-1 flex-col">
-		{@render children()}
+	<div class="mt-auto flex w-full flex-col items-center gap-1 pb-4">
+		<hr class="hr" />
+		<form
+			method="POST"
+			action="/logout"
+			class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4"
+		>
+			<button class="flex" aria-label={$_('sidebar.logout')}>
+				<LogOut size={iconSize} />
+				{@render sidebarItemStyle($_('sidebar.logout'))}
+			</button>
+		</form>
 	</div>
 </div>

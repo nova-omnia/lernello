@@ -81,6 +81,7 @@
 	"sidebar.settings": "Settings",
 	"sidebar.profile": "Profile",
 	"sidebar.logout": "Logout",
+	"sidebar.toggleSidebar": "Toggle Sidebar",
 	"learningUnit.createTitle": "Create a new Learning Unit",
 	"learningUnit.createButton": "Create Learning Unit",
 	"learningUnit.details": "Learning Unit Details",

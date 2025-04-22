@@ -71,7 +71,7 @@ public class BlockService {
     }
 
     @Transactional
-    public MultipleChoiceBlock updateMultipleChoiceBlock(MultipleChoiceBlock   multipleChoiceBlock) {
+    public MultipleChoiceBlock updateMultipleChoiceBlock(MultipleChoiceBlock multipleChoiceBlock) {
         MultipleChoiceBlock existingBlock = (MultipleChoiceBlock) blockRepository.findById(multipleChoiceBlock.getUuid()).orElseThrow(() -> new RuntimeException("MultipleChoiceBlock not found"));
         existingBlock.setName(multipleChoiceBlock.getName());
         existingBlock.setQuestion(multipleChoiceBlock.getQuestion());

@@ -10,5 +10,6 @@ import jakarta.validation.constraints.Size;
 public record SubFolderResDTO(
                               @NotNull UUID uuid,
                               @NotNull @Size(min = 3, max = 40) String name,
-                              List<SubFolderResDTO> subFolders) {
+                              List<SubFolderResDTO> subFolders
+) {
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +40,7 @@ public class UserRestController {
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
 
-    @PostMapping("/change-password")
+    @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
     public @Valid PasswordStatusDTO changePassword(
                                                    @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
@@ -48,13 +49,10 @@ public class UserRestController {
         return new PasswordStatusDTO(status);
     }
 
-    @PostMapping("/locale")
-    @PreAuthorize("hasAuthority('SCOPE_self:write')")
-    public @Valid UserLocaleDTO setLocale(
-                                          @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        String locale = userService.setLocale(userDetails.getUsername(), data.locale());
-        return userLocaleMapper.toDTO(locale);
+    @GetMapping("/trainees")
+    @PreAuthorize("hasAuthority('SCOPE_user:read')")
+    public List<@Valid ParticipantUserDTO> getAllTrainees() {
+        return userService.findAllTrainees().stream().map(participantUserMapper::toDTO).toList();
     }
 
     @GetMapping("/info")
@@ -66,13 +64,7 @@ public class UserRestController {
         return userInfoMapper.toDTO(user);
     }
 
-    @GetMapping("/trainees")
-    @PreAuthorize("hasAuthority('SCOPE_user:read')")
-    public List<@Valid ParticipantUserDTO> getAllTrainees() {
-        return userService.findAllTrainees().stream().map(participantUserMapper::toDTO).toList();
-    }
-
-    @PostMapping("/trainee/add")
+    @PostMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public @Valid ParticipantUserDTO addTrainee(
                                                 @RequestBody @Valid CreateParticipantDTO traineeDetails
@@ -81,7 +73,7 @@ public class UserRestController {
         return participantUserMapper.toDTO(trainee);
     }
 
-    @DeleteMapping("/trainee/delete/{id}")
+    @DeleteMapping("/trainee/{id}")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public void deleteTrainee(
                               @PathVariable UUID id
@@ -89,13 +81,22 @@ public class UserRestController {
         userService.deleteTrainee(id);
     }
 
+    @PostMapping("/locale")
+    @PreAuthorize("hasAuthority('SCOPE_self:write')")
+    public @Valid UserLocaleDTO setUserLocale(
+                                              @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String locale = userService.setLocale(userDetails.getUsername(), data.locale());
+        return userLocaleMapper.toDTO(locale);
+    }
 
-    @PostMapping("/trainee/edit")
+
+    @PatchMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public @Valid ParticipantUserDTO editTrainee(
                                                  @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
-        User trainee = userService.editTrainee( traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
     }
 }

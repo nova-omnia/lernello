@@ -11,6 +11,6 @@ public record UpdateMultipleChoiceBlockDTO(
                                            @NotBlank String name,
                                            @NotBlank String question,
                                            @NotNull List<String> possibleAnswers,
-                                           @NotNull List<String> correctAnswers) {
-
+                                           @NotNull List<String> correctAnswers
+) {
 }

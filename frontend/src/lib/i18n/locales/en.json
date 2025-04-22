@@ -86,6 +86,7 @@
 	"block.multipleChoiceBlocks.addButton": "Add more possible answers",
 	"block.textAnswerBlock.question": "Type question",
 	"block.textAnswerBlock.answer": "Answer",
+	"block.multimediaBlock.label": "Attach a multimedia file (image, video, audio)",
 	"multiSelect.placeholder": "Select...",
 	"multiSelect.searchPlaceholder": "Search...",
 	"multiSelect.noOptionsFound": "No options found",

@@ -80,6 +80,8 @@
 	"block.multipleChoiceBlocks.addButton": "Weitere mögliche Antworten hinzufügen",
 	"block.textAnswerBlock.question": "Frage eingeben",
 	"block.textAnswerBlock.answer": "Antwort",
+	"block.multimediaBlock.title": "Multimedia-Block",
+	"block.multimediaBlock.label": "Multimedia-Datei hinzufügen (Bild, Video, Audio)",
 	"multiSelect.placeholder": "Auswählen...",
 	"multiSelect.searchPlaceholder": "Suchen...",
 	"multiSelect.noOptionsFound": "Keine Optionen gefunden"

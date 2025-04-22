@@ -151,7 +151,6 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 				data: {
 					type: action.data.type,
 					name: action.data.name,
-					learningUnitId: action.data.learningUnitId,
 					content: action.data.content
 				}
 			};
@@ -162,7 +161,6 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 				data: {
 					type: action.data.type,
 					name: action.data.name,
-					learningUnitId: action.data.learningUnitId,
 					question: action.data.question,
 					possibleAnswers: action.data.possibleAnswers,
 					correctAnswers: action.data.correctAnswers

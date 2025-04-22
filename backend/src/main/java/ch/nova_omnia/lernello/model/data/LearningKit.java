@@ -24,6 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "learning_kits")
@@ -55,6 +56,7 @@ public class LearningKit {
 
     @Column(name = "createdAt", nullable = false)
     @NotNull
+    @CreatedDate
     private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)

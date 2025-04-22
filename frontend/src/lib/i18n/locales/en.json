@@ -73,7 +73,7 @@
 	"multiSelect.name": "Name",
 	"multiSelect.surname": "Surname",
 	"dashboard.title": "Dashboard",
-	"dashboard.allLearningKits": "All Learning Kits",
+	"dashboard.allLearningKits": "Learning Kits ({count} / {total})",
 	"dashboard.createKit": "Create New Kit",
 	"sidebar.dashboard": "Dashboard",
 	"sidebar.folders": "Files",

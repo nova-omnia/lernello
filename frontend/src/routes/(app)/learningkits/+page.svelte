@@ -7,11 +7,11 @@
 	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
-	import { getAllLearningKits } from '$lib/api/collections/learningKit';
+	import { getLearningKits } from '$lib/api/collections/learningKit';
 
 	const kitsQuery = createQuery({
-		queryKey: ['all-learning-kits-list'],
-		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
+		queryKey: [ 'all-learning-kits-list' ],
+		queryFn: () => api(fetch).req(getLearningKits, null, { page: 0, size: 99999 }).parse()
 	});
 </script>
 
@@ -25,7 +25,7 @@
 			{:else if $kitsQuery.status === 'error'}
 				<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 			{:else}
-				{#each $kitsQuery.data as kit (kit.uuid)}
+				{#each $kitsQuery.data.content as kit (kit.uuid)}
 					<LearningKit title={kit.name} uuid={kit.uuid} />
 				{/each}
 				<AddLearningKit title={$_('learningKit.create')} />

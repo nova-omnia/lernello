@@ -26,27 +26,23 @@
 	const invalidate = useQueryInvalidation();
 
 	const learningKitQuery = createQuery({
-		queryKey: ['learning-kit', learningKitId],
+		queryKey: [ 'learning-kit', learningKitId ],
 		queryFn: () => api(fetch).req(getLearningKitById, null, learningKitId).parse()
 	});
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
 		onSuccess: () => {
-			invalidate(['latest-learning-kits-list']);
-			invalidate(['all-learning-kits-list']);
-			invalidate(['learning-kit', learningKitId]);
+			invalidate([ 'latest-learning-kits-list' ]);
+			invalidate([ 'all-learning-kits-list' ]);
+			invalidate([ 'learning-kit', learningKitId ]);
 		}
 	});
 	const deleteLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
 		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['latest-learning-kits-list']
-			});
-			client.invalidateQueries({
-				queryKey: ['all-learning-kits-list']
-			});
+			invalidate([ 'latest-learning-kits-list' ]);
+			invalidate([ 'all-learning-kits-list' ]);
 			goto('/dashboard');
 		}
 	});
@@ -54,7 +50,7 @@
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			client.invalidateQueries({
-				queryKey: ['learning-kit', learningKitId]
+				queryKey: [ 'learning-kit', learningKitId ]
 			});
 		}
 	});
@@ -71,11 +67,11 @@
 	});
 
 	const availableFilesQuery = createQuery({
-		queryKey: ['files-list'],
+		queryKey: [ 'files-list' ],
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 	const availableTraineesQuery = createQuery({
-		queryKey: ['trainees-list'],
+		queryKey: [ 'trainees-list' ],
 		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
 	});
 </script>
@@ -230,7 +226,7 @@
 		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 		<div class="flex gap-2">
 			<button type="button" class="btn preset-filled-primary-500 rounded-full"
-				>{$_('learningKit.publish')}</button
+			>{$_('learningKit.publish')}</button
 			>
 			<button
 				onclick={(e) => {
@@ -239,7 +235,7 @@
 				}}
 				type="button"
 				class="btn preset-filled-error-500 rounded-full"
-				>{$_('learningKit.delete')}
+			>{$_('learningKit.delete')}
 			</button>
 		</div>
 	</div>

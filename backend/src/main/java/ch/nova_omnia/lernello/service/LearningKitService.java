@@ -1,9 +1,12 @@
 package ch.nova_omnia.lernello.service;
 
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,17 +19,8 @@ import java.util.UUID;
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
 
-    public List<LearningKit> findAll() {
-        return learningKitRepository.findAll().stream()
-            .sorted((kit1, kit2) -> kit2.getCreatedAt().compareTo(kit1.getCreatedAt()))
-            .toList();
-    }
-
-    public List<LearningKit> findLatestFive() {
-        return learningKitRepository.findAll().stream()
-            .sorted((kit1, kit2) -> kit2.getCreatedAt().compareTo(kit1.getCreatedAt()))
-            .limit(5)
-            .toList();
+    public Page<LearningKit> getList(Pageable pageable) {
+        return learningKitRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     public Optional<LearningKit> findById(UUID id) {

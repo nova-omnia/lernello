@@ -7,9 +7,10 @@
 	}
 
 	const { blockState }: BlockTheoryItemProps = $props();
+	const block = blockState;
 
 	$effect(() => {
-		content = blockState.type === 'THEORY' ? blockState.content : '';
+		content = block.type === 'THEORY' ? block.content : '';
 	});
 
 	let content: string = $state('');

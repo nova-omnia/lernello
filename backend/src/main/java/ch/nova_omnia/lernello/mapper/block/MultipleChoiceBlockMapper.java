@@ -12,7 +12,7 @@ public interface MultipleChoiceBlockMapper {
 
     @Mapping(target = "type", constant = "MULTIPLE_CHOICE")
     @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
+    @Mapping(target = "learningUnit", ignore = true)
     MultipleChoiceBlock toEntity(CreateMultipleChoiceBlockDTO createMultipleChoiceBlock);
 
     @Mapping(target = "type", constant = "MULTIPLE_CHOICE")

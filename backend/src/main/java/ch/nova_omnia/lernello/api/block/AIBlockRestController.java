@@ -1,6 +1,9 @@
 package ch.nova_omnia.lernello.api.block;
 
+import java.util.UUID;
+
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +27,9 @@ public class AIBlockRestController {
 
     @PostMapping("/generate")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public TheoryBlockResDTO generateBlock(@Valid @RequestBody AIGeneratedBlockRequest dto) {
+    public TheoryBlockResDTO generateBlock(@Valid @RequestBody AIGeneratedBlockRequest dto, @PathVariable UUID learningUnitId) {
         TheoryBlock block = aiBlockService.generateTheoryBlockFromAI(
-                dto.fileIds(), dto.topic(), dto.position(), dto.learningUnitId()
+                dto.fileIds(), dto.topic(), dto.position(), learningUnitId
         );
         return blockMapper.toTheoryBlockResDTO(block);
     }

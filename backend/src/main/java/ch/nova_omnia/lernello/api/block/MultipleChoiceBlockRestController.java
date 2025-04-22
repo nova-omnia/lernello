@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +33,7 @@ public class MultipleChoiceBlockRestController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public @Valid MultipleChoiceBlockResDTO createMultipleChoiceBlock(@Valid @RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO) {
-        UUID learningUnitId = createMultipleChoiceBlockDTO.learningUnitId();
+    public @Valid MultipleChoiceBlockResDTO createMultipleChoiceBlock(@Valid @RequestBody CreateMultipleChoiceBlockDTO createMultipleChoiceBlockDTO, @PathVariable UUID learningUnitId) {
         MultipleChoiceBlock createdMultipleChoiceBlock = blockService.createBlock(multipleChoiceBlockMapper.toEntity(createMultipleChoiceBlockDTO), learningUnitId);
         return blockMapper.toMultipleChoiceBlockResDTO(createdMultipleChoiceBlock);
     }

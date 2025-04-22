@@ -12,7 +12,7 @@ public interface TheoryBlockMapper {
 
     @Mapping(target = "type", constant = "THEORY")
     @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "learningUnit.uuid", source = "learningUnitId")
+    @Mapping(target = "learningUnit", ignore = true)
     TheoryBlock toEntity(CreateTheoryBlockDTO createTheoryBlockDTO);
 
     @Mapping(target = "type", constant = "THEORY")

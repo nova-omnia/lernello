@@ -1,10 +1,21 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	let { data } = $props();
+
+	const client = useQueryClient();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
-		onError: (error) => {
+		onResult() {
+			client.invalidateQueries({
+				queryKey: ['latest-learning-kits-list']
+			});
+			client.invalidateQueries({
+				queryKey: ['all-learning-kits-list']
+			});
+		},
+		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
 				title: 'Error',

@@ -11,15 +11,19 @@
 	interface LearningKitProps {
 		title: string;
 		uuid: string;
-		queryKey: string;
 	}
 
-	const { title, uuid, queryKey }: LearningKitProps = $props();
+	const { title, uuid }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
-			client.invalidateQueries({ queryKey: [queryKey] });
+			client.invalidateQueries({
+				queryKey: ['latest-learning-kits-list']
+			});
+			client.invalidateQueries({
+				queryKey: ['all-learning-kits-list']
+			});
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});
@@ -38,7 +42,7 @@
 	href="/learningkit/{uuid}"
 >
 	<button
-		class="absolute top-0 right-0 z-10 flex gap-2 p-2"
+		class="absolute right-0 top-0 z-10 flex gap-2 p-2"
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;

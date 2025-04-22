@@ -10,9 +10,8 @@
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import DashboardBase from '$lib/components/DashboardBase.svelte';
 
-	const queryKey = 'latest-learning-kits-list';
 	const kitsQuery = createQuery({
-		queryKey: [queryKey],
+		queryKey: ['latest-learning-kits-list'],
 		queryFn: () => api(fetch).req(getLatestFiveLearningKits, null).parse()
 	});
 </script>
@@ -33,7 +32,7 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data as kit (kit.uuid)}
-						<LearningKit title={kit.name} uuid={kit.uuid} {queryKey} />
+						<LearningKit title={kit.name} uuid={kit.uuid} />
 					{/each}
 					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}

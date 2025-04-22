@@ -32,6 +32,12 @@
 			api(fetch).req(updateLearningKit, data, id).parse(),
 		onSuccess: () => {
 			client.invalidateQueries({
+				queryKey: ['latest-learning-kits-list']
+			});
+			client.invalidateQueries({
+				queryKey: ['all-learning-kits-list']
+			});
+			client.invalidateQueries({
 				queryKey: ['learning-kit', learningKitId]
 			});
 		}
@@ -40,7 +46,10 @@
 		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
 		onSuccess: () => {
 			client.invalidateQueries({
-				queryKey: ['learning-kit', learningKitId]
+				queryKey: ['latest-learning-kits-list']
+			});
+			client.invalidateQueries({
+				queryKey: ['all-learning-kits-list']
 			});
 			goto('/dashboard');
 		}

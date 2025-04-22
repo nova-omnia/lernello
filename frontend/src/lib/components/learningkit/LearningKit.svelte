@@ -39,7 +39,7 @@
 	href="/learningkit/{uuid}"
 >
 	<button
-		class="absolute right-0 top-0 z-10 flex gap-2 p-2"
+		class="absolute top-0 right-0 z-10 flex gap-2 p-2"
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;

@@ -10,7 +10,7 @@
 	import { getLearningKits } from '$lib/api/collections/learningKit';
 
 	const kitsQuery = createQuery({
-		queryKey: [ 'all-learning-kits-list' ],
+		queryKey: ['all-learning-kits-list'],
 		queryFn: () => api(fetch).req(getLearningKits, null, { page: 0, size: 99999 }).parse()
 	});
 </script>

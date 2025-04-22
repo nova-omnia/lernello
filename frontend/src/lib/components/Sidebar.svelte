@@ -50,7 +50,7 @@
 >
 	<!-- Logo Section -->
 	<div class="flex h-20 w-full items-center px-4">
-		<img alt="Lernello" src={logo} width="24" class="object-cover object-center" />
+		<img alt="Lernello" src={logo} width="24" class="object-cover object-center dark:invert" />
 		{@render sidebarItemStyle($_('app.companyName'))}
 		{#if sidebarState.isExpanded}
 			<button

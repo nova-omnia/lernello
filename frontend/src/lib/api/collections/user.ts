@@ -88,7 +88,7 @@ export const setUserLocale = createEndpoint({
 });
 
 export const editTrainee = createEndpoint({
-	method: 'POST',
+	method: 'PATCH',
 	getPath: () => `${REQUEST_MAPPING}/trainee`,
 	response: {
 		schema: ParticipantUserSchema,

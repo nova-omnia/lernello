@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +33,7 @@ public class TheoryBlockRestController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public @Valid TheoryBlockResDTO createTheoryBlock(@Valid @RequestBody CreateTheoryBlockDTO createTheoryBlockDTO) {
-        UUID learningUnitId = createTheoryBlockDTO.learningUnitId();
+    public @Valid TheoryBlockResDTO createTheoryBlock(@Valid @RequestBody CreateTheoryBlockDTO createTheoryBlockDTO, @PathVariable UUID learningUnitId) {
         TheoryBlock createdTheoryBlock = blockService.createBlock(theoryBlockMapper.toEntity(createTheoryBlockDTO), learningUnitId);
         return blockMapper.toTheoryBlockResDTO(createdTheoryBlock);
     }

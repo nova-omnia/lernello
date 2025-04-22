@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
 import ch.nova_omnia.lernello.mapper.TemporaryKeyMapper;

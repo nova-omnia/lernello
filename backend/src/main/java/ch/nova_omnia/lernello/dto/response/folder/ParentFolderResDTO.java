@@ -7,5 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record ParentFolderResDTO(
                                  @NotNull UUID uuid,
-                                 @NotNull @Size(min = 3, max = 40) String name) {
+                                 @NotNull @Size(min = 3, max = 40) String name
+) {
 }

@@ -1,26 +1,29 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.RemoveBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.ReorderBlockActionDTO;
-import ch.nova_omnia.lernello.model.data.block.*;
-import ch.nova_omnia.lernello.repository.BlockRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -31,7 +31,6 @@ export const deleteLearningUnit = createEndpoint({
 	}
 });
 
-
 export const applyBlockActions = createEndpoint({
 	method: 'POST',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/apply-block-actions`,

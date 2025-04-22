@@ -9,12 +9,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateQuestionBlockDTO(
-        @NotNull BlockType type,
-        @Size(min = 3, max = 40)
-        @NotBlank String name,
-        @Min(0) int position,
-        @NotBlank String question,
-        @NotBlank String expectedAnswer
+                                     @NotNull BlockType type,
+                                     @Size(min = 3, max = 40) @NotBlank String name,
+                                     @Min(0) int position,
+                                     @NotBlank String question,
+                                     @NotBlank String expectedAnswer
 ) implements CreateBlockDTO {
     public CreateQuestionBlockDTO {
         type = QUESTION;

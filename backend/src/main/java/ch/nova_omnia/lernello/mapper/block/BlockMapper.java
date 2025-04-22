@@ -17,7 +17,7 @@ public interface BlockMapper {
     MultipleChoiceBlockResDTO toMultipleChoiceBlockResDTO(MultipleChoiceBlock multipleChoiceBlock);
 
     TheoryBlockResDTO toTheoryBlockResDTO(TheoryBlock theoryBlock);
-    
+
     QuestionBlockResDTO toQuestionBlockResDTO(QuestionBlock questionBlock);
 
     default BlockResDTO toBlockResDTO(Block block) {

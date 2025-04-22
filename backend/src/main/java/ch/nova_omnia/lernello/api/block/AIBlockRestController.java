@@ -25,7 +25,7 @@ public class AIBlockRestController {
     private final AIBlockService aiBlockService;
     private final BlockMapper blockMapper;
 
-    @PostMapping("/generate")
+    @PostMapping("{learningUnitId}/")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public TheoryBlockResDTO generateBlock(@Valid @RequestBody AIGeneratedBlockRequest dto, @PathVariable UUID learningUnitId) {
         TheoryBlock block = aiBlockService.generateTheoryBlockFromAI(

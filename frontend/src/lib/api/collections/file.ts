@@ -17,7 +17,7 @@ export const uploadFile = createEndpoint({
 	}
 });
 
-export const getById = createEndpoint({
+export const getFileById = createEndpoint({
 	method: 'GET',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	payload: {

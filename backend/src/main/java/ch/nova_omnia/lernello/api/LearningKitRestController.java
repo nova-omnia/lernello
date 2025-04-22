@@ -36,40 +36,40 @@ public class LearningKitRestController {
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid LearningKitResDTO create(@Valid @RequestBody CreateLearningKitDTO learningKit) {
+    public @Valid LearningKitResDTO createLearningKit(@Valid @RequestBody CreateLearningKitDTO learningKit) {
         LearningKit entity = learningKitMapper.toEntity(learningKit);
         LearningKit savedEntity = learningKitService.save(entity);
         return learningKitMapper.toDTO(savedEntity);
     }
 
-    @PatchMapping("/{learningKitId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public @Valid LearningKitResDTO update(@PathVariable UUID learningKitId, @Valid @RequestBody UpdateLearningKitDTO updateLearningKit) {
-        LearningKit destination = learningKitService.findById(learningKitId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
-        learningKitMapper.update(updateLearningKit, destination);
-        LearningKit savedEntity = learningKitService.save(destination);
-        return learningKitMapper.toDTO(savedEntity);
-    }
-
-    @DeleteMapping("/{learningKitId}")
-    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public UUID delete(@PathVariable UUID learningKitId) {
-        learningKitService.deleteById(learningKitId);
-        return learningKitId;
+    public UUID deleteLearningKit(@PathVariable UUID id) {
+        learningKitService.deleteById(id);
+        return id;
     }
 
     @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
-    public @Valid List<LearningKitResDTO> getAll() {
+    public @Valid List<LearningKitResDTO> getAllLearningKits() {
         List<LearningKit> learningKits = learningKitService.findAll();
         List<LearningKitResDTO> learningKitResDTOs = learningKits.stream().map(learningKitMapper::toDTO).collect(Collectors.toList());
         return learningKitResDTOs;
     }
 
-    @GetMapping("/{learningKitId}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
-    public @Valid LearningKitResDTO getById(@Valid @PathVariable UUID learningKitId) {
-        return learningKitService.findById(learningKitId).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+    public @Valid LearningKitResDTO getLearningKitById(@Valid @PathVariable UUID id) {
+        return learningKitService.findById(id).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid LearningKitResDTO updateLearningKit(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit, @PathVariable UUID id) {
+        LearningKit destination = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitMapper.update(updateLearningKit, destination);
+        LearningKit savedEntity = learningKitService.save(destination);
+        return learningKitMapper.toDTO(savedEntity);
     }
 
 

@@ -11,7 +11,7 @@ const REQUEST_MAPPING = '/api/user';
 
 export const changePassword = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/change-password`,
+	getPath: () => `${REQUEST_MAPPING}/password`,
 	response: {
 		schema: PasswordStatusSchema,
 		defaultValidate: true
@@ -50,7 +50,7 @@ export const getUserInfo = createEndpoint({
 
 export const addTrainee = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/trainee/add`,
+	getPath: () => `${REQUEST_MAPPING}/trainee`,
 	response: {
 		schema: ParticipantUserSchema,
 		defaultValidate: true
@@ -63,7 +63,7 @@ export const addTrainee = createEndpoint({
 
 export const deleteTrainee = createEndpoint({
 	method: 'DELETE',
-	getPath: (id: string) => `${REQUEST_MAPPING}/trainee/delete/${id}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/trainee/${id}`,
 	response: {
 		schema: z.null(),
 		defaultValidate: true
@@ -89,7 +89,7 @@ export const setUserLocale = createEndpoint({
 
 export const editTrainee = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/edit`,
+	getPath: () => `${REQUEST_MAPPING}/trainee`,
 	response: {
 		schema: ParticipantUserSchema,
 		defaultValidate: true

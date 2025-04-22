@@ -12,16 +12,18 @@
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
 	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import { api } from '$lib/api/apiClient.js';
-	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { getAllTrainees } from '$lib/api/collections/user';
 	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
+	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 
-	const client = useQueryClient();
 	const learningKitId = page.params.learningKitId;
+
+	const invalidate = useQueryInvalidation();
 
 	const learningKitQuery = createQuery({
 		queryKey: ['learning-kit', learningKitId],
@@ -31,16 +33,19 @@
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
 		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['learning-kit', learningKitId]
-			});
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
+			invalidate(['learning-kit', learningKitId]);
 		}
 	});
 	const deleteLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
 		onSuccess: () => {
 			client.invalidateQueries({
-				queryKey: ['learning-kit', learningKitId]
+				queryKey: ['latest-learning-kits-list']
+			});
+			client.invalidateQueries({
+				queryKey: ['all-learning-kits-list']
 			});
 			goto('/dashboard');
 		}

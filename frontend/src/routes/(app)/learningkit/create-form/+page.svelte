@@ -1,10 +1,18 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
+	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 
 	let { data } = $props();
+
+	const invalidate = useQueryInvalidation();
+
 	const { form, errors, constraints, enhance } = superForm(data.form, {
-		onError: (error) => {
+		onResult() {
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
+		},
+		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
 				title: 'Error',

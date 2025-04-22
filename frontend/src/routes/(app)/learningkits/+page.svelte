@@ -9,9 +9,8 @@
 	import { api } from '$lib/api/apiClient';
 	import { getAllLearningKits } from '$lib/api/collections/learningKit';
 
-	const queryKey = 'all-learning-kits-list';
 	const kitsQuery = createQuery({
-		queryKey: [queryKey],
+		queryKey: ['all-learning-kits-list'],
 		queryFn: () => api(fetch).req(getAllLearningKits, null).parse()
 	});
 </script>
@@ -27,7 +26,7 @@
 				<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 			{:else}
 				{#each $kitsQuery.data as kit (kit.uuid)}
-					<LearningKit title={kit.name} uuid={kit.uuid} {queryKey} />
+					<LearningKit title={kit.name} uuid={kit.uuid} />
 				{/each}
 				<AddLearningKit title={$_('learningKit.create')} />
 			{/if}

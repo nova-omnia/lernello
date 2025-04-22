@@ -62,7 +62,7 @@ public class LearningUnitService {
         for (BlockActionDTO action : actions) {
             switch (action) {
                 case AddBlockActionDTO addAction -> addBlock(learningUnit, addAction);
-                case RemoveBlockActionDTO removeAction-> removeBlock(learningUnit, removeAction);
+                case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
                 case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
@@ -78,25 +78,13 @@ public class LearningUnitService {
 
         block = switch (createBlockDTO) {
             case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
-                    theoryBlockDTO.name(),
-                    theoryBlockDTO.position(),
-                    learningUnit,
-                    theoryBlockDTO.content()
+                    theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
             );
             case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
-                    multipleChoiceBlockDTO.name(),
-                    multipleChoiceBlockDTO.position(),
-                    learningUnit,
-                    multipleChoiceBlockDTO.question(),
-                    multipleChoiceBlockDTO.possibleAnswers(),
-                    multipleChoiceBlockDTO.correctAnswers()
+                    multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
             );
             case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
-                    questionBlockDTO.name(),
-                    questionBlockDTO.position(),
-                    learningUnit,
-                    questionBlockDTO.question(),
-                    questionBlockDTO.expectedAnswer()
+                    questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
             );
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
         };
@@ -188,7 +176,7 @@ public class LearningUnitService {
         for (BlockActionDTO action : actions) {
             String key = getActionKey(action);
             if (key != null) {
-                groupedActions.computeIfAbsent(key, k -> new ArrayList<>()).add(action);
+                groupedActions.computeIfAbsent(key, _ -> new ArrayList<>()).add(action);
             } else {
                 nonGroupedActions.add(action);
             }

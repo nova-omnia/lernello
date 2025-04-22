@@ -1,5 +1,7 @@
 package ch.nova_omnia.lernello.model.data.block;
 
+import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
+
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,8 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
 
 @Entity
 @Data

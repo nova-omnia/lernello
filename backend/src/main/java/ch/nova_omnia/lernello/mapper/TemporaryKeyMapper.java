@@ -1,11 +1,12 @@
 package ch.nova_omnia.lernello.mapper;
 
-import ch.nova_omnia.lernello.dto.response.TemporaryKeySolveResDTO;
+import java.util.Map;
+import java.util.UUID;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.Map;
-import java.util.UUID;
+import ch.nova_omnia.lernello.dto.response.TemporaryKeySolveResDTO;
 
 @Mapper(componentModel = "spring")
 public interface TemporaryKeyMapper {

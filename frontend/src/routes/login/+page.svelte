@@ -7,7 +7,14 @@
 
 	let { data } = $props();
 
-	const { form, errors, constraints, message, enhance } = superForm(data.form, {
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		invalidateAll: false, // redirect inside load function would prevent onUpdated from being called
+		onUpdated({ form }) {
+			if (form.valid && form.message) {
+				localStorage.setItem('lernello_auth_token', JSON.stringify(form.message.tokenInfo));
+				goto(form.message.redirectTo);
+			}
+		},
 		onError: (error) => {
 			console.error('Error:', error.result.error);
 			toaster.create({
@@ -17,15 +24,6 @@
 			});
 		}
 	});
-
-	$effect(() => {
-		if ($message) {
-			if ($message.tokenInfo) {
-				localStorage.setItem('lernello_auth_token', JSON.stringify($message.tokenInfo));
-			}
-			goto($message.redirectTo);
-		}
-	});
 </script>
 
 <main class="flex h-full flex-col items-center justify-center">
@@ -33,9 +31,9 @@
 		method="POST"
 		use:enhance
 		action="{page.url.search ?? ''}{page.url.search ? '&' : '?'}/login"
-		class="card preset-filled-surface-100-900 border-surface-200-800 w-full max-w-lg space-y-8 border-[1px] p-8"
+		class="card preset-filled-surface-100-900 w-full max-w-lg space-y-8 p-8"
 	>
-		<h1 class="h2">{$_('login.title')}</h1>
+		<h1 class="preset-typo-headline">{$_('login.title')}</h1>
 
 		<div class="space-y-4">
 			<label class="label">
@@ -49,7 +47,7 @@
 					bind:value={$form.username}
 					{...$constraints.username}
 				/>
-				{#if $errors.username}<span class="text-error-50-950">{$errors.username}</span>{/if}
+				{#if $errors.username}<span class="text-error-500">{$errors.username}</span>{/if}
 			</label>
 			<label class="label">
 				<span class="label-text">{$_('form.passwordLabel')}</span>
@@ -62,7 +60,7 @@
 					bind:value={$form.password}
 					{...$constraints.password}
 				/>
-				{#if $errors.password}<span class="text-error-50-950">{$errors.password}</span>{/if}
+				{#if $errors.password}<p class="text-error-500">{$errors.password}</p>{/if}
 			</label>
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">{$_('login.signIn')}</button>

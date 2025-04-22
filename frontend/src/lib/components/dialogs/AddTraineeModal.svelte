@@ -1,7 +1,9 @@
+<!--AddTraineeModal.svelte-->
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { addTrainee } from '$lib/api/collections/user';
 	import { api } from '$lib/api/apiClient';
+	import { _ } from 'svelte-i18n';
 
 	interface AddTraineeModalProps {
 		isOpen: boolean;
@@ -23,61 +25,59 @@
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-screen-sm"
+	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-3xl w-full"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<div class="space-y-4">
-			<h2 class="text-lg font-bold">Add Trainee</h2>
-			<div class="space-y-2">
-				<label class="block">
-					<span class="text-sm font-medium">Username</span>
-					<input
-						type="text"
-						bind:value={username}
-						class="input input-bordered w-full"
-						placeholder="Enter username"
-					/>
-				</label>
-				<label class="block">
-					<span class="text-sm font-medium">Name</span>
-					<input
-						type="text"
-						bind:value={name}
-						class="input input-bordered w-full"
-						placeholder="Enter name"
-					/>
-				</label>
-				<label class="block">
-					<span class="text-sm font-medium">Surname</span>
-					<input
-						type="text"
-						bind:value={surname}
-						class="input input-bordered w-full"
-						placeholder="Enter surname"
-					/>
-				</label>
-			</div>
-			<div class="flex justify-end space-x-2">
-				<button
-					class="btn btn-secondary"
-					onclick={() => {
-						onCancel();
-						username = '';
-						name = '';
-						surname = '';
-					}}
-					>Cancel
-				</button>
-				<button
-					class="btn btn-primary"
-					onclick={async () => {
-						await handleAddTrainee();
-						onConfirm();
-					}}
-					>Submit
-				</button>
-			</div>
+		<h2 class="text-lg font-bold">{$_('addTrainee')}</h2>
+		<div class="space-y-2">
+			<label class="block">
+				<span class="text-sm font-medium">{$_('username')}</span>
+				<input
+					type="text"
+					bind:value={username}
+					class="input input-bordered w-full"
+					placeholder="Enter username"
+				/>
+			</label>
+			<label class="block">
+				<span class="text-sm font-medium">{$_('name')}</span>
+				<input
+					type="text"
+					bind:value={name}
+					class="input input-bordered w-full"
+					placeholder="Enter name"
+				/>
+			</label>
+			<label class="block">
+				<span class="text-sm font-medium">{$_('surname')}</span>
+				<input
+					type="text"
+					bind:value={surname}
+					class="input input-bordered w-full"
+					placeholder="Enter surname"
+				/>
+			</label>
+		</div>
+		<div class="flex justify-end space-x-2">
+			<button
+				class="btn btn-secondary"
+				onclick={() => {
+					onCancel();
+					username = '';
+					name = '';
+					surname = '';
+				}}
+				>Cancel
+			</button>
+			<button
+				class="btn btn-primary"
+				onclick={async () => {
+					await handleAddTrainee();
+					onConfirm();
+				}}
+				>Submit
+			</button>
 		</div>
 	{/snippet}
 </Modal>

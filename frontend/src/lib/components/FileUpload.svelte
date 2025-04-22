@@ -1,19 +1,28 @@
 <script lang="ts">
 	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
-	import { Upload as IconUpload, File as IconFile, XCircle as IconRemove } from 'lucide-svelte';
+	import { Upload as IconUpload } from 'lucide-svelte';
+	import { _ } from 'svelte-i18n';
+
+	// JOSI: TODO
+	// async function handleUploadFile() {
+	// 	const createdFile = { name };
+	// 	await api(fetch).req(uploadFile, createdFile).parse();
+	// }
 </script>
 
-<FileUpload
-	name="file-upload"
-	accept="image/*,text/*,.html,.htm,application/*"
-	maxFileSize={1024 * 1024 * 10}
-	maxFiles={100}
-	onFileChange={console.log}
-	onFileReject={console.error}
-	allowDrop
-	classes="w-full flex flex-col items-center justify-center rounded-border"
+<div
+	class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
 >
-	{#snippet iconInterface()}<IconUpload class="size-8" />{/snippet}
-	{#snippet iconFile()}<IconFile class="size-7" />{/snippet}
-	{#snippet iconFileRemove()}<IconRemove class="size-7" />{/snippet}
-</FileUpload>
+	<FileUpload
+		classes="w-full"
+		accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4"
+		onFileChange={console.log}
+		onFileReject={console.error}
+		maxFiles={1024 * 1024 * 10}
+	>
+		<button class=" text-surface-900-100 font- m-auto flex justify-center gap-3">
+			<IconUpload class="size-6" />
+			<p>{$_('addNewFile')}</p>
+		</button>
+	</FileUpload>
+</div>

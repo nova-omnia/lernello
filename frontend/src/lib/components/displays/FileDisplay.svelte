@@ -1,26 +1,18 @@
 <script lang="ts">
 	import { File as FileIcon } from 'lucide-svelte';
-	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { invalidate } from '$app/navigation';
-	import { deleteFile } from '$lib/api/collections/file';
 	import { _ } from 'svelte-i18n';
-	import { api } from '$lib/api/apiClient';
-	const { File } = $props();
+	import type { FileRes } from '$lib/schemas/response/FileRes';
 
-	let showDeleteDialog = $state(false);
-
-	async function removeFile() {
-		if (!File) return;
-
-		await api(fetch).req(deleteFile, null, File.uuid).parse();
-		await invalidate('files:list');
-
-		showDeleteDialog = false;
+	interface FileDisplayProps {
+		File: FileRes;
+		onRemoveFile: () => void;
 	}
+
+	const { File, onRemoveFile }: FileDisplayProps = $props();
 </script>
 
 <div
-	class="File-Display preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
+	class="preset-filled-surface-100-900 rounded-border border-surface-200-800 flex w-full items-center rounded-lg border-[1px] p-3 text-base"
 >
 	<FileIcon class="h-10 w-10" />
 	<p class="text-black-700 ml-3 text-xs font-bold">{File.name}</p>
@@ -28,20 +20,10 @@
 		type="button"
 		onclick={(e) => {
 			e.preventDefault();
-			showDeleteDialog = true;
+			onRemoveFile();
 		}}
-		class="btn preset-filled-error-500 ml-auto rounded-full p-2">{$_('button.remove')}</button
+		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
 	>
+		{$_('button.remove')}
+	</button>
 </div>
-
-<ConfirmDialog
-	isOpen={showDeleteDialog}
-	title="Confirm Deletion"
-	message={`Are you sure you want to remove "${File?.name}"?`}
-	confirmText="Delete"
-	danger={true}
-	onConfirm={removeFile}
-	onCancel={() => {
-		showDeleteDialog = false;
-	}}
-/>

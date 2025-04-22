@@ -24,8 +24,7 @@ public class AIBlockService {
         String context = loadContext(fileIds);
         String generatedContent = aiClient.generateTheoryBlock(context, topic);
 
-        LearningUnit unit = learningUnitRepository.findById(learningUnitId)
-                .orElseThrow(() -> new RuntimeException());
+        LearningUnit unit = learningUnitRepository.findById(learningUnitId).orElseThrow(() -> new RuntimeException());
 
         TheoryBlock block = new TheoryBlock(topic, position, unit, generatedContent);
         blockService.createBlock(block, learningUnitId);

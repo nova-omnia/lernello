@@ -21,6 +21,5 @@ public interface LearningKitMapper {
 
     LearningKit toEntity(CreateLearningKitDTO createLearningKitResDto);
 
-
     void update(UpdateLearningKitDTO source, @MappingTarget LearningKit destination);
 }

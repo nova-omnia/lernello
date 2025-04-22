@@ -12,13 +12,12 @@ import jakarta.validation.constraints.Size;
 
 
 public record CreateMultipleChoiceBlockDTO(
-        @NotNull BlockType type,
-        @Size(min = 3, max = 40)
-        @NotBlank String name,
-        @Min(0) int position,
-        @NotBlank String question,
-        @NotNull List<String> possibleAnswers,
-        @NotNull List<String> correctAnswers
+                                           @NotNull BlockType type,
+                                           @Size(min = 3, max = 40) @NotBlank String name,
+                                           @Min(0) int position,
+                                           @NotBlank String question,
+                                           @NotNull List<String> possibleAnswers,
+                                           @NotNull List<String> correctAnswers
 ) implements CreateBlockDTO {
     public CreateMultipleChoiceBlockDTO {
         type = MULTIPLE_CHOICE;

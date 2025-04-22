@@ -3,7 +3,6 @@
 	import { _ } from 'svelte-i18n';
 	import KitContentItem from './KitContentItem.svelte';
 	import { Sparkles } from 'lucide-svelte';
-	import { api } from '$lib/api/apiClient';
 
 	let showDeleteDialog = $state(false);
 

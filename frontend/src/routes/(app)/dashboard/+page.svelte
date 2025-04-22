@@ -24,7 +24,7 @@
 					<h2>
 						{$_('dashboard.allLearningKits', {
 							values: {
-								count: $kitsQuery.data.size,
+								count: $kitsQuery.data.numberOfElements,
 								total: $kitsQuery.data.totalElements
 							}
 						})}

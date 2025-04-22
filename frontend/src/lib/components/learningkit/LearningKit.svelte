@@ -2,11 +2,12 @@
 	import { Trash2 } from 'lucide-svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { deleteLearningKit } from '$lib/api/collections/learningKit.js';
+	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 
-	const client = useQueryClient();
+	const invalidate = useQueryInvalidation();
 
 	interface LearningKitProps {
 		title: string;
@@ -18,12 +19,8 @@
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['latest-learning-kits-list']
-			});
-			client.invalidateQueries({
-				queryKey: ['all-learning-kits-list']
-			});
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});

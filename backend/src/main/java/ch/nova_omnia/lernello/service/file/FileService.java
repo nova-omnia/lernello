@@ -6,10 +6,12 @@ import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.model.data.File;
 
+@Service
 public interface FileService {
     public List<File> findAll();
 

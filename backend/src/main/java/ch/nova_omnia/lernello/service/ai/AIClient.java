@@ -18,12 +18,12 @@ public class AIClient {
 
     public String generateTheoryBlock(String fullText, String topic) {
         String prompt = """
-            You are an AI tutor. Create a theory block on the topic '%s'.
-            Content of the chapter:
-            %s
+                You are an AI tutor. Create a theory block on the topic '%s'.
+                Content of the chapter:
+                %s
 
-            The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
-            """.formatted(topic, fullText);
+                The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
+                """.formatted(topic, fullText);
 
         return sendRequest(prompt);
     }

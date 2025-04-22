@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User{
+public class User {
     public enum Role {
         INSTRUCTOR, TRAINEE
     }

@@ -11,6 +11,6 @@ import jakarta.validation.constraints.Size;
 public record LearningUnitResDTO(
                                  @NotNull UUID uuid,
                                  @NotBlank @Size(min = 3, max = 40) String name,
-                                 @NotNull List<BlockResDTO>blocks
+                                 @NotNull List<BlockResDTO> blocks
 ) {
 }

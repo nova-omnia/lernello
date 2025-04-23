@@ -1,0 +1,19 @@
+meta {
+  name: Create Learning Unit
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/learning-unit/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "AI Basics Unit",
+    "description": "A unit introducing the core concepts of AI.",
+    "position": 0
+  }
+}

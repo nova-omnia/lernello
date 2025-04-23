@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
-import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
@@ -36,22 +35,23 @@ public class AIBlockService {
         return block;
     }
 
-    public MultipleChoiceBlock generateMultipleChoiceBlockAI(TheoryBlock theoryBlock, UUID learningUnitId) {
+    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId, UUID learningUnitId, UUID multipleChoicheBlockUuid) {
+        TheoryBlock theoryBlock = (TheoryBlock) blockService.getBlockById(theoryBlockId);
+        MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) blockService.getBlockById(multipleChoicheBlockUuid);
+
         String generatedContent = aiClient.generateMultipleChoiceBlock(theoryBlock.getContent());
         ObjectMapper objectMapper = new ObjectMapper();
-        MultipleChoiceBlock multipleChoiceBlock;
 
         try {
-            multipleChoiceBlock = objectMapper.readValue(generatedContent, MultipleChoiceBlock.class);
-            multipleChoiceBlock.setName(theoryBlock.getName());
-            multipleChoiceBlock.setPosition(theoryBlock.getPosition() + 1);
-            multipleChoiceBlock.setType(BlockType.MULTIPLE_CHOICE);
+            MultipleChoiceBlock generatedMultipleChoiceBlock = objectMapper.readValue(generatedContent, MultipleChoiceBlock.class);
+            multipleChoiceBlock.setQuestion(generatedMultipleChoiceBlock.getQuestion());
+            multipleChoiceBlock.setPossibleAnswers(generatedMultipleChoiceBlock.getPossibleAnswers());
+            multipleChoiceBlock.setCorrectAnswers(generatedMultipleChoiceBlock.getCorrectAnswers());
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse AI response into MultipleChoiceBlock", e);
         }
 
-        blockService.createBlock(multipleChoiceBlock, learningUnitId);
-        return multipleChoiceBlock;
+        return blockService.updateMultipleChoiceBlock(multipleChoiceBlock);
     }
 
     private String loadContext(List<UUID> fileIds) {

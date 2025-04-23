@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * Service from Spring Security for handling user details and authentication easily.
  */
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 

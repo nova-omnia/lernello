@@ -1,16 +1,17 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import ch.nova_omnia.lernello.model.data.User;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class EmailService {
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -22,8 +23,7 @@ public class EmailService {
 
             mailMessage.setFrom(sender);
             mailMessage.setTo(user.getUsername());
-            mailMessage.setText("Hello " + user.getUsername() + ",\n\n" +
-                    "Your password is: " + user.getPassword());
+            mailMessage.setText("Hello " + user.getUsername() + ",\n\n" + "Your password is: " + user.getPassword());
             mailMessage.setSubject("Test Mail");
 
             javaMailSender.send(mailMessage);

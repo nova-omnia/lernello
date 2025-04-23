@@ -16,9 +16,10 @@ public interface JsonNullableMapper {
     }
 
     /**
-    * Checks whether nullable parameter was passed explicitly.
-    * @return true if value was set explicitly, false otherwise
-    */
+     * Checks whether nullable parameter was passed explicitly.
+     * 
+     * @return true if value was set explicitly, false otherwise
+     */
     @Condition
     default <T> boolean isPresent(JsonNullable<T> nullable) {
         return nullable != null && nullable.isPresent();

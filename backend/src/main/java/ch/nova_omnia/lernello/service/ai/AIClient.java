@@ -28,6 +28,24 @@ public class AIClient {
         return sendRequest(prompt);
     }
 
+    public String generateMultipleChoiceBlock(String theoryBlockContent) {
+        String multipleChoicePrompt = """
+                Based on the following theory content, create a multiple choice question.
+
+                Content:
+                %s
+
+                Your response must be JSON formatted like this:
+                {
+                  "question": "What is ...?",
+                  "possibleAnswers": ["A", "B", "C", "D"],
+                  "correctAnswers": ["B"]
+                }
+                """.formatted(theoryBlockContent);
+
+        return sendRequest(multipleChoicePrompt);
+    }
+
     private String sendRequest(String prompt) {
         ChatRequest request = new ChatRequest(prompt);
 

@@ -72,11 +72,17 @@ public class LearningKitRestController {
         return learningKitMapper.toDTO(savedEntity);
     }
 
-
     @DeleteMapping("/participants/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public UUID removeParticipantFromKit(@PathVariable UUID id, @RequestBody UUID userId) {
         learningKitService.removeParticipant(id, userId);
+        return id;
+    }
+
+    @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public UUID publishLearningKit(@PathVariable UUID id) {
+        learningKitService.publishLearningKit(id);
         return id;
     }
 }

@@ -84,15 +84,15 @@ export const removeParticipantFromKit = createEndpoint({
 	}
 });
 
-export const addParticipantsToKit = createEndpoint({
+export const publishLearningKit = createEndpoint({
 	method: 'POST',
-	getPath: (kitId: string) => `${REQUEST_MAPPING}/participants/${kitId}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/publish/${id}`,
 	response: {
-		schema: z.string().uuid(),
+		schema: z.null(),
 		defaultValidate: false
 	},
 	payload: {
-		schema: z.string().uuid().array(),
+		schema: z.null(),
 		defaultValidate: false
 	}
 });

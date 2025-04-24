@@ -6,9 +6,9 @@
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import {
-		addParticipantsToKit,
 		deleteLearningKit,
-		getLearningKitById
+		getLearningKitById,
+		publishLearningKit
 	} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -274,10 +274,7 @@
 		onConfirm={async () => {
 			showPublishDialog = false;
 
-			const selectedTrainees = await api(fetch).req(getAllTrainees, null).parse();
-			const selectedTraineesUUIDs = selectedTrainees.map((trainee) => trainee.uuid);
-
-			await api(fetch).req(addParticipantsToKit, selectedTraineesUUIDs, learningKitId).parse();
+			await api(fetch).req(publishLearningKit, null, learningKitId).parse();
 		}}
 		onCancel={() => {
 			showPublishDialog = false;

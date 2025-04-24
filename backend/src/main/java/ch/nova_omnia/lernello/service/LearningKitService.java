@@ -30,7 +30,6 @@ public class LearningKitService {
         return learningKitRepository.save(learningKit);
     }
 
-
     @Transactional
     public void deleteById(UUID id) {
         learningKitRepository.deleteById(id);
@@ -47,5 +46,10 @@ public class LearningKitService {
         } else {
             throw new IllegalArgumentException("Participant not found in this LearningKit");
         }
+    }
+
+    public void publishLearningKit(UUID learningKitId) {
+        LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+        //TODO implement publish logic in other branch
     }
 }

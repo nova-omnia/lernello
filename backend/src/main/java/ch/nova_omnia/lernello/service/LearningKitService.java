@@ -1,9 +1,11 @@
 package ch.nova_omnia.lernello.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.model.data.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
+    private final EmailService emailService;
 
     public List<LearningKit> findAll() {
         return learningKitRepository.findAll();
@@ -50,6 +53,11 @@ public class LearningKitService {
 
     public void publishLearningKit(UUID learningKitId) {
         LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
-        //TODO implement publish logic in other branch
+        ArrayList<User> participants = new ArrayList<>(kit.getParticipants());
+        for(User participant : participants) {
+            if (participant.getRole() == User.Role.TRAINEE) {
+                emailService.sendLearningKitInvitation(participant, kit);
+            }
+        }
     }
 }

@@ -19,6 +19,8 @@ import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 public class LoadDatabase {
@@ -65,6 +67,7 @@ public class LoadDatabase {
             userRepository.save(frodo);
             log.info("Preloading learning kit");
             learningKitRepository.save(learningKit);
+            learningKit.setParticipants(List.of(max, bruno, leon, pascal, anja, fabian, dani));
             log.info("Preloading learning unit");
             learningUnitRepository.save(learningUnit);
             fileRepository.save(file1);

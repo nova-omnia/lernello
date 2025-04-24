@@ -51,6 +51,7 @@ public class LearningKitService {
         }
     }
 
+    @Transactional
     public void publishLearningKit(UUID learningKitId) {
         LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
         ArrayList<User> participants = new ArrayList<>(kit.getParticipants());

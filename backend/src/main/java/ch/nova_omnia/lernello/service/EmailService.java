@@ -28,18 +28,16 @@ public class EmailService {
      * @param learningKit The learning kit for which the invitation is sent.
      * @return true if the email was sent successfully, false otherwise.
      */
-    public boolean sendLearningKitInvitation(User user, LearningKit learningKit) {
+    public void sendLearningKitInvitation(User user, LearningKit learningKit) {
         try {
             SimpleMailMessage mailMessage = formatMailMessageLKInvite(user, learningKit);
 
             javaMailSender.send(mailMessage);
             log.info("Sent learning kit invitation to {}", user.getUsername());
-
-            return true;
         } catch (Exception ex) {
             log.error("Failed to send learning kit invitation to {}: {}",
                 user.getUsername(), ex.getMessage(), ex);
-            return false;
+            throw new RuntimeException("Failed to send email", ex);
         }
     }
 

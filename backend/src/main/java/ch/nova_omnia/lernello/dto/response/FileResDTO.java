@@ -7,5 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record FileResDTO(
                          @NotNull UUID uuid,
-                         @NotNull @Size(min = 1, max = 255) String name) {
+                         @NotNull @Size(min = 1, max = 255) String name
+) {
 }

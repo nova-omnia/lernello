@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { regenerateLearningUnit } from '$lib/api/collections/learningUnit';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import KitContentItem from './KitContentItem.svelte';
 	import { Sparkles } from 'lucide-svelte';
-	import { api } from '$lib/api/apiClient';
 
 	let showDeleteDialog = $state(false);
 
@@ -17,10 +15,6 @@
 		onDeleteLearningUnit: () => void;
 	}
 	const { learningUnit, onDeleteLearningUnit }: LearningUnitProps = $props();
-
-	async function regenerateLearningUnitHandler() {
-		await api(fetch).req(regenerateLearningUnit, null, learningUnit.uuid).parse();
-	}
 
 	async function deleteLearningUnitHandler() {
 		showDeleteDialog = false;
@@ -38,7 +32,7 @@
 		</a>
 		<button
 			type="button"
-			onclick={regenerateLearningUnitHandler}
+			onclick={() => alert('Regenerate not implemented yet')}
 			class="btn preset-outlined-surface-500 bg-gray rounded-full"
 		>
 			<Sparkles />

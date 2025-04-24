@@ -7,7 +7,14 @@
 
 	let { data } = $props();
 
-	const { form, errors, constraints, message, enhance } = superForm(data.form, {
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		invalidateAll: false, // redirect inside load function would prevent onUpdated from being called
+		onUpdated({ form }) {
+			if (form.valid && form.message) {
+				localStorage.setItem('lernello_auth_token', JSON.stringify(form.message.tokenInfo));
+				goto(form.message.redirectTo);
+			}
+		},
 		onError: (error) => {
 			console.error('Error:', error.result.error);
 			toaster.create({
@@ -15,15 +22,6 @@
 				description: $_('error.description', { values: { status: error.result.status } }),
 				type: 'error'
 			});
-		}
-	});
-
-	$effect(() => {
-		if ($message) {
-			if ($message.tokenInfo) {
-				localStorage.setItem('lernello_auth_token', JSON.stringify($message.tokenInfo));
-			}
-			goto($message.redirectTo);
 		}
 	});
 </script>

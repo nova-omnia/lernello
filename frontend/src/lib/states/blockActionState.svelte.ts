@@ -117,7 +117,6 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 					type: action.data.type,
 					name: action.data.name,
 					position: action.data.position,
-					learningUnitId: action.data.learningUnitId || 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', // Placeholder id
 					content: action.data.content || 'placeholder'
 				}
 			};
@@ -130,7 +129,6 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 					type: action.data.type,
 					name: action.data.name,
 					position: action.data.position,
-					learningUnitId: action.data.learningUnitId || 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', // Placeholder id
 					question: action.data.question || 'placeholder question',
 					possibleAnswers: action.data.possibleAnswers || [],
 					correctAnswers: action.data.correctAnswers || []

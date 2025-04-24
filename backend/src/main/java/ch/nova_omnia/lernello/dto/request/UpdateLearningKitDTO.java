@@ -17,5 +17,4 @@ public record UpdateLearningKitDTO(
                                    List<UUID> files,
                                    List<UUID> participants
 ) {
-
 }

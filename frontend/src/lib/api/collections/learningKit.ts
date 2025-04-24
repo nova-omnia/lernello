@@ -60,7 +60,7 @@ export const getLearningKitById = createEndpoint({
 
 export const updateLearningKit = createEndpoint({
 	method: 'PATCH',
-	getPath: (learningKitId: string) => `${REQUEST_MAPPING}/${learningKitId}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
 		schema: LearningKitResSchema,
 		defaultValidate: true
@@ -73,7 +73,7 @@ export const updateLearningKit = createEndpoint({
 
 export const removeParticipantFromKit = createEndpoint({
 	method: 'DELETE',
-	getPath: (kitId: string) => `${REQUEST_MAPPING}/participants/${kitId}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/participants/${id}`,
 	response: {
 		schema: z.string().uuid(),
 		defaultValidate: false

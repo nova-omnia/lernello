@@ -18,14 +18,32 @@ public class AIClient {
 
     public String generateTheoryBlock(String fullText, String topic) {
         String prompt = """
-            You are an AI tutor. Create a theory block on the topic '%s'.
-            Content of the chapter:
-            %s
+                You are an AI tutor. Create a theory block on the topic '%s'.
+                Content of the chapter:
+                %s
 
-            The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
-            """.formatted(topic, fullText);
+                The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
+                """.formatted(topic, fullText);
 
         return sendRequest(prompt);
+    }
+
+    public String generateMultipleChoiceBlock(String theoryBlockContent) {
+        String multipleChoicePrompt = """
+                Based on the following theory content, create a multiple choice question.
+
+                Content:
+                %s
+
+                Your response must be JSON formatted like this:
+                {
+                  "question": "What is ...?",
+                  "possibleAnswers": ["A", "B", "C", "D"],
+                  "correctAnswers": ["B"]
+                }
+                """.formatted(theoryBlockContent);
+
+        return sendRequest(multipleChoicePrompt);
     }
 
     private String sendRequest(String prompt) {

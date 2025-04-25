@@ -10,21 +10,17 @@
 
 	const { blockState }: BlockMultipleChoiceItemProps = $props();
 
-	let question = $state(
-		blockState.type === 'MULTIPLE_CHOICE' ? blockState.question : ''
-	);
+	let question = $state(blockState.type === 'MULTIPLE_CHOICE' ? blockState.question : '');
 
 	let answers = $state<{ value: string; isCorrect: boolean }[]>(
 		blockState.type === 'MULTIPLE_CHOICE' && Array.isArray(blockState.possibleAnswers)
 			? blockState.possibleAnswers.map((a) =>
-				typeof a === 'string'
-					? { value: a, isCorrect: false }
-					: a
-			)
+					typeof a === 'string' ? { value: a, isCorrect: false } : a
+				)
 			: [
-				{ value: '', isCorrect: false },
-				{ value: '', isCorrect: false }
-			]
+					{ value: '', isCorrect: false },
+					{ value: '', isCorrect: false }
+				]
 	);
 
 	function addAnswerField() {

@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello;
+package ch.nova_omnia.lernello.config;
 
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;

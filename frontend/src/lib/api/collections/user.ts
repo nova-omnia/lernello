@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
 import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
-import { UserRoleSchema } from '$lib/schemas/response/UserRole';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -97,19 +96,6 @@ export const editTrainee = createEndpoint({
 	},
 	payload: {
 		schema: CreateParticipantUserSchema,
-		defaultValidate: false
-	}
-});
-
-export const getCurrentRole = createEndpoint({
-	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/current-role`,
-	response: {
-		schema: UserRoleSchema,
-		defaultValidate: true
-	},
-	payload: {
-		schema: z.null(),
 		defaultValidate: false
 	}
 });

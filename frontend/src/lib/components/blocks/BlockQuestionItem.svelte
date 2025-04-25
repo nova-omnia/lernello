@@ -3,8 +3,8 @@
 
 	const { block } = $props();
 
-	let question = block.question;
-	let expectedAnswer = block.expectedAnswer;
+	let question = $state(block.question);
+	let expectedAnswer = $state(block.expectedAnswer);
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">

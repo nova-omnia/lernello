@@ -5,16 +5,23 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/theory-block/create
+  url: {{baseUrl}}/api/learning-unit/{{id}}/apply-block-actions
   body: json
   auth: inherit
 }
 
 body:json {
-  {
-    "name": "Introduction to Theory",
-    "position": 1,
-    "learningUnitId": "123e4567-e89b-12d3-a456-426614174000",
-    "content": "This is the content of the theory block."
-  }
+  [
+    {
+      "type": "ADD_BLOCK",
+      "index": 0,
+      "blockId": "theory-temp-id-001",
+      "data": {
+        "type": "THEORY",
+        "name": "Theory Block Title",
+        "position": 0,
+        "content": "This is the content of the theory block."
+      }
+    }
+  ]
 }

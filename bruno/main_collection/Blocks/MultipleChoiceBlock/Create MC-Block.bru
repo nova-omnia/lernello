@@ -5,18 +5,25 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/multiple-choice-block/create
+  url: {{baseUrl}}/api/learning-unit/{{id}}/apply-block-actions
   body: json
   auth: inherit
 }
 
 body:json {
-  {
-    "name": "Sample Block Name",
-    "position": 0,
-    "learningUnitId": "123e4567-e89b-12d3-a456-426614174000",
-    "question": "What is the capital of France?",
-    "possibleAnswers": ["Paris", "London", "Berlin", "Madrid"],
-    "correctAnswers": ["Paris"]
-  }
+  [
+    {
+      "type": "ADD_BLOCK",
+      "index": 1,
+      "blockId": "mc-temp-id-001",
+      "data": {
+        "type": "MULTIPLE_CHOICE",
+        "name": "MC Block Title",
+        "position": 1,
+        "question": "What is 2 + 2?",
+        "possibleAnswers": ["3", "4", "5", "22"],
+        "correctAnswers": ["4"]
+      }
+    }
+  ]
 }

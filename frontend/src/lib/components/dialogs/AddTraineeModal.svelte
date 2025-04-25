@@ -32,7 +32,7 @@
 		<h2 class="text-lg font-bold">{$_('addTrainee')}</h2>
 		<div class="space-y-2">
 			<label class="block">
-				<span class="text-sm font-medium">{$_('username')}</span>
+				<span class="text-sm font-medium">{$_('common.username')}</span>
 				<input
 					type="text"
 					bind:value={username}
@@ -41,7 +41,7 @@
 				/>
 			</label>
 			<label class="block">
-				<span class="text-sm font-medium">{$_('name')}</span>
+				<span class="text-sm font-medium">{$_('common.name')}</span>
 				<input
 					type="text"
 					bind:value={name}
@@ -50,7 +50,7 @@
 				/>
 			</label>
 			<label class="block">
-				<span class="text-sm font-medium">{$_('surname')}</span>
+				<span class="text-sm font-medium">{$_('common.surname')}</span>
 				<input
 					type="text"
 					bind:value={surname}

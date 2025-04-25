@@ -178,7 +178,7 @@
 		</div>
 
 		<!-- Context -->
-		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.context')}</p>
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('common.context')}</p>
 		<FileUpload />
 		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
 		<div class="flex flex-col gap-2">

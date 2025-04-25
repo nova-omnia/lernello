@@ -1,26 +1,29 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.RemoveBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.ReorderBlockActionDTO;
-import ch.nova_omnia.lernello.model.data.block.*;
-import ch.nova_omnia.lernello.repository.BlockRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -59,7 +62,7 @@ public class LearningUnitService {
         for (BlockActionDTO action : actions) {
             switch (action) {
                 case AddBlockActionDTO addAction -> addBlock(learningUnit, addAction);
-                case RemoveBlockActionDTO removeAction-> removeBlock(learningUnit, removeAction);
+                case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
                 case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
@@ -75,25 +78,13 @@ public class LearningUnitService {
 
         block = switch (createBlockDTO) {
             case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
-                    theoryBlockDTO.name(),
-                    theoryBlockDTO.position(),
-                    learningUnit,
-                    theoryBlockDTO.content()
+                    theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
             );
             case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
-                    multipleChoiceBlockDTO.name(),
-                    multipleChoiceBlockDTO.position(),
-                    learningUnit,
-                    multipleChoiceBlockDTO.question(),
-                    multipleChoiceBlockDTO.possibleAnswers(),
-                    multipleChoiceBlockDTO.correctAnswers()
+                    multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
             );
             case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
-                    questionBlockDTO.name(),
-                    questionBlockDTO.position(),
-                    learningUnit,
-                    questionBlockDTO.question(),
-                    questionBlockDTO.expectedAnswer()
+                    questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
             );
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
         };
@@ -185,7 +176,7 @@ public class LearningUnitService {
         for (BlockActionDTO action : actions) {
             String key = getActionKey(action);
             if (key != null) {
-                groupedActions.computeIfAbsent(key, k -> new ArrayList<>()).add(action);
+                groupedActions.computeIfAbsent(key, _ -> new ArrayList<>()).add(action);
             } else {
                 nonGroupedActions.add(action);
             }

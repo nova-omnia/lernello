@@ -28,21 +28,21 @@ public class FolderRestController {
     private final FolderService folderService;
     private final FolderMapper folderMapper;
 
-    @GetMapping()
+    @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
-    public List<FolderResDTO> loadAll() {
+    public List<FolderResDTO> getAllFolders() {
         return folderService.findAll().stream().map(folderMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_folders:read')")
-    public Optional<FolderResDTO> getById(@PathVariable UUID id) {
+    public Optional<FolderResDTO> getFolderById(@PathVariable UUID id) {
         return folderService.findById(id).map(folderMapper::toDTO);
     }
 
-    @PostMapping()
+    @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_folders:write')")
-    public @Valid FolderResDTO create(@Valid @RequestBody CreateFolderDTO folder) {
+    public @Valid FolderResDTO createFolder(@Valid @RequestBody CreateFolderDTO folder) {
         return folderMapper.toDTO(folderService.save(folderMapper.toEntity(folder)));
     }
 }

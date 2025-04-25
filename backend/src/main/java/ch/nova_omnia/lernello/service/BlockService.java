@@ -39,6 +39,10 @@ public class BlockService {
         }
     }
 
+    @Transactional
+    public Block getBlockById(UUID blockId) {
+        return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
+    }
 
     private void rearrangeBlockPosition(int position, UUID learningUnitUuid) {
         List<Block> blocks = blockRepository.findBlocksAsc(learningUnitUuid);
@@ -71,7 +75,7 @@ public class BlockService {
     }
 
     @Transactional
-    public MultipleChoiceBlock updateMultipleChoiceBlock(MultipleChoiceBlock   multipleChoiceBlock) {
+    public MultipleChoiceBlock updateMultipleChoiceBlock(MultipleChoiceBlock multipleChoiceBlock) {
         MultipleChoiceBlock existingBlock = (MultipleChoiceBlock) blockRepository.findById(multipleChoiceBlock.getUuid()).orElseThrow(() -> new RuntimeException("MultipleChoiceBlock not found"));
         existingBlock.setName(multipleChoiceBlock.getName());
         existingBlock.setQuestion(multipleChoiceBlock.getQuestion());

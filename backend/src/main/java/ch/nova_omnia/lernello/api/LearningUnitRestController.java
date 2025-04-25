@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -19,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
-import ch.nova_omnia.lernello.dto.request.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
 import ch.nova_omnia.lernello.mapper.TemporaryKeyMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.service.LearningUnitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,28 @@ public class LearningUnitRestController {
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
 
-    @PostMapping("/create")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
+    public @Valid LearningUnitResDTO getLearningUnitById(@PathVariable UUID id) {
+        return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
+    public UUID deleteLearningUnit(@PathVariable UUID id) {
+        learningUnitService.deleteById(id);
+        return id;
+    }
+
+
+    @PostMapping("/{id}/apply-block-actions")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
+    public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
+        Map<String, UUID> temporaryKeyMap = learningUnitService.applyBlockActions(id, actionQueue);
+        return temporaryKeyMapper.toDTO(temporaryKeyMap).temporaryKeyMap();
+    }
+
+    @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
 
@@ -49,29 +70,4 @@ public class LearningUnitRestController {
         return learningUnitMapper.toDTO(learningUnit);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
-    public UUID deleteById(@PathVariable UUID id) {
-        learningUnitService.deleteById(id);
-        return id;
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
-    public @Valid LearningUnitResDTO getById(@PathVariable UUID id) {
-        return learningUnitService.findById(id).map(learningUnitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/")
-    @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
-    public List<@Valid LearningUnitResDTO> getAllLearningUnits() {
-        return learningUnitService.findAll().stream().map(learningUnitMapper::toDTO).toList();
-    }
-
-    @PostMapping("/{id}/apply-block-actions")
-    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
-    public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
-        Map<String, UUID> temporaryKeyMap = learningUnitService.applyBlockActions(id, actionQueue);
-        return temporaryKeyMapper.toDTO(temporaryKeyMap).temporaryKeyMap();
-    }
 }

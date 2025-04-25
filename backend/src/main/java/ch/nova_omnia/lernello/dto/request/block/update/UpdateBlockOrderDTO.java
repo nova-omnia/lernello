@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record UpdateBlockOrderDTO(
-                                  @NotNull List<UUID> blockUuidsInOrder) {
-
-
+                                  @NotNull List<UUID> blockUuidsInOrder
+) {
 }

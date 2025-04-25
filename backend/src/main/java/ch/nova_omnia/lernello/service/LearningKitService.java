@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.repository.FileRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
-    private final UserRepository userRepository;
-    private final FileRepository fileRepository;
 
     public List<LearningKit> findAll() {
         return learningKitRepository.findAll();

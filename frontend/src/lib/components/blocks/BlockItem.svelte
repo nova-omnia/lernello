@@ -39,7 +39,7 @@
 	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
 	<BlockIconHeader {block} {learningUnitId} />
-	<Component {block}/>
+	<Component {block} />
 
 	<button
 		type="button"

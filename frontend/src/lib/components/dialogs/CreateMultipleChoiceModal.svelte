@@ -26,7 +26,7 @@
 				<span class="text-sm font-medium">{$_('block.chooseTheoryBlock')}</span>
 				<select bind:value={selectedBlockId} class="select select-bordered w-full">
 					<option disabled selected value="">{$_('common.choice')}</option>
-					{#each theoryBlocks as block}
+					{#each theoryBlocks as block (block.id)}
 						<option value={block.id}>{block.title}</option>
 					{/each}
 				</select>

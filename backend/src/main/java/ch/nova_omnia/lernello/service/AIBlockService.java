@@ -12,6 +12,7 @@ import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.service.ai.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;
@@ -24,6 +25,7 @@ public class AIBlockService {
     private final AIClient aiClient;
     private final BlockService blockService;
     private final LearningUnitRepository learningUnitRepository;
+    private final BlockRepository blockRepository;
 
     public TheoryBlock generateTheoryBlockFromAI(List<UUID> fileIds, String topic, int position, UUID learningUnitId) {
         String context = loadContext(fileIds);
@@ -52,7 +54,7 @@ public class AIBlockService {
             throw new RuntimeException("Failed to parse AI response into MultipleChoiceBlock", e);
         }
 
-        return blockService.updateMultipleChoiceBlock(multipleChoiceBlock);
+        return blockRepository.save(multipleChoiceBlock);
     }
 
 
@@ -70,9 +72,7 @@ public class AIBlockService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse AI response into QuestionBlock", e);
         }
-
-        return blockService.updateQuestionBlock(questionBlock);
-
+        return blockRepository.save(questionBlock);
     }
 
     private String loadContext(List<UUID> fileIds) {

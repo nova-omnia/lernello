@@ -3,7 +3,6 @@ package ch.nova_omnia.lernello.api;
 import java.util.List;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.mapper.user.RoleMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class UserRestController {
     private final UserService userService;
-    private final RoleMapper roleMapper;
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;

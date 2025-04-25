@@ -48,7 +48,7 @@
 		</div>
 		<a
 			class="btn preset-outlined-surface-500 h-fit"
-			href={`/learningkit/${learningKitId}/create-trainee?learningKitId=${learningKitId}`}
+			href={`/learningkit/${learningKitId}/create-trainee`}
 		>
 			<UserPlus size={24} />
 			{$_('addTrainee')}

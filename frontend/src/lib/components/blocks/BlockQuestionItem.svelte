@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 
-
 	const { block } = $props();
 
 	let question = block.question;
 	let expectedAnswer = block.expectedAnswer;
-
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">

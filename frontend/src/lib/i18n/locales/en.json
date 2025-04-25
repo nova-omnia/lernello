@@ -32,7 +32,7 @@
 	"changePassword.description": "Please change your generated password to your own password.",
 	"changePassword.button": "Change Password",
 	"dialog.creationWizardTitle": "Creation Wizard",
-	"dialog.enterTopicPlaceholder": "Enter the Topic here...",
+	"dialog.enterTopicPlaceholder": "Enter topic for AI content...",
 	"dialog.selectFilesPlaceholder": "Select files...",
 	"error.title": "Error",
 	"error.description": "Uh oh, something went wrong. ({status})",

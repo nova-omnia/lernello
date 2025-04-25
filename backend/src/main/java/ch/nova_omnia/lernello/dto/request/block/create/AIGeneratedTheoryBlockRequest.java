@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record AIGeneratedBlockRequest(
-                                      @NotNull List<UUID> fileIds,
+public record AIGeneratedTheoryBlockRequest(
                                       @NotBlank String topic,
-                                      int position
+                                      List<UUID> files
 ) {
 }

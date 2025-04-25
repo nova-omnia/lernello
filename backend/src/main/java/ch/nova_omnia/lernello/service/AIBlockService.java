@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.nova_omnia.lernello.model.data.LearningUnit;
+import org.springframework.stereotype.Service;
+
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
-import ch.nova_omnia.lernello.repository.LearningUnitRepository;
+import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.ai.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +23,16 @@ public class AIBlockService {
     private final FileService fileService;
     private final AIClient aiClient;
     private final BlockService blockService;
-    private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
 
-    public TheoryBlock generateTheoryBlockFromAI(List<UUID> fileIds, String topic, int position, UUID learningUnitId) {
+    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic,UUID blockId) {
+        TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
+
         String context = loadContext(fileIds);
         String generatedContent = aiClient.generateTheoryBlock(context, topic);
 
-        LearningUnit unit = learningUnitRepository.findById(learningUnitId).orElseThrow(() -> new RuntimeException());
-
-        TheoryBlock block = new TheoryBlock(topic, position, unit, generatedContent);
-        blockService.createBlock(block, learningUnitId);
+        block.setContent(generatedContent);
+        blockRepository.save(block);
         return block;
     }
 

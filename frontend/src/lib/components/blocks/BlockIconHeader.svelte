@@ -10,13 +10,18 @@
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
-		learningUnitId: string;
+		learningUnitId?: string;
 	}
-	const { block, learningUnitId }: BlockIconHeaderProps = $props();
+	const { block, learningUnitId: learningUnitId }: BlockIconHeaderProps = $props();
 
 	const getLearningKit = createQuery({
 		queryKey: ['learning-unit', learningUnitId],
-		queryFn: () => api(fetch).req(getLearningUnitById, null, learningUnitId).parse()
+		enabled: !!learningUnitId,
+		queryFn: () => {
+			if (learningUnitId) {
+				return api(fetch).req(getLearningUnitById, null, learningUnitId).parse();
+			}
+		}
 	});
 
 	let theoryBlocks: BlockRes[] = $state([]);
@@ -41,8 +46,8 @@
 	}
 
 	$effect(() => {
-		if ($getLearningKit?.data) {
-			theoryBlocks = $getLearningKit.data.blocks.filter((b: BlockRes) => b.type === 'THEORY');
+		if ($getLearningKit.isSuccess && $getLearningKit?.data) {
+			theoryBlocks = $getLearningKit?.data.blocks.filter((b: BlockRes) => b.type === 'THEORY');
 		}
 	});
 </script>
@@ -52,17 +57,19 @@
 	<h3 class="font-medium">{block.name}</h3>
 	<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
 
-	<div
-		class="text-primary-400 hover:text-primary-500 cursor-pointer"
-		title={$_('block.generateAi')}
-	>
-		<WandSparkles
-			onclick={(e) => {
-				e.preventDefault();
-				showCreationDialog = true;
-			}}
-		/>
-	</div>
+	{#if learningUnitId}
+		<div
+			class="text-primary-400 hover:text-primary-500 cursor-pointer"
+			title={$_('block.generateAi')}
+		>
+			<WandSparkles
+				onclick={(e) => {
+					e.preventDefault();
+					showCreationDialog = true;
+				}}
+			/>
+		</div>
+	{/if}
 </div>
 
 {#if block.type === 'MULTIPLE_CHOICE'}

@@ -11,7 +11,7 @@
 
 	interface BlockItemProps {
 		block: BlockRes;
-		learningUnitId: string
+		learningUnitId: string;
 	}
 
 	const { block, learningUnitId }: BlockItemProps = $props();
@@ -38,7 +38,7 @@
 <div
 	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} {learningUnitId}/>
+	<BlockIconHeader {block} {learningUnitId} />
 	<Component />
 
 	<button

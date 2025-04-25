@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
-import { BlockActionSchema } from '$lib/schemas/request/BlockAction';
+import { BlockActionSchema } from '$lib/schemas/request/block/BlockAction';
 import { createEndpoint } from '../createEndpoint';
 import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUnit';
 

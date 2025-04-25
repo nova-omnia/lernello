@@ -3,8 +3,8 @@ import {
 	ActionType,
 	type BlockAction,
 	type BlockActionWithQuickAdd
-} from '$lib/schemas/request/BlockAction';
-import { BlockType } from '$lib/schemas/request/CreateBlock';
+} from '$lib/schemas/request/block/BlockAction';
+import { BlockType } from '$lib/schemas/request/block/CreateBlock';
 
 let currTempId = 0;
 function getTempId() {

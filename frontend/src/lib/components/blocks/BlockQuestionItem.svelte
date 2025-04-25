@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	let question = $state('');
-	let expectedAnswer = $state('');
+
+	const { block } = $props();
+
+	let question = $state(block.question);
+	let expectedAnswer = $state(block.expectedAnswer);
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">

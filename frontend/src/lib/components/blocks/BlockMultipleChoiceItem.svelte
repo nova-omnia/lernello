@@ -10,28 +10,22 @@
 
 	const { blockState }: BlockMultipleChoiceItemProps = $props();
 
-	$effect(() => {
-		question = blockState.type === 'QUESTION' ? blockState.question : '';
-		answers =
-			blockState.type === 'MULTIPLE_CHOICE' && Array.isArray(blockState.possibleAnswers)
-				? blockState.possibleAnswers.map((answer) =>
-						typeof answer === 'string' ? { value: answer, isCorrect: false } : answer
-					)
-				: [
-						{ value: '', isCorrect: false },
-						{ value: '', isCorrect: false }
-					];
-	});
+	let question = $state(
+		blockState.type === 'MULTIPLE_CHOICE' ? blockState.question : ''
+	);
 
-	let question = $state('');
-	let answers = $state<{ value: string; isCorrect: boolean }[]>([
-		{ value: '', isCorrect: false },
-		{ value: '', isCorrect: false }
-	]);
-
-	//TODO: for future use when implementing update action
-	//const possibleAnswers = $derived(answers.map((a) => a.value));
-	//const correctAnswers = $derived(answers.filter((a) => a.isCorrect).map((a) => a.value));
+	let answers = $state<{ value: string; isCorrect: boolean }[]>(
+		blockState.type === 'MULTIPLE_CHOICE' && Array.isArray(blockState.possibleAnswers)
+			? blockState.possibleAnswers.map((a) =>
+				typeof a === 'string'
+					? { value: a, isCorrect: false }
+					: a
+			)
+			: [
+				{ value: '', isCorrect: false },
+				{ value: '', isCorrect: false }
+			]
+	);
 
 	function addAnswerField() {
 		answers = [...answers, { value: '', isCorrect: false }];

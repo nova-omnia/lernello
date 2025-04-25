@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
+	import { _ } from 'svelte-i18n';
 
 	interface ConfirmDialogProps {
 		isOpen?: boolean;
@@ -14,10 +15,10 @@
 
 	const {
 		isOpen = false,
-		title = 'Confirm Action',
-		message = 'Are you sure you want to proceed?',
-		confirmText = 'Confirm',
-		cancelText = 'Cancel',
+		title = $_('dialog.action.title'),
+		message = $_('dialog.action.message'),
+		confirmText = $_('common.confirm'),
+		cancelText = $_('common.cancel'),
 		danger = false,
 		onConfirm,
 		onCancel
@@ -26,28 +27,22 @@
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-screen-sm"
+	contentBase="card bg-surface-100-900 p-8 space-y-4 shadow-xl max-w-xl"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<header class="flex items-center justify-between">
-			<h2 class="h2">{title}</h2>
-		</header>
-
-		<article>
-			<p>{message}</p>
-		</article>
+		<h1 class="preset-typo-headline">{title}</h1>
+		<p>{message}</p>
 
 		<footer class="flex justify-end gap-3 pt-2">
-			<button type="button" class="btn preset-tonal" onclick={onCancel}>
+			<button type="button" class="btn preset-tonal-surface" onclick={onCancel}>
 				{cancelText}
 			</button>
-
 			<button
 				type="button"
-				class="btn"
-				class:preset-tonal-error={danger}
-				class:preset-filled={!danger}
+				class="btn preset-filled"
+				class:preset-filled-error-500={danger}
+				class:preset-filled-primary-500={!danger}
 				onclick={onConfirm}
 			>
 				{confirmText}

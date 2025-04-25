@@ -2,14 +2,14 @@
 	import { _ } from 'svelte-i18n';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { useQueryClient } from '@tanstack/svelte-query';
+	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 
 	let { data } = $props();
-	const client = useQueryClient();
+	const invalidate = useQueryInvalidation();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult(event) {
 			if (event.result.type === 'redirect') {
-				client.invalidateQueries({ queryKey: ['learning-kit', $form.learningKitId] });
+				invalidate(['learning-kit', $form.learningKitId]);
 			}
 		},
 		onError(error) {

@@ -14,6 +14,8 @@
 				return 'block.theoryBlock';
 			case 'MULTIPLE_CHOICE':
 				return 'block.multipleChoiceQuiz';
+			case 'QUESTION':
+				return 'block.questionBlock';
 			default:
 				return 'Unknown Block';
 		}

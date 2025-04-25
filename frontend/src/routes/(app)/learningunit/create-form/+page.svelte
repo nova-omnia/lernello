@@ -27,13 +27,13 @@
 	<h1 class="h1">{$_('learningUnit.createTitle')}</h1>
 
 	<label class="label">
-		<span class="label-text">{$_('form.nameLabel')} </span>
+		<span class="label-text">{$_('form.nameLabel')}</span>
 		<input
 			id="name"
 			type="text"
 			class="input"
 			name="name"
-			placeholder="Learning Kit Name"
+			placeholder={$_('form.nameLabel')}
 			aria-invalid={$errors.name ? 'true' : undefined}
 			bind:value={$form.name}
 			{...$constraints.name}

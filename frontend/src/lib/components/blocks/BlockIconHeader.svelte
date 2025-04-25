@@ -84,4 +84,15 @@
 	/>
 {:else if block.type === 'THEORY'}
 	<!--ToDo: Add Theory Creation Modal-->
+{:else if block.type === 'QUESTION'}
+	<CreateMultipleChoiceModal
+		isOpen={showCreationDialog}
+		onConfirm={handleCreationDialog}
+		onCancel={() => (showCreationDialog = false)}
+		theoryBlocks={theoryBlocks.map((theoryBlock) => ({
+			id: theoryBlock.uuid,
+			title: theoryBlock.name
+		}))}
+	/>
 {/if}
+

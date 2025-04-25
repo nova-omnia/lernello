@@ -2,6 +2,7 @@
 <script lang="ts">
 	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import { generateAITheoryBlock } from '$lib/api/collections/aiBlock.js';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
@@ -10,6 +11,7 @@
 
 	interface AddAITheoryBlockModalProps {
 		isOpen: boolean;
+		blockId: string;
 	}
 
 	let input = $state<string>('');
@@ -20,12 +22,25 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isOpen = $bindable() }: AddAITheoryBlockModalProps = $props();
+	let { isOpen = $bindable(), blockId }: AddAITheoryBlockModalProps = $props();
 
-	const onConfirm = () => {
-		isOpen = false;
-		input = '';
-		selectedFiles = [];
+	const onConfirm = async () => {
+		try {
+			await api(fetch)
+				.req(generateAITheoryBlock, {
+					blockId,
+					topic: input,
+					files: selectedFiles.map((f) => f.uuid)
+				})
+				.parse();
+
+			isOpen = false;
+			input = '';
+			selectedFiles = [];
+		} catch (error) {
+			console.error('Failed to create AI theory block:', error);
+		}
+		console.log('loaded data from AI');
 	};
 
 	const onCancel = () => {

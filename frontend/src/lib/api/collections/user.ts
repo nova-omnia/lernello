@@ -103,7 +103,7 @@ export const editTrainee = createEndpoint({
 
 export const getCurrentRole = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/currentRole`,
+	getPath: () => `${REQUEST_MAPPING}/current-role`,
 	response: {
 		schema: UserRoleSchema,
 		defaultValidate: true

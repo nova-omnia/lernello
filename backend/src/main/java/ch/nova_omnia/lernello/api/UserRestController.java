@@ -104,7 +104,7 @@ public class UserRestController {
         return participantUserMapper.toDTO(trainee);
     }
 
-    @PostMapping("/getCurrentRole")
+    @PostMapping("/current-role")
     @PreAuthorize("hasAuthority('SCOPE_self:read')")
     public @Valid UserRoleDTO getCurrentRole(
                                         @AuthenticationPrincipal UserDetails userDetails

@@ -15,9 +15,9 @@
 	import { PlusCircle } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import { BlockType } from '$lib/schemas/request/CreateBlock';
-	import { ActionType } from '$lib/schemas/request/BlockAction';
-	import { AddBlockActionSchema } from '$lib/schemas/request/BlockAction';
+	import { BlockType } from '$lib/schemas/request/block/CreateBlock';
+	import { ActionType } from '$lib/schemas/request/block/BlockAction';
+	import { AddBlockActionSchema } from '$lib/schemas/request/block/BlockAction';
 
 	interface BlockSelectPopoverProps {
 		index: number;

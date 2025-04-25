@@ -1,6 +1,5 @@
 <!--AITheoryBlock-->
 <script lang="ts">
-	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
 	import { generateAITheoryBlock } from '$lib/api/collections/aiBlock.js';
 	import { getAllFiles } from '$lib/api/collections/file';
@@ -8,6 +7,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { _ } from 'svelte-i18n';
+	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 
 	interface AddAITheoryBlockModalProps {
 		isOpen: boolean;
@@ -79,7 +79,7 @@
 				<div class="mt-1">
 					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
-							<FileDisplay
+							<FileItem
 								File={{ uuid: file.uuid, name: file.label }}
 								onRemoveFile={() => {
 									selectedFiles = selectedFiles.filter((f) => f.uuid !== file.uuid);

@@ -76,21 +76,19 @@
 		bind:value={searchValue}
 		bind:this={inputRef}
 		onfocus={() => (open = true)}
-		class="bg-surface-100-900 w-full rounded border px-3 py-2 outline-none focus:border-transparent focus:shadow-none focus:ring-0 focus:outline-none"
-		aria-label="Search or select"
+		class="input card preset-filled-surface-50-950 border-surface-300-700 w-fill py-3"
 	/>
 
 	{#if open}
-		<div class="bg-surface-100-900 absolute z-10 mt-1 w-full rounded border shadow-lg">
-			<ul class="max-h-60 space-y-1 overflow-auto px-1 py-1">
+		<div class="card bg-surface-50-950 border-surface-500 absolute z-10 mt-1 w-full border">
+			<ul class="max-h-60 space-y-1 overflow-auto p-1">
 				{#each filteredOptions() as option (option.uuid)}
 					<li>
 						<button
 							type="button"
 							onclick={() => selectOption(option.uuid)}
-							class={`hover:bg-surface-200-800 flex w-full items-center justify-between px-3 py-2 text-left focus:outline-none ${
-								isSelected(option.uuid) ? 'bg-surface-200-800' : ''
-							}`}
+							class="card hover:preset-filled-primary-50-950 flex w-full items-center justify-between p-3 text-left"
+							class:preset-filled-surface-100-900={isSelected(option.uuid)}
 						>
 							<div class="grid w-full grid-cols-[300px_auto] items-center">
 								<p>{option.label.split('|')[0]}</p>

@@ -31,8 +31,8 @@
 <div class="flex w-full flex-col gap-4 p-4">
 	<div class="flex w-full justify-between gap-4">
 		<div>
-			<h2 class="preset-typo-subtitle">{$_('common.content')}</h2>
-			<p>{$_('learningKit.content.description')}</p>
+			<h2 class="preset-typo-subtitle">{$_('learningKit.learningUnits')}</h2>
+			<p>{$_('learningKit.learningUnit.description')}</p>
 		</div>
 		<a
 			class="btn preset-outlined-surface-500 h-fit"

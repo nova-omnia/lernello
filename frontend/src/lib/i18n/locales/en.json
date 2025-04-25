@@ -53,7 +53,7 @@
 	"learningunit.details": "Learning Unit Details",
 	"learningunit.reorderBlocks": "Reorder Blocks",
 	"learningKit.name": "LearningKit Name",
-	"learningKit.title": "Learning Kits",
+	"learningKit.title": "Learning Kits: {name}",
 	"learningKit.addNewTrainee": "Add new trainee",
 	"learningKit.content": "The contents of the LearningKit",
 	"learningKit.context.description": "The context provided to the AI assisting tools",

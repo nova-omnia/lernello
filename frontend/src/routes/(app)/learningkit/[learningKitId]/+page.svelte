@@ -20,9 +20,9 @@
 	import { getAllTrainees } from '$lib/api/collections/user';
 	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
+	import PageContainer from '$lib/components/PageContainer.svelte';
 
 	const learningKitId = page.params.learningKitId;
-
 	const invalidate = useQueryInvalidation();
 
 	const learningKitQuery = createQuery({
@@ -74,7 +74,7 @@
 	});
 </script>
 
-{#if $learningKitQuery.status === 'pending'}
+{#snippet learningKitLoading()}
 	<div class="space-y-4 p-5">
 		<p class="placeholder h-8 max-w-64"></p>
 		<p class="placeholder max-w-48"></p>
@@ -83,14 +83,17 @@
 		<p class="placeholder"></p>
 		<p class="placeholder"></p>
 	</div>
+{/snippet}
+
+{#if $learningKitQuery.status === 'pending'}
+	{@render learningKitLoading()}
 {:else if $learningKitQuery.status === 'error'}
 	<ErrorIllustration>{$_('learningKit.error.loadSingle')}</ErrorIllustration>
 {:else}
-	<div class="p-5">
+	<PageContainer title={$_('learningKit.title', { values: { name: $learningKitQuery.data.name } })}>
 		<!--header-->
 		<div class="space-between flex items-start justify-between p-1">
 			<div>
-				<h1 class="h1">{$_('learningKit.title')}: {$learningKitQuery.data.name}</h1>
 				{#if $learningKitQuery.data.description}
 					<h2 class="preset-typo-subtitle">{$learningKitQuery.data.description}</h2>
 				{/if}
@@ -236,42 +239,42 @@
 				>{$_('learningKit.delete')}
 			</button>
 		</div>
-	</div>
 
-	<ConfirmDialog
-		isOpen={showDeleteDialog}
-		title="Confirm Deletion"
-		message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
-		confirmText="Delete"
-		danger={true}
-		onConfirm={() => {
-			$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);
-			showDeleteDialog = false;
-		}}
-		onCancel={() => {
-			showDeleteDialog = false;
-		}}
-	/>
+		<ConfirmDialog
+			isOpen={showDeleteDialog}
+			title="Confirm Deletion"
+			message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
+			confirmText="Delete"
+			danger={true}
+			onConfirm={() => {
+				$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);
+				showDeleteDialog = false;
+			}}
+			onCancel={() => {
+				showDeleteDialog = false;
+			}}
+		/>
 
-	<AddTraineeModal
-		isOpen={showAddTraineeModal}
-		onConfirm={async () => {
-			showAddTraineeModal = false;
+		<AddTraineeModal
+			isOpen={showAddTraineeModal}
+			onConfirm={async () => {
+				showAddTraineeModal = false;
 
-			await invalidate(['trainees-list']);
-			const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
-			const last = updatedTrainees.at(-1);
+				await invalidate(['trainees-list']);
+				const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
+				const last = updatedTrainees.at(-1);
 
-			if (last) {
-				const currentParticipants = $learningKitQuery.data.participants.map((t) => t.uuid);
-				await $updateLearningKitMutation.mutate({
-					id: learningKitId,
-					data: {
-						participants: [...currentParticipants, last.uuid]
-					}
-				});
-			}
-		}}
-		onCancel={() => (showAddTraineeModal = false)}
-	/>
+				if (last) {
+					const currentParticipants = $learningKitQuery.data.participants.map((t) => t.uuid);
+					await $updateLearningKitMutation.mutate({
+						id: learningKitId,
+						data: {
+							participants: [...currentParticipants, last.uuid]
+						}
+					});
+				}
+			}}
+			onCancel={() => (showAddTraineeModal = false)}
+		/>
+	</PageContainer>
 {/if}

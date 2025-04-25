@@ -50,10 +50,6 @@
 	let showCreationDialog = $state(false);
 
 	function handleCreationDialog(selectedBlockId: string) {
-		console.log('Submitting AI generation with', {
-			theoryBlockId: selectedBlockId,
-			multipleChoiceBlockId: block.uuid
-		});
 		showCreationDialog = false;
 		$generateMultipleChoiceMutation.mutate({
 			theoryBlockId: selectedBlockId,

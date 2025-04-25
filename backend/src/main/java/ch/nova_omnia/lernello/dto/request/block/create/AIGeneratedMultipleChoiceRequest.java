@@ -5,8 +5,8 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
 public record AIGeneratedMultipleChoiceRequest(
-                                               @NotNull UUID theoryBlockIUuid,
-                                               @NotNull UUID multipleChoiceBlockUuid
+                                               @NotNull UUID theoryBlockId,
+                                               @NotNull UUID multipleChoiceBlockId
 
 ) {
 }

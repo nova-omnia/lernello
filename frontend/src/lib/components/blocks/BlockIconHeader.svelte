@@ -6,7 +6,9 @@
 	import CreateMultipleChoiceModal from '../dialogs/CreateMultipleChoiceModal.svelte';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { createMutation, createQuery } from '@tanstack/svelte-query';
+	import { generateMultipleChoice } from '$lib/api/collections/aiGeneration';
+	import type { AIGeneratedMultipleChoice } from '$lib/schemas/request/AIGeneratedMutipleChoice';
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
@@ -21,6 +23,12 @@
 			if (learningUnitId) {
 				return api(fetch).req(getLearningUnitById, null, learningUnitId).parse();
 			}
+		}
+	});
+
+	const generateMultipleChoiceMutation = createMutation({
+		mutationFn: (payload: AIGeneratedMultipleChoice) => {
+			return api(fetch).req(generateMultipleChoice, payload).parse();
 		}
 	});
 
@@ -41,8 +49,16 @@
 
 	let showCreationDialog = $state(false);
 
-	function handleCreationDialog() {
+	function handleCreationDialog(selectedBlockId: string) {
+		console.log('Submitting AI generation with', {
+			theoryBlockId: selectedBlockId,
+			multipleChoiceBlockId: block.uuid
+		});
 		showCreationDialog = false;
+		$generateMultipleChoiceMutation.mutate({
+			theoryBlockId: selectedBlockId,
+			multipleChoiceBlockId: block.uuid
+		});
 	}
 
 	$effect(() => {
@@ -75,7 +91,7 @@
 {#if block.type === 'MULTIPLE_CHOICE'}
 	<CreateMultipleChoiceModal
 		isOpen={showCreationDialog}
-		onConfirm={handleCreationDialog}
+		onConfirm={(selectedBlockId) => handleCreationDialog(selectedBlockId)}
 		onCancel={() => (showCreationDialog = false)}
 		theoryBlocks={theoryBlocks.map((theoryBlock) => ({
 			id: theoryBlock.uuid,

@@ -104,7 +104,7 @@
 
 			<button type="button" class="btn preset-outlined-surface-500 rounded-full">
 				<Settings />
-				{$_('button.edit')}
+				{$_('common.edit')}
 			</button>
 		</div>
 

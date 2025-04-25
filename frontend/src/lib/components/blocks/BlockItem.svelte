@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
 	import MultipleChoiceBlockComponent from './BlockMultipleChoiceItem.svelte';
+	import QuestionBlockComponent from './BlockQuestionItem.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -15,8 +16,13 @@
 
 	const { block, learningUnitId }: BlockItemProps = $props();
 
-	// TODO: Improve mapping similar to BlockIcon.svelte
-	let Component = block.type === 'THEORY' ? TheoryBlockComponent : MultipleChoiceBlockComponent;
+	const componentMap = {
+		THEORY: TheoryBlockComponent,
+		QUESTION: QuestionBlockComponent,
+		MULTIPLE_CHOICE: MultipleChoiceBlockComponent
+	};
+
+	let Component = componentMap[block.type];
 
 	let isConfirmDialogOpen: boolean = $state(false);
 

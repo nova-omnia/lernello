@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	let question = $state('');
-	let expectedAnswer = $state('');
+
 
 	const { block } = $props();
+
+	let question = block.question;
+	let expectedAnswer = block.expectedAnswer;
 
 </script>
 

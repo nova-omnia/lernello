@@ -1,12 +1,12 @@
 <!--AITheoryBlock-->
 <script lang="ts">
-	import { Modal } from '@skeletonlabs/skeleton-svelte';
+	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { _ } from 'svelte-i18n';
+	import { getAllFiles } from '$lib/api/collections/file';
+	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
-	import { getAllFiles } from '$lib/api/collections/file';
-	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
+	import { _ } from 'svelte-i18n';
 
 	interface AddAITheoryBlockModalProps {
 		isOpen: boolean;
@@ -77,20 +77,10 @@
 		</div>
 
 		<div class="flex justify-end space-x-2">
-			<button
-				class="btn btn-primary"
-				onclick={() => {
-					onCancel();
-				}}
-			>
+			<button class="btn btn-primary" onclick={onCancel}>
 				{$_('dialog.cancelButton')}
 			</button>
-			<button
-				class="btn btn-primary"
-				onclick={() => {
-					onConfirm();
-				}}
-			>
+			<button class="btn btn-primary" onclick={onConfirm}>
 				{$_('dialog.saveButton')}
 			</button>
 		</div>

@@ -39,6 +39,7 @@
 .preset-typo-headline,
 .preset-typo-title,
 .preset-typo-subtitle,
+.preset-typo-subtitle-navigation,
 .preset-typo-caption {
 	color: var(--heading-font-color);
 	font-family: var(--heading-font-family);
@@ -66,6 +67,15 @@
 	font-size: var(--text-base);
 	font-family: var(--heading-font-family);
 	color: var(--color-surface-700-300);
+	@variant lg {
+		font-size: var(--text-xl);
+	}
+}
+
+.preset-typo-subtitle-navigation {
+	font-size: var(--text-base);
+	font-family: var(--heading-font-family);
+	color: var(--color-primary-500);
 	@variant lg {
 		font-size: var(--text-xl);
 	}

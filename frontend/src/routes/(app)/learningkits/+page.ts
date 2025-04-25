@@ -6,7 +6,7 @@ export const load: PageLoad = async ({ fetch, parent }) => {
 	const { queryClient } = await parent();
 
 	await queryClient.prefetchQuery({
-		queryKey: ['latest-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
+		queryKey: ['all-learning-kits-list'],
+		queryFn: () => api(fetch).req(getLearningKits, null, { page: 0, size: 99999 }).parse()
 	});
 };

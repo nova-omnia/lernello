@@ -8,7 +8,7 @@
 	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import { ChevronRight } from 'lucide-svelte';
-	import PageContainer from "$lib/components/PageContainer.svelte";
+	import PageContainer from '$lib/components/PageContainer.svelte';
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],

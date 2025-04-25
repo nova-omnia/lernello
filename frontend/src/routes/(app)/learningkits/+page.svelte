@@ -7,7 +7,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKits } from '$lib/api/collections/learningKit';
-	import PageContainer from "$lib/components/PageContainer.svelte";
+	import PageContainer from '$lib/components/PageContainer.svelte';
 
 	const kitsQuery = createQuery({
 		queryKey: ['all-learning-kits-list'],

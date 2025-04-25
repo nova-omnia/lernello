@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Clock, Settings } from 'lucide-svelte';
+	import { Clock, Settings, Trash } from 'lucide-svelte';
 	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -49,30 +49,6 @@
 	</div>
 {/snippet}
 
-{#snippet header()}
-	<div class="flex-col">
-		<div class="flex w-full justify-between gap-4">
-			<div>
-				<h1 class="preset-typo-headline">
-					{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
-				</h1>
-				{#if $learningKitQuery.data?.deadlineDate}
-					<p class="flex items-center gap-2">
-						<Clock size={20} />
-						{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
-					</p>
-				{/if}
-			</div>
-			<button type="button" class="btn preset-outlined-surface-500 h-fit py-4">
-				<Settings size={20} />
-			</button>
-		</div>
-		{#if $learningKitQuery.data?.description}
-			<p>{$learningKitQuery.data.description}</p>
-		{/if}
-	</div>
-{/snippet}
-
 {#if $learningKitQuery.status === 'pending'}
 	{@render learningKitLoading()}
 {:else if $learningKitQuery.status === 'error'}
@@ -80,25 +56,45 @@
 {:else}
 	<PageContainer>
 		<div class="flex flex-col gap-8">
-			{@render header()}
+			<div class="flex-col">
+				<div class="flex w-full justify-between gap-4">
+					<div>
+						<h1 class="preset-typo-headline">
+							{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
+						</h1>
+						{#if $learningKitQuery.data?.deadlineDate}
+							<p class="flex items-center gap-2">
+								<Clock size={20} />
+								{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
+							</p>
+						{/if}
+					</div>
+					<div class="flex h-10 gap-8">
+						<div class="flex gap-2">
+							<button type="button" class="btn preset-filled-primary-500 h-full">
+								{$_('learningKit.publish')}
+							</button>
+							<button type="button" class="btn preset-outlined-surface-500 h-full">
+								<Settings size={20} />
+							</button>
+						</div>
+						<button
+							onclick={(e) => {
+								e.preventDefault();
+								showDeleteDialog = true;
+							}}
+							type="button"
+							class="btn preset-filled-error-500 h-full"
+						>
+							<Trash size={20} />
+						</button>
+					</div>
+				</div>
+				{#if $learningKitQuery.data?.description}
+					<p>{$learningKitQuery.data.description}</p>
+				{/if}
+			</div>
 			<LearningKitTabs learningKit={$learningKitQuery.data}></LearningKitTabs>
-		</div>
-
-		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
-		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
-		<div class="flex gap-2">
-			<button type="button" class="btn preset-filled-primary-500 rounded-full"
-				>{$_('learningKit.publish')}</button
-			>
-			<button
-				onclick={(e) => {
-					e.preventDefault();
-					showDeleteDialog = true;
-				}}
-				type="button"
-				class="btn preset-filled-error-500 rounded-full"
-				>{$_('learningKit.delete')}
-			</button>
 		</div>
 	</PageContainer>
 

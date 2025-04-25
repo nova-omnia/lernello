@@ -55,7 +55,6 @@
 	"learningKit.trainees.description": "The trainees that have access to the LearningKit",
 	"learningKit.context.description": "The context provided to the AI assisting tools",
 	"learningKit.addFile": "Add File",
-	"learningKit.delete": "Delete learning kit",
 	"learningKit.publish": "Publish",
 	"learningUnit.create": "Create Learning Unit",
 	"learningKit.create": "Create LearningKit",

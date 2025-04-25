@@ -7,6 +7,7 @@
 	import { X } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { _ } from 'svelte-i18n';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	interface BlockItemProps {
 		block: BlockRes;
@@ -47,29 +48,40 @@
 	}
 
 	function updateBlock() {
-		if (blockState.type === 'THEORY') {
-			queueBlockAction({
-				type: 'UPDATE_BLOCK',
-				blockId: blockState.uuid,
-				data: {
-					type: blockState.type,
-					name: blockState.name,
-					content: blockState.content
-				}
-			});
-		}
-		if (blockState.type === 'MULTIPLE_CHOICE') {
-			queueBlockAction({
-				type: 'UPDATE_BLOCK',
-				blockId: blockState.uuid,
-				data: {
-					type: blockState.type,
-					name: blockState.name,
-					question: blockState.question,
-					possibleAnswers: blockState.possibleAnswers,
-					correctAnswers: blockState.correctAnswers
-				}
-			});
+		switch (blockState.type) {
+			case 'THEORY':
+				queueBlockAction({
+					type: 'UPDATE_BLOCK',
+					blockId: blockState.uuid,
+					data: {
+						type: blockState.type,
+						name: blockState.name,
+						content: blockState.content
+					}
+				});
+				break;
+
+			case 'MULTIPLE_CHOICE':
+				queueBlockAction({
+					type: 'UPDATE_BLOCK',
+					blockId: blockState.uuid,
+					data: {
+						type: blockState.type,
+						name: blockState.name,
+						question: blockState.question,
+						possibleAnswers: blockState.possibleAnswers,
+						correctAnswers: blockState.correctAnswers
+					}
+				});
+				break;
+
+			default:
+				console.warn(`Unhandled block type: ${blockState.type}`);
+				toaster.create({
+					title: $_('error.title'),
+					description: $_('error.description', { values: { status: 'unknown' } }),
+					type: 'error'
+				});
 		}
 	}
 </script>

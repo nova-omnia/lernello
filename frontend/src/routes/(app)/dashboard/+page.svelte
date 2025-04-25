@@ -5,10 +5,10 @@
 	import { api } from '$lib/api/apiClient.js';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
-	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import { ChevronRight } from 'lucide-svelte';
 	import PageContainer from '$lib/components/PageContainer.svelte';
+	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
@@ -43,7 +43,7 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data.content as kit (kit.uuid)}
-						<LearningKit title={kit.name} uuid={kit.uuid} />
+						<LearningKitItem title={kit.name} uuid={kit.uuid} />
 					{/each}
 					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}

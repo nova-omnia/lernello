@@ -3,11 +3,11 @@
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
-	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKits } from '$lib/api/collections/learningKit';
 	import PageContainer from '$lib/components/PageContainer.svelte';
+	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 
 	const kitsQuery = createQuery({
 		queryKey: ['all-learning-kits-list'],
@@ -26,7 +26,7 @@
 				<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 			{:else}
 				{#each $kitsQuery.data.content as kit (kit.uuid)}
-					<LearningKit title={kit.name} uuid={kit.uuid} />
+					<LearningKitItem title={kit.name} uuid={kit.uuid} />
 				{/each}
 				<AddLearningKit title={$_('learningKit.create')} />
 			{/if}

@@ -9,6 +9,8 @@
 		{ value: '', isCorrect: false }
 	]);
 
+	const { block } = $props();
+
 	//TODO: for future use when implementing update action
 	//const possibleAnswers = $derived(answers.map((a) => a.value));
 	//const correctAnswers = $derived(answers.filter((a) => a.isCorrect).map((a) => a.value));

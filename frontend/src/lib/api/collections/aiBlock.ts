@@ -1,12 +1,13 @@
 import { GenerateAITheoryBlockSchema } from "$lib/schemas/request/GenerateAITheoryBlock";
+import { BlockResSchema } from "$lib/schemas/response/BlockRes";
 import { createEndpoint } from "../createEndpoint";
 
-const REQUEST_MAPPING = '/api/ai-blocks';
+const REQUEST_MAPPING = '/api/ai-block';
 export const generateAITheoryBlock = createEndpoint({
     method: 'POST',
-    getPath: () => `${REQUEST_MAPPING}/`,
+    getPath: () => `${REQUEST_MAPPING}/theoryBlock`,
     response: {
-        schema: GenerateAITheoryBlockSchema,
+        schema: BlockResSchema,
         defaultValidate: true
     },
     payload: {

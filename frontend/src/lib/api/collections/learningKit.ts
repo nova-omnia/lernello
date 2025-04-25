@@ -1,6 +1,6 @@
 import { CreateLearningKitSchema } from '$lib/schemas/request/CreateLearningKit';
 import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
-import { LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
+import { LearningKitPageSchema, LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -32,11 +32,11 @@ export const deleteLearningKit = createEndpoint({
 	}
 });
 
-export const getAllLearningKits = createEndpoint({
+export const getLearningKits = createEndpoint({
 	method: 'GET',
-	getPath: () => `${REQUEST_MAPPING}/`,
+	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/?page=${page}&size=${size}`,
 	response: {
-		schema: LearningKitResSchema.array(),
+		schema: LearningKitPageSchema,
 		defaultValidate: true
 	},
 	payload: {

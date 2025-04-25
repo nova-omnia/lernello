@@ -8,7 +8,6 @@
 	interface TextEditorProps {
 		content: string;
 	}
-
 	let { content = $bindable() }: TextEditorProps = $props();
 
 	const Tab = {

@@ -10,7 +10,6 @@
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 
-	const { data } = $props();
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
 		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
@@ -46,7 +45,7 @@
 					{#each $kitsQuery.data.content as kit (kit.uuid)}
 						<LearningKitItem title={kit.name} uuid={kit.uuid} />
 					{/each}
-					<AddLearningKit {data} title={$_('learningKit.create')} />
+					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}
 			</div>
 		</div>

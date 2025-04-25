@@ -48,7 +48,7 @@
 	<div></div>
 {:else}
 	<a
-		class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center"
+		class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis"
 		href="/learningkit/{uuid}"
 	>
 		<button
@@ -60,7 +60,7 @@
 		>
 			<Trash2 class="h-4 w-4 text-red-500" />
 		</button>
-		<p>{title}</p>
+		<p class="w-48 truncate">{title}</p>
 	</a>
 {/if}
 

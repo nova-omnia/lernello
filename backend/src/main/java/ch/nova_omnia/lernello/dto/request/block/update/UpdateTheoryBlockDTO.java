@@ -12,7 +12,7 @@ public record UpdateTheoryBlockDTO(
                                    @NotNull BlockType type,
                                    @NotNull UUID uuid,
                                    @NotBlank String name,
-                                   @NotBlank String content
+                                   String content
 ) implements UpdateBlockDTO {
     public UpdateTheoryBlockDTO {
         type = THEORY;

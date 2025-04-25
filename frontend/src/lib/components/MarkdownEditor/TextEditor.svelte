@@ -5,11 +5,11 @@
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
 
-	interface MarkdownEditorProps {
+	interface TextEditorProps {
 		content: string;
 	}
 
-	let { content = $bindable() }: MarkdownEditorProps = $props();
+	let { content = $bindable() }: TextEditorProps = $props();
 
 	const Tab = {
 		EDIT: 'edit',

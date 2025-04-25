@@ -35,7 +35,7 @@ public class AIBlockRestController {
     @PostMapping("/question")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public QuestionBlockResDTO generateQuestion(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
-        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.theoryBlockIUuid(), dto.questionBlockUuid());
+        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.theoryBlockId(), dto.questionBlockId());
         return blockMapper.toQuestionBlockResDTO(block);
     }
 

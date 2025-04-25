@@ -5,7 +5,7 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
 public record AIGeneratedQuestionBlockRequest(
-                                              @NotNull UUID theoryBlockIUuid,
-                                              @NotNull UUID questionBlockUuid
+                                              @NotNull UUID theoryBlockId,
+                                              @NotNull UUID questionBlockId
 ) {
 }

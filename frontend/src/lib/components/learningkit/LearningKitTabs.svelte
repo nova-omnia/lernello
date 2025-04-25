@@ -2,8 +2,10 @@
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import { BookText, Files, Users } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
+	import LearningUnitsTab from '$lib/components/learningkit/LearningUnitsTab.svelte';
 
 	let group = $state($_('learningKit.learningUnits'));
+	const { learningKitId, learningKit } = $props();
 </script>
 
 <Tabs value={group} onValueChange={(e) => (group = e.value)}>
@@ -28,8 +30,11 @@
 		</Tabs.Control>
 	{/snippet}
 	{#snippet content()}
-		<Tabs.Panel value={$_('learningKit.learningUnits')}></Tabs.Panel>
-		<Tabs.Panel value={$_('common.trainees')}>Boat Panel - {lorem}</Tabs.Panel>
-		<Tabs.Panel value={$_('sidebar.files')}>Car Panel - {lorem}</Tabs.Panel>
+		<Tabs.Panel value={$_('learningKit.learningUnits')}>
+			<LearningUnitsTab {learningKitId} learningUnits={learningKit.learningUnits}
+			></LearningUnitsTab>
+		</Tabs.Panel>
+		<Tabs.Panel value={$_('common.trainees')}></Tabs.Panel>
+		<Tabs.Panel value={$_('sidebar.files')}></Tabs.Panel>
 	{/snippet}
 </Tabs>

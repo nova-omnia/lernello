@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton-svelte';
-	import ConfirmDialog from '../dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 
 	interface TraineeDisplayProps {
 		user: ParticipantUser;

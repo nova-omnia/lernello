@@ -2,8 +2,8 @@
 	import type { Snippet } from 'svelte';
 
 	interface BaseProps {
-		title: string;
-		description?: string;
+		title?: string;
+		description?: string | null;
 		subtitle?: string;
 		centered?: boolean;
 		children: Snippet<[]>;
@@ -13,9 +13,11 @@
 </script>
 
 <div class="space-y-4 p-4" class:mx-auto={centered} class:max-w-2xl={centered}>
-	<h1 class="preset-typo-headline">{title}</h1>
+	{#if title}
+		<h1 class="preset-typo-headline">{title}</h1>
+	{/if}
 	{#if description}
-		<p class="preset-typo-description">{description}</p>
+		<p>{description}</p>
 	{/if}
 	{#if subtitle}
 		<h2 class="preset-typo-subtitle">{subtitle}</h2>

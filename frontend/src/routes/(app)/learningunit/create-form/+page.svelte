@@ -44,7 +44,6 @@
 		<input type="hidden" name="learningKitId" bind:value={$form.learningKitId} />
 	</label>
 
-	<button class="btn preset-filled-primary-400-600 w-full">{$_('learningUnit.createButton')}</button
-	>
+	<button class="btn preset-filled-primary-400-600 w-full">{$_('learningUnit.create')}</button>
 	<SuperDebug data={$form} />
 </form>

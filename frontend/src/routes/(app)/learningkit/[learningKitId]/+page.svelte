@@ -1,16 +1,12 @@
 <script lang="ts">
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { Clock, Plus, Settings, UserPlus } from 'lucide-svelte';
-	import LearningUnitDisplay from '$lib/components/displays/LearningUnitDisplay.svelte';
-	import TraineeDisplay from '$lib/components/displays/TraineeDisplay.svelte';
+	import { Clock, Settings, UserPlus } from 'lucide-svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
-	import FileDisplay from '$lib/components/displays/FileDisplay.svelte';
 	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
 	import { updateLearningKit } from '$lib/api/collections/learningKit.js';
-	import { deleteLearningUnit } from '$lib/api/collections/learningUnit.js';
 	import { api } from '$lib/api/apiClient.js';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/state';
@@ -21,6 +17,9 @@
 	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import PageContainer from '$lib/components/PageContainer.svelte';
+	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
+	import TraineeDisplay from '$lib/components/learningkit/displays/TraineeDisplay.svelte';
+	import FileDisplay from '$lib/components/learningkit/displays/FileDisplay.svelte';
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -44,12 +43,6 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			goto('/dashboard');
-		}
-	});
-	const deleteLearningUnitMutation = createMutation({
-		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
-		onSuccess: () => {
-			invalidate(['learning-kit', learningKitId]);
 		}
 	});
 
@@ -85,55 +78,43 @@
 	</div>
 {/snippet}
 
+{#snippet header()}
+	<div class="flex-col">
+		<div class="flex w-full justify-between gap-4">
+			<div>
+				<h1 class="preset-typo-headline">
+					{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
+				</h1>
+				{#if $learningKitQuery.data?.deadlineDate}
+					<p class="flex items-center gap-2">
+						<Clock size={20} />
+						{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
+					</p>
+				{/if}
+			</div>
+			<button type="button" class="btn preset-outlined-surface-500 h-fit py-4">
+				<Settings size={20} />
+			</button>
+		</div>
+		{#if $learningKitQuery.data?.description}
+			<p>{$learningKitQuery.data.description}</p>
+		{/if}
+	</div>
+{/snippet}
+
 {#if $learningKitQuery.status === 'pending'}
 	{@render learningKitLoading()}
 {:else if $learningKitQuery.status === 'error'}
 	<ErrorIllustration>{$_('learningKit.error.loadSingle')}</ErrorIllustration>
 {:else}
-	<PageContainer title={$_('learningKit.title', { values: { name: $learningKitQuery.data.name } })}>
-		<!--header-->
-		<div class="space-between flex items-start justify-between p-1">
-			<div>
-				{#if $learningKitQuery.data.description}
-					<h2 class="preset-typo-subtitle">{$learningKitQuery.data.description}</h2>
-				{/if}
-				{#if $learningKitQuery.data.deadlineDate}
-					<p class="mt-2 flex items-center">
-						<Clock class="mr-2 inline-block" />
-						{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
-					</p>
-				{/if}
-			</div>
-
-			<button type="button" class="btn preset-outlined-surface-500 rounded-full">
-				<Settings />
-				{$_('common.edit')}
-			</button>
+	<PageContainer>
+		<div class="flex flex-col gap-8">
+			{@render header()}
+			<LearningKitTabs {learningKitId} learningKit={$learningKitQuery.data}></LearningKitTabs>
 		</div>
-
-		<!--content-->
-		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('content')}</p>
-		<p class="mt-5 text-sm">{$_('learningKit.content')}</p>
-		<div class="grid gap-2">
-			{#each $learningKitQuery.data.learningUnits ?? [] as learningUnit (learningUnit.uuid)}
-				<LearningUnitDisplay
-					{learningUnit}
-					onDeleteLearningUnit={() => {
-						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
-					}}
-				/>
-			{/each}
-		</div>
-		<a
-			class="btn preset-outlined-surface-500 w-full"
-			href={`/learningunit/create-form?learningKitId=${$learningKitQuery.data.uuid}`}
-		>
-			<Plus />
-			{$_('learningUnit.create')}
-		</a>
 
 		<!-- trainees -->
-		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('trainee.title')}</p>
+		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('common.trainees')}</p>
 		<button
 			class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center gap-2 rounded-lg border-[1px] p-2 text-center text-base"
 			onclick={() => (showAddTraineeModal = true)}

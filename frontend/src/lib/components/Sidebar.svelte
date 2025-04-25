@@ -73,7 +73,7 @@
 			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
 		{/if}
 		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
-		{@render sidebarItem($_('sidebar.folders'), '/folders', Folder)}
+		{@render sidebarItem($_('common.files'), '/folders', Folder)}
 		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 		{#if sidebarState.isExpanded}
 			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>

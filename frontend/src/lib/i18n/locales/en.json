@@ -11,7 +11,7 @@
 	"button.addSelected": "Add selected",
 	"block.theoryBlock": "Theory Block",
 	"block.multipleChoiceQuiz": "Multiple Choice Quiz",
-	"block.textAnswerQuiz": "Text Answer Quiz",
+	"block.questionBlock": "Question",
 	"dialog.action.title": "Confirm Action",
 	"dialog.action.message": "Are you sure you want to proceed?",
 	"dialog.delete.title": "Confirm Delete",

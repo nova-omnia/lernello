@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	let question = '';
-	let answer = '';
+	let question = $state('');
+	let expectedAnswer = $state('');
+
 </script>
 
-<div class="rounded border border-green-300 bg-green-100 p-4 shadow">
-	<h2 class="text-xl font-bold text-green-800">{$_('block.textAnswerQuiz')}</h2>
+<div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	<input
 		type="text"
 		placeholder={$_('block.textAnswerBlock.question')}
@@ -16,7 +16,7 @@
 		<input
 			type="text"
 			placeholder={$_('block.textAnswerBlock.answer')}
-			bind:value={answer}
+			bind:value={expectedAnswer}
 			class="input w-full border p-2"
 		/>
 	</div>

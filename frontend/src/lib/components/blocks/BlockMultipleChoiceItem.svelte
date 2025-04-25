@@ -9,7 +9,7 @@
 		{ value: '', isCorrect: false }
 	]);
 
-	const { block } = $props();
+	//const { block } = $props();
 
 	//TODO: for future use when implementing update action
 	//const possibleAnswers = $derived(answers.map((a) => a.value));

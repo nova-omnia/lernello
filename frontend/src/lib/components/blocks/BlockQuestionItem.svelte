@@ -2,7 +2,6 @@
 	import { _ } from 'svelte-i18n';
 	let question = $state('');
 	let expectedAnswer = $state('');
-
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">

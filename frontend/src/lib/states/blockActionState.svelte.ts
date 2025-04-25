@@ -71,7 +71,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					possibleAnswers: action.data.possibleAnswers || [],
 					correctAnswers: action.data.correctAnswers || []
 				};
-			} else if(action.data.type === BlockType.Enum.QUESTION){
+			} else if (action.data.type === BlockType.Enum.QUESTION) {
 				newBlock = {
 					type: action.data.type,
 					name: action.data.name,
@@ -143,7 +143,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 					correctAnswers: action.data.correctAnswers || []
 				}
 			};
-		} else if(action.data.type === BlockType.Enum.QUESTION){
+		} else if (action.data.type === BlockType.Enum.QUESTION) {
 			parsedAction = {
 				type: 'ADD_BLOCK',
 				index: action.index,
@@ -156,7 +156,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
 				}
 			};
-		}else {
+		} else {
 			throw new Error('Unsupported block type.');
 		}
 	} else if (action.type === ActionType.Enum.REORDER_BLOCK) {

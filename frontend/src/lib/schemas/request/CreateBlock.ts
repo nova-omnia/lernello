@@ -24,4 +24,4 @@ export const CreateQuestionBlockSchema = z.object({
 	position: z.number().min(0),
 	question: z.string().min(1).optional(),
 	expectedAnswer: z.string().min(1).nullable().optional()
-})
+});

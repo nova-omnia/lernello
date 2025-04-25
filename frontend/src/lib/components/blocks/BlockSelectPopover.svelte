@@ -169,7 +169,7 @@
 						addQuestionBlock();
 					}}
 				>
-					{$_('block.textQuestionQuiz')}
+					{$_('block.questionBlock')}
 				</button>
 			</div>
 			<FloatingArrow bind:ref={elemArrow} context={floating.context} fill="#575969" />

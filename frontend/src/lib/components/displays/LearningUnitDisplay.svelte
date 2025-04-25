@@ -28,7 +28,7 @@
 			href={`/learningunit/${learningUnit.uuid}`}
 			class="btn preset-filled-primary-500 rounded-full"
 		>
-			{$_('button.open')}
+			{$_('common.open')}
 		</a>
 		<button
 			type="button"
@@ -46,7 +46,7 @@
 			}}
 			class="btn preset-filled-error-500 rounded-full"
 		>
-			{$_('button.delete')}
+			{$_('common.delete')}
 		</button>
 	{/snippet}
 </KitContentItem>

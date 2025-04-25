@@ -21,7 +21,7 @@ function buildRequestInit({
 		method,
 		...requestInit,
 		headers: {
-			'Content-Type': 'application/json',
+			...(requestInit?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }), // browser decides the content type for FormData
 			...requestInit?.headers
 		}
 	} satisfies RequestInit;
@@ -72,7 +72,7 @@ export function api(fetchFn: typeof fetch) {
 			method: endpoint.method,
 			requestInit: payload
 				? {
-						body: JSON.stringify(payload)
+						body: payload instanceof FormData ? payload : JSON.stringify(payload)
 					}
 				: undefined
 		});

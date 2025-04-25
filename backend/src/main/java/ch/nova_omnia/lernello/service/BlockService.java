@@ -39,6 +39,10 @@ public class BlockService {
         }
     }
 
+    @Transactional
+    public Block getBlockById(UUID blockId) {
+        return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
+    }
 
     private void rearrangeBlockPosition(int position, UUID learningUnitUuid) {
         List<Block> blocks = blockRepository.findBlocksAsc(learningUnitUuid);

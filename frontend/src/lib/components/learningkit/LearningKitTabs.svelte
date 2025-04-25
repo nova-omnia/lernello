@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
 	import TraineesTab from '$lib/components/learningkit/tab/TraineesTab.svelte';
+	import FilesTab from '$lib/components/learningkit/tab/FilesTab.svelte';
 
 	let group = $state($_('learningKit.learningUnits'));
 
@@ -40,6 +41,8 @@
 			<TraineesTab learningKitId={learningKit.uuid} participants={learningKit.participants}
 			></TraineesTab>
 		</Tabs.Panel>
-		<Tabs.Panel value={$_('sidebar.files')}></Tabs.Panel>
+		<Tabs.Panel value={$_('sidebar.files')}>
+			<FilesTab learningKitId={learningKit.uuid} files={learningKit.files ?? []} />
+		</Tabs.Panel>
 	{/snippet}
 </Tabs>

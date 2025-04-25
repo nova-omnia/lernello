@@ -1,12 +1,6 @@
 <script lang="ts">
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
 	import { Clock, Settings } from 'lucide-svelte';
-	import FileUpload from '$lib/components/FileUpload.svelte';
-	import {
-		deleteLearningKit,
-		getLearningKitById,
-		updateLearningKit
-	} from '$lib/api/collections/learningKit';
+	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
@@ -14,12 +8,9 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
-	import { getAllFiles } from '$lib/api/collections/file';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import PageContainer from '$lib/components/PageContainer.svelte';
-	import FileDisplay from '$lib/components/learningkit/displays/FileDisplay.svelte';
 	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
-	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -44,21 +35,6 @@
 		day: '2-digit',
 		hour: '2-digit',
 		minute: '2-digit'
-	});
-
-	const availableFilesQuery = createQuery({
-		queryKey: ['files-list'],
-		queryFn: () => api(fetch).req(getAllFiles, null).parse()
-	});
-
-	const updateLearningKitMutation = createMutation({
-		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
-			api(fetch).req(updateLearningKit, data, id).parse(),
-		onSuccess: () => {
-			invalidate(['latest-learning-kits-list']);
-			invalidate(['all-learning-kits-list']);
-			invalidate(['learning-kit', learningKitId]);
-		}
 	});
 </script>
 
@@ -108,49 +84,6 @@
 			<LearningKitTabs learningKit={$learningKitQuery.data}></LearningKitTabs>
 		</div>
 
-		<!-- Context -->
-		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('common.context')}</p>
-		<FileUpload />
-		<p class="mt-5 text-sm">{$_('learningKit.context.description')}</p>
-		<div class="flex flex-col gap-2">
-			<MultiSelect
-				options={$availableFilesQuery.data?.map((file) => ({
-					uuid: file.uuid,
-					label: `${file.name}`
-				})) ?? []}
-				selected={$learningKitQuery.data.files?.map((file) => ({
-					//gives a warning when not using ?
-					uuid: file.uuid,
-					label: `${file.name}`
-				}))}
-				onSelect={(options) => {
-					$updateLearningKitMutation.mutate({
-						id: learningKitId,
-						data: {
-							files: options.map((options) => options.uuid)
-						}
-					});
-				}}
-			/>
-
-			{#each $learningKitQuery.data.files ?? [] as file (file.uuid)}
-				<FileDisplay
-					File={file}
-					onRemoveFile={() => {
-						const current = $learningKitQuery.data.files ?? []; //gives a warning when not using ??
-						const updated = current.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
-
-						$updateLearningKitMutation.mutate({
-							id: learningKitId,
-							data: {
-								files: updated
-							}
-						});
-					}}
-				/>
-			{/each}
-		</div>
-
 		<p class="text-primary-500 mt-5 text-sm font-semibold">{$_('learningKit.settings')}</p>
 		<p class="mt-5 text-sm">{$_('learningKit.settings.change')}</p>
 		<div class="flex gap-2">
@@ -167,20 +100,20 @@
 				>{$_('learningKit.delete')}
 			</button>
 		</div>
-
-		<ConfirmDialog
-			isOpen={showDeleteDialog}
-			title="Confirm Deletion"
-			message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
-			confirmText="Delete"
-			danger={true}
-			onConfirm={() => {
-				$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);
-				showDeleteDialog = false;
-			}}
-			onCancel={() => {
-				showDeleteDialog = false;
-			}}
-		/>
 	</PageContainer>
+
+	<ConfirmDialog
+		isOpen={showDeleteDialog}
+		title="Confirm Deletion"
+		message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
+		confirmText="Delete"
+		danger={true}
+		onConfirm={() => {
+			$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);
+			showDeleteDialog = false;
+		}}
+		onCancel={() => {
+			showDeleteDialog = false;
+		}}
+	/>
 {/if}

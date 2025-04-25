@@ -10,13 +10,11 @@
 
 	const { blockState }: BlockMultipleChoiceItemProps = $props();
 
-	const block = blockState;
-
 	$effect(() => {
-		question = block.type === 'QUESTION' ? block.question : '';
+		question = blockState.type === 'QUESTION' ? blockState.question : '';
 		answers =
-			block.type === 'MULTIPLE_CHOICE' && Array.isArray(block.possibleAnswers)
-				? block.possibleAnswers.map((answer) =>
+			blockState.type === 'MULTIPLE_CHOICE' && Array.isArray(blockState.possibleAnswers)
+				? blockState.possibleAnswers.map((answer) =>
 						typeof answer === 'string' ? { value: answer, isCorrect: false } : answer
 					)
 				: [

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const BlockType = z.enum(['THEORY', 'MULTIPLE_CHOICE']);
+export const BlockType = z.enum(['THEORY', 'MULTIPLE_CHOICE', 'QUESTION']);
 
 export const CreateTheoryBlockSchema = z.object({
 	type: z.literal(BlockType.Enum.THEORY),
@@ -16,4 +16,12 @@ export const CreateMultipleChoiceBlockSchema = z.object({
 	question: z.string().min(1),
 	possibleAnswers: z.array(z.string().min(1)),
 	correctAnswers: z.array(z.string().min(1))
+});
+
+export const CreateQuestionBlockSchema = z.object({
+	type: z.literal(BlockType.Enum.QUESTION),
+	name: z.string().min(3).max(40),
+	position: z.number().min(0),
+	question: z.string().min(1).optional(),
+	expectedAnswer: z.string().min(1).nullable().optional()
 });

@@ -46,6 +46,23 @@ public class AIClient {
         return sendRequest(multipleChoicePrompt);
     }
 
+    public String generateQuestionBlock(String theoryBlockContent) {
+        String questionPrompt = """
+                Based on the following theory content, create a question.
+
+                Content:
+                %s
+
+                Your response must be JSON formatted like this:
+                {
+                  "question": "What is ...?",
+                  "expectedAnswers": "The correct answer is ",
+                }
+                """.formatted(theoryBlockContent);
+
+        return sendRequest(questionPrompt);
+    }
+
     private String sendRequest(String prompt) {
         ChatRequest request = new ChatRequest(prompt);
 

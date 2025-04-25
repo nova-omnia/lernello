@@ -26,7 +26,7 @@
 	<p class="text-black-700 ml-3 text-xs font-bold">{user.surname} {user.name}</p>
 	<!-- todo> -->
 	<!-- <button type="button" class="btn preset-outlined-surface-500 bg-gray ml-auto rounded-full p-2"
-		>{$_('button.edit')}</button
+		>{$_('common.edit')}</button
 	>-->
 	<button
 		type="button"
@@ -34,7 +34,7 @@
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;
-		}}>{$_('button.remove')}</button
+		}}>{$_('common.remove')}</button
 	>
 </div>
 

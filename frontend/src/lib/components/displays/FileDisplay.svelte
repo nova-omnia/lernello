@@ -24,6 +24,6 @@
 		}}
 		class="btn preset-filled-error-500 ml-auto rounded-full p-2"
 	>
-		{$_('button.remove')}
+		{$_('common.remove')}
 	</button>
 </div>

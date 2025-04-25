@@ -31,7 +31,7 @@ public class AIBlockRestController {
     @PostMapping("/multiple-choice")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public MultipleChoiceBlockResDTO generateMultipleChoice(@Valid @RequestBody AIGeneratedMultipleChoiceRequest dto) {
-        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockIUuid(), dto.learningUnitId(), dto.multipleChoiceBlockUuid());
+        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockIUuid(), dto.multipleChoiceBlockUuid());
         return blockMapper.toMultipleChoiceBlockResDTO(block);
     }
 

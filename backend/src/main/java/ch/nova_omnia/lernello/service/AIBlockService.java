@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.ai.AIClient;
@@ -34,9 +35,9 @@ public class AIBlockService {
         return block;
     }
 
-    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId, UUID learningUnitId, UUID multipleChoicheBlockUuid) {
+    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId, UUID multipleChoiceBlockUuid) {
         TheoryBlock theoryBlock = (TheoryBlock) blockService.getBlockById(theoryBlockId);
-        MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) blockService.getBlockById(multipleChoicheBlockUuid);
+        MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) blockService.getBlockById(multipleChoiceBlockUuid);
 
         String generatedContent = aiClient.generateMultipleChoiceBlock(theoryBlock.getContent());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -50,7 +51,25 @@ public class AIBlockService {
             throw new RuntimeException("Failed to parse AI response into MultipleChoiceBlock", e);
         }
 
-        return blockService.updateMultipleChoiceBlock(multipleChoiceBlock);
+        return blockRepository.save(multipleChoiceBlock);
+    }
+
+
+    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockIUuid, UUID questionBlockUuid) {
+        TheoryBlock theoryBlock = (TheoryBlock) blockService.getBlockById(theoryBlockIUuid);
+        QuestionBlock questionBlock = (QuestionBlock) blockService.getBlockById(questionBlockUuid);
+
+        String generatedContent = aiClient.generateQuestionBlock(theoryBlock.getContent());
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            QuestionBlock generatedQuestionBlock = objectMapper.readValue(generatedContent, QuestionBlock.class);
+            questionBlock.setQuestion(generatedQuestionBlock.getQuestion());
+            questionBlock.setExpectedAnswer(generatedQuestionBlock.getExpectedAnswer());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse AI response into QuestionBlock", e);
+        }
+        return blockRepository.save(questionBlock);
     }
 
     private String loadContext(List<UUID> fileIds) {

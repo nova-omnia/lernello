@@ -29,7 +29,7 @@
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	<input
 		type="text"
-		placeholder={$_('block.multipleChoiceBlocks.question')}
+		placeholder={$_('common.block.question')}
 		bind:value={question}
 		class="input col-span-12 mb-4 w-full border p-2"
 	/>
@@ -47,7 +47,7 @@
 			</Switch>
 			<input
 				type="text"
-				placeholder={`${$_('block.multipleChoiceBlocks.answer')} ${idx + 1}`}
+				placeholder={`${$_('common.block.answer')} ${idx + 1}`}
 				class="input col-span-11 p-2"
 				bind:value={answer.value}
 			/>

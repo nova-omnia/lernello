@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -64,6 +64,7 @@ public class LearningUnitService {
                 case AddBlockActionDTO addAction -> addBlock(learningUnit, addAction);
                 case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
                 case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
+                case UpdateBlockActionDTO updateAction -> updateBlock(learningUnit, updateAction);
                 default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
             }
         }
@@ -159,6 +160,35 @@ public class LearningUnitService {
         }
 
         blockRepository.flush();
+    }
+
+
+    private void updateBlock(LearningUnit learningUnit, UpdateBlockActionDTO updateAction) {
+        if (updateAction.blockId() == null) {
+            throw new IllegalArgumentException("Block ID cannot be null");
+        } else if (updateAction.blockId().isEmpty()) {
+            throw new IllegalArgumentException("Block ID cannot be empty");
+        }
+
+        Block block = blockRepository.getReferenceById(UUID.fromString(updateAction.blockId()));
+        UpdateBlockDTO updateBlockDTO = updateAction.data();
+
+        switch (updateBlockDTO) {
+            case UpdateTheoryBlockDTO theoryBlockDTO -> {
+                TheoryBlock theoryBlock = (TheoryBlock) block;
+                theoryBlock.setName(theoryBlockDTO.name());
+                theoryBlock.setContent(theoryBlockDTO.content());
+            }
+            case UpdateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> {
+                MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) block;
+                multipleChoiceBlock.setName(multipleChoiceBlockDTO.name());
+                multipleChoiceBlock.setQuestion(multipleChoiceBlockDTO.question());
+                multipleChoiceBlock.setPossibleAnswers(multipleChoiceBlockDTO.possibleAnswers());
+                multipleChoiceBlock.setCorrectAnswers(multipleChoiceBlockDTO.correctAnswers());
+            }
+            case null, default -> throw new IllegalArgumentException("Unknown block type: " + updateAction.type());
+        }
+        blockRepository.saveAndFlush(block);
     }
 
     private LearningUnit getLearningUnit(UUID id) {

@@ -12,7 +12,7 @@
 		async onUpdated({ form }) {
 			if (form.valid && form.message) {
 				localStorage.setItem('lernello_auth_token', JSON.stringify(form.message.tokenInfo));
-				await invalidateAll();
+				await invalidateAll(); // will call load function aka redirect
 			}
 		},
 		onError: (error) => {

@@ -37,7 +37,7 @@ public class AIBlockRestController {
 
     @PostMapping("/theory")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public TheoryBlockResDTO generateTheoryBlock(@Valid @RequestBody AIGeneratedTheoryBlockRequest dto) {
+    public TheoryBlockResDTO generateTheory(@Valid @RequestBody AIGeneratedTheoryBlockRequest dto) {
         TheoryBlock theoryBlock = aiBlockService.generateTheoryBlockAI(dto.files(), dto.topic(), dto.blockId());
         return blockMapper.toTheoryBlockResDTO(theoryBlock);
     }

@@ -39,7 +39,7 @@
 	"form.nameLabel": "Name",
 	"form.optional": "(Optional)",
 	"form.deadlineLabel": "Deadline",
-	"form.emailLabel": "Email",
+	"common.email": "Email",
 	"form.emailPlaceholder": "email",
 	"form.passwordLabel": "Password",
 	"form.passwordPlaceholder": "password",
@@ -67,6 +67,7 @@
 	"learningKit.learningUnits": "Learning Units",
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
 	"learningKit.form.title": "Create a new Learning Kit",
+	"trainee.form.title": "Create a new Trainee",
 	"learningKit.form.description": "Please fill in the details for the new Learning Kit.",
 	"common.trainees": "Trainees",
 	"trainee.access": "These Trainees have access to the course",
@@ -106,6 +107,7 @@
 	"common.surname": "surname",
 	"common.username": "Username",
 	"common.context": "Context",
+	"common.files": "Files",
 	"common.additionalContext": "Additional Context",
 	"common.descriptionPlaceholder": "Description..."
 }

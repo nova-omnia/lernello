@@ -90,7 +90,10 @@
 				{/if}
 			</label>
 		</div>
-		<button class="btn preset-filled-primary-500 w-full">{$_('learningKit.create')}</button>
+		<div class="flex justify-end gap-2">
+			<a class="btn preset-outlined-surface-500" href="/dashboard">{$_('common.cancel')}</a>
+			<button class="btn preset-filled-primary-500">{$_('learningKit.create')}</button>
+		</div>
 		<SuperDebug data={$form} />
 	</form>
 </PageContainer>

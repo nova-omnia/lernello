@@ -6,7 +6,6 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getAllTrainees } from '$lib/api/collections/user';
-	import AddTraineeModal from '$lib/components/dialogs/AddTraineeModal.svelte';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 	import { updateLearningKit } from '$lib/api/collections/learningKit';
@@ -29,7 +28,6 @@
 		queryKey: ['trainees-list'],
 		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
 	});
-	let showAddTraineeModal = $state(false);
 
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
@@ -48,13 +46,13 @@
 			<h2 class="preset-typo-subtitle">{$_('common.trainees')}</h2>
 			<p>{$_('learningKit.trainees.description')}</p>
 		</div>
-		<button
+		<a
 			class="btn preset-outlined-surface-500 h-fit"
-			onclick={() => (showAddTraineeModal = true)}
+			href={`/learningkit/${learningKitId}/create-trainee?learningKitId=${learningKitId}`}
 		>
 			<UserPlus size={24} />
 			{$_('addTrainee')}
-		</button>
+		</a>
 	</div>
 
 	<div class="flex flex-col gap-4">
@@ -95,25 +93,3 @@
 		</div>
 	</div>
 </div>
-
-<AddTraineeModal
-	isOpen={showAddTraineeModal}
-	onConfirm={async () => {
-		showAddTraineeModal = false;
-
-		invalidate(['trainees-list']);
-		const updatedTrainees = await api(fetch).req(getAllTrainees, null).parse();
-		const last = updatedTrainees.at(-1);
-
-		if (last) {
-			const currentParticipants = participants.map((t) => t.uuid);
-			$updateLearningKitMutation.mutate({
-				id: learningKitId,
-				data: {
-					participants: [...currentParticipants, last.uuid]
-				}
-			});
-		}
-	}}
-	onCancel={() => (showAddTraineeModal = false)}
-/>

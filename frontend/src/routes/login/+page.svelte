@@ -37,12 +37,12 @@
 
 		<div class="space-y-4">
 			<label class="label">
-				<span class="label-text">{$_('form.emailLabel')}</span>
+				<span class="label-text">{$_('common.email')}</span>
 				<input
 					class="input preset-filled-surface-200-800"
 					name="username"
 					type="text"
-					placeholder={$_('form.emailPlaceholder')}
+					placeholder={$_('common.email')}
 					aria-invalid={$errors.username ? 'true' : undefined}
 					bind:value={$form.username}
 					{...$constraints.username}

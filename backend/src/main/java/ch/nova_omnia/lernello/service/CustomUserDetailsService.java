@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         switch (user.getRole()) {
             case INSTRUCTOR -> {
+                scopes.add(new SimpleGrantedAuthority("SCOPE_self:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_folders:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_files:read"));
@@ -65,6 +66,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
             }
             case TRAINEE -> {
+                scopes.add(new SimpleGrantedAuthority("SCOPE_self:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_files:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_blocks:read"));
             }

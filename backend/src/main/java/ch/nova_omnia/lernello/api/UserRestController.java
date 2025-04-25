@@ -3,6 +3,9 @@ package ch.nova_omnia.lernello.api;
 import java.util.List;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.response.user.UserRoleDTO;
+import ch.nova_omnia.lernello.mapper.user.RoleMapper;
+import ch.nova_omnia.lernello.model.data.user.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +28,7 @@ import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
 import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class UserRestController {
     private final UserService userService;
+    private final RoleMapper roleMapper;
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
@@ -98,5 +102,14 @@ public class UserRestController {
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
+    }
+
+    @PostMapping("/getCurrentRole")
+    @PreAuthorize("hasAuthority('SCOPE_self:read')")
+    public @Valid UserRoleDTO getCurrentRole(
+                                        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Role role = userService.getCurrentRole(userDetails.getUsername());
+        return roleMapper.toDTO(role);
     }
 }

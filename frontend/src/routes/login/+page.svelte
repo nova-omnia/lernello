@@ -3,16 +3,16 @@
 	import { _ } from 'svelte-i18n';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { goto } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data } = $props();
 
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		invalidateAll: false, // redirect inside load function would prevent onUpdated from being called
-		onUpdated({ form }) {
+		async onUpdated({ form }) {
 			if (form.valid && form.message) {
 				localStorage.setItem('lernello_auth_token', JSON.stringify(form.message.tokenInfo));
-				goto(form.message.redirectTo);
+				await invalidateAll(); // will call load function aka redirect
 			}
 		},
 		onError: (error) => {

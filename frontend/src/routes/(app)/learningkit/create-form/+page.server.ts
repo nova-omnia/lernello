@@ -20,6 +20,6 @@ export const actions = {
 
 		const learningKit = await api(fetch).req(createLearningKit, form.data).parse();
 
-		return redirect(303, `/learningkit/${learningKit.uuid}`);
+		redirect(303, `/learningkit/${learningKit.uuid}`);
 	})
 } satisfies Actions;

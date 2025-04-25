@@ -7,8 +7,8 @@
 	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
 	import LearningKit from '$lib/components/learningkit/LearningKit.svelte';
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
-	import DashboardBase from '$lib/components/DashboardBase.svelte';
 	import { ChevronRight } from 'lucide-svelte';
+	import PageContainer from "$lib/components/PageContainer.svelte";
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
@@ -16,7 +16,7 @@
 	});
 </script>
 
-<DashboardBase title={$_('dashboard.title')}>
+<PageContainer title={$_('dashboard.title')}>
 	<div class="container flex space-y-4">
 		<div class="container flex-col space-y-2">
 			<a href="/learningkits" class="preset-typo-subtitle-navigation flex w-fit items-center">
@@ -50,4 +50,4 @@
 			</div>
 		</div>
 	</div>
-</DashboardBase>
+</PageContainer>

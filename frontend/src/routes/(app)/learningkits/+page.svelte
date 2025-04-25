@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import DashboardBase from '$lib/components/DashboardBase.svelte';
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
@@ -8,6 +7,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKits } from '$lib/api/collections/learningKit';
+	import PageContainer from "$lib/components/PageContainer.svelte";
 
 	const kitsQuery = createQuery({
 		queryKey: ['all-learning-kits-list'],
@@ -15,7 +15,7 @@
 	});
 </script>
 
-<DashboardBase title={$_('learningKit.title')}>
+<PageContainer title={$_('learningKit.title')}>
 	<div class="container flex space-y-4">
 		<div class="container flex h-36 flex-wrap gap-2">
 			{#if $kitsQuery.status === 'pending'}
@@ -32,4 +32,4 @@
 			{/if}
 		</div>
 	</div>
-</DashboardBase>
+</PageContainer>

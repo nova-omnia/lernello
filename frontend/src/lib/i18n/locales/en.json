@@ -23,7 +23,7 @@
 	"changePassword.button": "Change Password",
 	"dashboard.welcome": "Good Morning!",
 	"dialog.creationWizardTitle": "Creation Wizard",
-	"dialog.enterTopicPlaceholder": "Enter the Topic here...",
+	"dialog.enterTopicPlaceholder": "Enter topic for AI content...",
 	"dialog.selectFilesPlaceholder": "Select files...",
 	"dialog.saveButton": "Save",
 	"dialog.cancelButton": "Cancel",

@@ -10,8 +10,6 @@
 
 	interface AddAITheoryBlockModalProps {
 		isOpen: boolean;
-		onConfirm: () => void;
-		onCancel: () => void;
 	}
 
 	let input = $state<string>('');
@@ -22,8 +20,19 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	const { isOpen = false, onConfirm, onCancel }: AddAITheoryBlockModalProps = $props();
+	let { isOpen = $bindable() }: AddAITheoryBlockModalProps = $props();
 
+	const onConfirm = () => {
+		isOpen = false;
+		input = '';
+		selectedFiles = [];
+	};
+
+	const onCancel = () => {
+		isOpen = false;
+		input = '';
+		selectedFiles = [];
+	};
 </script>
 
 <Modal
@@ -72,8 +81,6 @@
 				class="btn btn-primary"
 				onclick={() => {
 					onCancel();
-					input = '';
-					selectedFiles = [];
 				}}
 			>
 				{$_('dialog.cancelButton')}
@@ -82,8 +89,6 @@
 				class="btn btn-primary"
 				onclick={() => {
 					onConfirm();
-					input = '';
-					selectedFiles = [];
 				}}
 			>
 				{$_('dialog.saveButton')}

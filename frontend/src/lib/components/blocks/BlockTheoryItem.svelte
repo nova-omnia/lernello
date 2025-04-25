@@ -19,8 +19,5 @@
 	</button>
 </div>
 
-<AddAITheoryBlockModal
-	isOpen={showAddTraineeModal}
-	onCancel={() => (showAddTraineeModal = false)}
-	onConfirm={() => (showAddTraineeModal = false)}
-/>
+<AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} />
+

@@ -71,15 +71,15 @@ export const updateLearningKit = createEndpoint({
 	}
 });
 
-export const removeParticipantFromKit = createEndpoint({
-	method: 'DELETE',
-	getPath: (id: string) => `${REQUEST_MAPPING}/participants/${id}`,
+export const updateLearningUnitsOrder = createEndpoint({
+	method: 'PATCH',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/reorder/learning-units`,
 	response: {
-		schema: z.string().uuid(),
-		defaultValidate: false
+		schema: z.void(),
+		defaultValidate: true
 	},
 	payload: {
-		schema: z.string().uuid(),
+		schema: z.array(z.string().uuid()),
 		defaultValidate: false
 	}
 });

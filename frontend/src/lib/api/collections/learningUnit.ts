@@ -56,18 +56,3 @@ export const createLearningUnit = createEndpoint({
 		defaultValidate: false
 	}
 });
-
-export const updateLearningUnitsOrder = createEndpoint({
-	method: 'PATCH',
-	getPath: () => `${REQUEST_MAPPING}/reorder`,
-	response: {
-		schema: z.void(),
-		defaultValidate: true
-	},
-	payload: {
-		schema: z.object({
-			order: z.array(z.string().uuid())
-		}),
-		defaultValidate: false
-	}
-});

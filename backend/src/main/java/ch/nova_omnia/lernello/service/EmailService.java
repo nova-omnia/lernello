@@ -26,7 +26,6 @@ public class EmailService {
      *
      * @param user        The user to whom the invitation is sent.
      * @param learningKit The learning kit for which the invitation is sent.
-     * @return true if the email was sent successfully, false otherwise.
      */
     public void sendLearningKitInvitation(User user, LearningKit learningKit) {
         try {

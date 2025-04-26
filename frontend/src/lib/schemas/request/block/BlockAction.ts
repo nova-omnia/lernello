@@ -2,7 +2,8 @@ import { z } from 'zod';
 import {
 	CreateTheoryBlockSchema,
 	CreateMultipleChoiceBlockSchema,
-	CreateQuestionBlockSchema
+	CreateQuestionBlockSchema,
+	CreateMultimediaBlockSchema
 } from './CreateBlock';
 
 export const ActionType = z.enum(['ADD_BLOCK', 'REORDER_BLOCK', 'REMOVE_BLOCK']);
@@ -17,7 +18,8 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 	data: z.discriminatedUnion('type', [
 		CreateTheoryBlockSchema,
 		CreateMultipleChoiceBlockSchema,
-		CreateQuestionBlockSchema
+		CreateQuestionBlockSchema,
+		CreateMultimediaBlockSchema
 	])
 });
 

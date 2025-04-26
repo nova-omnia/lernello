@@ -25,3 +25,10 @@ export const CreateQuestionBlockSchema = z.object({
 	question: z.string().min(1).optional(),
 	expectedAnswer: z.string().min(1).nullable().optional()
 });
+
+export const CreateMultimediaBlockSchema = z.object({
+	type: z.literal(BlockType.Enum.MULTIMEDIA),
+	name: z.string().min(3).max(40),
+	position: z.number().min(0),
+	content: z.string().min(1).nullable().optional()
+});

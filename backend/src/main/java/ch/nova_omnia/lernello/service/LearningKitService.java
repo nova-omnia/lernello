@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +64,7 @@ public class LearningKitService {
         LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
         ArrayList<User> participants = new ArrayList<>(kit.getParticipants());
         for(User participant : participants) {
-            if (participant.getRole() == User.Role.TRAINEE) {
+            if (participant.getRole() == Role.TRAINEE) {
                 emailService.sendLearningKitInvitation(participant, kit);
             }
         }

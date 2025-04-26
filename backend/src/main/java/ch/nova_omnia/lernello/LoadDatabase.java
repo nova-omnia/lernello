@@ -67,7 +67,6 @@ public class LoadDatabase {
             userRepository.save(frodo);
             log.info("Preloading learning kit");
             learningKitRepository.save(learningKit);
-            learningKit.setParticipants(List.of(max, bruno, leon, pascal, anja, fabian, dani));
             log.info("Preloading learning unit");
             learningUnitRepository.save(learningUnit);
             fileRepository.save(file1);

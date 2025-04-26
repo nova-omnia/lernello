@@ -33,14 +33,14 @@ export const deleteLearningKit = createEndpoint({
 });
 
 export const getLearningKits = createEndpoint({
-	method: 'POST',
+	method: 'GET',
 	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/getList?page=${page}&size=${size}`,
 	response: {
 		schema: LearningKitPageSchema,
 		defaultValidate: true
 	},
 	payload: {
-		schema: z.string().uuid(),
+		schema: z.null(),
 		defaultValidate: false
 	}
 });

@@ -2,6 +2,7 @@ package ch.nova_omnia.lernello.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +38,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), getUserScopes(user)
         );
+    }
+
+    /**
+     * gets the user id by username
+     *
+     * @param username the username of the user to load
+     * @return the user id
+     */
+    public UUID getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User Not Found with username: " + username);
+        }
+        return user.getUuid();
     }
 
     private List<GrantedAuthority> getUserScopes(User user) {

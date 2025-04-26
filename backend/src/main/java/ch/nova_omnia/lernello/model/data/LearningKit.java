@@ -61,7 +61,6 @@ public class LearningKit {
     @Column(name = "deadlineDate")
     private ZonedDateTime deadlineDate;
 
-
     @Column(name = "context")
     @Size(max = 200)
     private String context;

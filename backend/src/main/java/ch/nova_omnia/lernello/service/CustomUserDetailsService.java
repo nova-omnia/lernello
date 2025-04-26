@@ -2,6 +2,7 @@ package ch.nova_omnia.lernello.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +40,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
+    /**
+     * gets the user id by username
+     *
+     * @param username the username of the user to load
+     * @return the user id
+     */
+    public UUID getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User Not Found with username: " + username);
+        }
+        return user.getUuid();
+    }
+
     private List<GrantedAuthority> getUserScopes(User user) {
         List<GrantedAuthority> scopes = new ArrayList<>();
 
@@ -65,6 +80,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
             }
             case TRAINEE -> {
+                scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_folders:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_files:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_blocks:read"));
             }

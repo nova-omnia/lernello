@@ -8,6 +8,7 @@ import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
 import { signin } from '$lib/api/collections/auth';
 import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
 import { api } from '$lib/api/apiClient.js';
+import { getUserInfo } from '$lib/api/collections/user';
 
 export const load = async ({ url }) => {
 	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
@@ -41,6 +42,15 @@ export const actions = {
 			}
 
 			cookies.set('lernello_auth_token', loggedInUser.token, {
+				httpOnly: true,
+				path: '/',
+				maxAge: Math.floor(expiresMs / 1000)
+			});
+
+			const userInfo = await api(fetch).req(getUserInfo, null).parse();
+			const serializedUserInfo = JSON.stringify(userInfo);
+
+			cookies.set('lernello_user', serializedUserInfo, {
 				httpOnly: true,
 				path: '/',
 				maxAge: Math.floor(expiresMs / 1000)

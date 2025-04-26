@@ -8,6 +8,7 @@
 	interface TextEditorProps {
 		content: string;
 	}
+
 	let { content }: TextEditorProps = $props();
 
 	const Tab = {
@@ -45,7 +46,7 @@
 	const throwError = (message: string) => {
 		console.error('Error:', message);
 		toaster.create({
-			title: $_('error.title'),
+			title: $_('common.error.title'),
 			description: message,
 			type: 'error'
 		});

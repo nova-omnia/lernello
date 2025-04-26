@@ -15,9 +15,9 @@
 	import { PlusCircle } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import { BlockType } from '$lib/schemas/request/CreateBlock';
-	import { ActionType } from '$lib/schemas/request/BlockAction';
-	import { AddBlockActionSchema } from '$lib/schemas/request/BlockAction';
+	import { BlockType } from '$lib/schemas/request/block/CreateBlock';
+	import { ActionType } from '$lib/schemas/request/block/BlockAction';
+	import { AddBlockActionSchema } from '$lib/schemas/request/block/BlockAction';
 
 	interface BlockSelectPopoverProps {
 		index: number;
@@ -98,6 +98,24 @@
 		const parsedAction = AddBlockActionSchema.parse(actionData);
 		queueBlockAction(parsedAction);
 	}
+
+	function addQuestionBlock() {
+		const actionData = {
+			type: ActionType.Enum.ADD_BLOCK,
+			blockId: '',
+			index: insertIndex,
+			data: {
+				type: BlockType.Enum.QUESTION,
+				name: 'Question',
+				position: 0,
+				learningUnitId: learningUnitId,
+				question: 'placeholder question?',
+				expectedAnswer: 'placeholder answer'
+			}
+		};
+		const parsedAction = AddBlockActionSchema.parse(actionData);
+		queueBlockAction(parsedAction);
+	}
 </script>
 
 <div>
@@ -148,13 +166,10 @@
 					type="button"
 					class="btn preset-filled-primary-500 block w-full"
 					onclick={() => {
-						//TODO: Implement Text Answer Quiz
-						alert(
-							'Text Answer Quiz is not implemented yet. Please use the Multiple Choice Quiz for now.'
-						);
+						addQuestionBlock();
 					}}
 				>
-					{$_('block.textAnswerQuiz')}
+					{$_('block.questionBlock')}
 				</button>
 			</div>
 			<FloatingArrow bind:ref={elemArrow} context={floating.context} fill="#575969" />

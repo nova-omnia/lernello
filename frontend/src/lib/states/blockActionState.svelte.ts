@@ -3,8 +3,8 @@ import {
 	ActionType,
 	type BlockAction,
 	type BlockActionWithQuickAdd
-} from '$lib/schemas/request/BlockAction';
-import { BlockType } from '$lib/schemas/request/CreateBlock';
+} from '$lib/schemas/request/block/BlockAction';
+import { BlockType } from '$lib/schemas/request/block/CreateBlock';
 
 let currTempId = 0;
 function getTempId() {
@@ -71,6 +71,15 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					possibleAnswers: action.data.possibleAnswers || [],
 					correctAnswers: action.data.correctAnswers || []
 				};
+			} else if (action.data.type === BlockType.Enum.QUESTION) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0,
+					question: action.data.question || 'placeholder question',
+					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
+				};
 			} else {
 				throw new Error('Unsupported block type.');
 			}
@@ -132,6 +141,19 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 					question: action.data.question || 'placeholder question',
 					possibleAnswers: action.data.possibleAnswers || [],
 					correctAnswers: action.data.correctAnswers || []
+				}
+			};
+		} else if (action.data.type === BlockType.Enum.QUESTION) {
+			parsedAction = {
+				type: 'ADD_BLOCK',
+				index: action.index,
+				blockId: getTempId(),
+				data: {
+					type: action.data.type,
+					name: action.data.name,
+					position: action.data.position,
+					question: action.data.question || 'placeholder question',
+					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
 				}
 			};
 		} else {

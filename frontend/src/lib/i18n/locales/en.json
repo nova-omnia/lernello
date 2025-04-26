@@ -116,5 +116,9 @@
 	"sidebar.toggleSidebar": "Toggle Sidebar",
 	"trainee.access": "These Trainees have access to the course",
 	"trainee.add": "Manage Trainees",
-	"trainee.form.title": "Create a new Trainee"
+	"trainee.form.title": "Create a new Trainee",
+	"files.upload.uploading": "Uploading...",
+	"files.upload.uploading.description": "File is being uploaded",
+	"files.upload.reject.title": "File rejected",
+	"files.upload.reject.description": "File rejected ({reason})"
 }

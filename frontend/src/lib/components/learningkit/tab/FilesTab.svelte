@@ -48,7 +48,16 @@
 			<h2 class="preset-typo-subtitle">{$_('common.files')}</h2>
 			<p>{$_('learningKit.context.description')}</p>
 		</div>
-		<FileUpload />
+		<FileUpload
+			onFileUploaded={(fileInfo) => {
+				$updateLearningKitMutation.mutate({
+					id: learningKitId,
+					data: {
+						files: [...files.map((file) => file.uuid), fileInfo.uuid]
+					}
+				});
+			}}
+		/>
 	</div>
 	<div class="flex flex-col gap-4">
 		<MultiSelect

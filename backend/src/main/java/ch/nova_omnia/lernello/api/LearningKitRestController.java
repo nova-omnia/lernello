@@ -72,7 +72,7 @@ public class LearningKitRestController {
         return id;
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/publish/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public UUID publishLearningKit(@PathVariable UUID id) {
         learningKitService.publishLearningKit(id);

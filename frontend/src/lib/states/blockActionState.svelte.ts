@@ -2,7 +2,8 @@ import type { BlockRes } from '$lib/schemas/response/BlockRes';
 import {
 	ActionType,
 	type BlockAction,
-	type BlockActionWithQuickAdd
+	type BlockActionWithQuickAdd,
+	type UpdateBlockAction
 } from '$lib/schemas/request/block/BlockAction';
 import { BlockType } from '$lib/schemas/request/block/CreateBlock';
 
@@ -106,6 +107,26 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			break;
 		}
 
+		case 'UPDATE_BLOCK': {
+			return blocks.map((block) => {
+				if (block.uuid === action.blockId) {
+					return {
+						...block,
+						...(action.content !== undefined && { content: action.content }),
+						...(action.question !== undefined && { question: action.question }),
+						...(action.expectedAnswer !== undefined && { expectedAnswer: action.expectedAnswer }),
+						...(action.possibleAnswers !== undefined && {
+							possibleAnswers: action.possibleAnswers
+						}),
+						...(action.correctAnswers !== undefined && {
+							correctAnswers: action.correctAnswers
+						})
+					};
+				}
+				return block;
+			});
+		}
+
 		default:
 			throw new Error(`Unknown action type`);
 	}
@@ -113,7 +134,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	return blocks;
 }
 
-export function queueBlockAction(action: BlockActionWithQuickAdd) {
+export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAction) {
 	let parsedAction: BlockAction;
 
 	if (action.type === ActionType.Enum.ADD_BLOCK) {
@@ -164,6 +185,16 @@ export function queueBlockAction(action: BlockActionWithQuickAdd) {
 			type: 'REORDER_BLOCK',
 			blockId: action.blockId,
 			newIndex: action.newIndex
+		};
+	} else if (action.type === ActionType.Enum.UPDATE_BLOCK) {
+		parsedAction = {
+			type: 'UPDATE_BLOCK',
+			blockId: action.blockId,
+			...(action.content !== undefined && { content: action.content }),
+			...(action.question !== undefined && { question: action.question }),
+			...(action.expectedAnswer !== undefined && { expectedAnswer: action.expectedAnswer }),
+			...(action.possibleAnswers !== undefined && { possibleAnswers: action.possibleAnswers }),
+			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers })
 		};
 	} else {
 		parsedAction = action;

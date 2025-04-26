@@ -4,13 +4,14 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.model.data.user.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import ch.nova_omnia.lernello.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@ public class UserService {
     }
 
     public List<User> findAllTrainees() {
-        return userRepository.findAllByRole(User.Role.TRAINEE);
+        return userRepository.findAllByRole(Role.TRAINEE);
     }
 
     public User addTrainee(String username, String name, String surname) {
@@ -79,7 +80,7 @@ public class UserService {
         user.setUsername(username);
         user.setSurname(surname);
         user.setName(name);
-        user.setRole(User.Role.TRAINEE);
+        user.setRole(Role.TRAINEE);
         user.setPassword(passwordEncoder.encode("defaultPassword"));
         user.setChangedPassword(false);
         userRepository.save(user);
@@ -102,5 +103,13 @@ public class UserService {
             userRepository.save(user);
         }
         return user;
+    }
+
+    public Role getCurrentRole(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getRole();
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello;
 
+import ch.nova_omnia.lernello.model.data.user.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -11,13 +12,15 @@ import ch.nova_omnia.lernello.model.data.File;
 import ch.nova_omnia.lernello.model.data.Folder;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.FileRepository;
 import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class LoadDatabase {
         Folder bilbo = new Folder("Bilbo Baggins");
         bilbo.setParentFolder(bungo);
 
-        User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, User.Role.INSTRUCTOR);
+        User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
 
 
@@ -47,13 +50,13 @@ public class LoadDatabase {
         File file9 = new File("file9.txt");
         File file10 = new File("file10.txt");
 
-        User max = new User("max.sebastian@bluewin.ch", "Max", "Sebastian", encoder.encode("password"), null, User.Role.TRAINEE);
-        User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, User.Role.TRAINEE);
-        User leon = new User("brodbeckleon@gmail.com", "Leon", "Brodbeck", encoder.encode("password"), null, User.Role.TRAINEE);
-        User pascal = new User("pascal.Dorta@gmx.ch", "Pascal", "Dorta", encoder.encode("password"), null, User.Role.TRAINEE);
-        User anja = new User("anja.wigger@bluewin.ch", "Anja", "Wigger", encoder.encode("password"), null, User.Role.TRAINEE);
-        User fabian = new User("fabian_balo@gmail.com", "Fabian", "Balo", encoder.encode("password"), null, User.Role.TRAINEE);
-        User dani = new User("malek_dani78@gmail.com", "Dani", "Malek", encoder.encode("password"), null, User.Role.TRAINEE);
+        User max = new User("max.sebastian@bluewin.ch", "Max", "Sebastian", encoder.encode("password"), null, Role.TRAINEE);
+        User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, Role.TRAINEE);
+        User leon = new User("brodbeckleon@gmail.com", "Leon", "Brodbeck", encoder.encode("password"), null, Role.TRAINEE);
+        User pascal = new User("pascal.Dorta@gmx.ch", "Pascal", "Dorta", encoder.encode("password"), null, Role.TRAINEE);
+        User anja = new User("anja.wigger@bluewin.ch", "Anja", "Wigger", encoder.encode("password"), null, Role.TRAINEE);
+        User fabian = new User("fabian_balo@gmail.com", "Fabian", "Balo", encoder.encode("password"), null, Role.TRAINEE);
+        User dani = new User("malek_dani78@gmail.com", "Dani", "Malek", encoder.encode("password"), null, Role.TRAINEE);
         LearningKit learningKit = new LearningKit("Learning Kit 1");
         LearningUnit learningUnit = new LearningUnit("Learning Unit 1", learningKit);
 
@@ -63,7 +66,15 @@ public class LoadDatabase {
             folderRepository.save(bilbo);
             log.info("Preloading users");
             userRepository.save(frodo);
+            userRepository.save(max);
+            userRepository.save(bruno);
+            userRepository.save(leon);
+            userRepository.save(pascal);
+            userRepository.save(anja);
+            userRepository.save(fabian);
+            userRepository.save(dani);
             log.info("Preloading learning kit");
+            learningKit.setParticipants(List.of(max, bruno, leon, pascal, anja, fabian, dani));
             learningKitRepository.save(learningKit);
             log.info("Preloading learning unit");
             learningUnitRepository.save(learningUnit);

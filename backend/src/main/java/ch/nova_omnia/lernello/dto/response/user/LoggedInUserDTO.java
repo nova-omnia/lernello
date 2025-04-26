@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record LoggedInUserDTO(
                               @NotBlank String token,
-                              @NotNull ZonedDateTime expires,
-                              @NotNull Role role
+                              @NotNull ZonedDateTime expires
 ) {
 }

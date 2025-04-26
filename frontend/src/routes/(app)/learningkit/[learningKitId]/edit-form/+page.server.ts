@@ -1,7 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import { getLearningKitById, updateLearningKit } from '$lib/api/collections/learningKit';
 import { api } from '$lib/api/apiClient';
 import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
@@ -9,7 +9,7 @@ import { formatUtcToDatetimeLocal } from '$lib/utils/formatUtcToDatetimeLocal';
 
 export const load = async ({ fetch, params }) => {
 	if (!params.learningKitId) {
-		return fail(400, { message: 'Learning Kit ID is required' });
+		return error(400, 'LearningKit ID is required');
 	}
 
 	const learningKit = await api(fetch).req(getLearningKitById, null, params.learningKitId).parse();

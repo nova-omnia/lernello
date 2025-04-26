@@ -116,6 +116,23 @@
 		const parsedAction = AddBlockActionSchema.parse(actionData);
 		queueBlockAction(parsedAction);
 	}
+
+	function addMultimediaBlock() {
+		const actionData = {
+			type: ActionType.Enum.ADD_BLOCK,
+			blockId: '',
+			index: insertIndex,
+			data: {
+				type: BlockType.Enum.MULTIMEDIA,
+				name: 'Multimedia',
+				position: 0,
+				learningUnitId: learningUnitId,
+				content: 'placeholder'
+			}
+		};
+		const parsedAction = AddBlockActionSchema.parse(actionData);
+		queueBlockAction(parsedAction);
+	}
 </script>
 
 <div>
@@ -170,6 +187,15 @@
 					}}
 				>
 					{$_('block.questionBlock')}
+				</button>
+				<button
+					type="button"
+					class="btn preset-filled-primary-500 block w-full"
+					onclick={() => {
+						addMultimediaBlock();
+					}}
+				>
+					{$_('block.multimediaBlock')}
 				</button>
 			</div>
 			<FloatingArrow bind:ref={elemArrow} context={floating.context} fill="#575969" />

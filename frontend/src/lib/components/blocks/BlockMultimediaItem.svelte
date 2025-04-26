@@ -1,17 +1,15 @@
 <script lang="ts">
-	import { FileUpload } from '@skeletonlabs/skeleton-svelte'; // Check correct import path! Possibly '@skeletonlabs/skeleton-svelte' or just '@skeletonlabs/skeleton'
+	import { FileUpload } from '@skeletonlabs/skeleton-svelte';
 	import { FilePlus } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { onDestroy } from 'svelte';
 
-	// --- State variables for preview (unchanged) ---
 	let previewUrl: string | null = null;
 	let fileType: 'image' | 'pdf' | 'video' | 'audio' | 'other' | null = null;
 	let imageName: string | null = null;
 	let currentObjectUrl: string | null = null; // For revokeObjectURL
 	let fileUploaded: boolean = false; // New state variable
 
-	// --- Type for the event detail object ---
 	type FileChangeDetails = {
 		acceptedFiles: File[];
 		rejectedFiles: any[];
@@ -36,17 +34,15 @@
 		fileType = null;
 		imageName = null;
 
-		const files = details.acceptedFiles; // <-- Access to details
+		const files = details.acceptedFiles;
 
 		if (files && files.length > 0) {
-			// File has been uploaded, hide upload component
 			fileUploaded = true;
 
 			const file = files[0];
 			imageName = file.name;
 			const mimeType = file.type;
 
-			// --- Logic for file type detection and preview generation (unchanged) ---
 			if (mimeType.startsWith('image/')) {
 				fileType = 'image';
 				const reader = new FileReader();
@@ -79,7 +75,7 @@
 			previewUrl = null;
 			fileType = null;
 			imageName = null;
-			fileUploaded = false; // Reset when no files are selected
+			fileUploaded = false;
 		}
 	}
 </script>

@@ -2,6 +2,7 @@
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
 	import MultipleChoiceBlockComponent from './BlockMultipleChoiceItem.svelte';
 	import QuestionBlockComponent from './BlockQuestionItem.svelte';
+	import MultimediaBlockComponent from './BlockMultimediaItem.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -19,7 +20,8 @@
 	const componentMap = {
 		THEORY: TheoryBlockComponent,
 		QUESTION: QuestionBlockComponent,
-		MULTIPLE_CHOICE: MultipleChoiceBlockComponent
+		MULTIPLE_CHOICE: MultipleChoiceBlockComponent,
+		MULTIMEDIA: MultimediaBlockComponent
 	};
 
 	let Component = componentMap[block.type];

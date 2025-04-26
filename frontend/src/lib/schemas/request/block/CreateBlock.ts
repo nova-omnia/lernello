@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const BlockType = z.enum(['THEORY', 'MULTIPLE_CHOICE', 'QUESTION']);
+export const BlockType = z.enum(['THEORY', 'MULTIPLE_CHOICE', 'QUESTION', 'MULTIMEDIA']);
 
 export const CreateTheoryBlockSchema = z.object({
 	type: z.literal(BlockType.Enum.THEORY),

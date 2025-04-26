@@ -13,6 +13,13 @@ import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +27,8 @@ public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
     private final EmailService emailService;
 
-    public List<LearningKit> findAll() {
-        return learningKitRepository.findAll();
+    public Page<LearningKit> getList(Pageable pageable) {
+        return learningKitRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     public Optional<LearningKit> findById(UUID id) {

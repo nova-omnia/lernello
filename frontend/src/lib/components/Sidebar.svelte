@@ -1,9 +1,9 @@
 <script lang="ts">
 	import logo from '$lib/assets/Lernello_Logo.svg';
-	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import {
 		ChartLine,
 		Folder,
+		type IconProps,
 		LayoutDashboard,
 		LogOut,
 		Settings,
@@ -11,76 +11,89 @@
 		User
 	} from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
+	import { sidebarState } from '$lib/states/sidebarState.svelte';
+	import type { SvelteComponent } from 'svelte';
+
+	const iconSize = 24;
 </script>
 
-{#snippet sidebarItemLabel(label: string)}
+{#snippet sidebarItemStyle(label: string)}
 	<span
-		class="ml-3 text-nowrap transition-all"
 		class:visible={sidebarState.isExpanded}
+		class:ml-3={sidebarState.isExpanded}
 		class:w-max={sidebarState.isExpanded}
 		class:opacity-100={sidebarState.isExpanded}
 		class:invisible={!sidebarState.isExpanded}
 		class:w-0={!sidebarState.isExpanded}
-		class:opacity-0={!sidebarState.isExpanded}>{label}</span
+		class:opacity-0={!sidebarState.isExpanded}
 	>
+		{label}
+	</span>
+{/snippet}
+
+{#snippet sidebarItem(label: string, href: string, Icon: typeof SvelteComponent<IconProps>)}
+	<a
+		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4"
+		{href}
+		aria-label={label}
+	>
+		<Icon size={iconSize} />
+		{@render sidebarItemStyle(label)}
+	</a>
 {/snippet}
 
 <!-- Sidebar -->
 <div
-	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden p-4 transition-all duration-300"
+	class="preset-filled-surface-100-900 flex h-screen flex-col items-start justify-start overflow-hidden px-4"
 	class:w-64={sidebarState.isExpanded}
-	class:w-16={!sidebarState.isExpanded}
+	class:w-fit={!sidebarState.isExpanded}
 >
-	<div class="w-max min-w-full space-y-2">
-		<!-- Logo -->
-		<p class="flex items-center" aria-label="Lernello">
-			<img alt="Lernello" src={logo} width="24" class="object-cover object-center" />
-			{@render sidebarItemLabel('Lernello')}
-			{#if sidebarState.isExpanded}
-				<button
-					class="ml-auto items-center justify-center"
-					onclick={sidebarState.toggleSidebar}
-					aria-label="Toggle sidebar"
-					aria-expanded={sidebarState.isExpanded}
-				>
-					<SidebarClose size={24} />
-				</button>
-			{/if}
-		</p>
+	<!-- Logo Section -->
+	<div class="flex h-20 w-full items-center px-4">
+		<img alt="Lernello" src={logo} width="24" class="object-cover object-center dark:invert" />
+		{@render sidebarItemStyle($_('app.companyName'))}
+		{#if sidebarState.isExpanded}
+			<button
+				class="ml-auto items-center justify-center"
+				onclick={sidebarState.toggleSidebar}
+				aria-label={$_('sidebar.toggleSidebar')}
+				aria-expanded={sidebarState.isExpanded}
+			>
+				<SidebarClose size={24} />
+			</button>
+		{/if}
+	</div>
+	<hr class="hr" />
 
-		<hr class="hr" />
-		<!-- Buttons Section -->
-		<div class="flex flex-col items-center">
-			<a class="flex w-full items-center py-2" href="/dashboard" aria-label="Dashboard">
-				<LayoutDashboard size={24} />
-				{@render sidebarItemLabel($_('sidebar.dashboard'))}
-			</a>
-			<a class="flex w-full items-center py-2" href="/folders" aria-label="Folders">
-				<Folder size={24} />
-				{@render sidebarItemLabel($_('sidebar.folders'))}
-			</a>
-			<a class="flex w-full items-center py-2" href="/statistics" aria-label="Statistics">
-				<ChartLine size={24} />
-				{@render sidebarItemLabel($_('sidebar.statistics'))}
-			</a>
-		</div>
-
-		<hr class="hr" />
+	<!-- Buttons Section -->
+	<div class="flex w-full flex-col items-center gap-1">
+		{#if sidebarState.isExpanded}
+			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.general')}</p>
+		{:else}
+			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+		{/if}
+		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
+		{@render sidebarItem($_('common.files'), '/folders', Folder)}
+		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
+		{#if sidebarState.isExpanded}
+			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
+		{:else}
+			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+		{/if}
+		{@render sidebarItem($_('sidebar.settings'), '/settings', Settings)}
+		{@render sidebarItem($_('sidebar.profile'), '/profile', User)}
 	</div>
 
-	<div class="mt-auto flex flex-col items-center">
-		<a class="flex w-full items-center py-2" href="/settings" aria-label="Settings">
-			<Settings size={24} />
-			{@render sidebarItemLabel($_('sidebar.settings'))}
-		</a>
-		<a class="flex w-full items-center py-2" href="/profile" aria-label="Profile">
-			<User size={24} />
-			{@render sidebarItemLabel($_('sidebar.profile'))}
-		</a>
-		<form method="POST" action="/logout" class="flex w-full items-center py-2">
-			<button class="flex" aria-label="Logout">
-				<LogOut size={24} />
-				{@render sidebarItemLabel($_('sidebar.logout'))}
+	<div class="mt-auto flex w-full flex-col items-center gap-1 pb-4">
+		<hr class="hr" />
+		<form
+			method="POST"
+			action="/logout"
+			class="card hover:preset-filled-surface-50-950 flex w-full items-center"
+		>
+			<button class="flex w-full p-4" aria-label={$_('sidebar.logout')}>
+				<LogOut size={iconSize} />
+				{@render sidebarItemStyle($_('sidebar.logout'))}
 			</button>
 		</form>
 	</div>

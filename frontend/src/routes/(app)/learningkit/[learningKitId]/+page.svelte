@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Clock, Settings, Trash } from 'lucide-svelte';
-	import { deleteLearningKit, getLearningKitById } from '$lib/api/collections/learningKit';
+	import {deleteLearningKit, getLearningKitById, publishLearningKit} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
@@ -28,6 +28,7 @@
 		}
 	});
 	let showDeleteDialog = $state(false);
+	let showPublishDialog = $state(false);
 
 	const dateFormat = new Intl.DateTimeFormat($locale || window.navigator.language, {
 		year: 'numeric',
@@ -71,8 +72,14 @@
 					</div>
 					<div class="flex h-10 gap-8">
 						<div class="flex gap-2">
-							<button type="button" class="btn preset-filled-primary-500 h-full">
-								{$_('learningKit.publish')}
+							<button
+									type="button"
+									class="btn preset-filled-primary-500 rounded-full"
+									onclick={(e) => {
+										e.preventDefault();
+										showPublishDialog = true;
+								}}
+								>{$_('learningKit.publish')}
 							</button>
 							<button type="button" class="btn preset-outlined-surface-500 h-full">
 								<Settings size={20} />
@@ -110,6 +117,22 @@
 		}}
 		onCancel={() => {
 			showDeleteDialog = false;
+		}}
+	/>
+
+	<ConfirmDialog
+		isOpen={showPublishDialog}
+		title={$_('learningKit.Publish.ConfirmationTitle')}
+		message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
+		confirmText={$_('learningKit.Publish.Text')}
+		danger={false}
+		onConfirm={async () => {
+		showPublishDialog = false;
+
+		await api(fetch).req(publishLearningKit, null, learningKitId).parse();
+		}}
+			onCancel={() => {
+			showPublishDialog = false;
 		}}
 	/>
 {/if}

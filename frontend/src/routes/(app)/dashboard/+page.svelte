@@ -9,11 +9,36 @@
 	import { ChevronRight } from 'lucide-svelte';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
+	import {getUserInfo} from "$lib/api/collections/user";
+
+
+
+	const userInfoQuery = createQuery({
+		queryKey: ['user-info'],
+		queryFn: () => api(fetch).req(getUserInfo, null).parse()
+	});
+
+	const kitsQuery = createQuery({
+		queryKey: ['latest-learning-kits-list', () => $userInfoQuery.data?.uuid],
+		enabled: () => $userInfoQuery.status === 'success',
+		queryFn: () => {
+			const uuid = $userInfoQuery.data!.uuid;
+			return api(fetch).req(getLearningKits, uuid, { size: 5, page: 0 }).parse();
+		}
+	});
+
+	/**
+	const { locals } = getRequestEvent();
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
+		enabled: () => locals.userInfo?.uuid !== undefined,
+		queryFn: () => {
+			const uuid = locals.userInfo!.uuid;
+			return api(fetch).req(getLearningKits, uuid, { size: 5, page: 0 }).parse();
+		}
 	});
+	*/
 </script>
 
 <PageContainer title={$_('dashboard.title')}>

@@ -43,10 +43,10 @@ public class LearningKitRestController {
         return id;
     }
 
-    @GetMapping("/")
+    @PostMapping("/getList")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
-    public Page<LearningKitResDTO> getList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<LearningKit> kits = learningKitService.getList(pageable);
+    public Page<LearningKitResDTO> getList(@Valid @RequestBody UUID userID, @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<LearningKit> kits = learningKitService.getList(pageable, userID);
         return kits.map(learningKitMapper::toDTO);
     }
 

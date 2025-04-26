@@ -47,15 +47,6 @@ export const actions = {
 				maxAge: Math.floor(expiresMs / 1000)
 			});
 
-			const userInfo = await api(fetch).req(getUserInfo, null).parse();
-			const serializedUserInfo = JSON.stringify(userInfo);
-
-			cookies.set('lernello_user', serializedUserInfo, {
-				httpOnly: true,
-				path: '/',
-				maxAge: Math.floor(expiresMs / 1000)
-			});
-
 			return message(form, {
 				redirectTo: parseRedirectTo(url),
 				tokenInfo: loggedInUser

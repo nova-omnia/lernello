@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { Clock, Settings, Trash } from 'lucide-svelte';
-	import {deleteLearningKit, getLearningKitById, publishLearningKit} from '$lib/api/collections/learningKit';
+	import {
+		deleteLearningKit,
+		getLearningKitById,
+		publishLearningKit
+	} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _, locale } from 'svelte-i18n';
@@ -73,11 +77,11 @@
 					<div class="flex h-10 gap-8">
 						<div class="flex gap-2">
 							<button
-									type="button"
-									class="btn preset-filled-primary-500 rounded-full"
-									onclick={(e) => {
-										e.preventDefault();
-										showPublishDialog = true;
+								type="button"
+								class="btn preset-filled-primary-500 rounded-full"
+								onclick={(e) => {
+									e.preventDefault();
+									showPublishDialog = true;
 								}}
 								>{$_('learningKit.publish')}
 							</button>
@@ -127,11 +131,11 @@
 		confirmText={$_('learningKit.Publish.Text')}
 		danger={false}
 		onConfirm={async () => {
-		showPublishDialog = false;
+			showPublishDialog = false;
 
-		await api(fetch).req(publishLearningKit, null, learningKitId).parse();
+			await api(fetch).req(publishLearningKit, null, learningKitId).parse();
 		}}
-			onCancel={() => {
+		onCancel={() => {
 			showPublishDialog = false;
 		}}
 	/>

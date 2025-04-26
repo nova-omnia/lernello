@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Clock, Settings, Trash } from 'lucide-svelte';
+	import { Clock, Pencil, Trash } from 'lucide-svelte';
 	import {
 		deleteLearningKit,
 		getLearningKitById,
@@ -85,13 +85,16 @@
 								}}
 								>{$_('learningKit.publish')}
 							</button>
-							<button type="button" class="btn preset-outlined-surface-500 h-full">
-								<Settings size={20} />
+							<button
+								type="button"
+								class="btn preset-outlined-surface-500 h-full"
+								onclick={() => goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`)}
+							>
+								<Pencil size={20} />
 							</button>
 						</div>
 						<button
-							onclick={(e) => {
-								e.preventDefault();
+							onclick={() => {
 								showDeleteDialog = true;
 							}}
 							type="button"
@@ -102,7 +105,7 @@
 					</div>
 				</div>
 				{#if $learningKitQuery.data?.description}
-					<p>{$learningKitQuery.data.description}</p>
+					<p class="w-2xl wrap-break-word">{$learningKitQuery.data.description}</p>
 				{/if}
 			</div>
 			<LearningKitTabs learningKit={$learningKitQuery.data}></LearningKitTabs>

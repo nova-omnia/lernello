@@ -58,7 +58,6 @@ public class LearningUnitService {
     @Transactional
     public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
         actions = filterCorrelatedActions(actions);
-        System.out.println(actions);
 
         LearningUnit learningUnit = getLearningUnit(id);
         temporaryKeyMap.clear();
@@ -173,7 +172,6 @@ public class LearningUnitService {
 
 
     private void updateBlock(LearningUnit learningUnit, UpdateBlockActionDTO updateAction) {
-        System.out.println("updating block: " + updateAction);
         if (updateAction.blockId() == null) {
             throw new IllegalArgumentException("Block ID cannot be null");
         }

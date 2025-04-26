@@ -46,11 +46,6 @@
 			lastPossibleAnswers = newPossibleAnswers;
 			lastCorrectAnswers = newCorrectAnswers;
 		}
-		console.log({
-			question,
-			possibleAnswers: newPossibleAnswers,
-			correctAnswers: newCorrectAnswers
-		});
 	}
 
 	function addAnswerField() {

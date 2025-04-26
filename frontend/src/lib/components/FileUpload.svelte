@@ -10,9 +10,7 @@
 	// }
 </script>
 
-<div
-	class="preset-filled-primary-100-900 rounded-border border-surface-200-800 flex w-full items-center justify-center rounded-lg border-[1px] p-2 text-center text-base"
->
+<button type="button" class="btn preset-outlined-surface-500 h-fit">
 	<FileUpload
 		classes="w-full"
 		accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4"
@@ -21,8 +19,8 @@
 		maxFiles={1024 * 1024 * 10}
 	>
 		<button class=" text-surface-900-100 font- m-auto flex justify-center gap-3">
-			<IconUpload class="size-6" />
-			<p>{$_('addNewFile')}</p>
+			<IconUpload size={24} />
+			{$_('addNewFile')}
 		</button>
 	</FileUpload>
-</div>
+</button>

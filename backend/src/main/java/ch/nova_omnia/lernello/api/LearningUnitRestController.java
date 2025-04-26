@@ -55,6 +55,7 @@ public class LearningUnitRestController {
     @PostMapping("/{id}/apply-block-actions")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
+        System.out.println("applyBlockActions: " + actionQueue);
         Map<String, UUID> temporaryKeyMap = learningUnitService.applyBlockActions(id, actionQueue);
         return temporaryKeyMapper.toDTO(temporaryKeyMap).temporaryKeyMap();
     }

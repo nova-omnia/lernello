@@ -119,8 +119,8 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 							possibleAnswers: action.possibleAnswers
 						}),
 						...(action.correctAnswers !== undefined && {
-							correctAnswers: action.correctAnswers.map(String)
-						}) // Ensure correctAnswers is string[]
+							correctAnswers: action.correctAnswers
+						})
 					};
 				}
 				return block;

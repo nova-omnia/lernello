@@ -14,7 +14,7 @@ public record UpdateBlockActionDTO(
                                    String content,
                                    String question,
                                    List<String> possibleAnswers,
-                                   List<Integer> correctAnswers,
+                                   List<String> correctAnswers,
                                    String expectedAnswer, 
                                    @Valid UpdateBlockDTO data
 ) implements BlockActionDTO {

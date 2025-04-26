@@ -7,7 +7,6 @@
 	const { block } = $props();
 	let lastContent = block.content;
 
-
 	function handleContentUpdate(newContent: string) {
 		if (newContent !== lastContent) {
 			queueBlockAction({

@@ -58,6 +58,7 @@ public class LearningUnitService {
     @Transactional
     public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
         actions = filterCorrelatedActions(actions);
+        System.out.println(actions);
 
         LearningUnit learningUnit = getLearningUnit(id);
         temporaryKeyMap.clear();
@@ -172,6 +173,7 @@ public class LearningUnitService {
 
 
     private void updateBlock(LearningUnit learningUnit, UpdateBlockActionDTO updateAction) {
+        System.out.println("updating block: " + updateAction);
         if (updateAction.blockId() == null) {
             throw new IllegalArgumentException("Block ID cannot be null");
         }
@@ -190,13 +192,14 @@ public class LearningUnitService {
         if (updateAction.question() != null) {
             if (block instanceof QuestionBlock questionBlock) {
                 questionBlock.setQuestion(updateAction.question());
+                questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
             } else if (block instanceof MultipleChoiceBlock mcBlock) {
                 mcBlock.setQuestion(updateAction.question());
+                mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
+                mcBlock.setCorrectAnswers(updateAction.correctAnswers());
+                
             }
         }
-
-        // Handle other direct updates similarly...
-
         // Handle full DTO updates if present
         if (updateAction.data() != null) {
             switch (updateAction.data()) {

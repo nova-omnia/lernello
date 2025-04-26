@@ -36,8 +36,8 @@ export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
 	question: z.string().optional(),
 	expectedAnswer: z.string().optional(),
 	possibleAnswers: z.array(z.string()).optional(),
-	correctAnswers: z.array(z.number()).optional()
-  });
+	correctAnswers: z.array(z.string()).optional()
+});
 
 export const BlockActionSchema = z.discriminatedUnion('type', [
 	AddBlockActionSchema,

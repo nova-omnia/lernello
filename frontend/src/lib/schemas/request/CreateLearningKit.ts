@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const CreateLearningKitSchema = z.object({
-	name: z.string().nonempty(),
-	description: z.string().optional().nullable(),
+	name: z.string().min(3).max(40).nonempty(),
+	description: z.string().max(200).optional().nullable(),
 	deadlineDate: z
 		.string()
 		.transform((val, ctx) => {

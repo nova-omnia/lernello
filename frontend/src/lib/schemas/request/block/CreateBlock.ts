@@ -15,7 +15,7 @@ export const CreateMultipleChoiceBlockSchema = z.object({
 	position: z.number().min(0),
 	question: z.string().min(1),
 	possibleAnswers: z.array(z.string().min(1)),
-	correctAnswers: z.array(z.string().min(1))
+	correctAnswers: z.array(z.string().min(0))
 });
 
 export const CreateQuestionBlockSchema = z.object({

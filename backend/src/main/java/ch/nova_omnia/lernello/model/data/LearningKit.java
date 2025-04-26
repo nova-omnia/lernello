@@ -55,12 +55,14 @@ public class LearningKit {
     private String name;
 
     @Column(name = "description")
+    @Size(max = 200)
     private String description;
 
     @Column(name = "deadlineDate")
     private ZonedDateTime deadlineDate;
 
     @Column(name = "context")
+    @Size(max = 200)
     private String context;
 
     @CreatedDate

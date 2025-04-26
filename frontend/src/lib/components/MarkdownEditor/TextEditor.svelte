@@ -7,14 +7,30 @@
 
 	interface TextEditorProps {
 		content: string;
+		onUpdate?: (content: string) => void;
 	}
 
-	let { content }: TextEditorProps = $props();
+	let { content: initialContent, onUpdate }: TextEditorProps = $props();
+	let content = $state(initialContent);
+	let lastSavedContent = $state(initialContent);
 
 	const Tab = {
 		EDIT: 'edit',
 		PREVIEW: 'preview'
 	} as const;
+
+	$effect(() => {
+		if (onUpdate && content !== lastSavedContent) {
+			onUpdate(content);
+			lastSavedContent = content;
+		}
+	});
+
+	// Update local content when prop changes
+	$effect(() => {
+		content = initialContent;
+		lastSavedContent = initialContent;
+	});
 
 	type Tab = (typeof Tab)[keyof typeof Tab];
 

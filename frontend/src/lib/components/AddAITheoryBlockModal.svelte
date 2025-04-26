@@ -40,7 +40,6 @@
 		} catch (error) {
 			console.error('Failed to create AI theory block:', error);
 		}
-		console.log('loaded data from AI');
 	};
 
 	const onCancel = () => {

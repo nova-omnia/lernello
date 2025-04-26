@@ -31,6 +31,10 @@
 			goto('/dashboard');
 		}
 	});
+	const publishLearningKitMutation = createMutation({
+		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse()
+	});
+
 	let showDeleteDialog = $state(false);
 	let showPublishDialog = $state(false);
 
@@ -78,7 +82,7 @@
 						<div class="flex gap-2">
 							<button
 								type="button"
-								class="btn preset-filled-primary-500 rounded-full"
+								class="btn preset-filled-primary-500 h-full"
 								onclick={(e) => {
 									e.preventDefault();
 									showPublishDialog = true;
@@ -126,14 +130,14 @@
 
 	<ConfirmDialog
 		isOpen={showPublishDialog}
-		title={$_('learningKit.Publish.ConfirmationTitle')}
-		message={`${$_('learningKit.Publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
-		confirmText={$_('learningKit.Publish.Text')}
+		title={$_('learningKit.publish.ConfirmationTitle')}
+		message={`${$_('learningKit.publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
+		confirmText={$_('learningKit.publish.Text')}
 		danger={false}
-		onConfirm={async () => {
-			showPublishDialog = false;
+		onConfirm={() => {
+			$publishLearningKitMutation.mutate(learningKitId);
 
-			await api(fetch).req(publishLearningKit, null, learningKitId).parse();
+			showPublishDialog = false;
 		}}
 		onCancel={() => {
 			showPublishDialog = false;

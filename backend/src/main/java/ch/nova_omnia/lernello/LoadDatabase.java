@@ -19,8 +19,6 @@ import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @Configuration
 @RequiredArgsConstructor
 public class LoadDatabase {

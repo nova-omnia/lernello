@@ -74,7 +74,7 @@
 	"learningKit.addFile": "Add File",
 	"learningKit.checkpoint": "Checkpoint",
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
-	"learningKit.context.description": "The context provided to the AI assisting tools",
+	"learningKit.context.description": "The context provided to the AI assisting tools. Drag files anywhere to upload.",
 	"learningKit.create": "Create Learning Kit",
 	"learningKit.update": "Update Learning Kit",
 	"learningKit.error.loadList": "Failed to load Learning Kits",

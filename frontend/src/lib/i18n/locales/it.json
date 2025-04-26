@@ -74,7 +74,7 @@
 	"learningKit.addFile": "Aggiungi file",
 	"learningKit.checkpoint": "Punto di controllo",
 	"learningKit.checkpoint.description": "I partecipanti devono completare tutte le unita di apprendimento sopra per accedere al resto.",
-	"learningKit.context.description": "Contesto fornito agli strumenti IA",
+	"learningKit.context.description": "Il contesto fornito agli strumenti IA. Trascina i file ovunque per caricarli.",
 	"learningKit.create": "Crea kit di apprendimento",
 	"learningKit.error.loadList": "Impossibile caricare i kit di apprendimento",
 	"learningKit.error.loadSingle": "Impossibile caricare il kit di apprendimento",

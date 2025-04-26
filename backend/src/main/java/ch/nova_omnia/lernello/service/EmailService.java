@@ -52,12 +52,16 @@ public class EmailService {
         Description: %s
         Deadline: %s
         Context: %s
+        Link: http://localhost:8080/learningkit/%s
         """.formatted(
                 learningKit.getName(),
                 learningKit.getDescription(),
                 learningKit.getDeadlineDate(),
-                learningKit.getContext()
+                learningKit.getContext(),
+                learningKit.getUuid()
         );
+        // TODO: add link to the learning kit
+
         mailMessage.setText(body);
 
         return mailMessage;

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { _ } from 'svelte-i18n';
+	import { dragHandle } from 'svelte-dnd-action';
 	import { AlignLeft, GripVertical } from 'lucide-svelte';
 
 	interface LearningUnitProps {
@@ -22,7 +23,9 @@
 </script>
 
 <div class="flex items-center">
-	<GripVertical size={28} class="text-surface-300-700" />
+	<div use:dragHandle aria-label={`drag-handle for ${learningUnit.name}`}>
+		<GripVertical size={28} class="text-surface-300-700" />
+	</div>
 	<a
 		class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4"
 		href={`/learningunit/${learningUnit.uuid}`}

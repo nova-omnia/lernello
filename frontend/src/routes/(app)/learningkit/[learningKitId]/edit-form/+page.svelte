@@ -4,7 +4,9 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
+	import { page } from '$app/state';
 
+	const learningKitId = page.params.learningKitId;
 	let { data } = $props();
 
 	const invalidate = useQueryInvalidation();
@@ -13,6 +15,7 @@
 		onResult() {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
+			invalidate(['learning-kit', learningKitId]);
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
@@ -25,8 +28,8 @@
 	});
 </script>
 
-<PageContainer title={$_('learningKit.form.create.title')} centered={true}>
-	<form method="POST" use:enhance action="?/create" class="space-y-4">
+<PageContainer title={$_('learningKit.form.edit.title')} centered={true}>
+	<form method="POST" use:enhance action="?/update" class="space-y-4">
 		<div class="space-y-6">
 			<label class="label">
 				<span class="label-text">{$_('common.name')} *</span>
@@ -92,7 +95,7 @@
 		</div>
 		<div class="flex justify-end gap-2">
 			<a class="btn preset-outlined-surface-500" href="/dashboard">{$_('common.cancel')}</a>
-			<button class="btn preset-filled-primary-500">{$_('learningKit.create')}</button>
+			<button class="btn preset-filled-primary-500">{$_('learningKit.update')}</button>
 		</div>
 		<SuperDebug data={$form} />
 	</form>

@@ -10,6 +10,6 @@ public record CreateLearningKitDTO(
     @NotNull @Size(min = 3, max = 40) String name,
     @Size(max = 200) String description,
     ZonedDateTime deadlineDate,
-    String context
+    @Size(max = 200) String context
 ) {
 }

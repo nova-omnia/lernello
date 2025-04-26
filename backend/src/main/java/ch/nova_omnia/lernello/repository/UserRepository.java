@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import ch.nova_omnia.lernello.model.data.User;
-import ch.nova_omnia.lernello.model.data.User.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.model.data.user.Role;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

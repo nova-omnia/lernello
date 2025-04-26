@@ -8,7 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import lombok.RequiredArgsConstructor;
 
 @Service

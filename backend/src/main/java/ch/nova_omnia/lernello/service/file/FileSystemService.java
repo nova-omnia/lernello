@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,21 +70,25 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public String getFileContent(UUID fileId) {
-        Optional<File> fileOptional = fileRepository.findById(fileId);
-        if (fileOptional.isPresent()) {
-            File file = fileOptional.get();
-            Path filePath = Paths.get(storagePath, file.getUuid().toString());
-            try {
-                return Files.readString(filePath);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
-            }
-        } else {
-            throw new RuntimeException("File not found");
-        }
+@Transactional(readOnly = true)
+public String getFileContent(UUID fileId) {
+    Optional<File> fileOptional = fileRepository.findById(fileId);
+
+    if (fileOptional.isEmpty()) {
+        throw new RuntimeException("File not found");
     }
+
+    File file = fileOptional.get();
+    Path filePath = Paths.get(storagePath, file.getUuid().toString());
+
+    try {
+        byte[] bytes = Files.readAllBytes(filePath);
+        return Base64.getEncoder().encodeToString(bytes);
+    } catch (IOException e) {
+        throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
+    }
+}
+
 
     public ResponseEntity<Resource> getFileResource(UUID uuid) {
         Optional<File> fileOptional = fileRepository.findById(uuid);

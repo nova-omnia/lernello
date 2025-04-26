@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const CreateLearningUnitSchema = z.object({
 	name: z
 		.string()
-		.min(2, { message: 'Name must be at least 2 characters' })
-		.max(32, { message: 'Name cannot exceed 32 characters' }),
+		.min(3, { message: 'Name must be at least 3 characters' })
+		.max(40, { message: 'Name cannot exceed 40 characters' }),
 	learningKitId: z.string().uuid({ message: 'Invalid learningKitId format' }).nonempty()
 });

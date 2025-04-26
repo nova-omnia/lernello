@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TheoryBlockComponent from './BlockTheoryItem.svelte';
 	import MultipleChoiceBlockComponent from './BlockMultipleChoiceItem.svelte';
+	import QuestionBlockComponent from './BlockQuestionItem.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -10,12 +11,18 @@
 
 	interface BlockItemProps {
 		block: BlockRes;
+		learningUnitId: string;
 	}
 
-	const { block }: BlockItemProps = $props();
+	const { block, learningUnitId }: BlockItemProps = $props();
 
-	// TODO: Improve mapping similar to BlockIcon.svelte
-	let Component = block.type === 'THEORY' ? TheoryBlockComponent : MultipleChoiceBlockComponent;
+	const componentMap = {
+		THEORY: TheoryBlockComponent,
+		QUESTION: QuestionBlockComponent,
+		MULTIPLE_CHOICE: MultipleChoiceBlockComponent
+	};
+
+	let Component = componentMap[block.type];
 
 	let isConfirmDialogOpen: boolean = $state(false);
 
@@ -31,8 +38,8 @@
 <div
 	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} />
-	<Component />
+	<BlockIconHeader {block} {learningUnitId} />
+	<Component {block} />
 
 	<button
 		type="button"

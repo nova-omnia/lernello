@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.mapper.block;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
@@ -11,7 +12,7 @@ import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BlockMapper {
 
     MultipleChoiceBlockResDTO toMultipleChoiceBlockResDTO(MultipleChoiceBlock multipleChoiceBlock);

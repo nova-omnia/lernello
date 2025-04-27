@@ -133,7 +133,9 @@
 	<ConfirmDialog
 		isOpen={showPublishDialog}
 		title={$_('learningKit.publish.confirmationTitle')}
-		message={$_('learningKit.publish.confirmationText', { values: { name: $learningKitQuery.data.name } })}
+		message={$_('learningKit.publish.confirmationText', {
+			values: { name: $learningKitQuery.data.name }
+		})}
 		confirmText={$_('learningKit.publish.text')}
 		danger={false}
 		onConfirm={() => {

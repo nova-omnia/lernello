@@ -22,45 +22,53 @@ public class AIClient {
                 Content of the chapter:
                 %s
 
-                The response should be formatted using Markdown and can include LaTeX syntax for mathematical expressions.
+                Response must be a JSON object only without markdown formatting, code blocks, or extra text.
+                Example:
+                {
+                  "content": "Your theory content here"
+                }
+
+                Use Markdown and LaTeX syntax inside the content string where appropriate.
                 """.formatted(topic, fullText);
 
-        return sendRequest(prompt);
+        return extractJson(sendRequest(prompt));
     }
 
     public String generateMultipleChoiceBlock(String theoryBlockContent) {
-        String multipleChoicePrompt = """
+        String prompt = """
                 Based on the following theory content, create a multiple choice question.
 
                 Content:
                 %s
 
-                Your response must be JSON formatted like this:
+                Response must be a JSON object only:
                 {
                   "question": "What is ...?",
                   "possibleAnswers": ["A", "B", "C", "D"],
                   "correctAnswers": ["B"]
                 }
+                No markdown, no code block, just pure JSON.
                 """.formatted(theoryBlockContent);
 
-        return sendRequest(multipleChoicePrompt);
+        return extractJson(sendRequest(prompt));
     }
 
     public String generateQuestionBlock(String theoryBlockContent) {
-        String questionPrompt = """
+        String prompt = """
                 Based on the following theory content, create a question.
 
                 Content:
                 %s
 
-                Your response must be JSON formatted like this:
+                Response must be a JSON object only:
                 {
                   "question": "What is ...?",
-                  "expectedAnswers": "The correct answer is ",
+                  "expectedAnswer": "The correct answer is ..."
                 }
+                No markdown, no code block, just pure JSON.
                 """.formatted(theoryBlockContent);
 
-        return sendRequest(questionPrompt);
+        return extractJson(sendRequest(prompt));
     }
 
     private String sendRequest(String prompt) {
@@ -83,5 +91,16 @@ public class AIClient {
         }
 
         return responseBody.getChoices().get(0).getMessage().getContent();
+    }
+
+    private String extractJson(String response) {
+        String trimmed = response.trim();
+        if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
+            trimmed = trimmed.substring(3, trimmed.length() - 3).trim();
+        }
+        if (!trimmed.startsWith("{") || !trimmed.endsWith("}")) {
+            throw new RuntimeException("AI response is not pure JSON: " + trimmed);
+        }
+        return trimmed;
     }
 }

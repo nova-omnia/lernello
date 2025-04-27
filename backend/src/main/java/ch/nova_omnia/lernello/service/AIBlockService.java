@@ -24,13 +24,21 @@ public class AIBlockService {
     private final BlockService blockService;
     private final BlockRepository blockRepository;
 
-    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic,UUID blockId) {
-        TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
+    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic, UUID blockId) {
+        TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId)
+                .orElseThrow(() -> new RuntimeException("Block not found"));
 
         String context = loadContext(fileIds);
         String generatedContent = aiClient.generateTheoryBlock(context, topic);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        block.setContent(generatedContent);
+        try {
+            TheoryBlock generatedTheoryBlock = objectMapper.readValue(generatedContent, TheoryBlock.class);
+            block.setContent(generatedTheoryBlock.getContent());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse AI response into TheoryBlock", e);
+        }
+
         blockRepository.save(block);
         return block;
     }

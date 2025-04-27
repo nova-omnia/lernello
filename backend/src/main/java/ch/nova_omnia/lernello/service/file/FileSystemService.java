@@ -70,24 +70,24 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-@Transactional(readOnly = true)
-public String getFileContent(UUID fileId) {
-    Optional<File> fileOptional = fileRepository.findById(fileId);
+    @Transactional(readOnly = true)
+    public String getFileContent(UUID fileId) {
+        Optional<File> fileOptional = fileRepository.findById(fileId);
 
-    if (fileOptional.isEmpty()) {
-        throw new RuntimeException("File not found");
+        if (fileOptional.isEmpty()) {
+            throw new RuntimeException("File not found");
+        }
+
+        File file = fileOptional.get();
+        Path filePath = Paths.get(storagePath, file.getUuid().toString());
+
+        try {
+            byte[] bytes = Files.readAllBytes(filePath);
+            return Base64.getEncoder().encodeToString(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
+        }
     }
-
-    File file = fileOptional.get();
-    Path filePath = Paths.get(storagePath, file.getUuid().toString());
-
-    try {
-        byte[] bytes = Files.readAllBytes(filePath);
-        return Base64.getEncoder().encodeToString(bytes);
-    } catch (IOException e) {
-        throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
-    }
-}
 
 
     public ResponseEntity<Resource> getFileResource(UUID uuid) {

@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-export const Role = z.enum(['INSTRUCTOR', 'TRAINEE']);
+export const INSTRUCTOR_ROLE = 'INSTRUCTOR' as const;
+export const TRAINEE_ROLE = 'TRAINEE' as const;
+export const Role = z.enum([INSTRUCTOR_ROLE, TRAINEE_ROLE]);
+export type RoleType = z.infer<typeof Role>;
 
 export const UserInfoSchema = z.object({
 	uuid: z.string().uuid().nonempty(),

@@ -1,10 +1,18 @@
 <script lang="ts">
-	import AddAITheoryBlockModal from './../AddAITheoryBlockModal.svelte';
+	import AddAITheoryBlockModal from '$lib/components/AddAITheoryBlockModal.svelte';
 	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
 	import { WandSparkles } from 'lucide-svelte';
-	import { queueBlockAction } from '$lib/states/blockActionState.svelte'; // Add this import
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
+	import { THEORY_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 
-	const { block } = $props();
+	interface BlockTheoryItemProps {
+		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
+		role: RoleType;
+	}
+
+	const { block, role }: BlockTheoryItemProps = $props();
 	let lastContent = block.content;
 
 	function handleContentUpdate(newContent: string) {
@@ -21,11 +29,13 @@
 </script>
 
 <div>
-	<TextEditor content={block.content} onUpdate={handleContentUpdate} />
+	<TextEditor content={block.content} onUpdate={handleContentUpdate} {role} />
 
-	<button class="btn btn-primary btn-sm mt-2" onclick={() => (showAddTraineeModal = true)}>
-		<WandSparkles />
-	</button>
+	{#if role === INSTRUCTOR_ROLE}
+		<button class="btn btn-primary btn-sm mt-2" onclick={() => (showAddTraineeModal = true)}>
+			<WandSparkles />
+		</button>
+	{/if}
 </div>
 
 <AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} blockId={block.uuid} />

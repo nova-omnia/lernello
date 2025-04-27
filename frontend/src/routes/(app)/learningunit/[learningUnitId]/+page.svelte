@@ -6,6 +6,7 @@
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo.js';
 
 	let { data } = $props();
 
@@ -71,7 +72,9 @@
 		class:opacity-50={dataLoading}
 		class:cursor-not-allowed={dataLoading}
 	>
-		<BlockEditor learningUnitId={data.learningUnitId} />
-		<BlockReorder />
+		<BlockEditor learningUnitId={data.learningUnitId} role={data.role} />
+		{#if data.role === INSTRUCTOR_ROLE}
+			<BlockReorder />
+		{/if}
 	</div>
 </div>

@@ -26,6 +26,7 @@
 	"common.content": "Content",
 	"common.context": "Context",
 	"common.delete": "Delete",
+	"common.generate": "Generate",
 	"common.description": "Description",
 	"common.descriptionPlaceholder": "Description...",
 	"common.edit": "Edit",

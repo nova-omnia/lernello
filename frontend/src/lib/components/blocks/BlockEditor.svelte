@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
 	import { blockActionState } from '$lib/states/blockActionState.svelte';
 	import BlockItem from '$lib/components/blocks/BlockItem.svelte';
 	import { flip } from 'svelte/animate';

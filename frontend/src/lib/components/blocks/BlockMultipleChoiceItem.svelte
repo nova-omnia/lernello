@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
-	import { Check, X, WandSparkles } from 'lucide-svelte';
+	import { Check, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import AddAITheoryBlockModal from '../GenerateTheoryModal.svelte';
 
 	const { block } = $props();
 
@@ -18,7 +17,6 @@
 			})
 		)
 	);
-	let showAddTraineeModal = $state(false);
 
 	let lastQuestion = $state(block.question);
 	let lastPossibleAnswers = $state([...block.possibleAnswers]);
@@ -118,9 +116,6 @@
 	<div class="flex gap-2">
 		<button onclick={addAnswerField} type="button" class="btn preset-filled-primary-500">
 			{$_('block.multipleChoiceBlocks.addButton')}
-		</button>
-		<button class="btn btn-primary btn-sm" onclick={() => (showAddTraineeModal = true)}>
-			<WandSparkles />
 		</button>
 	</div>
 </div>

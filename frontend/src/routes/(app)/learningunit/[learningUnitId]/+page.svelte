@@ -9,7 +9,6 @@
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
 
-
 	let { data } = $props();
 
 	blockActionState.setBlocks(data.learningUnit.blocks);

@@ -53,7 +53,7 @@
 	});
 </script>
 
-<div class="flex items-center justify-between w-full">
+<div class="flex w-full items-center justify-between">
 	<div class="flex items-center gap-2">
 		<BlockIcon iconType={block.type} />
 		<div class="flex items-baseline gap-2">
@@ -77,7 +77,6 @@
 		</button>
 	{/if}
 </div>
-
 
 {#if block.type === 'MULTIPLE_CHOICE'}
 	<CreateMultipleChoiceModal

@@ -54,6 +54,7 @@
 	"dialog.action.message": "Are you sure you want to proceed?",
 	"dialog.action.title": "Confirm Action",
 	"dialog.closeButton": "Close",
+	"dialog.cancelButton": "Cancel",
 	"dialog.creationWizardTitle": "Creation Wizard",
 	"dialog.delete.message": "Are you sure you want to delete {name}? This action cannot be undone.",
 	"dialog.delete.title": "Confirm Delete",

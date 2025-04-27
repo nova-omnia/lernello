@@ -9,7 +9,7 @@
 		role: RoleType;
 	}
 
-	const { block, role }: BlockQuestionItemProps = $props();
+	const { block }: BlockQuestionItemProps = $props();
 
 	let question = $state(block.question);
 	let expectedAnswer = $state(block.expectedAnswer);

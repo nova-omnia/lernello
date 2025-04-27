@@ -8,7 +8,7 @@ public class ChatRequest {
     private final String model;
 
     public ChatRequest(String prompt) {
-        this.model = "gpt-3.5-turbo";
+        this.model = "gpt-4o";
         this.messages = List.of(Map.of("role", "user", "content", prompt));
     }
 

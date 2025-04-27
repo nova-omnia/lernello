@@ -7,7 +7,7 @@
 		learningUnitId: string;
 		role: RoleType;
 	}
-	const { learningUnitId }: LearningUnitTrainingContainerProps = $props();
+	const { learningUnitId, role }: LearningUnitTrainingContainerProps = $props();
 </script>
 
 <div

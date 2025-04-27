@@ -6,6 +6,9 @@
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import PageContainer from '$lib/components/PageContainer.svelte';
+	import { _ } from 'svelte-i18n';
+
 
 	let { data } = $props();
 
@@ -64,14 +67,16 @@
 	});
 </script>
 
-<div class="-m-4">
-	<div
-		class="grid h-full grid-cols-[75%_25%]"
-		class:pointer-events-none={dataLoading}
-		class:opacity-50={dataLoading}
-		class:cursor-not-allowed={dataLoading}
-	>
-		<BlockEditor learningUnitId={data.learningUnitId} />
-		<BlockReorder />
+<PageContainer title={$_('learningUnit.details')}>
+	<div class="-m-4">
+		<div
+			class="grid h-full grid-cols-[75%_25%]"
+			class:pointer-events-none={dataLoading}
+			class:opacity-50={dataLoading}
+			class:cursor-not-allowed={dataLoading}
+		>
+			<BlockEditor learningUnitId={data.learningUnitId} />
+			<BlockReorder />
+		</div>
 	</div>
-</div>
+</PageContainer>

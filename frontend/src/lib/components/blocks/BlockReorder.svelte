@@ -41,8 +41,7 @@
 	}
 </script>
 
-<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
-	<h2 class="h2">{$_('learningUnit.reorderBlocks')}</h2>
+<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4" style="margin-top: 34px;">
 	<div
 		class="space-y-2 rounded-lg"
 		use:dragHandleZone={{

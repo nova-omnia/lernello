@@ -52,7 +52,7 @@
 	});
 </script>
 
-<div class="flex items-end gap-2">
+<div class="flex items-center gap-2">
 	<BlockIcon iconType={block.type} />
 	<h3 class="font-medium">{block.name}</h3>
 	<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>

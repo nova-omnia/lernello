@@ -6,6 +6,7 @@ import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.service.LearningKitService;
+import ch.nova_omnia.lernello.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +30,7 @@ import java.util.UUID;
 public class LearningKitRestController {
     private final LearningKitService learningKitService;
     private final LearningKitMapper learningKitMapper;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
@@ -43,10 +47,11 @@ public class LearningKitRestController {
         return id;
     }
 
-    @GetMapping("/")
+    @GetMapping("/getList")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
-    public Page<LearningKitResDTO> getList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<LearningKit> kits = learningKitService.getList(pageable);
+    public Page<LearningKitResDTO> getList(@AuthenticationPrincipal UserDetails userDetails, @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        UUID userID = customUserDetailsService.getUserIdByUsername(userDetails.getUsername());
+        Page<LearningKit> kits = learningKitService.getList(pageable, userID);
         return kits.map(learningKitMapper::toDTO);
     }
 

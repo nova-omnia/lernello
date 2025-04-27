@@ -74,7 +74,7 @@
 	"learningKit.addFile": "Datei hinzufügen",
 	"learningKit.checkpoint": "Meilenstein",
 	"learningKit.checkpoint.description": "Teilnehmer müssen alle oben genannten Lerneinheiten abschließen, um Zugriff auf den Rest zu erhalten.",
-	"learningKit.context.description": "Der Kontext für die KI-Unterstützung",
+	"learningKit.context.description": "Der bereitgestellte Kontext für die KI-Unterstützungswerkzeuge. Dateien überall hinziehen, um sie hochzuladen.",
 	"learningKit.create": "Lernkit erstellen",
 	"learningKit.error.loadList": "Lernkits konnten nicht geladen werden",
 	"learningKit.error.loadSingle": "Lernkit konnte nicht geladen werden",

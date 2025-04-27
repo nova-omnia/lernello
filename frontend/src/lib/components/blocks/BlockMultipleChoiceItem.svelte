@@ -3,7 +3,7 @@
 	import { Check, X, WandSparkles } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import AddAITheoryBlockModal from './../AddAITheoryBlockModal.svelte';
+	import AddAITheoryBlockModal from '../GenerateTheoryModal.svelte';
 
 	const { block } = $props();
 
@@ -124,5 +124,3 @@
 		</button>
 	</div>
 </div>
-
-<AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} blockId={block.uuid} />

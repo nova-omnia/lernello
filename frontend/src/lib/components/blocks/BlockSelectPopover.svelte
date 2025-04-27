@@ -70,7 +70,7 @@
 			index: insertIndex,
 			data: {
 				type: BlockType.Enum.THEORY,
-				name: 'Theory Block',
+				name: 'Theory',
 				position: 0,
 				learningUnitId: learningUnitId,
 				content: 'placeholder'
@@ -87,7 +87,7 @@
 			index: insertIndex,
 			data: {
 				type: BlockType.Enum.MULTIPLE_CHOICE,
-				name: 'Multiple Choice Quiz',
+				name: 'Multiple Choice',
 				position: 0,
 				learningUnitId: learningUnitId,
 				question: 'placeholder question?',

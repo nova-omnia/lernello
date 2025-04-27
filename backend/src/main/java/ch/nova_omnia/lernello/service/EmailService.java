@@ -26,7 +26,6 @@ public class EmailService {
      *
      * @param user        The user to whom the invitation is sent.
      * @param learningKit The learning kit for which the invitation is sent.
-     * @return true if the email was sent successfully, false otherwise.
      */
     public void sendLearningKitInvitation(User user, LearningKit learningKit) {
         try {
@@ -52,12 +51,16 @@ public class EmailService {
         Description: %s
         Deadline: %s
         Context: %s
+        Link: http://localhost:8080/learningkit/%s
         """.formatted(
                 learningKit.getName(),
                 learningKit.getDescription(),
                 learningKit.getDeadlineDate(),
-                learningKit.getContext()
+                learningKit.getContext(),
+                learningKit.getUuid()
         );
+        // TODO: add link to the learning kit
+
         mailMessage.setText(body);
 
         return mailMessage;

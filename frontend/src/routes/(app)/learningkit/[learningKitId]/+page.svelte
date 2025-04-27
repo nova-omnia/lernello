@@ -83,8 +83,7 @@
 							<button
 								type="button"
 								class="btn preset-filled-primary-500 h-full"
-								onclick={(e) => {
-									e.preventDefault();
+								onclick={() => {
 									showPublishDialog = true;
 								}}
 								>{$_('learningKit.publish')}
@@ -133,9 +132,11 @@
 
 	<ConfirmDialog
 		isOpen={showPublishDialog}
-		title={$_('learningKit.publish.ConfirmationTitle')}
-		message={`${$_('learningKit.publish.ConfirmationText')} "${$learningKitQuery.data.name}"?`}
-		confirmText={$_('learningKit.publish.Text')}
+		title={$_('learningKit.publish.confirmationTitle')}
+		message={$_('learningKit.publish.confirmationText', {
+			values: { name: $learningKitQuery.data.name }
+		})}
+		confirmText={$_('learningKit.publish.text')}
 		danger={false}
 		onConfirm={() => {
 			$publishLearningKitMutation.mutate(learningKitId);

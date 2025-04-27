@@ -2,18 +2,17 @@ package ch.nova_omnia.lernello.service.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +36,7 @@ public class FileSystemService implements FileService {
 
     @Override
     public List<File> findAllByIds(List<UUID> uuids) {
-        if (uuids == null) {
-            return null;
-        }
-        return fileRepository.findAllById(uuids);
+        return uuids == null ? null : fileRepository.findAllById(uuids);
     }
 
     @Override
@@ -64,52 +60,53 @@ public class FileSystemService implements FileService {
             Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
         } catch (IOException e) {
-            throw new RuntimeException("Could not create directory for file. Error: " + e.getMessage(), e);
+            throw new RuntimeException("Could not save file. Error: " + e.getMessage(), e);
         }
         return savedFile;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public String getFileContent(UUID fileId) {
-        Optional<File> fileOptional = fileRepository.findById(fileId);
+    public String extractTextFromFiles(List<UUID> fileIds) {
+        StringBuilder context = new StringBuilder();
 
-        if (fileOptional.isEmpty()) {
-            throw new RuntimeException("File not found");
+        for (UUID fileId : fileIds) {
+            try (InputStream inputStream = loadFileAsStream(fileId);
+                 PDDocument document = PDDocument.load(inputStream)) {
+
+                String fileContent = new PDFTextStripper().getText(document);
+                if (!fileContent.isBlank()) {
+                    if (context.length() > 0) {
+                        context.append("\n");
+                    }
+                    context.append(fileContent);
+                }
+
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read or parse PDF file with ID: " + fileId, e);
+            }
         }
 
-        File file = fileOptional.get();
-        Path filePath = Paths.get(storagePath, file.getUuid().toString());
-
-        try {
-            byte[] bytes = Files.readAllBytes(filePath);
-            return Base64.getEncoder().encodeToString(bytes);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not read file content. Error: " + e.getMessage(), e);
-        }
+        return context.toString();
     }
 
+    private InputStream loadFileAsStream(UUID fileId) {
+        Optional<File> fileOptional = fileRepository.findById(fileId);
+        if (fileOptional.isEmpty()) {
+            throw new RuntimeException("File with ID " + fileId + " not found");
+        }
 
-    public ResponseEntity<Resource> getFileResource(UUID uuid) {
-        Optional<File> fileOptional = fileRepository.findById(uuid);
-        if (fileOptional.isPresent()) {
-            File file = fileOptional.get();
-            Path filePath = Paths.get(storagePath, uuid.toString());
-            try {
-                byte[] fileData = Files.readAllBytes(filePath);
-                InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(fileData));
-                return ResponseEntity.ok().header("attachment;filename=" + file.getName()).body(resource);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not read file. Error: " + e.getMessage(), e);
-            }
-        } else {
-            return ResponseEntity.notFound().build();
+        Path filePath = Paths.get(storagePath, fileId.toString());
+        try {
+            byte[] fileData = Files.readAllBytes(filePath);
+            return new ByteArrayInputStream(fileData);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load file data for ID: " + fileId, e);
         }
     }
 
     private void deleteExistingFileIfExists(String fileName) {
-        Optional<File> existingFileOptional = fileRepository.findByName(fileName);
-        existingFileOptional.ifPresent(existingFile -> {
+        fileRepository.findByName(fileName).ifPresent(existingFile -> {
             Path existingFilePath = Paths.get(storagePath, existingFile.getUuid().toString());
             try {
                 Files.deleteIfExists(existingFilePath);

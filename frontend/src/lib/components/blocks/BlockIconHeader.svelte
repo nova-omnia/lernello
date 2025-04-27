@@ -7,6 +7,7 @@
 	import { api } from '$lib/api/apiClient';
 	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
 	import { createQuery } from '@tanstack/svelte-query';
+	import AddAiTheoryBlockModal from '../AddAITheoryBlockModal.svelte';
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
@@ -83,7 +84,10 @@
 		}))}
 	/>
 {:else if block.type === 'THEORY'}
-	<!--ToDo: Add Theory Creation Modal-->
+	<AddAiTheoryBlockModal
+		bind:isOpen={showCreationDialog}
+		blockId={block.uuid}
+	/>
 {:else if block.type === 'QUESTION'}
 	<CreateMultipleChoiceModal
 		isOpen={showCreationDialog}

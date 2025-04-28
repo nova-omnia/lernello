@@ -1,8 +1,6 @@
 <script lang="ts">
-	import AddAITheoryBlockModal from './../AddAITheoryBlockModal.svelte';
 	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
-	import { WandSparkles } from 'lucide-svelte';
-	import { queueBlockAction } from '$lib/states/blockActionState.svelte'; // Add this import
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 
 	const { block } = $props();
 	let lastContent = block.content;
@@ -17,15 +15,6 @@
 			lastContent = newContent;
 		}
 	}
-	let showAddTraineeModal = $state(false);
 </script>
 
-<div>
-	<TextEditor content={block.content} onUpdate={handleContentUpdate} />
-
-	<button class="btn btn-primary btn-sm mt-2" onclick={() => (showAddTraineeModal = true)}>
-		<WandSparkles />
-	</button>
-</div>
-
-<AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} blockId={block.uuid} />
+<TextEditor content={block.content} onUpdate={handleContentUpdate} />

@@ -12,7 +12,9 @@
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
+		queryFn: () => {
+			return api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse();
+		}
 	});
 </script>
 

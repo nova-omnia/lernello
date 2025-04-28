@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +21,5 @@ public interface FileService {
 
     public File save(MultipartFile file);
 
-    public ResponseEntity<Resource> getFileResource(UUID uuid);
-
-    public String getFileContent(UUID fileId);
+    public String extractTextFromFiles(List<UUID> fileIds);
 }

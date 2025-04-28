@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.nova_omnia.lernello.dto.request.user.UserLoginDTO;
 import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
 import ch.nova_omnia.lernello.mapper.user.UserLoginMapper;
-import ch.nova_omnia.lernello.model.data.User;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,14 @@
 package ch.nova_omnia.lernello.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
@@ -19,65 +20,94 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AIBlockService {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final BlockRepository blockRepository;
     private final FileService fileService;
     private final AIClient aiClient;
-    private final BlockService blockService;
-    private final BlockRepository blockRepository;
 
-    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic,UUID blockId) {
+    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic, UUID blockId) {
         TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
 
-        String context = loadContext(fileIds);
-        String generatedContent = aiClient.generateTheoryBlock(context, topic);
+        String context = fileService.extractTextFromFiles(fileIds);
+        String prompt = buildTheoryBlockPrompt(context, topic);
+        String aiResponse = aiClient.sendPrompt(prompt);
 
-        block.setContent(generatedContent);
-        blockRepository.save(block);
-        return block;
+        try {
+            TheoryBlock generated = objectMapper.readValue(aiResponse, TheoryBlock.class);
+            block.setContent(generated.getContent());
+            return blockRepository.save(block);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse AI TheoryBlock", e);
+        }
     }
 
     public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId, UUID multipleChoiceBlockUuid) {
-        TheoryBlock theoryBlock = (TheoryBlock) blockService.getBlockById(theoryBlockId);
-        MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) blockService.getBlockById(multipleChoiceBlockUuid);
+        TheoryBlock theoryBlock = (TheoryBlock) getBlockById(theoryBlockId);
+        MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) getBlockById(multipleChoiceBlockUuid);
 
-        String generatedContent = aiClient.generateMultipleChoiceBlock(theoryBlock.getContent());
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            MultipleChoiceBlock generatedMultipleChoiceBlock = objectMapper.readValue(generatedContent, MultipleChoiceBlock.class);
-            multipleChoiceBlock.setQuestion(generatedMultipleChoiceBlock.getQuestion());
-            multipleChoiceBlock.setPossibleAnswers(generatedMultipleChoiceBlock.getPossibleAnswers());
-            multipleChoiceBlock.setCorrectAnswers(generatedMultipleChoiceBlock.getCorrectAnswers());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse AI response into MultipleChoiceBlock", e);
-        }
-
-        return blockRepository.save(multipleChoiceBlock);
-    }
-
-
-    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockIUuid, UUID questionBlockUuid) {
-        TheoryBlock theoryBlock = (TheoryBlock) blockService.getBlockById(theoryBlockIUuid);
-        QuestionBlock questionBlock = (QuestionBlock) blockService.getBlockById(questionBlockUuid);
-
-        String generatedContent = aiClient.generateQuestionBlock(theoryBlock.getContent());
-        ObjectMapper objectMapper = new ObjectMapper();
+        String prompt = buildMultipleChoicePrompt(theoryBlock.getContent());
+        String aiResponse = aiClient.sendPrompt(prompt);
 
         try {
-            QuestionBlock generatedQuestionBlock = objectMapper.readValue(generatedContent, QuestionBlock.class);
-            questionBlock.setQuestion(generatedQuestionBlock.getQuestion());
-            questionBlock.setExpectedAnswer(generatedQuestionBlock.getExpectedAnswer());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse AI response into QuestionBlock", e);
+            MultipleChoiceBlock generated = objectMapper.readValue(aiResponse, MultipleChoiceBlock.class);
+            mcBlock.setQuestion(generated.getQuestion());
+            mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
+            mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
+            return blockRepository.save(mcBlock);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse AI MultipleChoiceBlock", e);
         }
-        return blockRepository.save(questionBlock);
     }
 
-    private String loadContext(List<UUID> fileIds) {
-        String context = "";
-        for (UUID fileId : fileIds) {
-            String fileContent = fileService.getFileContent(fileId);
-            context = context == null ? fileContent : context + "\n" + fileContent;
+    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockUuid, UUID questionBlockUuid) {
+        TheoryBlock theoryBlock = (TheoryBlock) getBlockById(theoryBlockUuid);
+        QuestionBlock questionBlock = (QuestionBlock) getBlockById(questionBlockUuid);
+
+        String prompt = buildQuestionBlockPrompt(theoryBlock.getContent());
+        String aiResponse = aiClient.sendPrompt(prompt);
+
+        try {
+            QuestionBlock generated = objectMapper.readValue(aiResponse, QuestionBlock.class);
+            questionBlock.setQuestion(generated.getQuestion());
+            questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
+            return blockRepository.save(questionBlock);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse AI QuestionBlock", e);
         }
-        return context;
+    }
+
+    @Transactional
+    private Block getBlockById(UUID blockId) {
+        return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found" + blockId));
+    }
+
+    private String buildTheoryBlockPrompt(String context, String topic) {
+        return """
+                You are an AI tutor. Create a theory block on the topic '%s' strictly based on the provided content.
+                Content:
+                %s
+                Respond with pure JSON:
+                { "content": "..." }
+                """.formatted(topic, context);
+    }
+
+    private String buildMultipleChoicePrompt(String content) {
+        return """
+                Based on the following content, create a multiple choice question.
+                Content:
+                %s
+                Respond with pure JSON:
+                { "question": "...", "possibleAnswers": ["..."], "correctAnswers": ["..."] }
+                """.formatted(content);
+    }
+
+    private String buildQuestionBlockPrompt(String content) {
+        return """
+                Based on the following content, create a question.
+                Content:
+                %s
+                Respond with pure JSON:
+                { "question": "...", "expectedAnswer": "..." }
+                """.formatted(content);
     }
 }

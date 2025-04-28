@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data;
+package ch.nova_omnia.lernello.model.data.user;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -28,9 +28,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @NoArgsConstructor
 public class User {
-    public enum Role {
-        INSTRUCTOR, TRAINEE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

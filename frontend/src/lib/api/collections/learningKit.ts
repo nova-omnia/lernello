@@ -34,7 +34,7 @@ export const deleteLearningKit = createEndpoint({
 
 export const getLearningKits = createEndpoint({
 	method: 'GET',
-	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/?page=${page}&size=${size}`,
+	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/getList?page=${page}&size=${size}`,
 	response: {
 		schema: LearningKitPageSchema,
 		defaultValidate: true
@@ -80,6 +80,19 @@ export const removeParticipantFromKit = createEndpoint({
 	},
 	payload: {
 		schema: z.string().uuid(),
+		defaultValidate: false
+	}
+});
+
+export const publishLearningKit = createEndpoint({
+	method: 'POST',
+	getPath: (id: string) => `${REQUEST_MAPPING}/publish/${id}`,
+	response: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	payload: {
+		schema: z.null(),
 		defaultValidate: false
 	}
 });

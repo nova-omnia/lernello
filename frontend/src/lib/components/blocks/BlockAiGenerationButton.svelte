@@ -14,7 +14,7 @@
 	} from '$lib/api/collections/aiBlock';
 	import type { GeneratedAIQuestionBlock } from '$lib/schemas/request/block/GeneratedAIQuestionBlock';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
-	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { blockActionState } from '$lib/states/blockActionState.svelte';
 	import type { GenerateAITheoryBlock } from '$lib/schemas/request/block/GenerateAITheoryBlock';
 
 	interface BlockAiGenerationButtonProps {

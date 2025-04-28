@@ -3,6 +3,7 @@
 	import { FilePlus } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { onDestroy } from 'svelte';
+	import { FileRejection } from '@zag-js/file-upload';
 
 	let previewUrl: string | null = null;
 	let fileType: 'image' | 'pdf' | 'video' | 'audio' | 'other' | null = null;
@@ -12,7 +13,7 @@
 
 	type FileChangeDetails = {
 		acceptedFiles: File[];
-		rejectedFiles: any[];
+		rejectedFiles: FileRejection[];
 	};
 
 	function cleanupObjectUrl() {
@@ -121,7 +122,9 @@
 					controls
 					src={previewUrl}
 					class="border-surface-300-600 bg-surface-100-800 max-w-full rounded border"
-					>{$_('block.multimediaBlock.videoNotSupported')}</video
+				>
+					<track kind="captions" src={previewUrl} />
+					{$_('block.multimediaBlock.videoNotSupported')}</video
 				>
 			{:else if fileType === 'audio'}
 				<audio controls src={previewUrl} class="w-full"

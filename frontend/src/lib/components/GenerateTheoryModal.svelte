@@ -8,7 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 
-	interface AddAITheoryBlockModalProps {
+	interface GenerateTheoryModalProps {
 		isOpen: boolean;
 		blockId: string;
 		onConfirm: (blockId: string, topic: string, files: string[]) => void;
@@ -22,7 +22,7 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isOpen = $bindable(), blockId, onConfirm }: AddAITheoryBlockModalProps = $props();
+	let { isOpen = $bindable(), blockId, onConfirm }: GenerateTheoryModalProps = $props();
 
 	const onCancel = () => {
 		isOpen = false;

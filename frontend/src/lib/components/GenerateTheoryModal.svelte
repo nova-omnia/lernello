@@ -76,7 +76,15 @@
 			<button class="btn btn-primary" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
-			<button class="btn btn-primary" onclick={() => onConfirm(blockId, input, selectedFiles.map((f) => f.uuid))}>
+			<button
+				class="btn btn-primary"
+				onclick={() =>
+					onConfirm(
+						blockId,
+						input,
+						selectedFiles.map((f) => f.uuid)
+					)}
+			>
 				{$_('common.generate')}
 			</button>
 		</div>

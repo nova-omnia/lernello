@@ -7,7 +7,11 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
-	import { generateAITheoryBlock, generatedAIMultipleChoiceBlock, generatedAIQuestionBlock } from '$lib/api/collections/aiBlock';
+	import {
+		generateAITheoryBlock,
+		generatedAIMultipleChoiceBlock,
+		generatedAIQuestionBlock
+	} from '$lib/api/collections/aiBlock';
 	import type { GeneratedAIQuestionBlock } from '$lib/schemas/request/block/GeneratedAIQuestionBlock';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
@@ -30,7 +34,9 @@
 		enabled: !!learningUnitId,
 		queryFn: async () => {
 			if (learningUnitId) {
-				const learningUnit = await api(fetch).req(getLearningUnitById, null, learningUnitId).parse();
+				const learningUnit = await api(fetch)
+					.req(getLearningUnitById, null, learningUnitId)
+					.parse();
 				loadTheoryBlocks();
 				blockActionState.setBlocks(learningUnit.blocks ?? []);
 				blockActionState.clearQueue();
@@ -137,10 +143,10 @@
 		}))}
 	/>
 {:else if block.type === 'THEORY'}
-	<GenerateTheoryModal 
-	bind:isOpen={showCreationDialog} 
-	blockId={block.uuid} 
-	onConfirm={handleTheoryCreationDialog}
+	<GenerateTheoryModal
+		bind:isOpen={showCreationDialog}
+		blockId={block.uuid}
+		onConfirm={handleTheoryCreationDialog}
 	/>
 {:else if block.type === 'QUESTION'}
 	<CreateMultipleChoiceModal

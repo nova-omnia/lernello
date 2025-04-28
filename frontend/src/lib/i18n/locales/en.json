@@ -5,7 +5,7 @@
 	"app.searchPlaceholder": "Search...",
 	"block.chooseTheoryBlock": "Choose Theory Block",
 	"block.generateAi": "Generate",
-	"block.generateAi.description": "Generate content with AI",
+	"block.generateAi.description": "Generate block content with AI",
 	"block.multipleChoiceBlocks.addButton": "Add more possible answers",
 	"block.multipleChoiceCreation": "Create Multiple Choice Block",
 	"block.multipleChoiceQuiz": "Multiple Choice",

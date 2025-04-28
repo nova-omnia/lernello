@@ -76,9 +76,9 @@
 			class:cursor-not-allowed={dataLoading}
 		>
 			<BlockEditor learningUnitId={data.learningUnitId} role={data.role} />
-		{#if data.role === INSTRUCTOR_ROLE}
-			<BlockReorder />
-		{/if}
+			{#if data.role === INSTRUCTOR_ROLE}
+				<BlockReorder />
+			{/if}
 		</div>
 	</div>
 </PageContainer>

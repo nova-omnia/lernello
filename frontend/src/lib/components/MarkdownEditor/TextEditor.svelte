@@ -73,27 +73,29 @@
 
 <div class="relative h-full rounded-lg bg-white p-4 dark:bg-gray-800">
 	{#if role === INSTRUCTOR_ROLE}
-		<div class="flex border-b dark:border-gray-700">
-			<button
-				class={`!rounded-none !px-4 !py-2 !text-sm !font-medium ${
-					activeTab === Tab.EDIT
-						? '!border-primary-500 text-primary-500 !border-b-2'
-						: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-				}`}
-				onclick={() => (activeTab = Tab.EDIT)}
-			>
-				{$_('common.edit')}
-			</button>
-			<button
-				class={`px-4 py-2 text-sm font-medium ${
-					activeTab === Tab.PREVIEW
-						? '!border-primary-500 text-primary-500 !border-b-2'
-						: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-				}`}
-				onclick={() => (activeTab = Tab.PREVIEW)}
-			>
-				{$_('common.preview')}
-			</button>
+		<div class="flex justify-between dark:border-gray-700">
+			<div>
+				<button
+					class={`!rounded-none !px-4 !py-2 !text-sm !font-medium ${
+						activeTab === Tab.EDIT
+							? '!border-primary-500 text-primary-500 !border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => (activeTab = Tab.EDIT)}
+				>
+					{$_('common.edit')}
+				</button>
+				<button
+					class={`px-4 py-2 text-sm font-medium ${
+						activeTab === Tab.PREVIEW
+							? '!border-primary-500 text-primary-500 !border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => (activeTab = Tab.PREVIEW)}
+				>
+					{$_('common.preview')}
+				</button>
+			</div>
 			{#if activeTab === Tab.EDIT}
 				<Toolbar {insertSyntax} />
 			{/if}

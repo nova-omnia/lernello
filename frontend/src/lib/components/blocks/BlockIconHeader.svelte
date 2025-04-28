@@ -7,7 +7,7 @@
 		THEORY_BLOCK_TYPE
 	} from '$lib/schemas/response/BlockRes';
 	import BlockIcon from './BlockIcon.svelte';
-	import { WandSparkles } from 'lucide-svelte';
+	import { Sparkles } from 'lucide-svelte';
 	import CreateMultipleChoiceModal from '../dialogs/CreateMultipleChoiceModal.svelte';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
@@ -74,15 +74,15 @@
 	{#if learningUnitId && role === INSTRUCTOR_ROLE}
 		<button
 			type="button"
-			class="text-primary-400 hover:text-primary-500 flex items-center gap-2"
+			class="btn preset-filled-primary-500"
 			title={$_('block.generateAi')}
 			onclick={(e) => {
 				e.preventDefault();
 				showCreationDialog = true;
 			}}
 		>
-			<WandSparkles />
-			<p class="m-0">{$_('block.generateAi')}</p>
+			{$_('block.generateAi')}
+			<Sparkles size={18} />
 		</button>
 	{/if}
 </div>

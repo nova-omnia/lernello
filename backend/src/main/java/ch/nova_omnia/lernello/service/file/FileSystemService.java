@@ -53,8 +53,8 @@ public class FileSystemService implements FileService {
     @Override
     @Transactional
     public File save(MultipartFile file) {
-        deleteExistingFileIfExists(file.getOriginalFilename());
-        File savedFile = fileRepository.save(new File(file.getOriginalFilename()));
+        String uniqueFileName = resolveUniqueFileName(file.getOriginalFilename());
+        File savedFile = fileRepository.save(new File(uniqueFileName));
         try {
             Path filePath = Paths.get(storagePath, savedFile.getUuid().toString());
             Files.createDirectories(filePath.getParent());
@@ -71,8 +71,7 @@ public class FileSystemService implements FileService {
         StringBuilder context = new StringBuilder();
 
         for (UUID fileId : fileIds) {
-            try (InputStream inputStream = loadFileAsStream(fileId);
-                 PDDocument document = PDDocument.load(inputStream)) {
+            try (InputStream inputStream = loadFileAsStream(fileId); PDDocument document = PDDocument.load(inputStream)) {
 
                 String fileContent = new PDFTextStripper().getText(document);
                 if (!fileContent.isBlank()) {
@@ -105,15 +104,16 @@ public class FileSystemService implements FileService {
         }
     }
 
-    private void deleteExistingFileIfExists(String fileName) {
-        fileRepository.findByName(fileName).ifPresent(existingFile -> {
-            Path existingFilePath = Paths.get(storagePath, existingFile.getUuid().toString());
-            try {
-                Files.deleteIfExists(existingFilePath);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not delete existing file. Error: " + e.getMessage(), e);
-            }
-            fileRepository.delete(existingFile);
-        });
+    private String resolveUniqueFileName(String fileName) {
+        String baseName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName;
+        String extension = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf('.')) : "";
+        String uniqueFileName = fileName;
+        int count = 1;
+
+        while (fileRepository.findByName(uniqueFileName).isPresent()) {
+            uniqueFileName = String.format("%s (%d)%s", baseName, count++, extension);
+        }
+
+        return uniqueFileName;
     }
 }

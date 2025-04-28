@@ -3,12 +3,14 @@
 	import BlockItem from '$lib/components/blocks/BlockItem.svelte';
 	import { flip } from 'svelte/animate';
 	import BlockSelectPopover from './BlockSelectPopover.svelte';
+	import type { RoleType } from '$lib/schemas/response/UserInfo';
 
 	interface BlockEditorProps {
 		learningUnitId: string;
+		role: RoleType;
 	}
 
-	const { learningUnitId }: BlockEditorProps = $props();
+	const { learningUnitId, role }: BlockEditorProps = $props();
 </script>
 
 <div
@@ -18,7 +20,7 @@
 		<BlockSelectPopover index={-1} {learningUnitId} />
 		{#each blockActionState.blocks as block, index (block.uuid)}
 			<div animate:flip={{ duration: 200 }} class="space-y-2">
-				<BlockItem {block} {learningUnitId} />
+				<BlockItem {block} {learningUnitId} {role} />
 				<BlockSelectPopover {index} {learningUnitId} />
 			</div>
 		{/each}

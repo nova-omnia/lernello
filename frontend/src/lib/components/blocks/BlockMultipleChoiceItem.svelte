@@ -1,10 +1,24 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
-	import { Check, X } from 'lucide-svelte';
+	import { Plus, Check, X, Trash } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 
-	const { block } = $props();
+	const Tab = {
+		EDIT: 'edit',
+		PREVIEW: 'preview'
+	} as const;
+	type Tab = (typeof Tab)[keyof typeof Tab];
+	let activeTab: Tab = $state(Tab.EDIT);
+
+	interface BlockMultipleChoiceItemProps {
+		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
+		role: RoleType;
+	}
+
+	const { block, role }: BlockMultipleChoiceItemProps = $props();
 
 	type Answer = { value: string; isCorrect: boolean };
 
@@ -72,50 +86,141 @@
 	$effect(() => {
 		handleUpdate();
 	});
+
+	//TODO
+	let selectedAnswer = $state<number | null>(null);
+	let isSubmitted = $state(false);
+
+	function handleSubmit() {
+		isSubmitted = true;
+	}
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">
-	<input
-		type="text"
-		placeholder={$_('common.block.question')}
-		bind:value={question}
-		class="input col-span-12 mb-4 w-full border p-2"
-	/>
+	{#if role === INSTRUCTOR_ROLE}
+		<div class="mb-4 flex justify-between dark:border-gray-700">
+			<div>
+				<button
+					type="button"
+					class={`rounded-none px-4 py-2 text-sm font-medium ${
+						activeTab === Tab.EDIT
+							? 'border-primary-500 text-primary-500 border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => (activeTab = Tab.EDIT)}
+				>
+					{$_('common.edit')}
+				</button>
+				<button
+					type="button"
+					class={`rounded-none px-4 py-2 text-sm font-medium ${
+						activeTab === Tab.PREVIEW
+							? 'border-primary-500 text-primary-500 border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => {
+						activeTab = Tab.PREVIEW;
+						isSubmitted = false;
+						selectedAnswer = null;
+					}}
+				>
+					{$_('common.preview')}
+				</button>
+			</div>
 
-	{#each answers as answer, idx (idx)}
-		<div class="col-span-12 mb-2 grid grid-cols-12 items-center gap-4 pl-4">
-			<Switch
-				name={`correct-${idx}`}
-				checked={answer.isCorrect}
-				controlActive="bg-primary-400"
-				classes="col-span-1"
-				onCheckedChange={() => toggleCorrect(idx)}
-			>
-				{#snippet inactiveChild()}<X size="14" />{/snippet}
-				{#snippet activeChild()}<Check size="14" />{/snippet}
-			</Switch>
-			<input
-				type="text"
-				placeholder={`${$_('common.block.answer')} ${idx + 1}`}
-				class="input col-span-10 p-2"
-				value={answer.value}
-				oninput={(e) => updateAnswer(idx, e.currentTarget.value)}
-				onblur={() => handleUpdate()}
-			/>
-			<button
-				onclick={() => removeAnswer(idx)}
-				class="col-span-1 text-red-500 hover:text-red-700"
-				title={$_('common.remove')}
-				type="button"
-			>
-				<X size="18" />
-			</button>
+			{#if activeTab === Tab.EDIT}
+				<div class="flex items-center space-x-2">
+					<button
+						type="button"
+						onclick={addAnswerField}
+						class="btn preset-tonal-surface hover:"
+						title={$_('block.multipleChoiceBlocks.addButton')}
+					>
+						<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />
+					</button>
+				</div>
+			{/if}
 		</div>
-	{/each}
+	{/if}
 
-	<div class="flex gap-2">
-		<button onclick={addAnswerField} type="button" class="btn preset-filled-primary-500">
-			{$_('block.multipleChoiceBlocks.addButton')}
-		</button>
-	</div>
+	{#if role === INSTRUCTOR_ROLE && activeTab === Tab.EDIT}
+		<input
+			type="text"
+			placeholder={$_('common.block.question')}
+			bind:value={question}
+			class="input col-span-12 mb-4 w-full border p-2 dark:bg-gray-700"
+		/>
+
+		{#each answers as answer, idx (idx)}
+			<div class="col-span-12 mb-2 flex items-center gap-4 pl-4">
+				<Switch
+					name={`correct-${idx}`}
+					checked={answer.isCorrect}
+					controlActive="bg-primary-400"
+					onCheckedChange={() => toggleCorrect(idx)}
+				>
+					{#snippet inactiveChild()}<X size="14" />{/snippet}
+					{#snippet activeChild()}<Check size="14" />{/snippet}
+				</Switch>
+				<input
+					type="text"
+					placeholder={`${$_('common.block.answer')} ${idx + 1}`}
+					class="input h-full flex-grow p-2 dark:bg-gray-700"
+					value={answer.value}
+					oninput={(e) => updateAnswer(idx, e.currentTarget.value)}
+					onblur={() => handleUpdate()}
+				/>
+				<button
+					onclick={() => removeAnswer(idx)}
+					class="btn-icon preset-outlined-error-500 ml-auto text-red-500 hover:text-red-700"
+					title={$_('common.remove')}
+					type="button"
+				>
+					<Trash size="18" />
+				</button>
+			</div>
+		{/each}
+	{:else}
+		<div class="space-y-4">
+			<div class="flex justify-between">
+				<h3 class="text-lg font-semibold dark:text-gray-200">{question}</h3>
+
+				{#if !isSubmitted}
+					<button
+						type="button"
+						onclick={handleSubmit}
+						disabled={selectedAnswer === null}
+						class="btn preset-tonal-surface hover:"
+						title={$_('common.submit')}
+					>
+						{$_('common.submit')}
+					</button>
+				{:else}
+					<div class="mt-4 rounded-lg bg-gray-100 p-3 dark:bg-gray-700">
+						{#if selectedAnswer !== null && answers[selectedAnswer]?.isCorrect}
+							<span class="text-green-600 dark:text-green-400">✓ {$_('block.correctAnswer')}</span>
+						{:else}
+							<span class="text-red-600 dark:text-red-400">✗ {$_('block.incorrectAnswer')}</span>
+						{/if}
+					</div>
+				{/if}
+			</div>
+
+			<div class="space-y-2">
+				{#each answers as answer, idx (idx)}
+					<button
+						class={`w-full rounded-lg border p-3 text-left transition-colors
+							${selectedAnswer === idx ? 'border-blue-300 bg-blue-100 dark:bg-blue-900/30' : 'dark:border-gray-600'}
+							${isSubmitted && answer.isCorrect ? 'border-green-300 bg-green-100 dark:bg-green-900/30' : ''}
+							${isSubmitted && selectedAnswer === idx && !answer.isCorrect ? 'border-red-300 bg-red-100 dark:bg-red-900/30' : ''}
+							${!isSubmitted ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : ''}`}
+						onclick={() => !isSubmitted && (selectedAnswer = idx)}
+						disabled={isSubmitted}
+					>
+						{answer.value}
+					</button>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>

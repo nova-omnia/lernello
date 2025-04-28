@@ -3,6 +3,7 @@
 	import { GripVertical } from 'lucide-svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
 	interface BlockReorderItemProps {
 		block: BlockRes;
@@ -17,5 +18,5 @@
 >
 	<GripVertical class="text-surface-400-600 h-6 w-6" />
 
-	<BlockIconHeader {block} />
+	<BlockIconHeader {block} role={INSTRUCTOR_ROLE} />
 </div>

@@ -4,13 +4,15 @@
 	import Toolbar from './Toolbar.svelte';
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 
 	interface TextEditorProps {
 		content: string;
 		onUpdate?: (content: string) => void;
+		role: RoleType;
 	}
 
-	let { content: initialContent, onUpdate }: TextEditorProps = $props();
+	let { content: initialContent, onUpdate, role }: TextEditorProps = $props();
 	let content = $state(initialContent);
 	let lastSavedContent = $state(initialContent);
 
@@ -69,43 +71,45 @@
 	};
 </script>
 
-<div class="relative h-full rounded-lg border dark:border-gray-700 dark:bg-gray-900">
-	<div class="flex border-b dark:border-gray-700">
-		<button
-			class={`px-4 py-2 text-sm font-medium ${
-				activeTab === Tab.EDIT
-					? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-					: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-			}`}
-			onclick={() => (activeTab = Tab.EDIT)}
-		>
-			{$_('common.edit')}
-		</button>
-		<button
-			class={`px-4 py-2 text-sm font-medium ${
-				activeTab === Tab.PREVIEW
-					? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-					: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-			}`}
-			onclick={() => (activeTab = Tab.PREVIEW)}
-		>
-			{$_('common.preview')}
-		</button>
-		{#if activeTab === Tab.EDIT}
-			<Toolbar {insertSyntax} />
-		{/if}
-	</div>
+<div class="relative h-full rounded-lg bg-white p-4 dark:bg-gray-800">
+	{#if role === INSTRUCTOR_ROLE}
+		<div class="flex justify-between dark:border-gray-700">
+			<div>
+				<button
+					class={`!rounded-none !px-4 !py-2 !text-sm !font-medium ${
+						activeTab === Tab.EDIT
+							? '!border-primary-500 text-primary-500 !border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => (activeTab = Tab.EDIT)}
+				>
+					{$_('common.edit')}
+				</button>
+				<button
+					class={`px-4 py-2 text-sm font-medium ${
+						activeTab === Tab.PREVIEW
+							? '!border-primary-500 text-primary-500 !border-b-2'
+							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+					}`}
+					onclick={() => (activeTab = Tab.PREVIEW)}
+				>
+					{$_('common.preview')}
+				</button>
+			</div>
+			{#if activeTab === Tab.EDIT}
+				<Toolbar {insertSyntax} />
+			{/if}
+		</div>
+	{/if}
 
-	{#if activeTab === Tab.EDIT}
+	{#if role === INSTRUCTOR_ROLE && activeTab === Tab.EDIT}
 		<textarea
 			id="editor"
 			bind:value={content}
-			class="h-[calc(100%-44px)] min-h-[300px] w-full resize-none bg-white p-4 text-gray-900 focus:outline-none dark:bg-gray-900 dark:text-gray-100"
+			class="h-[calc(100%-44px)] min-h-[300px] w-full resize-none bg-white p-4 text-gray-900 focus:outline-none dark:bg-gray-700 dark:text-gray-100"
 			placeholder={$_('markdownEditor.placeholder')}
-		>
-		</textarea>
-	{/if}
-	{#if activeTab === Tab.PREVIEW}
+		></textarea>
+	{:else}
 		{#await previewContent()}
 			<div class="p-4">{$_('common.loading')}</div>
 		{:then safeHtml}

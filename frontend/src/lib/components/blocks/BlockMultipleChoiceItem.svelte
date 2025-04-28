@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
-	import { Check, X, WandSparkles } from 'lucide-svelte';
+	import { Check, X } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import AddAITheoryBlockModal from './../AddAITheoryBlockModal.svelte';
@@ -32,7 +32,6 @@
 			})
 		)
 	);
-	let showAddTraineeModal = $state(false);
 
 	let lastQuestion = $state(block.question);
 	let lastPossibleAnswers = $state([...block.possibleAnswers]);
@@ -211,5 +210,3 @@
 		</div>
 	{/if}
 </div>
-
-<AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} blockId={block.uuid} />

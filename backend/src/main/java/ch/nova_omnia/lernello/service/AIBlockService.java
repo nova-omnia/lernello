@@ -84,7 +84,6 @@ public class AIBlockService {
     private String buildTheoryBlockPrompt(String context, String topic) {
         return """
                 You are an AI tutor. Create a theory block on the topic '%s' strictly based on the provided content.
-                Do not use any external knowledge or your own database.
                 Content:
                 %s
                 Respond with pure JSON:

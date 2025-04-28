@@ -13,6 +13,7 @@
 	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import GenerateTheoryModal from '../GenerateTheoryModal.svelte';
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
@@ -61,23 +62,28 @@
 	});
 </script>
 
-<div class="flex items-end gap-2">
-	<BlockIcon iconType={block.type} />
-	<h3 class="font-medium">{block.name}</h3>
-	<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
+<div class="flex w-full items-center justify-between">
+	<div class="flex items-center gap-2">
+		<BlockIcon iconType={block.type} />
+		<div class="flex items-baseline gap-2">
+			<h3 class="font-medium">{block.name}</h3>
+			<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
+		</div>
+	</div>
 
 	{#if learningUnitId && role === INSTRUCTOR_ROLE}
-		<div
-			class="text-primary-400 hover:text-primary-500 cursor-pointer"
+		<button
+			type="button"
+			class="text-primary-400 hover:text-primary-500 flex items-center gap-2"
 			title={$_('block.generateAi')}
+			onclick={(e) => {
+				e.preventDefault();
+				showCreationDialog = true;
+			}}
 		>
-			<WandSparkles
-				onclick={(e) => {
-					e.preventDefault();
-					showCreationDialog = true;
-				}}
-			/>
-		</div>
+			<WandSparkles />
+			<p class="m-0">{$_('block.generateAi')}</p>
+		</button>
 	{/if}
 </div>
 
@@ -92,7 +98,7 @@
 		}))}
 	/>
 {:else if block.type === 'THEORY'}
-	<!--ToDo: Add Theory Creation Modal-->
+	<GenerateTheoryModal bind:isOpen={showCreationDialog} blockId={block.uuid} />
 {:else if block.type === 'QUESTION'}
 	<CreateMultipleChoiceModal
 		isOpen={showCreationDialog}

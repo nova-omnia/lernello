@@ -25,11 +25,9 @@
 			lastContent = newContent;
 		}
 	}
-	let showAddTraineeModal = $state(false);
 </script>
 
-<div>
-	<TextEditor content={block.content} onUpdate={handleContentUpdate} {role} />
+<TextEditor content={block.content} onUpdate={handleContentUpdate} {role} />
 
 	{#if role === INSTRUCTOR_ROLE}
 		<button class="btn btn-primary btn-sm mt-2" onclick={() => (showAddTraineeModal = true)}>

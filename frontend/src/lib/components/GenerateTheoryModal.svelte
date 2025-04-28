@@ -92,10 +92,10 @@
 
 		<div class="flex justify-end space-x-2">
 			<button class="btn btn-primary" onclick={onCancel}>
-				{$_('dialog.cancelButton')}
+				{$_('common.cancel')}
 			</button>
 			<button class="btn btn-primary" onclick={onConfirm}>
-				{$_('dialog.saveButton')}
+				{$_('common.generate')}
 			</button>
 		</div>
 	{/snippet}

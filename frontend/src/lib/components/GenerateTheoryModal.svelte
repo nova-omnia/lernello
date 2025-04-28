@@ -1,7 +1,6 @@
 <!--AITheoryBlock-->
 <script lang="ts">
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { generateAITheoryBlock } from '$lib/api/collections/aiBlock.js';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
@@ -12,6 +11,7 @@
 	interface AddAITheoryBlockModalProps {
 		isOpen: boolean;
 		blockId: string;
+		onConfirm: (blockId: string, topic: string, files: string[]) => void;
 	}
 
 	let input = $state<string>('');
@@ -22,25 +22,7 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isOpen = $bindable(), blockId }: AddAITheoryBlockModalProps = $props();
-
-	const onConfirm = async () => {
-		try {
-			await api(fetch)
-				.req(generateAITheoryBlock, {
-					blockId,
-					topic: input,
-					files: selectedFiles.map((f) => f.uuid)
-				})
-				.parse();
-
-			isOpen = false;
-			input = '';
-			selectedFiles = [];
-		} catch (error) {
-			console.error('Failed to create AI theory block:', error);
-		}
-	};
+	let { isOpen = $bindable(), blockId, onConfirm }: AddAITheoryBlockModalProps = $props();
 
 	const onCancel = () => {
 		isOpen = false;
@@ -94,7 +76,7 @@
 			<button class="btn btn-primary" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
-			<button class="btn btn-primary" onclick={onConfirm}>
+			<button class="btn btn-primary" onclick={() => onConfirm(blockId, input, selectedFiles.map((f) => f.uuid))}>
 				{$_('common.generate')}
 			</button>
 		</div>

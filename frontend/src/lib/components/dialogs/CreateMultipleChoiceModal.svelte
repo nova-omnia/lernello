@@ -38,10 +38,10 @@
 				onclick={() => {
 					onCancel();
 					selectedBlockId = '';
-				}}>{$_('common.save')}</button
+				}}>{$_('common.cancel')}</button
 			>
 			<button class="btn btn-primary" onclick={() => onConfirm(selectedBlockId)}
-				>{$_('common.cancel')}</button
+				>{$_('common.save')}</button
 			>
 		</div>
 	{/snippet}

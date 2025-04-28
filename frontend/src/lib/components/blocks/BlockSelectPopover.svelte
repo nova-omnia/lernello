@@ -118,19 +118,18 @@
 	}
 </script>
 
-<div class="flex items-center gap-2">
-	<hr class="hr border-dashed" />
+<div class="flex items-center gap-2 p-2">
 	<!-- Reference Element -->
+	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<button
 		bind:this={floating.elements.reference}
 		{...interactions.getReferenceProps()}
-		class="btn"
+		class="btn text-gray-400"
 	>
 		<PlusCircle class="h-4 w-4" />
 	</button>
+	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<!-- Floating Element -->
-	<hr class="hr border-dashed" />
-
 	{#if open}
 		<div
 			bind:this={floating.elements.floating}

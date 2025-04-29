@@ -4,10 +4,9 @@
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
 
 	interface LearningUnitTrainingContainerProps {
-		learningUnitId: string;
 		role: RoleType;
 	}
-	const { learningUnitId, role }: LearningUnitTrainingContainerProps = $props();
+	const { role }: LearningUnitTrainingContainerProps = $props();
 </script>
 
 <div
@@ -16,7 +15,7 @@
 	<div class="space-y-2">
 		{#each blockActionState.blocks as block (block.uuid)}
 			<div class="space-y-2">
-				<BlockItem {block} {learningUnitId} {role} />
+				<BlockItem {block} {role} />
 			</div>
 		{/each}
 	</div>

@@ -17,11 +17,10 @@
 
 	interface BlockItemProps {
 		block: BlockRes;
-		learningUnitId: string;
 		role: RoleType;
 	}
 
-	const { block, learningUnitId, role }: BlockItemProps = $props();
+	const { block, role }: BlockItemProps = $props();
 
 	let isConfirmDialogOpen: boolean = $state(false);
 
@@ -35,9 +34,9 @@
 </script>
 
 <div
-	class="group card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
+	class="card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 group relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} {learningUnitId} {role} />
+	<BlockIconHeader {block} {role} />
 
 	{#if block.type === THEORY_BLOCK_TYPE}
 		<TheoryBlockComponent {block} {role} />

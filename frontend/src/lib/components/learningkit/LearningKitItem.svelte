@@ -49,7 +49,7 @@
 {:else}
 	<a
 		class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis"
-		href="/learningkit/{uuid}"
+		href="/learningkit/{uuid}?tab=learningUnits"
 	>
 		<button
 			class="absolute top-0 right-0 z-10 flex gap-2 p-2"

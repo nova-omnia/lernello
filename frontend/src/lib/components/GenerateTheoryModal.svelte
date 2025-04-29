@@ -33,11 +33,11 @@
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-lg w-full"
+	contentBase="card bg-surface-100-900 w-full p-8 space-y-4 shadow-xl max-w-xl border-surface-500"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<h2 class="text-center text-lg font-bold">{$_('dialog.creationWizardTitle')}</h2>
+		<h1 class="preset-typo-headline">{$_('dialog.creationWizardTitle')}</h1>
 
 		<div class="space-y-4">
 			<input
@@ -72,12 +72,13 @@
 			{/if}
 		</div>
 
-		<div class="flex justify-end space-x-2">
-			<button class="btn btn-primary" onclick={onCancel}>
+		<footer class="flex justify-end gap-3 pt-2">
+			<button type="button" class="btn preset-tonal-surface" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
 			<button
-				class="btn btn-primary"
+				type="button"
+				class="btn preset-filled-primary-500"
 				onclick={() =>
 					onConfirm(
 						blockId,
@@ -87,6 +88,6 @@
 			>
 				{$_('common.generate')}
 			</button>
-		</div>
+		</footer>
 	{/snippet}
 </Modal>

@@ -24,6 +24,7 @@ public class LearningKitService {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
+    //TODO only visible if kit published
     public Page<LearningKit> getList(Pageable pageable, UUID userID) {
         if (isParticipant(userID)) {
             return learningKitRepository.findAllByParticipantsUuid(userID, pageable);

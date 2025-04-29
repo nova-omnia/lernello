@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.api.block;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/ai-block")
 @RequiredArgsConstructor
+@Validated
 public class AIBlockRestController {
 
     private final AIBlockService aiBlockService;
@@ -30,22 +32,23 @@ public class AIBlockRestController {
     @PostMapping("/multiple-choice")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public MultipleChoiceBlockResDTO generateMultipleChoice(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
-        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockId(), dto.questionBlockId());
+        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockId());
         return blockMapper.toMultipleChoiceBlockResDTO(block);
     }
 
     @PostMapping("/theory")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public TheoryBlockResDTO generateTheory(@Valid @RequestBody AIGeneratedTheoryBlockRequest dto) {
-        TheoryBlock theoryBlock = aiBlockService.generateTheoryBlockAI(dto.files(), dto.topic(), dto.blockId());
+        TheoryBlock theoryBlock = aiBlockService.generateTheoryBlockAI(dto.files(), dto.topic());
         return blockMapper.toTheoryBlockResDTO(theoryBlock);
     }
 
 
-    @PostMapping("/questionBlock")
+    @PostMapping("/question-block")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
+
     public QuestionBlockResDTO generateQuestion(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
-        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.theoryBlockId(), dto.questionBlockId());
+        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.theoryBlockId());
         return blockMapper.toQuestionBlockResDTO(block);
     }
 }

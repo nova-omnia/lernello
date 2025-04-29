@@ -10,8 +10,7 @@
 
 	interface GenerateTheoryModalProps {
 		isOpen: boolean;
-		blockId: string;
-		onConfirm: (blockId: string, topic: string, files: string[]) => void;
+		onConfirm: (topic: string, files: string[]) => void;
 	}
 
 	let input = $state<string>('');
@@ -22,7 +21,7 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isOpen = $bindable(), blockId, onConfirm }: GenerateTheoryModalProps = $props();
+	let { isOpen = $bindable(), onConfirm }: GenerateTheoryModalProps = $props();
 
 	const onCancel = () => {
 		isOpen = false;
@@ -58,7 +57,7 @@
 			/>
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
+					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
 								File={{ uuid: file.uuid, name: file.label }}
@@ -81,7 +80,6 @@
 				class="btn preset-filled-primary-500"
 				onclick={() =>
 					onConfirm(
-						blockId,
 						input,
 						selectedFiles.map((f) => f.uuid)
 					)}

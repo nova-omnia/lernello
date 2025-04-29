@@ -72,9 +72,9 @@ public class LearningKitRestController {
 
     @DeleteMapping("/participants/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public UUID removeParticipantFromKit(@PathVariable UUID id, @RequestBody UUID userId) {
-        learningKitService.removeParticipant(id, userId);
-        return id;
+    public UUID removeParticipantFromKit(@PathVariable UUID kitId, @RequestBody UUID userId) {
+        learningKitService.removeParticipant(kitId, userId);
+        return kitId;
     }
 
     @PostMapping("/publish/{id}")

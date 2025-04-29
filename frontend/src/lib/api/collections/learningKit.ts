@@ -34,7 +34,7 @@ export const deleteLearningKit = createEndpoint({
 
 export const getLearningKits = createEndpoint({
 	method: 'GET',
-	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/getList?page=${page}&size=${size}`,
+	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/?page=${page}&size=${size}`,
 	response: {
 		schema: LearningKitPageSchema,
 		defaultValidate: true

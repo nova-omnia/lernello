@@ -43,6 +43,7 @@
 	"common.open": "Open",
 	"common.preview": "Preview",
 	"common.remove": "Remove",
+	"common.unselect": "Remove",
 	"common.return": "Return",
 	"common.save": "Save",
 	"common.submit": "Submit",
@@ -92,6 +93,7 @@
 	"learningKit.name": "LearningKit Name",
 	"learningKit.publish": "Publish",
 	"learningKit.title": "Learning Kits: {name}",
+	"learningKits.title": "Learning Kits",
 	"learningKit.trainees.description": "The trainees that have access to the LearningKit",
 	"learningKit.publish.confirmationText": "Are you finished with configuring and want to publish {name}",
 	"learningKit.publish.text": "Publish",
@@ -126,6 +128,8 @@
 	"trainee.form.title": "Create a new Trainee",
 	"files.upload.uploading": "Uploading...",
 	"files.upload.uploading.description": "File is being uploaded",
+	"files.upload.success": "File uploaded",
+	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.reject.title": "File rejected",
 	"files.upload.reject.description": "File rejected ({reason})"
 }

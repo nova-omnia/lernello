@@ -11,11 +11,11 @@
 
 	const kitsQuery = createQuery({
 		queryKey: ['all-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { page: 0, size: 99999 }).parse()
+		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
 	});
 </script>
 
-<PageContainer title={$_('learningKit.title')}>
+<PageContainer title={$_('learningKits.title')}>
 	<div class="container flex space-y-4">
 		<div class="container flex h-36 flex-wrap gap-2">
 			{#if $kitsQuery.status === 'pending'}

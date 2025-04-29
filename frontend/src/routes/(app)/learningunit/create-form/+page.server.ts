@@ -22,6 +22,6 @@ export const actions = {
 
 		await api(fetch).req(createLearningUnit, form.data).parse();
 
-		return redirect(303, `/learningkit/${form.data.learningKitId}`);
+		return redirect(303, `/learningkit/${form.data.learningKitId}?tab=learningUnits`);
 	})
 } satisfies Actions;

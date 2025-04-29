@@ -20,6 +20,6 @@ export const actions = {
 
 		await api(fetch).req(addTrainee, form.data).parse();
 
-		redirect(303, `/learningkit/${params.learningKitId}`);
+		redirect(303, `/learningkit/${params.learningKitId}?tab=trainees`);
 	})
 };

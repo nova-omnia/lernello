@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { type BlockRes, QUESTION_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
+	import type { RoleType } from '$lib/schemas/response/UserInfo';
 
-	const { block } = $props();
+	interface BlockQuestionItemProps {
+		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;
+		role: RoleType;
+	}
+
+	const { block }: BlockQuestionItemProps = $props();
 
 	let question = $state(block.question);
 	let expectedAnswer = $state(block.expectedAnswer);

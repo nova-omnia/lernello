@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.nova_omnia.lernello.dto.request.block.ai.AIGeneratedMultipleChoiceRequest;
 import ch.nova_omnia.lernello.dto.request.block.ai.AIGeneratedQuestionBlockRequest;
 import ch.nova_omnia.lernello.dto.request.block.ai.AIGeneratedTheoryBlockRequest;
 import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
@@ -30,8 +29,8 @@ public class AIBlockRestController {
 
     @PostMapping("/multiple-choice")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
-    public MultipleChoiceBlockResDTO generateMultipleChoice(@Valid @RequestBody AIGeneratedMultipleChoiceRequest dto) {
-        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockIUuid(), dto.multipleChoiceBlockUuid());
+    public MultipleChoiceBlockResDTO generateMultipleChoice(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
+        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockId(), dto.questionBlockId());
         return blockMapper.toMultipleChoiceBlockResDTO(block);
     }
 

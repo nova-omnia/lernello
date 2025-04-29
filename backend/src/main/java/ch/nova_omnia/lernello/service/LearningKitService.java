@@ -1,30 +1,35 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
-
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.Role;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
 @RequiredArgsConstructor
 public class LearningKitService {
     private final LearningKitRepository learningKitRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
 
+    //TODO only visible if kit published
     public Page<LearningKit> getList(Pageable pageable, UUID userID) {
-        return learningKitRepository.findAllByParticipantsUuid(userID, pageable);
+        if (isParticipant(userID)) {
+            return learningKitRepository.findAllByParticipantsUuid(userID, pageable);
+        }
+        return learningKitRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     public Optional<LearningKit> findById(UUID id) {
@@ -58,10 +63,15 @@ public class LearningKitService {
     public void publishLearningKit(UUID learningKitId) {
         LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
         ArrayList<User> participants = new ArrayList<>(kit.getParticipants());
-        for(User participant : participants) {
+        for (User participant : participants) {
             if (participant.getRole() == Role.TRAINEE) {
                 emailService.sendLearningKitInvitation(participant, kit);
             }
         }
+    }
+
+    private boolean isParticipant(UUID id) {
+        User user = userRepository.findByUuid(id);
+        return user.getRole() == Role.TRAINEE;
     }
 }

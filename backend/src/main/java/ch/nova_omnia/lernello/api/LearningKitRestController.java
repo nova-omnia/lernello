@@ -5,8 +5,8 @@ import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.service.LearningKitService;
 import ch.nova_omnia.lernello.service.CustomUserDetailsService;
+import ch.nova_omnia.lernello.service.LearningKitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,11 +47,11 @@ public class LearningKitRestController {
         return id;
     }
 
-    @GetMapping("/getList")
+    @GetMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public Page<LearningKitResDTO> getList(@AuthenticationPrincipal UserDetails userDetails, @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        UUID userID = customUserDetailsService.getUserIdByUsername(userDetails.getUsername());
-        Page<LearningKit> kits = learningKitService.getList(pageable, userID);
+        UUID userId = customUserDetailsService.getUserIdByUsername(userDetails.getUsername());
+        Page<LearningKit> kits = learningKitService.getList(pageable, userId);
         return kits.map(learningKitMapper::toDTO);
     }
 
@@ -72,9 +72,9 @@ public class LearningKitRestController {
 
     @DeleteMapping("/participants/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public UUID removeParticipantFromKit(@PathVariable UUID id, @RequestBody UUID userId) {
-        learningKitService.removeParticipant(id, userId);
-        return id;
+    public UUID removeParticipantFromKit(@PathVariable UUID kitId, @RequestBody UUID userId) {
+        learningKitService.removeParticipant(kitId, userId);
+        return kitId;
     }
 
     @PostMapping("/publish/{id}")

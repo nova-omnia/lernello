@@ -41,17 +41,20 @@
 
 	onMount(() => {
 		let dragCounter = 0;
+
 		function onDragEnter(event: DragEvent) {
 			if (event.dataTransfer?.types?.includes('Files')) {
 				dragCounter++;
 				isDraggingFile = true;
 			}
 		}
+
 		function onDragOver(event: DragEvent) {
 			if (event.dataTransfer?.types?.includes('Files')) {
 				event.preventDefault();
 			}
 		}
+
 		function onDrop(event: DragEvent) {
 			dragCounter = 0;
 			isDraggingFile = false;
@@ -62,12 +65,14 @@
 				}
 			}
 		}
+
 		function onDragLeave() {
 			dragCounter--;
 			if (dragCounter <= 0) {
 				isDraggingFile = false;
 			}
 		}
+
 		window.addEventListener('dragenter', onDragEnter);
 		window.addEventListener('dragover', onDragOver);
 		window.addEventListener('dragleave', onDragLeave);
@@ -82,11 +87,6 @@
 </script>
 
 <div>
-	{#if $uploadFileMutation.isPending}
-		<div class="fixed inset-0 flex items-center justify-center backdrop-blur-3xl">
-			<h1 class="h1">UPLOADING...</h1>
-		</div>
-	{/if}
 	<FileUpload
 		accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4"
 		onFileReject={(details) => {

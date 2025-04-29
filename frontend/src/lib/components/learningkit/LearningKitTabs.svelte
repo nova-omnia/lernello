@@ -5,27 +5,39 @@
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
 	import TraineesTab from '$lib/components/learningkit/tab/TraineesTab.svelte';
 	import FilesTab from '$lib/components/learningkit/tab/FilesTab.svelte';
+	import { goto } from '$app/navigation';
 
-	let group = $state($_('learningKit.learningUnits'));
+	const tabs = {
+		learningUnits: 'learningUnits',
+		trainees: 'trainees',
+		files: 'files'
+	};
 
-	const { learningKit } = $props();
+	const { learningKit, tab } = $props();
+
+	let group = $state(tab);
+
+	function handleTabChange(e: { value: string }) {
+		group = e.value;
+		goto(`/learningkit/${learningKit.uuid}?tab=${e.value}`);
+	}
 </script>
 
-<Tabs value={group} onValueChange={(e) => (group = e.value)}>
+<Tabs value={group || tabs.learningUnits} onValueChange={(e) => handleTabChange(e)}>
 	{#snippet list()}
-		<Tabs.Control value={$_('learningKit.learningUnits')}>
+		<Tabs.Control value={tabs.learningUnits}>
 			{#snippet lead()}
 				<BookText size={20} />
 			{/snippet}
 			{$_('learningKit.learningUnits')}
 		</Tabs.Control>
-		<Tabs.Control value={$_('common.trainees')}>
+		<Tabs.Control value={tabs.trainees}>
 			{#snippet lead()}
 				<Users size={20} />
 			{/snippet}
 			{$_('common.trainees')}
 		</Tabs.Control>
-		<Tabs.Control value={$_('sidebar.files')}>
+		<Tabs.Control value={tabs.files}>
 			{#snippet lead()}
 				<Files size={20} />
 			{/snippet}
@@ -33,15 +45,15 @@
 		</Tabs.Control>
 	{/snippet}
 	{#snippet content()}
-		<Tabs.Panel value={$_('learningKit.learningUnits')}>
+		<Tabs.Panel value={tabs.learningUnits}>
 			<LearningUnitsTab learningKitId={learningKit.uuid} learningUnits={learningKit.learningUnits}
 			></LearningUnitsTab>
 		</Tabs.Panel>
-		<Tabs.Panel value={$_('common.trainees')}>
+		<Tabs.Panel value={tabs.trainees}>
 			<TraineesTab learningKitId={learningKit.uuid} participants={learningKit.participants}
 			></TraineesTab>
 		</Tabs.Panel>
-		<Tabs.Panel value={$_('sidebar.files')}>
+		<Tabs.Panel value={tabs.files}>
 			<FilesTab learningKitId={learningKit.uuid} files={learningKit.files ?? []} />
 		</Tabs.Panel>
 	{/snippet}

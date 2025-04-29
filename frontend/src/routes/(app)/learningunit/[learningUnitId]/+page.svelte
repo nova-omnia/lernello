@@ -8,6 +8,7 @@
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo.js';
 
 	let { data } = $props();
 
@@ -74,8 +75,10 @@
 			class:opacity-50={dataLoading}
 			class:cursor-not-allowed={dataLoading}
 		>
-			<BlockEditor learningUnitId={data.learningUnitId} />
-			<BlockReorder />
+			<BlockEditor learningUnitId={data.learningUnitId} role={data.role} />
+			{#if data.role === INSTRUCTOR_ROLE}
+				<BlockReorder />
+			{/if}
 		</div>
 	</div>
 </PageContainer>

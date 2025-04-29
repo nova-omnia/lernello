@@ -3,6 +3,7 @@ package ch.nova_omnia.lernello.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
@@ -29,12 +30,13 @@ public class AIBlockService {
         TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
 
         String context = fileService.extractTextFromFiles(fileIds);
-        String prompt = buildTheoryBlockPrompt(context, topic);
+        String prompt = buildTheoryBlockPrompt(context, topic, block.getPosition());
         String aiResponse = aiClient.sendPrompt(prompt);
 
         try {
-            TheoryBlock generated = objectMapper.readValue(aiResponse, TheoryBlock.class);
-            block.setContent(generated.getContent());
+            JsonNode jsonNode = objectMapper.readTree(aiResponse);
+            String content = jsonNode.get("content").asText();
+            block.setContent(content);
             return blockRepository.save(block);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI TheoryBlock", e);
@@ -81,14 +83,21 @@ public class AIBlockService {
         return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found" + blockId));
     }
 
-    private String buildTheoryBlockPrompt(String context, String topic) {
+    private String buildTheoryBlockPrompt(String context, String topic, int position) {
         return """
                 You are an AI tutor. Create a theory block on the topic '%s' strictly based on the provided content.
+                The Theory Block should have a maximum of 100 Words.
                 Content:
                 %s
                 Respond with pure JSON:
                 { "content": "..." }
-                """.formatted(topic, context);
+
+                The theory must be adapted to fit the given position in a sequence of theory blocks.
+                Take into account that there may be previous or subsequent theory blocks, so your text should be naturally integrated into a larger flow.
+                You must not simply repeat the same summary for different positions. Adjust the phrasing, transitions, and focus accordingly, but always stay based strictly on the provided content.
+
+                Position of this Theory Block: %s
+                """.formatted(topic, context, position);
     }
 
     private String buildMultipleChoicePrompt(String content) {

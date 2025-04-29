@@ -19,7 +19,20 @@ export const generateAITheoryBlock = createEndpoint({
 
 export const generatedAIQuestionBlock = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/question`,
+	getPath: () => `${REQUEST_MAPPING}/questionBlock`,
+	response: {
+		schema: BlockResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: GeneratedAIQuestionBlockSchema,
+		defaultValidate: false
+	}
+});
+
+export const generatedAIMultipleChoiceBlock = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/multiple-choice`,
 	response: {
 		schema: BlockResSchema,
 		defaultValidate: true

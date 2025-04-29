@@ -1,7 +1,6 @@
 <!--AITheoryBlock-->
 <script lang="ts">
 	import MultiSelect from '$lib/components/MultiSelect.svelte';
-	import { generateAITheoryBlock } from '$lib/api/collections/aiBlock.js';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
@@ -9,9 +8,10 @@
 	import { _ } from 'svelte-i18n';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 
-	interface AddAITheoryBlockModalProps {
+	interface GenerateTheoryModalProps {
 		isOpen: boolean;
 		blockId: string;
+		onConfirm: (blockId: string, topic: string, files: string[]) => void;
 	}
 
 	let input = $state<string>('');
@@ -22,25 +22,7 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isOpen = $bindable(), blockId }: AddAITheoryBlockModalProps = $props();
-
-	const onConfirm = async () => {
-		try {
-			await api(fetch)
-				.req(generateAITheoryBlock, {
-					blockId,
-					topic: input,
-					files: selectedFiles.map((f) => f.uuid)
-				})
-				.parse();
-
-			isOpen = false;
-			input = '';
-			selectedFiles = [];
-		} catch (error) {
-			console.error('Failed to create AI theory block:', error);
-		}
-	};
+	let { isOpen = $bindable(), blockId, onConfirm }: GenerateTheoryModalProps = $props();
 
 	const onCancel = () => {
 		isOpen = false;
@@ -51,11 +33,11 @@
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-lg w-full"
+	contentBase="card bg-surface-100-900 w-full p-8 space-y-4 shadow-xl max-w-xl border-surface-500"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<h2 class="text-center text-lg font-bold">{$_('dialog.creationWizardTitle')}</h2>
+		<h1 class="preset-typo-headline">{$_('dialog.creationWizardTitle')}</h1>
 
 		<div class="space-y-4">
 			<input
@@ -90,13 +72,22 @@
 			{/if}
 		</div>
 
-		<div class="flex justify-end space-x-2">
-			<button class="btn btn-primary" onclick={onCancel}>
+		<footer class="flex justify-end gap-3 pt-2">
+			<button type="button" class="btn preset-tonal-surface" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
-			<button class="btn btn-primary" onclick={onConfirm}>
+			<button
+				type="button"
+				class="btn preset-filled-primary-500"
+				onclick={() =>
+					onConfirm(
+						blockId,
+						input,
+						selectedFiles.map((f) => f.uuid)
+					)}
+			>
 				{$_('common.generate')}
 			</button>
-		</div>
+		</footer>
 	{/snippet}
 </Modal>

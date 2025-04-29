@@ -19,6 +19,8 @@
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
 
+	const { data } = $props();
+
 	const learningKitQuery = createQuery({
 		queryKey: ['learning-kit', learningKitId],
 		queryFn: () => api(fetch).req(getLearningKitById, null, learningKitId).parse()
@@ -111,7 +113,7 @@
 					<p class="w-2xl wrap-break-word">{$learningKitQuery.data.description}</p>
 				{/if}
 			</div>
-			<LearningKitTabs learningKit={$learningKitQuery.data}></LearningKitTabs>
+			<LearningKitTabs learningKit={$learningKitQuery.data} tab={data.tab}></LearningKitTabs>
 		</div>
 	</PageContainer>
 

@@ -13,6 +13,7 @@
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
 			invalidate(['learning-kit', learningKitId]);
+			invalidate(['trainees-list', learningKitId]);
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
@@ -77,7 +78,7 @@
 			</label>
 		</div>
 		<div class="flex justify-end gap-2">
-			<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}">
+			<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}?tab=trainees">
 				{$_('common.cancel')}
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('createTrainee')}</button>

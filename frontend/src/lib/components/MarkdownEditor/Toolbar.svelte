@@ -7,7 +7,7 @@
 	const { insertSyntax }: ToolbarProps = $props();
 </script>
 
-<div class="absolute top-0 right-0 flex items-center space-x-2 p-2">
+<div class="flex items-center space-x-2">
 	<button
 		type="button"
 		onclick={() => insertSyntax('**{{selection}}**')}

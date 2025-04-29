@@ -58,7 +58,7 @@
 			/>
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
+					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
 								File={{ uuid: file.uuid, name: file.label }}

@@ -49,7 +49,7 @@
 	{#if role === 'INSTRUCTOR'}
 		<button
 			type="button"
-			class="btn preset-filled-error-500 absolute -right-2 -top-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+			class="btn preset-filled-error-500 absolute -top-2 -right-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 			onclick={() => (isConfirmDialogOpen = true)}
 		>
 			<X class="h-4 w-4" />

@@ -3,19 +3,36 @@
 	import { FilePlus } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { onDestroy } from 'svelte';
-	import { FileRejection } from '@zag-js/file-upload';
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 
 	let previewUrl: string | null = null;
 	let fileType: 'image' | 'pdf' | 'video' | 'audio' | 'other' | null = null;
 	let imageName: string | null = null;
-	let currentObjectUrl: string | null = null; // For revokeObjectURL
-	let fileUploaded: boolean = false; // New state variable
+	let currentObjectUrl: string | null = null;
+	let fileUploaded: boolean = false;
 
+	const { block } = $props();
+
+	let content = $state(block.content); // Initiale Block-Inhalte
+	let lastContent = $state(block.content); // Cache des letzten Inhalts
+
+	function handleUpdate() {
+		if (content !== lastContent) {
+			queueBlockAction({
+				type: 'UPDATE_BLOCK',
+				blockId: block.uuid,
+				content
+			});
+			lastContent = content;
+		}
+	}
+
+	// Typ für die File-Änderungsdetails
 	type FileChangeDetails = {
 		acceptedFiles: File[];
-		rejectedFiles: FileRejection[];
 	};
 
+	// Funktion, um Object URLs aufzuräumen
 	function cleanupObjectUrl() {
 		if (currentObjectUrl) {
 			URL.revokeObjectURL(currentObjectUrl);
@@ -23,11 +40,8 @@
 		}
 	}
 
-	onDestroy(() => {
-		cleanupObjectUrl();
-	});
-
-	function handleFileChange(details: FileChangeDetails) {
+	// Standardparameter für die Funktion `handleFileChange`
+	function handleFileChange(details: FileChangeDetails = { acceptedFiles: [] }) {
 		console.log('FileUpload Details:', details);
 
 		cleanupObjectUrl();
@@ -49,6 +63,8 @@
 				const reader = new FileReader();
 				reader.onload = (e: ProgressEvent<FileReader>) => {
 					previewUrl = e.target?.result as string;
+					content = previewUrl; // Der Blockinhalt wird mit der Vorschau aktualisiert
+					handleUpdate(); // Inhaltänderung verfolgen
 				};
 				reader.onerror = () => {
 					alert($_('block.multimediaBlock.errorReadingImage'));
@@ -59,19 +75,26 @@
 				fileType = 'pdf';
 				currentObjectUrl = URL.createObjectURL(file);
 				previewUrl = currentObjectUrl;
+				content = currentObjectUrl; // Blockinhalt für PDF aktualisieren
+				handleUpdate();
 			} else if (mimeType.startsWith('video/')) {
 				fileType = 'video';
 				currentObjectUrl = URL.createObjectURL(file);
 				previewUrl = currentObjectUrl;
+				content = currentObjectUrl; // Blockinhalt für Video aktualisieren
+				handleUpdate();
 			} else if (mimeType.startsWith('audio/')) {
 				fileType = 'audio';
 				currentObjectUrl = URL.createObjectURL(file);
 				previewUrl = currentObjectUrl;
+				content = currentObjectUrl; // Blockinhalt für Audio aktualisieren
+				handleUpdate();
 			} else {
 				fileType = 'other';
 				previewUrl = null;
 			}
 		} else {
+			// keine Datei wurde hochgeladen
 			cleanupObjectUrl();
 			previewUrl = null;
 			fileType = null;
@@ -79,6 +102,18 @@
 			fileUploaded = false;
 		}
 	}
+
+	// Sicherstellen, dass Object URLs vor dem Cleanup aufgeräumt werden
+	onDestroy(() => {
+		cleanupObjectUrl();
+	});
+
+	// `effect` mit Abhängigkeit verbessern
+	$effect(() => {
+		const dummyDetails: FileChangeDetails = { acceptedFiles: [] };
+		handleFileChange(dummyDetails); // Dummy-Daten übergeben
+		handleUpdate();
+	});
 </script>
 
 <div
@@ -156,7 +191,7 @@
 			<div class="mt-4 text-center">
 				<button
 					class="btn preset-filled-tertiary-500 text-sm"
-					on:click={() => {
+					onclick={() => {
 						fileUploaded = false;
 						cleanupObjectUrl();
 						previewUrl = null;

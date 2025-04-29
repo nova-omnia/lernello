@@ -34,11 +34,15 @@ const QuestionBlockResSchema = BaseBlockResSchema.extend({
 	question: z.string(),
 	expectedAnswer: z.string()
 });
+const MultimediaBlockResSchema = BaseBlockResSchema.extend({
+	type: z.literal('MULTIMEDIA')
+});
 
 export const BlockResSchema = z.discriminatedUnion('type', [
 	TheoryBlockResSchema,
 	MultipleChoiceBlockResSchema,
-	QuestionBlockResSchema
+	QuestionBlockResSchema,
+	MultimediaBlockResSchema
 ]);
 
 export type BlockRes = z.infer<typeof BlockResSchema>;

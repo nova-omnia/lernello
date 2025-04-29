@@ -81,6 +81,13 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					question: action.data.question || 'placeholder question',
 					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
 				};
+			} else if (action.data.type === BlockType.Enum.MULTIMEDIA) {
+				newBlock = {
+					type: action.data.type,
+					name: action.data.name,
+					uuid: action.blockId,
+					position: action.data.position || 0
+				};
 			} else {
 				throw new Error('Unsupported block type.');
 			}
@@ -175,6 +182,17 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 					position: action.data.position,
 					question: action.data.question || 'placeholder question',
 					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
+				}
+			};
+		} else if (action.data.type === BlockType.Enum.MULTIMEDIA) {
+			parsedAction = {
+				type: 'ADD_BLOCK',
+				index: action.index,
+				blockId: getTempId(),
+				data: {
+					type: action.data.type,
+					name: action.data.name,
+					position: action.data.position
 				}
 			};
 		} else {

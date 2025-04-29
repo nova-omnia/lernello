@@ -87,11 +87,6 @@
 </script>
 
 <div>
-	{#if $uploadFileMutation.isPending}
-		<div class="fixed inset-0 flex items-center justify-center backdrop-blur-3xl">
-			<h1 class="h1">UPLOADING...</h1>
-		</div>
-	{/if}
 	<FileUpload
 		accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4"
 		onFileReject={(details) => {

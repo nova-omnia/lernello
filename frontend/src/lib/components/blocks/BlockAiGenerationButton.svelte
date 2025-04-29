@@ -88,6 +88,7 @@
 
 {#if block.type === 'MULTIPLE_CHOICE'}
 	<CreateMultipleChoiceModal
+		isLoading={$generateMultipleChoiceMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId) => {
 			$generateMultipleChoiceMutation.mutate({
@@ -102,6 +103,7 @@
 	/>
 {:else if block.type === 'THEORY'}
 	<GenerateTheoryModal
+		isLoading={$generateTheoryMutation.isPending}
 		bind:isOpen={showCreationDialog}
 		onConfirm={(topic, files) => {
 			$generateTheoryMutation.mutate({
@@ -112,6 +114,7 @@
 	/>
 {:else if block.type === 'QUESTION'}
 	<CreateMultipleChoiceModal
+		isLoading={$generateQuestionMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId: string) => {
 			$generateQuestionMutation.mutate({

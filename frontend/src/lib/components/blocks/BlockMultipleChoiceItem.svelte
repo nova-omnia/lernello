@@ -139,6 +139,8 @@
 			type="text"
 			placeholder={$_('common.block.question')}
 			bind:value={currentQuestion}
+			onblur={onUpdateHandler}
+			oninput={onUpdateHandler}
 			class="input col-span-12 mb-4 w-full border p-2 dark:bg-gray-700"
 		/>
 

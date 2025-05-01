@@ -15,6 +15,8 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
+	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
+	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte'; // Import the role constant
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -66,55 +68,64 @@
 	<ErrorIllustration>{$_('learningKit.error.loadSingle')}</ErrorIllustration>
 {:else}
 	<PageContainer>
-		<div class="flex flex-col gap-8">
-			<div class="flex-col">
-				<div class="flex w-full justify-between gap-4">
-					<div>
-						<h1 class="preset-typo-headline">
-							{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
-						</h1>
-						{#if $learningKitQuery.data?.deadlineDate}
-							<p class="flex items-center gap-2">
-								<Clock size={20} />
-								{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
-							</p>
-						{/if}
-					</div>
-					<div class="flex h-10 gap-8">
-						<div class="flex gap-2">
+		{#if data.role === INSTRUCTOR_ROLE}
+			<div class="flex flex-col gap-8">
+				<div class="flex-col">
+					<div class="flex w-full justify-between gap-4">
+						<div>
+							<h1 class="preset-typo-headline">
+								{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
+							</h1>
+							{#if $learningKitQuery.data?.deadlineDate}
+								<p class="flex items-center gap-2">
+									<Clock size={20} />
+									{dateFormat.format(new Date($learningKitQuery.data.deadlineDate))}
+								</p>
+							{/if}
+						</div>
+						<div class="flex h-10 gap-8">
+							<div class="flex gap-2">
+								<button
+									type="button"
+									class="btn preset-filled-primary-500 h-full"
+									onclick={() => {
+										showPublishDialog = true;
+									}}
+									>{$_('learningKit.publish')}
+								</button>
+								<button
+									type="button"
+									class="btn preset-outlined-surface-500 h-full"
+									onclick={() => goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`)}
+								>
+									<Pencil size={20} />
+								</button>
+							</div>
 							<button
-								type="button"
-								class="btn preset-filled-primary-500 h-full"
 								onclick={() => {
-									showPublishDialog = true;
+									showDeleteDialog = true;
 								}}
-								>{$_('learningKit.publish')}
-							</button>
-							<button
 								type="button"
-								class="btn preset-outlined-surface-500 h-full"
-								onclick={() => goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`)}
+								class="btn preset-filled-error-500 h-full"
 							>
-								<Pencil size={20} />
+								<Trash size={20} />
 							</button>
 						</div>
-						<button
-							onclick={() => {
-								showDeleteDialog = true;
-							}}
-							type="button"
-							class="btn preset-filled-error-500 h-full"
-						>
-							<Trash size={20} />
-						</button>
 					</div>
+					{#if $learningKitQuery.data?.description}
+						<p class="w-2xl wrap-break-word">{$learningKitQuery.data.description}</p>
+					{/if}
 				</div>
-				{#if $learningKitQuery.data?.description}
-					<p class="w-2xl wrap-break-word">{$learningKitQuery.data.description}</p>
-				{/if}
+				<LearningKitTabs learningKit={$learningKitQuery.data} tab={data.tab} role={data.role}
+				></LearningKitTabs>
 			</div>
-			<LearningKitTabs learningKit={$learningKitQuery.data} tab={data.tab}></LearningKitTabs>
-		</div>
+		{:else if data.role === TRAINEE_ROLE}
+			<LearningUnitsTab
+				learningKitId={$learningKitQuery.data.uuid}
+				learningUnits={$learningKitQuery.data.learningUnits ?? []}
+				role={data.role}
+			></LearningUnitsTab>
+		{/if}
 	</PageContainer>
 
 	<ConfirmDialog

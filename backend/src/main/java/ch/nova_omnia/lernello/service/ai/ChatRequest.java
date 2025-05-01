@@ -7,6 +7,12 @@ public class ChatRequest {
     private final List<Map<String, String>> messages;
     private final String model;
 
+    // Balanced creativity
+    private final double temperature = 0.5;
+
+    // Reduce repetition
+    private final double frequency_penalty = 0.6;
+
     public ChatRequest(String prompt) {
         this.model = "gpt-4o";
         this.messages = List.of(Map.of("role", "user", "content", prompt));
@@ -18,5 +24,13 @@ public class ChatRequest {
 
     public String getModel() {
         return model;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public double getFrequency_penalty() {
+        return frequency_penalty;
     }
 }

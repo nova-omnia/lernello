@@ -1,14 +1,14 @@
 <script lang="ts">
 	import logo from '$lib/assets/Lernello_Logo.svg';
 	import {
+		Boxes,
 		ChartLine,
 		Folder,
 		type IconProps,
 		LayoutDashboard,
 		LogOut,
-		Settings,
 		SidebarClose,
-		User
+		Users
 	} from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
@@ -73,15 +73,15 @@
 			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
 		{/if}
 		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
-		{@render sidebarItem($_('common.files'), '/folders', Folder)}
-		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
+		{@render sidebarItem($_('learningKits.title'), '/learningkits', Boxes)}
 		{#if sidebarState.isExpanded}
 			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
 		{:else}
 			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
 		{/if}
-		{@render sidebarItem($_('sidebar.settings'), '/settings', Settings)}
-		{@render sidebarItem($_('sidebar.profile'), '/profile', User)}
+		{@render sidebarItem($_('sidebar.users'), '/users', Users)}
+		{@render sidebarItem($_('common.files'), '/files', Folder)}
+		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 	</div>
 
 	<div class="mt-auto flex w-full flex-col items-center gap-1 pb-4">

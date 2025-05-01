@@ -32,6 +32,7 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			invalidate(['files-list']);
 		}
 	});
 </script>

@@ -76,9 +76,9 @@
 		<div class="flex justify-between dark:border-gray-700">
 			<div>
 				<button
-					class={`!rounded-none !px-4 !py-2 !text-sm !font-medium ${
+					class={`rounded-none px-4 py-2 text-sm font-medium ${
 						activeTab === Tab.EDIT
-							? '!border-primary-500 text-primary-500 !border-b-2'
+							? 'border-primary-500 text-primary-500 border-b-2'
 							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
 					}`}
 					onclick={() => (activeTab = Tab.EDIT)}
@@ -88,7 +88,7 @@
 				<button
 					class={`px-4 py-2 text-sm font-medium ${
 						activeTab === Tab.PREVIEW
-							? '!border-primary-500 text-primary-500 !border-b-2'
+							? 'border-primary-500 text-primary-500 border-b-2'
 							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
 					}`}
 					onclick={() => (activeTab = Tab.PREVIEW)}

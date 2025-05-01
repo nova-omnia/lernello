@@ -98,14 +98,14 @@
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	{#if role === INSTRUCTOR_ROLE}
-		<div class="mb-4 flex justify-between dark:border-gray-700">
+		<div class="mb-4 flex justify-between">
 			<div>
 				<button
 					type="button"
 					class={`rounded-none px-4 py-2 text-sm font-medium ${
 						activeTab === Tab.EDIT
 							? 'border-primary-500 text-primary-500 border-b-2'
-							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+							: 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-200'
 					}`}
 					onclick={() => (activeTab = Tab.EDIT)}
 				>
@@ -133,7 +133,7 @@
 					<button
 						type="button"
 						onclick={addAnswerField}
-						class="btn preset-tonal-surface hover:"
+						class="btn preset-tonal-surface"
 						title={$_('block.multipleChoiceBlocks.addButton')}
 					>
 						<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -190,7 +190,7 @@
 						type="button"
 						onclick={handleSubmit}
 						disabled={selectedAnswer === null}
-						class="btn preset-tonal-surface hover:"
+						class="btn preset-tonal-surface"
 						title={$_('common.submit')}
 					>
 						{$_('common.submit')}
@@ -200,7 +200,7 @@
 						{#if selectedAnswer !== null && answers[selectedAnswer]?.isCorrect}
 							<span class="text-green-600 dark:text-green-400">✓ {$_('block.correctAnswer')}</span>
 						{:else}
-							<span class="text-red-600 dark:text-red-400">✗ {$_('block.incorrectAnswer')}</span>
+							<span class="error600-400">✗ {$_('block.incorrectAnswer')}</span>
 						{/if}
 					</div>
 				{/if}

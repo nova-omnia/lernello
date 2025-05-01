@@ -12,7 +12,14 @@
 		useRole
 	} from '@skeletonlabs/floating-ui-svelte';
 	import { _ } from 'svelte-i18n';
-	import { FileQuestion, ListChecks, PlusCircle, TextSelect } from 'lucide-svelte';
+	import {
+		BookOpen,
+		FileQuestion,
+		FileText,
+		ListChecks,
+		PlusCircle,
+		TextSelect
+	} from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { BlockType } from '$lib/schemas/request/block/CreateBlock';
@@ -124,7 +131,7 @@
 		{...interactions.getReferenceProps()}
 		class="btn text-gray-400"
 	>
-		<PlusCircle class="h-4 w-4" />
+		<PlusCircle class="h-5 w-5" />
 	</button>
 	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<!-- Floating Element -->
@@ -134,30 +141,29 @@
 			style={floating.floatingStyles}
 			{...interactions.getFloatingProps()}
 			class="floating"
-			transition:fade={{ duration: 200 }}
 		>
 			<div
-				class="preset-filled-surface-100-900 card border-surface-200-800 border-2 p-2 shadow-lg"
+				class="preset-filled-surface-100-900 card border-surface-200-800 border-2"
 				role="button"
 				tabindex="0"
 				onkeydown={simulateEscKeyPress}
 				onclick={simulateEscKeyPress}
 				{...interactions.getFloatingProps()}
 			>
-				<nav class="btn-group preset-outlined-surface-200-800 flex-col p-2 md:flex-row">
+				<nav class="btn-group">
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px] flex-1"
+						class="btn preset-filled-primary-500 min-w-[250px]"
 						onclick={() => {
 							addTheoryBlock();
 						}}
 					>
-						<TextSelect />
+						<BookOpen />
 						{$_('block.theoryBlock')}
 					</button>
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px] flex-1"
+						class="btn preset-filled-primary-500 min-w-[250px]"
 						onclick={() => {
 							addMultipleChoiceBlock();
 						}}
@@ -167,12 +173,12 @@
 					</button>
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px] flex-1"
+						class="btn preset-filled-primary-500 min-w-[250px]"
 						onclick={() => {
 							addQuestionBlock();
 						}}
 					>
-						<FileQuestion />
+						<FileText />
 						{$_('block.questionBlock')}
 					</button>
 				</nav>

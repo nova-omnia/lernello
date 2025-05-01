@@ -17,9 +17,10 @@
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
+		withTitle: boolean;
 	}
 
-	const { block }: BlockAiGenerationButtonProps = $props();
+	const { block, withTitle = true }: BlockAiGenerationButtonProps = $props();
 
 	let theoryBlocks: BlockRes[] = $derived(
 		blockActionState.blocks.filter((b) => b.type === THEORY_BLOCK_TYPE)
@@ -82,7 +83,9 @@
 		showCreationDialog = true;
 	}}
 >
-	{$_('block.generateAi')}
+	{#if withTitle === true}
+		{$_('block.generateAi')}
+	{/if}
 	<Sparkles size={18} />
 </button>
 

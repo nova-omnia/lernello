@@ -13,8 +13,9 @@
 	interface BlockIconHeaderProps {
 		block: BlockRes;
 		role: RoleType;
+		titleOn: boolean;
 	}
-	const { block, role }: BlockIconHeaderProps = $props();
+	const { block, role, titleOn = true }: BlockIconHeaderProps = $props();
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -30,7 +31,7 @@
 	});
 </script>
 
-<div class="flex justify-between">
+<div class="flex w-full justify-between">
 	<div class="flex items-center gap-2">
 		<BlockIcon iconType={block.type} />
 		<div class="flex items-baseline gap-2">
@@ -41,7 +42,7 @@
 
 	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block} />
+			<BlockAiGenerationButton {block} withTitle={titleOn} />
 		</div>
 	{/if}
 </div>

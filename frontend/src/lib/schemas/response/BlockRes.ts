@@ -17,19 +17,19 @@ const BaseBlockResSchema = z.object({
 	position: z.number().min(0)
 });
 
-const TheoryBlockResSchema = BaseBlockResSchema.extend({
+export const TheoryBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(THEORY_BLOCK_TYPE),
 	content: z.string()
 });
 
-const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
+export const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(MULTIPLE_CHOICE_BLOCK_TYPE),
 	question: z.string(),
 	possibleAnswers: z.array(z.string()),
 	correctAnswers: z.array(z.string())
 });
 
-const QuestionBlockResSchema = BaseBlockResSchema.extend({
+export const QuestionBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(QUESTION_BLOCK_TYPE),
 	question: z.string(),
 	expectedAnswer: z.string()

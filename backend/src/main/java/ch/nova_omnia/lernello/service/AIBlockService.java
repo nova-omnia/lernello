@@ -3,11 +3,11 @@ package ch.nova_omnia.lernello.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
@@ -26,8 +26,8 @@ public class AIBlockService {
     private final FileService fileService;
     private final AIClient aiClient;
 
-    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic, UUID blockId) {
-        TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found"));
+    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
+        TheoryBlock block = new TheoryBlock();
 
         String context = fileService.extractTextFromFiles(fileIds);
         String prompt = buildTheoryBlockPrompt(context, topic, block.getPosition());
@@ -37,15 +37,15 @@ public class AIBlockService {
             JsonNode jsonNode = objectMapper.readTree(aiResponse);
             String content = jsonNode.get("content").asText();
             block.setContent(content);
-            return blockRepository.save(block);
+            return block;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI TheoryBlock", e);
         }
     }
 
-    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId, UUID multipleChoiceBlockUuid) {
+    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId) {
         TheoryBlock theoryBlock = (TheoryBlock) getBlockById(theoryBlockId);
-        MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) getBlockById(multipleChoiceBlockUuid);
+        MultipleChoiceBlock mcBlock = new MultipleChoiceBlock();
 
         String prompt = buildMultipleChoicePrompt(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
@@ -55,15 +55,15 @@ public class AIBlockService {
             mcBlock.setQuestion(generated.getQuestion());
             mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
             mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
-            return blockRepository.save(mcBlock);
+            return mcBlock;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI MultipleChoiceBlock", e);
         }
     }
 
-    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockUuid, UUID questionBlockUuid) {
+    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockUuid) {
         TheoryBlock theoryBlock = (TheoryBlock) getBlockById(theoryBlockUuid);
-        QuestionBlock questionBlock = (QuestionBlock) getBlockById(questionBlockUuid);
+        QuestionBlock questionBlock = new QuestionBlock();
 
         String prompt = buildQuestionBlockPrompt(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
@@ -72,7 +72,7 @@ public class AIBlockService {
             QuestionBlock generated = objectMapper.readValue(aiResponse, QuestionBlock.class);
             questionBlock.setQuestion(generated.getQuestion());
             questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
-            return blockRepository.save(questionBlock);
+            return questionBlock;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI QuestionBlock", e);
         }

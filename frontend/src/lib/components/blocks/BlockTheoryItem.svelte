@@ -4,6 +4,7 @@
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { THEORY_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
@@ -11,9 +12,9 @@
 	}
 
 	const { block, role }: BlockTheoryItemProps = $props();
-	let lastContent = block.content;
+	let lastContent = $derived(block.content);
 
-	function handleContentUpdate(newContent: string) {
+	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
@@ -22,7 +23,7 @@
 			});
 			lastContent = newContent;
 		}
-	}
+	}, 500);
 </script>
 
-<TextEditor content={block.content} onUpdate={handleContentUpdate} {role} />
+<TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />

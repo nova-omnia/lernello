@@ -3,6 +3,7 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, QUESTION_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;
@@ -11,47 +12,37 @@
 
 	const { block }: BlockQuestionItemProps = $props();
 
-	let question = $state(block.question);
-	let expectedAnswer = $state(block.expectedAnswer);
+	let currentQuestion = $derived(block.question);
+	let currentExpectedAnswer = $derived(block.expectedAnswer);
 
-	let lastQuestion = $state(block.question);
-	let lastExpectedAnswer = $state(block.expectedAnswer);
-
-	function handleUpdate() {
-		if (question !== lastQuestion || expectedAnswer !== lastExpectedAnswer) {
+	const onUpdateHandler = createDebounced(() => {
+		if (currentQuestion !== block.question || currentExpectedAnswer !== block.expectedAnswer) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
-				question,
-				expectedAnswer
+				question: currentQuestion,
+				expectedAnswer: currentExpectedAnswer
 			});
-
-			lastQuestion = question;
-			lastExpectedAnswer = expectedAnswer;
 		}
-	}
-
-	$effect(() => {
-		handleUpdate();
-	});
+	}, 500);
 </script>
 
 <div class="rounded-lg bg-white p-4 dark:bg-gray-800">
 	<input
 		type="text"
 		placeholder={$_('common.block.question')}
-		bind:value={question}
-		oninput={handleUpdate}
-		onblur={handleUpdate}
+		bind:value={currentQuestion}
+		oninput={onUpdateHandler}
+		onblur={onUpdateHandler}
 		class="input mb-4 w-full border p-2"
 	/>
 	<div>
 		<input
 			type="text"
 			placeholder={$_('common.block.answer')}
-			bind:value={expectedAnswer}
-			oninput={handleUpdate}
-			onblur={handleUpdate}
+			bind:value={currentExpectedAnswer}
+			oninput={onUpdateHandler}
+			onblur={onUpdateHandler}
 			class="input w-full border p-2"
 		/>
 	</div>

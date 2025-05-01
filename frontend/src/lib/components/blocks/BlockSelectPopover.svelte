@@ -12,15 +12,7 @@
 		useRole
 	} from '@skeletonlabs/floating-ui-svelte';
 	import { _ } from 'svelte-i18n';
-	import {
-		BookOpen,
-		FileQuestion,
-		FileText,
-		ListChecks,
-		PlusCircle,
-		TextSelect
-	} from 'lucide-svelte';
-	import { fade } from 'svelte/transition';
+	import { BookOpen, FileText, ListChecks, PlusCircle } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { BlockType } from '$lib/schemas/request/block/CreateBlock';
 	import { ActionType } from '$lib/schemas/request/block/BlockAction';

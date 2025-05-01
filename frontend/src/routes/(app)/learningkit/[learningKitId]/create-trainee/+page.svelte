@@ -13,7 +13,7 @@
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
 			invalidate(['learning-kit', learningKitId]);
-			invalidate(['trainees-list', learningKitId]);
+			invalidate(['trainees-list']);
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);

@@ -10,5 +10,5 @@
 </script>
 
 <PageContainer title={$_('learningUnit.trainingTitle')}>
-	<LearningUnitTrainingContainer learningUnitId={data.learningUnitId} role={data.role} />
+	<LearningUnitTrainingContainer role={data.role} />
 </PageContainer>

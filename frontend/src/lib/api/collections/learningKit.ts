@@ -3,6 +3,7 @@ import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit'
 import { LearningKitPageSchema, LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
+import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
 
 const REQUEST_MAPPING = '/api/learning-kits';
 
@@ -71,15 +72,15 @@ export const updateLearningKit = createEndpoint({
 	}
 });
 
-export const removeParticipantFromKit = createEndpoint({
-	method: 'DELETE',
-	getPath: (id: string) => `${REQUEST_MAPPING}/participants/${id}`,
+export const addTraineeInLearningKit = createEndpoint({
+	method: 'POST',
+	getPath: (id: string) => `${REQUEST_MAPPING}/trainee/${id}`,
 	response: {
 		schema: z.string().uuid(),
-		defaultValidate: false
+		defaultValidate: true
 	},
 	payload: {
-		schema: z.string().uuid(),
+		schema: CreateParticipantUserSchema,
 		defaultValidate: false
 	}
 });

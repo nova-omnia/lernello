@@ -18,7 +18,7 @@
 		<BlockSelectPopover index={-1} {learningUnitId} />
 		{#each blockActionState.blocks as block, index (block.uuid)}
 			<div animate:flip={{ duration: 200 }} class="space-y-2">
-				<BlockItem {block} {learningUnitId} {role} />
+				<BlockItem {block} {role} />
 				<BlockSelectPopover {index} {learningUnitId} />
 			</div>
 		{/each}

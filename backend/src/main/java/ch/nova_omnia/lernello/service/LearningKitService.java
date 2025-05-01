@@ -70,6 +70,13 @@ public class LearningKitService {
         }
     }
 
+    @Transactional
+    public void saveTraineeInKit(UUID learningKitId, User trainee) {
+        LearningKit kit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new EntityNotFoundException("LearningKit not found"));
+        kit.getParticipants().add(trainee);
+        learningKitRepository.save(kit);
+    }
+
     private boolean isParticipant(UUID id) {
         User user = userRepository.findByUuid(id);
         return user.getRole() == Role.TRAINEE;

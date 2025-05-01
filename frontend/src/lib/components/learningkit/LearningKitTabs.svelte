@@ -6,6 +6,8 @@
 	import TraineesTab from '$lib/components/learningkit/tab/TraineesTab.svelte';
 	import FilesTab from '$lib/components/learningkit/tab/FilesTab.svelte';
 	import { goto } from '$app/navigation';
+	import type { RoleType } from '$lib/schemas/response/UserInfo';
+	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
 
 	const tabs = {
 		learningUnits: 'learningUnits',
@@ -13,7 +15,13 @@
 		files: 'files'
 	};
 
-	const { learningKit, tab } = $props();
+	interface LearningKitTabsProps {
+		learningKit: LearningKitRes;
+		tab: string | undefined | null;
+		role: RoleType;
+	}
+
+	const { learningKit, tab, role }: LearningKitTabsProps = $props();
 
 	let group = $state(tab);
 
@@ -46,7 +54,10 @@
 	{/snippet}
 	{#snippet content()}
 		<Tabs.Panel value={tabs.learningUnits}>
-			<LearningUnitsTab learningKitId={learningKit.uuid} learningUnits={learningKit.learningUnits}
+			<LearningUnitsTab
+				learningKitId={learningKit.uuid}
+				learningUnits={learningKit.learningUnits ?? []}
+				{role}
 			></LearningUnitsTab>
 		</Tabs.Panel>
 		<Tabs.Panel value={tabs.trainees}>

@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 
 public record TheoryBlockResDTO(
                                 @NotNull BlockType type,
-                                @NotNull UUID uuid,
+                                UUID uuid,
                                 @Size(min = 3, max = 40) @NotBlank String name,
                                 @Min(0) int position,
                                 @NotBlank String content

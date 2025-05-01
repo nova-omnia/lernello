@@ -12,10 +12,9 @@
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
-		learningUnitId?: string;
 		role: RoleType;
 	}
-	const { block, learningUnitId: learningUnitId, role }: BlockIconHeaderProps = $props();
+	const { block, role }: BlockIconHeaderProps = $props();
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -40,9 +39,9 @@
 		</div>
 	</div>
 
-	{#if learningUnitId && role === INSTRUCTOR_ROLE}
+	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block} {learningUnitId} />
+			<BlockAiGenerationButton {block} />
 		</div>
 	{/if}
 </div>

@@ -18,6 +18,32 @@ Java, Gradle, SpringBoot.
 - `gradle bootRun` to start the server (will auto restart on rebuild)
 - `gradle build --continuous` to auto build when files change
 
+### OpenAI API Key (Required for AI features)
+
+To use AI functionality, set the `OPENAI_API_KEY` **as an environment variable** before starting the backend.
+
+#### Temporarily in your terminal:
+
+- PowerShell (Windows):
+  $env:OPENAI_API_KEY = "sk-..."
+
+- CMD (Windows):
+  set OPENAI_API_KEY=sk-...
+
+- Bash/macOS/Linux:
+  export OPENAI_API_KEY=sk-...
+
+#### Or permanently in IntelliJ:
+
+1. Go to `Run > Edit Configurations`
+2. Select your Spring Boot configuration
+3. Add under Environment variables:
+   OPENAI_API_KEY=sk-...
+
+#### Optional: In `application.properties` (not recommended for production)
+
+OPENAI_API_KEY=sk-...
+
 ## Frontend (`/frontend`)
 
 SvelteKit, TypeScript, Skeleton, TailwindCSS, Prettier, Eslint.
@@ -32,19 +58,6 @@ SvelteKit, TypeScript, Skeleton, TailwindCSS, Prettier, Eslint.
 - `npm run dev` to start a local development server
 - `npm run lint` to lint check
 - `npm run format` to format with prettier (your IDE can do this automatically)
-
-## LiteLLM (`/litellm`)
-
-LiteLLM: so we can easily switch between different AI models during development.
-
-### Requirements
-
-- Docker
-- Ollama with deepseek-r1 (make sure ollama is running if you want to use that model)
-
-### Scripts
-
-- `docker compose up` (for older versions: `docker-compose up`) to start
 
 ## Swagger
 

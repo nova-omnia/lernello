@@ -5,6 +5,7 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
 	const Tab = {
 		EDIT: 'edit',
@@ -22,72 +23,62 @@
 
 	type Answer = { value: string; isCorrect: boolean };
 
-	let question = $state(block.question);
-	let answers = $state<Answer[]>(
+	let currentQuestion = $derived(block.question);
+	let currentAnswers = $derived<Answer[]>(
 		block.possibleAnswers.map(
-			(answer: string): Answer => ({
+			(answer): Answer => ({
 				value: answer,
 				isCorrect: block.correctAnswers.includes(answer)
 			})
 		)
 	);
 
-	let lastQuestion = $state(block.question);
-	let lastPossibleAnswers = $state([...block.possibleAnswers]);
-	let lastCorrectAnswers = $state([...block.correctAnswers]);
-
-	function handleUpdate() {
-		const newPossibleAnswers = answers.map((a: Answer) => a.value);
-		const newCorrectAnswers = answers
+	const onUpdateHandler = createDebounced(() => {
+		const newPossibleAnswers = currentAnswers.map((a: Answer) => a.value);
+		const newCorrectAnswers = currentAnswers
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
 		if (
-			question !== lastQuestion ||
-			JSON.stringify(newPossibleAnswers) !== JSON.stringify(lastPossibleAnswers) ||
-			JSON.stringify(newCorrectAnswers) !== JSON.stringify(lastCorrectAnswers)
+			currentQuestion !== block.question ||
+			JSON.stringify(newPossibleAnswers) !== JSON.stringify(block.possibleAnswers) ||
+			JSON.stringify(newCorrectAnswers) !== JSON.stringify(block.correctAnswers)
 		) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
-				question,
+				question: currentQuestion,
 				possibleAnswers: newPossibleAnswers,
 				correctAnswers: newCorrectAnswers
 			});
-
-			lastQuestion = question;
-			lastPossibleAnswers = newPossibleAnswers;
-			lastCorrectAnswers = newCorrectAnswers;
 		}
-	}
+	}, 500);
 
 	function addAnswerField() {
-		answers = [...answers, { value: '', isCorrect: false }];
+		currentAnswers = [...currentAnswers, { value: '', isCorrect: false }];
+		onUpdateHandler();
 	}
 
 	function toggleCorrect(index: number) {
-		answers = answers.map((answer: Answer, i: number) =>
+		currentAnswers = currentAnswers.map((answer: Answer, i: number) =>
 			i === index ? { ...answer, isCorrect: !answer.isCorrect } : answer
 		);
+		onUpdateHandler();
 	}
 
 	function updateAnswer(index: number, value: string) {
-		answers = answers.map((answer: Answer, i: number) =>
+		currentAnswers = currentAnswers.map((answer: Answer, i: number) =>
 			i === index ? { ...answer, value } : answer
 		);
-		handleUpdate();
+		onUpdateHandler();
 	}
 
 	function removeAnswer(index: number) {
-		if (answers.length > 1) {
-			answers = answers.filter((_, i: number) => i !== index);
+		if (currentAnswers.length > 1) {
+			currentAnswers = currentAnswers.filter((_, i: number) => i !== index);
 		}
+		onUpdateHandler();
 	}
 
-	$effect(() => {
-		handleUpdate();
-	});
-
-	//TODO
 	let selectedAnswer = $state<number | null>(null);
 	let isSubmitted = $state(false);
 
@@ -147,11 +138,13 @@
 		<input
 			type="text"
 			placeholder={$_('common.block.question')}
-			bind:value={question}
+			bind:value={currentQuestion}
+			onblur={onUpdateHandler}
+			oninput={onUpdateHandler}
 			class="input col-span-12 mb-4 w-full border p-2 dark:bg-gray-700"
 		/>
 
-		{#each answers as answer, idx (idx)}
+		{#each currentAnswers as answer, idx (idx)}
 			<div class="col-span-12 mb-2 flex items-center gap-4 pl-4">
 				<Switch
 					name={`correct-${idx}`}
@@ -168,7 +161,7 @@
 					class="input h-full flex-grow p-2 dark:bg-gray-700"
 					value={answer.value}
 					oninput={(e) => updateAnswer(idx, e.currentTarget.value)}
-					onblur={() => handleUpdate()}
+					onblur={onUpdateHandler}
 				/>
 				<button
 					onclick={() => removeAnswer(idx)}
@@ -183,7 +176,7 @@
 	{:else}
 		<div class="space-y-4">
 			<div class="flex justify-between">
-				<h3 class="text-lg font-semibold dark:text-gray-200">{question}</h3>
+				<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
 
 				{#if !isSubmitted}
 					<button
@@ -197,7 +190,7 @@
 					</button>
 				{:else}
 					<div class="mt-4 rounded-lg bg-gray-100 p-3 dark:bg-gray-700">
-						{#if selectedAnswer !== null && answers[selectedAnswer]?.isCorrect}
+						{#if selectedAnswer !== null && currentAnswers[selectedAnswer]?.isCorrect}
 							<span class="text-green-600 dark:text-green-400">✓ {$_('block.correctAnswer')}</span>
 						{:else}
 							<span class="error600-400">✗ {$_('block.incorrectAnswer')}</span>
@@ -207,7 +200,7 @@
 			</div>
 
 			<div class="space-y-2">
-				{#each answers as answer, idx (idx)}
+				{#each currentAnswers as answer, idx (idx)}
 					<button
 						class={`w-full rounded-lg border p-3 text-left transition-colors
 							${selectedAnswer === idx ? 'border-blue-300 bg-blue-100 dark:bg-blue-900/30' : 'dark:border-gray-600'}

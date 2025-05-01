@@ -90,7 +90,7 @@
 							class="card hover:preset-filled-primary-50-950 flex w-full items-center justify-between p-3 text-left"
 							class:preset-filled-surface-100-900={isSelected(option.uuid)}
 						>
-							<div class="grid w-full grid-cols-[300px_auto] items-center">
+							<div class="grid w-full grid-cols-[400px_auto] items-center">
 								<p>{option.label.split('|')[0]}</p>
 								<p>{option.label.split('|')[1]}</p>
 							</div>

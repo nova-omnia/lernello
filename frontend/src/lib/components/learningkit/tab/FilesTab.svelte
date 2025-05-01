@@ -9,19 +9,13 @@
 	import { updateLearningKit } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
+	import type { FileRes } from '$lib/schemas/response/FileRes';
 
 	const invalidate = useQueryInvalidation();
 
 	interface FilesTabProps {
 		learningKitId: string;
-		files: {
-			uuid: string;
-			name: string;
-			createdAt: string;
-			updatedAt: string;
-			size: number;
-			type: string;
-		}[];
+		files: FileRes[];
 	}
 
 	const { learningKitId, files }: FilesTabProps = $props();
@@ -38,6 +32,7 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			invalidate(['files-list']);
 		}
 	});
 </script>

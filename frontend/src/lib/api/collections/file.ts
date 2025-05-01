@@ -70,7 +70,7 @@ export const getStaticFile = createEndpoint({
 		defaultValidate: false
 	},
 	response: {
-		schema:  StaticFileResSchema,
+		schema: StaticFileResSchema,
 		defaultValidate: true
 	}
 });

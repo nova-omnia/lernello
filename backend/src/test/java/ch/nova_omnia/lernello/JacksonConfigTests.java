@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import ch.nova_omnia.lernello.mapper.example.EntityEx;
 import ch.nova_omnia.lernello.mapper.example.EntityMapper;
@@ -16,6 +18,8 @@ import ch.nova_omnia.lernello.mapper.example.EntityUpdateDTO;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Import(TestAIClientConfig.class)
 public class JacksonConfigTests {
 
 

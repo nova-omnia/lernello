@@ -116,4 +116,19 @@ public class FileSystemService implements FileService {
 
         return uniqueFileName;
     }
+
+    public byte[] getStaticFile(UUID id) {
+        Optional<File> fileOptional = fileRepository.findById(id);
+        if (fileOptional.isPresent()) {
+            Path filePath = Paths.get(storagePath, id.toString());
+            try {
+                return Files.readAllBytes(filePath);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Could not load static file. Error: " + e.getMessage(), e);
+            }
+        } else {
+            throw new RuntimeException("File with ID " + id + " not found");
+        }
+    }
 }

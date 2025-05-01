@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,6 +56,16 @@ public class FileRestController {
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
     public List<@Valid FileResDTO> getAllFiles() {
         return fileService.findAll().stream().map(fileMapper::toDTO).toList();
+    }
+
+    @GetMapping("/static/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_files:read')")
+    public ResponseEntity<byte[]> getStaticFile(@PathVariable UUID id) {
+        byte[] fileBytes = fileService.getStaticFile(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentLength(fileBytes.length);
+        return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
     }
 
 }

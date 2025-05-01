@@ -120,8 +120,7 @@ public class FileSystemService implements FileService {
     public byte[] getStaticFile(UUID id) {
         Optional<File> fileOptional = fileRepository.findById(id);
         if (fileOptional.isPresent()) {
-            File file = fileOptional.get();
-            Path filePath = Paths.get(storagePath, file.getUuid().toString());
+            Path filePath = Paths.get(storagePath, id.toString());
             try {
                 return Files.readAllBytes(filePath);
 

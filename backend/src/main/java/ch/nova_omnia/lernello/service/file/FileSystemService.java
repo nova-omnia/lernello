@@ -28,6 +28,8 @@ public class FileSystemService implements FileService {
 
     @Value("${storage.path}")
     private String storagePath;
+    @Value("${server.url}")
+    private String serverUrl;
 
     @Override
     public List<File> findAll() {
@@ -117,10 +119,10 @@ public class FileSystemService implements FileService {
         return uniqueFileName;
     }
 
-    public byte[] getStaticFile(UUID id) {
-        Optional<File> fileOptional = fileRepository.findById(id);
+    public byte[] getStaticFile(UUID fileId) {
+        Optional<File> fileOptional = fileRepository.findById(fileId);
         if (fileOptional.isPresent()) {
-            Path filePath = Paths.get(storagePath, id.toString());
+            Path filePath = Paths.get(storagePath, fileId.toString());
             try {
                 return Files.readAllBytes(filePath);
 
@@ -128,7 +130,25 @@ public class FileSystemService implements FileService {
                 throw new RuntimeException("Could not load static file. Error: " + e.getMessage(), e);
             }
         } else {
-            throw new RuntimeException("File with ID " + id + " not found");
+            throw new RuntimeException("File with ID " + fileId + " not found");
         }
+    }
+
+    // public ResponseEntity<Resource> getStaticFileUrl(UUID id) {
+    //     Path filePath = Paths.get(storagePath, id.toString());
+    //     if (!Files.exists(filePath)) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    //     }
+    //     try {
+    //         FileSystemResource resource = new FileSystemResource(filePath);
+    //         String contentType = Files.probeContentType(filePath);
+    //         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream")).body(resource);
+    //     } catch (IOException e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    //     }
+    // }
+    public String getStoragePath(UUID id) {
+        return Paths.get(serverUrl, id.toString()).toString();
+
     }
 }

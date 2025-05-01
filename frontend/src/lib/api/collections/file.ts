@@ -1,4 +1,5 @@
 import { FileResSchema } from '$lib/schemas/response/FileRes';
+import { StaticFileResSchema } from '$lib/schemas/response/StaticFileRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -69,7 +70,7 @@ export const getStaticFile = createEndpoint({
 		defaultValidate: false
 	},
 	response: {
-		schema: z.instanceof(Blob),
-		defaultValidate: false
+		schema:  StaticFileResSchema,
+		defaultValidate: true
 	}
 });

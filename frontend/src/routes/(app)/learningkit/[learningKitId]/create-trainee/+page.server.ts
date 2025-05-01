@@ -4,7 +4,7 @@ import { handleApiError } from '$lib/api/apiError';
 import { fail, redirect } from '@sveltejs/kit';
 import { api } from '$lib/api/apiClient';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
-import { addTrainee } from '$lib/api/collections/user';
+import { addTraineeInLearningKit } from '$lib/api/collections/learningKit';
 
 export const load = async () => {
 	const form = await superValidate(zod(CreateParticipantUserSchema));
@@ -18,7 +18,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		await api(fetch).req(addTrainee, form.data).parse();
+		await api(fetch).req(addTraineeInLearningKit, form.data, params.learningKitId).parse();
 
 		redirect(303, `/learningkit/${params.learningKitId}?tab=trainees`);
 	})

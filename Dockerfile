@@ -18,7 +18,7 @@ COPY backend/ backend/
 RUN chmod +x gradlew
 
 # Build the application (skip tests to speed up; remove -x test if you want them)
-RUN ./gradlew  :backend:build
+RUN ./gradlew -p backend clean build -x test
 
 # -----
 

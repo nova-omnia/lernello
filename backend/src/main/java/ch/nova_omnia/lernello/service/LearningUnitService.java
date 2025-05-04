@@ -57,13 +57,14 @@ public class LearningUnitService {
     }
 
     @Transactional
-    public LearningUnit GenerateLearningUnitAI(List<UUID> fileIds, UUID learningUnitId) {
+    public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
-        List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
-
+        
         // TODO: discuss, if we want to keep the blocks in the learning unit
         // or if we want to replace them with the new ones
         learningUnit.getBlocks().clear();
+
+        List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
 
         for (Block block : blocks) {
             block.setLearningUnit(learningUnit);

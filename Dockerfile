@@ -1,5 +1,5 @@
 # Use Oracle JDK 23.0.2 as the build environment
-FROM ghcr.io/oracle/oracle-jdk:23.0.2 AS builder
+FROM openjdk:23-jdk-oracle AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN ./gradlew  :backend:build
 # -----
 
 # Use a fresh Oracle JDK image for runtime
-FROM ghcr.io/oracle/oracle-jdk:23.0.2
+FROM openjdk:23-jdk-oracle
 
 WORKDIR /app
 

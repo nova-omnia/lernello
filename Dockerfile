@@ -27,8 +27,9 @@ FROM openjdk:23-jdk-oracle
 
 WORKDIR /app
 
-# Copy the built JAR from the builder stage
-COPY --from=builder /app/backend/build/libs/*.jar app.jar
+# Locate the one Spring-Boot “fat” JAR (exclude any *plain.jar) and rename it to app.jar
+RUN find backend/build/libs -maxdepth 1 -name '*.jar' ! -name '*plain.jar' -print -quit \
+    | xargs -I {} cp {} app.jar
 
 # Expose the default Spring Boot port
 EXPOSE 8080

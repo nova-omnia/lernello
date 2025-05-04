@@ -3,7 +3,7 @@
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
 	const invalidate = useQueryInvalidation();

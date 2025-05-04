@@ -1,6 +1,6 @@
 <script>
 	import { _ } from 'svelte-i18n';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningUnitTrainingContainer from '$lib/components/LearningUnitTrainer.svelte';
 	import { blockActionState } from '$lib/states/blockActionState.svelte.js';
 

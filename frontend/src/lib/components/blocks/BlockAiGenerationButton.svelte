@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { THEORY_BLOCK_TYPE, type BlockRes } from '$lib/schemas/response/BlockRes';
 	import CreateMultipleChoiceModal from '$lib/components/dialogs/CreateMultipleChoiceModal.svelte';
-	import GenerateTheoryModal from '$lib/components/GenerateTheoryModal.svelte';
+	import GenerateTheoryModal from '$lib/components/dialogs/GenerateTheoryModal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { Sparkles } from 'lucide-svelte';
 	import { createMutation } from '@tanstack/svelte-query';

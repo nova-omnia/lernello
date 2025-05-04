@@ -16,7 +16,8 @@
 		role: RoleType;
 	}
 
-	const { learningUnit, onDeleteLearningUnit, onGenerateLearningUnit, role }: LearningUnitProps = $props();
+	const { learningUnit, onDeleteLearningUnit, onGenerateLearningUnit, role }: LearningUnitProps =
+		$props();
 
 	let showDeleteDialog = $state(false);
 	let showGenerationDialog = $state(false);

@@ -1,6 +1,10 @@
 # Use Oracle JDK 23.0.2 as the build environment
 FROM openjdk:23-jdk-oracle AS builder
 
+# Install xargs (part of findutils) so gradlew will run
+RUN microdnf install -y findutils \
+    && microdnf clean all
+
 WORKDIR /app
 
 # Copy Gradle wrapper and its files

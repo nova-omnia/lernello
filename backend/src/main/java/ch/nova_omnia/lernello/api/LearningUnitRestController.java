@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
@@ -67,6 +68,13 @@ public class LearningUnitRestController {
 
         LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO, learningKit);
         LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit);
+        return learningUnitMapper.toDTO(learningUnit);
+    }
+
+    @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
+    public @Valid LearningUnitResDTO generateLearningUnit(@PathVariable UUID id, @RequestBody GenerateLearningUnitDTO generateLearningUnitDTO) {
+        LearningUnit learningUnit = learningUnitService.generateLearningUnitWithAI(generateLearningUnitDTO.fileIds(), id);
         return learningUnitMapper.toDTO(learningUnit);
     }
 

@@ -1,32 +1,38 @@
-# Use Oracle JDK 23 base image
-FROM ghcr.io/graalvm/oraclelinux:23.0.2
+# Use Oracle JDK 23.0.2 base image
+FROM container-registry.oracle.com/java/oraclelinux:23-slim
 
-# Set working directory
+# Install necessary packages
+RUN microdnf install -y unzip tar gzip git && \
+    microdnf clean all
+
+# Set working directory inside container
 WORKDIR /app
 
-# Copy Gradle wrapper and settings
-COPY gradlew settings.gradle.kts gradle/ ./
+# Copy gradle wrapper and config
+COPY gradlew .
+COPY gradle gradle
+COPY settings.gradle settings.gradle
+COPY build.gradle build.gradle
 
-# Copy only the backend project (contains build.gradle etc.)
-COPY backend ./backend
+# Copy only the backend folder (the Spring Boot project)
+COPY backend/ backend/
 
-# Give gradlew execute permission
+# Give execution permissions to gradlew
 RUN chmod +x ./gradlew
 
-# Build the backend project
-RUN ./gradlew -p backend build --no-daemon
+# Build the project
+RUN ./gradlew :backend:bootJar --no-daemon
 
-# Use a lightweight base image for runtime
-FROM eclipse-temurin:23-jdk-alpine
+# Use a minimal image for running the app
+FROM container-registry.oracle.com/java/oraclelinux:23-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy built JAR from previous stage
+# Copy the built JAR from the previous build stage
 COPY --from=0 /app/backend/build/libs/*.jar app.jar
 
-# Expose default Spring Boot port
+# Expose the default Spring Boot port
 EXPOSE 8080
 
-# Run the Spring Boot application
+# Run the Spring Boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]

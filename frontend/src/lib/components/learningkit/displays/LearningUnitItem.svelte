@@ -12,10 +12,12 @@
 			uuid: string;
 		};
 		onDeleteLearningUnit: () => void;
+		onGenerateLearningUnit: (files: string[]) => void;
 		role: RoleType;
 	}
 
-	const { learningUnit, onDeleteLearningUnit, role }: LearningUnitProps = $props();
+	const { learningUnit, onDeleteLearningUnit, onGenerateLearningUnit, role }: LearningUnitProps = $props();
+
 	let showDeleteDialog = $state(false);
 	let showGenerationDialog = $state(false);
 
@@ -23,11 +25,6 @@
 		onDeleteLearningUnit();
 		showDeleteDialog = false;
 	}
-
-	
-
-
-
 </script>
 
 <div class="flex items-center">
@@ -89,9 +86,13 @@
 />
 
 <GenerateLearningUnitModal
-	isOpen={showGenerationDialog}
-	isLoading={$generateLearningUnitMutation.isPending}
-	onConfirm={(fileIds) => {
+	bind:isOpen={showGenerationDialog}
+	isLoading={false}
+	onConfirm={(files) => {
+		onGenerateLearningUnit(files);
+		showGenerationDialog = false;
+	}}
+	onCancel={() => {
 		showGenerationDialog = false;
 	}}
 />

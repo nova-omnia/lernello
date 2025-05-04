@@ -60,7 +60,7 @@ export const createLearningUnit = createEndpoint({
 
 export const generateLearningUnit = createEndpoint({
     method: 'POST',
-    getPath: (id: string) => `${REQUEST_MAPPING}/${id}/generate`,
+    getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
     response: {
         schema: LearningUnitResSchema,
         defaultValidate: true

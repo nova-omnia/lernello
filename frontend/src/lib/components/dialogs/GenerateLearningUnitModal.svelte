@@ -12,6 +12,7 @@
 		isOpen: boolean;
 		isLoading: boolean;
 		onConfirm: (files: string[]) => void;
+		onCancel: () => void;
 	}
 
 	let selectedFiles = $state<{ uuid: string; label: string }[]>([]);
@@ -21,12 +22,12 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isLoading, isOpen = $bindable(), onConfirm }: GenerateLearningUnitModalProps = $props();
-
-	const onCancel = () => {
-		isOpen = false;
-		selectedFiles = [];
-	};
+	let {
+		isLoading,
+		onConfirm,
+		onCancel,
+		isOpen = $bindable()
+	}: GenerateLearningUnitModalProps = $props();
 </script>
 
 <Modal
@@ -35,7 +36,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		<h1 class="preset-typo-headline">{$_('dialog.createLearningUnitTitle')}</h1>
+		<h1 class="preset-typo-headline">{$_('dialog.creationWizardTitle')}</h1>
 
 		<div class="space-y-4">
 			<MultiSelect
@@ -50,7 +51,7 @@
 
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
+					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
 								File={{ uuid: file.uuid, name: file.label }}
@@ -66,15 +67,16 @@
 
 		<footer class="flex justify-end gap-3 pt-2">
 			<button
-				disabled={isLoading}
 				type="button"
 				class="btn preset-tonal-surface"
-				onclick={onCancel}
+				onclick={() => {
+					onCancel();
+					selectedFiles = [];
+				}}
 			>
 				{$_('common.cancel')}
 			</button>
 			<button
-				disabled={isLoading}
 				type="button"
 				class="btn preset-filled-primary-500"
 				onclick={() => onConfirm(selectedFiles.map((f) => f.uuid))}

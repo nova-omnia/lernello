@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
@@ -30,15 +31,13 @@ public class AIBlockService {
 
     public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
         TheoryBlock block = new TheoryBlock();
-
         String context = fileService.extractTextFromFiles(fileIds);
         String prompt = buildTheoryBlockPrompt(context, topic, block.getPosition());
         String aiResponse = aiClient.sendPrompt(prompt);
 
         try {
             JsonNode jsonNode = objectMapper.readTree(aiResponse);
-            String content = jsonNode.get("content").asText();
-            block.setContent(content);
+            block.setContent(jsonNode.get("content").asText());
             return block;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI TheoryBlock", e);
@@ -84,43 +83,34 @@ public class AIBlockService {
         String context = fileService.extractTextFromFiles(fileIds);
         String prompt = buildSmartUnitPrompt(context);
         String aiResponse = aiClient.sendPrompt(prompt);
+        System.out.println("AI Response: " + aiResponse);
 
-        List<Block> blocks = new ArrayList<>();
         try {
-            JsonNode json = objectMapper.readTree(aiResponse);
+            JsonNode json = parseToJsonArray(aiResponse);
+            if (!json.isArray()) {
+                throw new RuntimeException("AI response is not a valid JSON array");
+            }
 
+            List<Block> blocks = new ArrayList<>();
             int position = 0;
+
             for (JsonNode node : json) {
-                String type = node.get("type").asText();
-                switch (type) {
-                    case "Theory" -> {
-                        TheoryBlock block = new TheoryBlock();
-                        block.setContent(node.get("content").asText());
-                        block.setPosition(position++);
-                        blocks.add(block);
-                    }
-                    case "MultipleChoice" -> {
-                        MultipleChoiceBlock block = objectMapper.treeToValue(node, MultipleChoiceBlock.class);
-                        block.setPosition(position++);
-                        blocks.add(block);
-                    }
-                    case "Question" -> {
-                        QuestionBlock block = objectMapper.treeToValue(node, QuestionBlock.class);
-                        block.setPosition(position++);
-                        blocks.add(block);
-                    }
+                Block block = BlockFactory.create(node, position);
+                if (block != null) {
+                    blocks.add(block);
+                    position++;
                 }
             }
-        } catch (JsonProcessingException e) {
+
+            return blocks;
+        } catch (Exception e) {
             throw new RuntimeException("Failed to process AI response JSON", e);
         }
-
-        return blocks;
     }
 
     @Transactional
     private Block getBlockById(UUID blockId) {
-        return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found" + blockId));
+        return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
     }
 
     private String buildTheoryBlockPrompt(String context, String topic, int position) {
@@ -162,18 +152,118 @@ public class AIBlockService {
 
     private String buildSmartUnitPrompt(String context) {
         return """
-                You are an AI tutor. Create a learning unit based on the provided content.
-                The learning unit should consist of theory ,multiple choice and question blocks.
-                
-                Return a list of blocks in JSON format.
-                Content:
-                %s
+                You are an AI tutor.
+
+                Create a structured learning unit based strictly on the provided content.
+                The unit must consist the provided blocks. Each block must be one of the following types:
+
+                - "Theory": Explain concepts concisely.
+                - "MultipleChoice": Provide a question with multiple answers and mark the correct ones.
+                - "Question": Ask an open-ended question expecting a text-based answer.
+
+                Important:
+                - Every block **must** include a "type" key with one of the values: "Theory", "MultipleChoice", or "Question".
+                - Respond with pure JSON only — a flat list ([]) of block objects.
+                - Do not include any explanations, markdown, or text outside the JSON.
+
                 Respond with pure JSON:
+
                 [
                     { "type": "Theory", "content": "..." },
                     { "type": "MultipleChoice", "question": "...", "possibleAnswers": ["..."], "correctAnswers": ["..."] },
                     { "type": "Question", "question": "...", "expectedAnswer": "..." }
                 ]
+
+                Content:
+                %s
                 """.formatted(context);
+    }
+
+    private JsonNode parseToJsonArray(String rawJson) throws JsonProcessingException {
+        String trimmed = rawJson.trim();
+
+        if (!trimmed.startsWith("[")) {
+            String fixed = "[" + trimmed;
+            if (trimmed.endsWith(",")) {
+                fixed = fixed.substring(0, fixed.length() - 1);
+            }
+            if (!trimmed.endsWith("}")) {
+                fixed = fixed + "}";
+            }
+            fixed = fixed + "]";
+            return objectMapper.readTree(fixed);
+        }
+
+        return objectMapper.readTree(trimmed);
+    }
+
+    private static class BlockFactory {
+        static Block create(JsonNode node, int position) {
+            try {
+                String type = getTextSafe(node, "type");
+                if (type == null) return null;
+
+                return switch (type) {
+                    case "Theory" -> {
+                        TheoryBlock block = new TheoryBlock();
+                        block.setName("Theory");
+                        block.setType(BlockType.THEORY);
+                        block.setContent(getTextSafe(node, "content", "..."));
+                        block.setPosition(position);
+                        yield block;
+                    }
+                    case "MultipleChoice" -> {
+                        MultipleChoiceBlock block = new MultipleChoiceBlock();
+                        block.setName("Multiple Choice");
+                        block.setType(BlockType.MULTIPLE_CHOICE);
+                        block.setQuestion(getTextSafe(node, "question", "No question provided"));
+                        block.setPossibleAnswers(toListSafe(node.get("possibleAnswers")));
+                        block.setCorrectAnswers(toListSafe(node.get("correctAnswers")));
+                        block.setPosition(position);
+                        yield block;
+                    }
+                    case "Question" -> {
+                        QuestionBlock block = new QuestionBlock();
+                        block.setName("Question");
+                        block.setType(BlockType.QUESTION);
+                        block.setQuestion(getTextSafe(node, "question", "No question provided"));
+                        block.setExpectedAnswer(getTextSafe(node, "expectedAnswer", "No answer provided"));
+                        block.setPosition(position);
+                        yield block;
+                    }
+                    default -> {
+                        System.out.println("Unknown block type: " + type);
+                        yield null;
+                    }
+                };
+            } catch (Exception e) {
+                System.out.println("Skipping invalid block: " + node.toPrettyString() + " – Reason: " + e.getMessage());
+                return null;
+            }
+        }
+
+        private static String getTextSafe(JsonNode node, String field) {
+            return getTextSafe(node, field, null);
+        }
+
+        private static String getTextSafe(JsonNode node, String field, String fallback) {
+            JsonNode value = node.get(field);
+            if (value != null && !value.isNull() && value.isTextual()) {
+                return value.asText();
+            }
+            return fallback;
+        }
+
+        private static List<String> toListSafe(JsonNode arrayNode) {
+            List<String> list = new ArrayList<>();
+            if (arrayNode != null && arrayNode.isArray()) {
+                for (JsonNode item : arrayNode) {
+                    if (item.isTextual()) {
+                        list.add(item.asText());
+                    }
+                }
+            }
+            return list;
+        }
     }
 }

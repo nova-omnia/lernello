@@ -3,6 +3,7 @@ import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
 import { BlockActionSchema } from '$lib/schemas/request/block/BlockAction';
 import { createEndpoint } from '../createEndpoint';
 import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUnit';
+import { GenerateAILearningUnitSchema } from '$lib/schemas/request/GenerateAILearningUnit';
 
 const REQUEST_MAPPING = '/api/learning-unit';
 
@@ -55,4 +56,17 @@ export const createLearningUnit = createEndpoint({
 		schema: CreateLearningUnitSchema,
 		defaultValidate: false
 	}
+});
+
+export const generateLearningUnit = createEndpoint({
+    method: 'POST',
+    getPath: (id: string) => `${REQUEST_MAPPING}/${id}/generate`,
+    response: {
+        schema: LearningUnitResSchema,
+        defaultValidate: true
+    },
+    payload: {
+        schema: GenerateAILearningUnitSchema,
+        defaultValidate: false
+    }
 });

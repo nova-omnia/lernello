@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import GenerateLearningUnitModal from '$lib/components/dialogs/GenerateLearningUnitModal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { AlignLeft, GripVertical } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
@@ -22,6 +23,11 @@
 		onDeleteLearningUnit();
 		showDeleteDialog = false;
 	}
+
+	
+
+
+
 </script>
 
 <div class="flex items-center">
@@ -79,5 +85,13 @@
 	onConfirm={deleteLearningUnitHandler}
 	onCancel={() => {
 		showDeleteDialog = false;
+	}}
+/>
+
+<GenerateLearningUnitModal
+	isOpen={showGenerationDialog}
+	isLoading={$generateLearningUnitMutation.isPending}
+	onConfirm={(fileIds) => {
+		showGenerationDialog = false;
 	}}
 />

@@ -4,6 +4,7 @@
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import PageContainer from '$lib/components/PageContainer.svelte';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 	const invalidate = useQueryInvalidation();
@@ -53,6 +54,6 @@
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('learningUnit.create')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

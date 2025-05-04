@@ -4,6 +4,7 @@
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { invalidateAll } from '$app/navigation';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 
@@ -65,5 +66,5 @@
 		</div>
 		<button class="btn preset-filled-primary-500 w-full">{$_('login.signIn')}</button>
 	</form>
-	<SuperDebug data={$form} />
+	<SuperDebug data={$form} display={dev} />
 </main>

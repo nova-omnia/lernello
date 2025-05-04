@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
+    private final AIBlockService aiBlockService;
 
     private Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
@@ -53,6 +54,23 @@ public class LearningUnitService {
 
     public void deleteById(UUID id) {
         learningUnitRepository.deleteById(id);
+    }
+
+    @Transactional
+    public LearningUnit GenerateLearningUnitAI(List<UUID> fileIds, UUID learningUnitId) {
+        LearningUnit learningUnit = getLearningUnit(learningUnitId);
+        List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
+
+        // TODO: discuss, if we want to keep the blocks in the learning unit
+        // or if we want to replace them with the new ones
+        learningUnit.getBlocks().clear();
+
+        for (Block block : blocks) {
+            block.setLearningUnit(learningUnit);
+            learningUnit.getBlocks().add(block);
+        }
+
+        return learningUnitRepository.save(learningUnit);
     }
 
     @Transactional
@@ -195,7 +213,7 @@ public class LearningUnitService {
                 mcBlock.setQuestion(updateAction.question());
                 mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
                 mcBlock.setCorrectAnswers(updateAction.correctAnswers());
-                
+
             }
         }
         // Handle full DTO updates if present

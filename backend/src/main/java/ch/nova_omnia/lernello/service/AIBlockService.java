@@ -1,13 +1,15 @@
 package ch.nova_omnia.lernello.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
@@ -78,6 +80,44 @@ public class AIBlockService {
         }
     }
 
+    public List<Block> generateBlocksAI(List<UUID> fileIds) {
+        String context = fileService.extractTextFromFiles(fileIds);
+        String prompt = buildSmartUnitPrompt(context);
+        String aiResponse = aiClient.sendPrompt(prompt);
+
+        List<Block> blocks = new ArrayList<>();
+        try {
+            JsonNode json = objectMapper.readTree(aiResponse);
+
+            int position = 0;
+            for (JsonNode node : json) {
+                String type = node.get("type").asText();
+                switch (type) {
+                    case "Theory" -> {
+                        TheoryBlock block = new TheoryBlock();
+                        block.setContent(node.get("content").asText());
+                        block.setPosition(position++);
+                        blocks.add(block);
+                    }
+                    case "MultipleChoice" -> {
+                        MultipleChoiceBlock block = objectMapper.treeToValue(node, MultipleChoiceBlock.class);
+                        block.setPosition(position++);
+                        blocks.add(block);
+                    }
+                    case "Question" -> {
+                        QuestionBlock block = objectMapper.treeToValue(node, QuestionBlock.class);
+                        block.setPosition(position++);
+                        blocks.add(block);
+                    }
+                }
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to process AI response JSON", e);
+        }
+
+        return blocks;
+    }
+
     @Transactional
     private Block getBlockById(UUID blockId) {
         return blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found" + blockId));
@@ -118,5 +158,22 @@ public class AIBlockService {
                 Respond with pure JSON:
                 { "question": "...", "expectedAnswer": "..." }
                 """.formatted(content);
+    }
+
+    private String buildSmartUnitPrompt(String context) {
+        return """
+                You are an AI tutor. Create a learning unit based on the provided content.
+                The learning unit should consist of theory ,multiple choice and question blocks.
+                
+                Return a list of blocks in JSON format.
+                Content:
+                %s
+                Respond with pure JSON:
+                [
+                    { "type": "Theory", "content": "..." },
+                    { "type": "MultipleChoice", "question": "...", "possibleAnswers": ["..."], "correctAnswers": ["..."] },
+                    { "type": "Question", "question": "...", "expectedAnswer": "..." }
+                ]
+                """.formatted(context);
     }
 }

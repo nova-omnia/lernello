@@ -16,6 +16,7 @@
 
 	const { learningUnit, onDeleteLearningUnit, role }: LearningUnitProps = $props();
 	let showDeleteDialog = $state(false);
+	let showGenerationDialog = $state(false);
 
 	function deleteLearningUnitHandler() {
 		onDeleteLearningUnit();
@@ -43,6 +44,16 @@
 
 		{#if role === INSTRUCTOR_ROLE}
 			<div class="flex gap-2">
+				<button
+					type="button"
+					onclick={(e) => {
+						e.preventDefault();
+						showGenerationDialog = true;
+					}}
+					class="btn preset-filled-primary-500"
+				>
+					{$_('common.generate')}
+				</button>
 				<button
 					type="button"
 					onclick={(e) => {

@@ -17,7 +17,7 @@ import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
-import ch.nova_omnia.lernello.service.ai.AIClient;
+import ch.nova_omnia.lernello.service.aiClient.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 

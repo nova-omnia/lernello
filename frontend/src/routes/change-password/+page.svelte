@@ -1,6 +1,7 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { _ } from 'svelte-i18n';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 
@@ -54,5 +55,5 @@
 			{$_('changePassword.button')}
 		</button>
 	</form>
-	<SuperDebug data={$form} />
+	<SuperDebug data={$form} display={dev} />
 </main>

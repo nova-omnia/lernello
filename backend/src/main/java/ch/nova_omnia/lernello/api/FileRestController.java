@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.nova_omnia.lernello.dto.response.FileResDTO;
+import ch.nova_omnia.lernello.dto.response.StaticFileResDTO;
 import ch.nova_omnia.lernello.mapper.FileMapper;
 import ch.nova_omnia.lernello.service.file.FileSystemService;
 import jakarta.validation.Valid;
@@ -56,8 +57,8 @@ public class FileRestController {
 
     @GetMapping("/static/{id}")
     @PreAuthorize("hasAuthority('SCOPE_files:read')")
-    public String getStaticFile(@PathVariable UUID id) {
-        return fileService.getStoragePath(id);
+    public StaticFileResDTO getStaticFile(@PathVariable UUID id) {
+        StaticFileResDTO staticFile = new StaticFileResDTO(fileService.getStoragePath(id));
+        return staticFile;
     }
-
 }

@@ -94,8 +94,15 @@ public class FileSystemService implements FileService {
 
     @Override
     public String getStoragePath(UUID id) {
-        return Paths.get(serverUrl, id.toString()).toString();
+        Optional<File> fileOptional = fileRepository.findById(id);
 
+        if (fileOptional.isEmpty()) {
+            throw new RuntimeException("File with ID " + id + " not found");
+        }
+
+        File file = fileOptional.get();
+        String extension = getExtension(file.getName());
+        return serverUrl + id + extension;
     }
 
     private InputStream loadFileAsStream(UUID fileId) {

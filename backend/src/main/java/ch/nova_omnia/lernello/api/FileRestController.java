@@ -54,4 +54,10 @@ public class FileRestController {
         return fileService.findAll().stream().map(fileMapper::toDTO).toList();
     }
 
+    @GetMapping("/static/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_files:read')")
+    public String getStaticFile(@PathVariable UUID id) {
+        return fileService.getStoragePath(id);
+    }
+
 }

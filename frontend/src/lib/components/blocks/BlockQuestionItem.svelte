@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import { Check, X } from 'lucide-svelte'; // Import icons for feedback
+	import { Check, X } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, QUESTION_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
 	import { createDebounced } from '$lib/utils/createDebounced';
-	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte'; // Import the container
+	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;

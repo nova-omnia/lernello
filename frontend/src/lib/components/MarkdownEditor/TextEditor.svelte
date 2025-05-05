@@ -67,16 +67,13 @@
 	};
 </script>
 
-<!-- Pass role and the snippets to the container -->
 <EditPreviewTabContainer {role}>
-	<!-- Define the snippet for the edit header content (Toolbar) -->
 	{#snippet editHeaderContent()}
 		{#if role === INSTRUCTOR_ROLE}
 			<Toolbar {insertSyntax} />
 		{/if}
 	{/snippet}
 
-	<!-- Define the snippet for the main edit area (Textarea) -->
 	{#snippet edit()}
 		<textarea
 			bind:this={editorRef}
@@ -86,7 +83,6 @@
 		></textarea>
 	{/snippet}
 
-	<!-- Define the snippet for the preview area -->
 	{#snippet preview()}
 		{#await previewContent()}
 			<div class="text-center text-gray-500 dark:text-gray-400">{$_('common.loading')}...</div>

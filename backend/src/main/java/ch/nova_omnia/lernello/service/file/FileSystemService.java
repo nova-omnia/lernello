@@ -56,7 +56,7 @@ public class FileSystemService implements FileService {
         String uniqueFileName = resolveUniqueFileName(file.getOriginalFilename());
         File savedFile = fileRepository.save(new File(uniqueFileName));
         try {
-            Path filePath = Paths.get(storagePath, savedFile.getUuid().toString());
+            Path filePath = Paths.get(storagePath, savedFile.getUuid().toString() + getExtension(file.getOriginalFilename()));
             Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
         } catch (IOException e) {
@@ -115,5 +115,10 @@ public class FileSystemService implements FileService {
         }
 
         return uniqueFileName;
+    }
+
+    private String getExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex >= 0) ? fileName.substring(dotIndex) : "";
     }
 }

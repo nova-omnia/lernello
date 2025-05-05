@@ -4,6 +4,7 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 
@@ -94,6 +95,6 @@
 			<a class="btn preset-outlined-surface-500" href="/dashboard">{$_('common.cancel')}</a>
 			<button class="btn preset-filled-primary-500">{$_('learningKit.create')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

@@ -28,6 +28,8 @@ public class FileSystemService implements FileService {
 
     @Value("${storage.path}")
     private String storagePath;
+    @Value("${server.url}")
+    private String serverUrl;
 
     @Override
     public List<File> findAll() {
@@ -87,6 +89,13 @@ public class FileSystemService implements FileService {
         }
 
         return context.toString();
+    }
+
+
+    @Override
+    public String getStoragePath(UUID id) {
+        return Paths.get(serverUrl, id.toString()).toString();
+
     }
 
     private InputStream loadFileAsStream(UUID fileId) {

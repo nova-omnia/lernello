@@ -49,7 +49,7 @@
 		<div class="space-y-4">
 			<input
 				type="text"
-				placeholder={$_('common.block.question')}
+				placeholder={$_('block.typeTheAnswer')}
 				bind:value={currentQuestion}
 				oninput={onUpdateHandler}
 				onblur={onUpdateHandler}
@@ -76,12 +76,12 @@
 						for={`student-answer-${block.uuid}`}
 						class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
 					>
-						{$_('common.block.yourAnswer')}
+						{$_('block.yourAnswer')}
 					</label>
 					<input
 						id={`student-answer-${block.uuid}`}
 						type="text"
-						placeholder={$_('common.block.typeYourAnswer')}
+						placeholder={$_('block.typeYourAnswer')}
 						bind:value={traineeAnswer}
 						disabled={isSubmitted}
 						class="input w-full border p-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"

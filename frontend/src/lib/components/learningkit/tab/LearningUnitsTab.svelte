@@ -2,7 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
-	import { deleteLearningUnit } from '$lib/api/collections/learningUnit';
+	import { deleteLearningUnit, generateLearningUnit } from '$lib/api/collections/learningUnit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import LearningUnitItem from '$lib/components/learningkit/displays/LearningUnitItem.svelte';
 	import { Plus } from 'lucide-svelte';
@@ -24,6 +24,14 @@
 
 	const deleteLearningUnitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
+		onSuccess: () => {
+			invalidate(['learning-kit', learningKitId]);
+		}
+	});
+
+	const generateLearningUnitMutation = createMutation({
+		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
+			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 		}
@@ -52,6 +60,12 @@
 				{learningUnit}
 				onDeleteLearningUnit={() => {
 					$deleteLearningUnitMutation.mutate(learningUnit.uuid);
+				}}
+				onGenerateLearningUnit={(files) => {
+					$generateLearningUnitMutation.mutate({
+						id: learningUnit.uuid,
+						files
+					});
 				}}
 				{role}
 			/>

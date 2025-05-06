@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import GenerateLearningUnitModal from '$lib/components/dialogs/GenerateLearningUnitModal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { AlignLeft, GripVertical } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
@@ -11,11 +12,15 @@
 			uuid: string;
 		};
 		onDeleteLearningUnit: () => void;
+		onGenerateLearningUnit: (files: string[]) => void;
 		role: RoleType;
 	}
 
-	const { learningUnit, onDeleteLearningUnit, role }: LearningUnitProps = $props();
+	const { learningUnit, onDeleteLearningUnit, onGenerateLearningUnit, role }: LearningUnitProps =
+		$props();
+
 	let showDeleteDialog = $state(false);
+	let showGenerationDialog = $state(false);
 
 	function deleteLearningUnitHandler() {
 		onDeleteLearningUnit();
@@ -47,6 +52,16 @@
 					type="button"
 					onclick={(e) => {
 						e.preventDefault();
+						showGenerationDialog = true;
+					}}
+					class="btn preset-filled-primary-500"
+				>
+					{$_('common.generate')}
+				</button>
+				<button
+					type="button"
+					onclick={(e) => {
+						e.preventDefault();
 						showDeleteDialog = true;
 					}}
 					class="btn preset-filled-error-500"
@@ -68,5 +83,17 @@
 	onConfirm={deleteLearningUnitHandler}
 	onCancel={() => {
 		showDeleteDialog = false;
+	}}
+/>
+
+<GenerateLearningUnitModal
+	bind:isOpen={showGenerationDialog}
+	isLoading={false}
+	onConfirm={(files) => {
+		onGenerateLearningUnit(files);
+		showGenerationDialog = false;
+	}}
+	onCancel={() => {
+		showGenerationDialog = false;
 	}}
 />

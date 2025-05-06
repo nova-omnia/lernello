@@ -6,7 +6,7 @@
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo.js';
 

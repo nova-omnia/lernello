@@ -1,6 +1,6 @@
-<!--AITheoryBlock-->
+<!--LearningUnitModal.svelte-->
 <script lang="ts">
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
@@ -8,13 +8,13 @@
 	import { _ } from 'svelte-i18n';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 
-	interface GenerateTheoryModalProps {
+	interface GenerateLearningUnitModalProps {
 		isOpen: boolean;
 		isLoading: boolean;
-		onConfirm: (topic: string, files: string[]) => void;
+		onConfirm: (files: string[]) => void;
+		onCancel: () => void;
 	}
 
-	let input = $state<string>('');
 	let selectedFiles = $state<{ uuid: string; label: string }[]>([]);
 
 	const availableFilesQuery = createQuery({
@@ -22,13 +22,12 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isLoading, isOpen = $bindable(), onConfirm }: GenerateTheoryModalProps = $props();
-
-	const onCancel = () => {
-		isOpen = false;
-		input = '';
-		selectedFiles = [];
-	};
+	let {
+		isLoading,
+		onConfirm,
+		onCancel,
+		isOpen = $bindable()
+	}: GenerateLearningUnitModalProps = $props();
 </script>
 
 <Modal
@@ -40,13 +39,6 @@
 		<h1 class="preset-typo-headline">{$_('dialog.creationWizardTitle')}</h1>
 
 		<div class="space-y-4">
-			<input
-				type="text"
-				bind:value={input}
-				class="input input-bordered w-full"
-				placeholder={$_('dialog.enterTopicPlaceholder')}
-			/>
-
 			<MultiSelect
 				options={$availableFilesQuery.data?.map((file) => ({
 					uuid: file.uuid,
@@ -56,6 +48,7 @@
 				onSelect={(vals) => (selectedFiles = vals)}
 				placeholder={$_('dialog.selectFilesPlaceholder')}
 			/>
+
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
 					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
@@ -74,22 +67,19 @@
 
 		<footer class="flex justify-end gap-3 pt-2">
 			<button
-				disabled={isLoading}
 				type="button"
 				class="btn preset-tonal-surface"
-				onclick={onCancel}
+				onclick={() => {
+					onCancel();
+					selectedFiles = [];
+				}}
 			>
 				{$_('common.cancel')}
 			</button>
 			<button
-				disabled={isLoading}
 				type="button"
 				class="btn preset-filled-primary-500"
-				onclick={() =>
-					onConfirm(
-						input,
-						selectedFiles.map((f) => f.uuid)
-					)}
+				onclick={() => onConfirm(selectedFiles.map((f) => f.uuid))}
 			>
 				{$_('common.generate')}
 			</button>

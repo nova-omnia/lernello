@@ -13,7 +13,7 @@
 	import { page } from '$app/state';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte'; // Import the role constant

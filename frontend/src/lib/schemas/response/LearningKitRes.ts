@@ -15,7 +15,7 @@ export const LearningKitResSchema = z.object({
 			offset: true
 		})
 		.nullable(),
-	published: z.boolean().nullable(),
+	published: z.boolean(),
 	context: z.string().nullable(),
 	participants: z.array(ParticipantUserSchema),
 	files: z.array(FileResSchema).nullable()

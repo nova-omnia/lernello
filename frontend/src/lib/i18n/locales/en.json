@@ -28,6 +28,7 @@
 	"common.block.question": "Type question",
 	"common.cancel": "Cancel",
 	"common.choice": "-- Choose --",
+	"common.role": "Role",
 	"common.confirm": "Confirm",
 	"common.content": "Content",
 	"common.context": "Context",
@@ -59,6 +60,7 @@
 	"common.instructors": "Instructors",
 	"common.username": "Username",
 	"createTrainee": "Create Trainee",
+	"createUser": "Create User",
 	"dashboard.allLearningKits": "Learning Kits ({count} / {total})",
 	"dashboard.createKit": "Create New Kit",
 	"dashboard.title": "Dashboard",
@@ -87,6 +89,7 @@
 	"form.passwordLabel": "Password",
 	"form.passwordPlaceholder": "password",
 	"learningKit.addFile": "Add File",
+	"user.create": "Create User",
 	"learningKit.checkpoint": "Checkpoint",
 	"learningKit.checkpoint.description": "Trainees must complete all the above Learning Units, before gaining access to the rest.",
 	"learningKit.context.description": "The context provided to the AI assisting tools. Drag files anywhere to upload.",
@@ -97,6 +100,7 @@
 	"instructors.error.loadList": "Failed to load instructors",
 	"learningKit.error.loadSingle": "Failed to load Learning Kit",
 	"learningKit.form.create.title": "Create a new Learning Kit",
+	"user.form.create.title": "Create a new User",
 	"learningKit.form.edit.title": "Edit Learning Kit",
 	"learningKit.learningUnits": "Learning Units",
 	"learningKit.learningUnit.description": "The contents of the LearningKit",
@@ -142,5 +146,7 @@
 	"files.upload.success": "File uploaded",
 	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.reject.title": "File rejected",
-	"files.upload.reject.description": "File rejected ({reason})"
+	"files.upload.reject.description": "File rejected ({reason})",
+	"role.instructor": "Instructor",
+	"role.trainee": "Trainee"
 }

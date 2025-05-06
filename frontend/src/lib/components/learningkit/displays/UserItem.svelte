@@ -23,7 +23,10 @@
 <div class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4">
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
 		<Avatar name="{user.surname} {user.name}" classes="h-10 w-10" />
-		<p class="truncate font-bold">{user.surname} {user.name}</p>
+		<div class="flex flex-col">
+			<p class="truncate font-bold">{user.surname} {user.name}</p>
+			<p class="truncate text-sm text-gray-500">{user.username}</p>
+		</div>
 	</div>
 	<button
 		type="button"

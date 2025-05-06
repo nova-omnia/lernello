@@ -2,7 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import { User } from 'lucide-svelte';
+	import { Plus, User } from 'lucide-svelte';
 	import TraineesOverviewTab from '$lib/components/users/TraineesOverviewTab.svelte';
 	import InstructorsOverviewTab from '$lib/components/users/InstructorsOverviewTab.svelte';
 	import { goto } from '$app/navigation';
@@ -22,29 +22,48 @@
 </script>
 
 <!-- 	TODO View only visible for instructors -->
-<PageContainer title={$_('common.users')}>
-	<Tabs value={group || tabGroup.instructors} onValueChange={(e) => handleTabChange(e)}>
-		{#snippet list()}
-			<Tabs.Control value={tabGroup.instructors}>
-				{#snippet lead()}
-					<User size={20} />
-				{/snippet}
-				{$_('common.instructors')}
-			</Tabs.Control>
-			<Tabs.Control value={tabGroup.trainees}>
-				{#snippet lead()}
-					<User size={20} />
-				{/snippet}
-				{$_('common.trainees')}
-			</Tabs.Control>
-		{/snippet}
-		{#snippet content()}
-			<Tabs.Panel value={tabGroup.instructors}>
-				<InstructorsOverviewTab></InstructorsOverviewTab>
-			</Tabs.Panel>
-			<Tabs.Panel value={tabGroup.trainees}>
-				<TraineesOverviewTab></TraineesOverviewTab>
-			</Tabs.Panel>
-		{/snippet}
-	</Tabs>
+<PageContainer>
+	<div class="flex flex-col gap-8">
+		<div class="flex-col">
+			<div class="flex w-full justify-between gap-4">
+				<h1 class="preset-typo-headline">
+					{$_('common.users')}
+				</h1>
+				<div class="flex h-10 gap-8">
+					<button
+						type="button"
+						class="btn preset-filled-primary-500 h-full"
+						onclick={() => goto(`/users/create-form`)}
+					>
+						<Plus size={24} />
+						{$_('user.create')}
+					</button>
+				</div>
+			</div>
+		</div>
+		<Tabs value={group || tabGroup.instructors} onValueChange={(e) => handleTabChange(e)}>
+			{#snippet list()}
+				<Tabs.Control value={tabGroup.instructors}>
+					{#snippet lead()}
+						<User size={20} />
+					{/snippet}
+					{$_('common.instructors')}
+				</Tabs.Control>
+				<Tabs.Control value={tabGroup.trainees}>
+					{#snippet lead()}
+						<User size={20} />
+					{/snippet}
+					{$_('common.trainees')}
+				</Tabs.Control>
+			{/snippet}
+			{#snippet content()}
+				<Tabs.Panel value={tabGroup.instructors}>
+					<InstructorsOverviewTab></InstructorsOverviewTab>
+				</Tabs.Panel>
+				<Tabs.Panel value={tabGroup.trainees}>
+					<TraineesOverviewTab></TraineesOverviewTab>
+				</Tabs.Panel>
+			{/snippet}
+		</Tabs>
+	</div>
 </PageContainer>

@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
 import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
+import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
+import { UserSchema } from '$lib/schemas/response/UserSchema';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -61,15 +63,15 @@ export const getUserInfo = createEndpoint({
 	}
 });
 
-export const addUser = createEndpoint({
+export const createUser = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}`,
 	response: {
-		schema: ParticipantUserSchema,
+		schema: UserSchema,
 		defaultValidate: true
 	},
 	payload: {
-		schema: CreateParticipantUserSchema,
+		schema: CreateUserSchema,
 		defaultValidate: false
 	}
 });

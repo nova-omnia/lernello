@@ -15,6 +15,7 @@ public record LearningKitResDTO(
                                 List<LearningUnitResDTO> learningUnits,
                                 String description,
                                 ZonedDateTime deadlineDate,
+                                Boolean isPublished,
                                 String context,
                                 List<ParticipantUserDTO> participants,
                                 List<FileResDTO> files

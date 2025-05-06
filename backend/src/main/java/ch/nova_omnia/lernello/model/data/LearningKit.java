@@ -48,6 +48,9 @@ public class LearningKit {
     @Size(max = 200)
     private String context;
 
+    @Column(name = "isPublished")
+    private boolean isPublished = false;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

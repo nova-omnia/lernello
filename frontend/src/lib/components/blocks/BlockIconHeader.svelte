@@ -21,6 +21,7 @@
 
 	let blockName = $state(block.name);
 	let isEditing = $state(false);
+	let hasError = $state(false);
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -38,16 +39,29 @@
 	const enableEditing = () => {
 		if (role === INSTRUCTOR_ROLE) {
 			isEditing = true;
+			hasError = false; // Reset error state when editing starts
 		}
 	};
 
 	const disableEditing = () => {
+		if (blockName.length < 3 || blockName.length > 40) {
+			toaster.create({
+				title: $_('common.warning.title'),
+				description: $_('block.newName.danger'),
+				type: 'warning'
+			});
+			hasError = true;
+			return;
+		}
 		isEditing = false;
-		queueBlockAction({
-			type: ActionType.Enum.UPDATE_BLOCK_NAME,
-			blockId: block.uuid,
-			newName: blockName,
-		});
+		hasError = false;
+		if (blockName !== block.name) {
+			queueBlockAction({
+				type: ActionType.Enum.UPDATE_BLOCK_NAME,
+				blockId: block.uuid,
+				newName: blockName
+			});
+		}
 	};
 
 	const handleInputKeydown = (event: KeyboardEvent) => {
@@ -55,7 +69,9 @@
 			event.preventDefault();
 			disableEditing();
 		} else if (event.key === 'Escape') {
-			disableEditing();
+			blockName = block.name;
+			isEditing = false;
+			hasError = false;
 		}
 	};
 </script>
@@ -66,18 +82,20 @@
 		<div class="flex items-baseline gap-2">
 			{#if role === INSTRUCTOR_ROLE && isEditing}
 				<label class="label">
-					<span class="label-text">
-					</span>
-					<input class="input" type="text" placeholder={$_('block.name')}
-								 bind:value={blockName}
-								 onblur={disableEditing}
-								 onkeydown={handleInputKeydown}
-
+					<input
+						class="input"
+						type="text"
+						placeholder={$_('block.name')}
+						bind:value={blockName}
+						onblur={disableEditing}
+						onkeydown={handleInputKeydown}
 					/>
 				</label>
 			{:else}
 				<h3
-					class="font-medium {role === INSTRUCTOR_ROLE ? 'cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 p-1 rounded-md -m-1' : ''}"
+					class="font-medium {role === INSTRUCTOR_ROLE
+						? 'hover:bg-surface-100 dark:hover:bg-surface-700 -m-1 cursor-pointer rounded-md p-1'
+						: ''}"
 					onclick={enableEditing}
 					onkeydown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {

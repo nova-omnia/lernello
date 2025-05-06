@@ -5,10 +5,16 @@ import {
 	CreateQuestionBlockSchema
 } from './CreateBlock';
 
-export const ActionType = z.enum(['ADD_BLOCK', 'REORDER_BLOCK', 'REMOVE_BLOCK', 'UPDATE_BLOCK', 'UPDATE_BLOCK_NAME']);
+export const ActionType = z.enum([
+	'ADD_BLOCK',
+	'REORDER_BLOCK',
+	'REMOVE_BLOCK',
+	'UPDATE_BLOCK',
+	'UPDATE_BLOCK_NAME'
+]);
 
 const BaseBlockActionSchema = z.object({
-	blockId: z.string(),
+	blockId: z.string()
 });
 
 export const AddBlockActionSchema = BaseBlockActionSchema.extend({

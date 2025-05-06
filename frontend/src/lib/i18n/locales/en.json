@@ -47,6 +47,7 @@
 	"common.return": "Return",
 	"common.save": "Save",
 	"common.submit": "Submit",
+	"common.firstname": "firstname",
 	"common.surname": "surname",
 	"common.trainees": "Trainees",
 	"common.username": "Username",

@@ -33,7 +33,7 @@
 
 {#snippet sidebarItem(label: string, href: string, Icon: typeof SvelteComponent<IconProps>)}
 	<a
-		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4"
+		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4 text-nowrap"
 		{href}
 		aria-label={label}
 	>

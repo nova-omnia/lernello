@@ -46,7 +46,7 @@ public class LearningUnitProgress {
     private LearningKitProgress learningKitProgress;
 
     @NotNull
-    @OneToMany(mappedBy = "userLearningUnitProgress", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "learningUnitProgress", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<BlockProgress> userBlockProgresses = new ArrayList<>();

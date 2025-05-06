@@ -65,7 +65,7 @@ export const getUserInfo = createEndpoint({
 	}
 });
 
-export const getUserById = createEndpoint({
+export const getUser = createEndpoint({
 	method: 'GET',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {

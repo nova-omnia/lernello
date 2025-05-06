@@ -15,6 +15,7 @@
 		onResult() {
 			invalidate(['instructors-overview-list']);
 			invalidate(['trainees-overview-list']);
+			invalidate(['trainees-list']);
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);

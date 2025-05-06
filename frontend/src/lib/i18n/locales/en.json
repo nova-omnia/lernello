@@ -101,6 +101,7 @@
 	"learningKit.error.loadSingle": "Failed to load Learning Kit",
 	"learningKit.form.create.title": "Create a new Learning Kit",
 	"user.form.create.title": "Create a new User",
+	"user.form.edit.title": "Edit User",
 	"learningKit.form.edit.title": "Edit Learning Kit",
 	"learningKit.learningUnits": "Learning Units",
 	"learningKit.learningUnit.description": "The contents of the LearningKit",

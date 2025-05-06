@@ -30,6 +30,25 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public User findByUuid(UUID uuid) {
+        return userRepository.findByUuid(uuid);
+    }
+
+    public User update(UUID uuid, User user) {
+        User existingUser = userRepository.findByUuid(uuid);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User with UUID " + user.getUuid() + " not found.");
+        }
+        if (user.getRole() == Role.INSTRUCTOR) {
+            removeUserAllLearningKits(existingUser);
+        }
+        existingUser.setUsername(user.getUsername());
+        existingUser.setName(user.getName());
+        existingUser.setSurname(user.getSurname());
+        existingUser.setRole(user.getRole());
+        return userRepository.save(existingUser);
+    }
+
     public User authenticate(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(username, password)
@@ -42,7 +61,6 @@ public class UserService {
         user.setExpires(expirationTime);
         return user;
     }
-
 
     public boolean changePassword(String username, String newPassword) {
         User user = userRepository.findByUsername(username);

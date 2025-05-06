@@ -27,7 +27,7 @@
 	});
 </script>
 
-<PageContainer title={$_('user.form.create.title')} centered={true}>
+<PageContainer title={$_('user.form.edit.title')} centered={true}>
 	<form method="POST" use:enhance action="?/update" class="space-y-4">
 		<div class="space-y-6">
 			<label class="label">
@@ -96,7 +96,7 @@
 			<a class="btn preset-outlined-surface-500" href="/users">
 				{$_('common.cancel')}
 			</a>
-			<button class="btn preset-filled-primary-500">{$_('createUser')}</button>
+			<button class="btn preset-filled-primary-500">{$_('common.save')}</button>
 		</div>
 		<SuperDebug data={$form} display={dev} />
 	</form>

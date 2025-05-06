@@ -3,16 +3,16 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import { api } from '$lib/api/apiClient';
-import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
-import { getUserById, updateUser } from '$lib/api/collections/user';
+import { getUser, updateUser } from '$lib/api/collections/user';
 import { UserResSchema } from '$lib/schemas/response/UserResSchema';
+import { UpdateUserSchema } from '$lib/schemas/request/UpdateUser';
 
 export const load = async ({ fetch, params }) => {
 	if (!params.userId) {
 		return error(400, 'LearningKit ID is required');
 	}
 
-	const user = await api(fetch).req(getUserById, null, params.userId).parse();
+	const user = await api(fetch).req(getUser, null, params.userId).parse();
 	const form = await superValidate(
 		{
 			username: user.username,
@@ -28,7 +28,7 @@ export const load = async ({ fetch, params }) => {
 
 export const actions = {
 	update: handleApiError(async ({ request, fetch, params }) => {
-		const form = await superValidate(request, zod(UpdateLearningKitSchema));
+		const form = await superValidate(request, zod(UpdateUserSchema));
 		if (!form.valid || !params.userId) {
 			return fail(400, { form });
 		}

@@ -86,11 +86,11 @@ public class UserService {
     }
 
     public List<User> findAllTrainees() {
-        return userRepository.findAllByRole(Role.TRAINEE);
+        return userRepository.findAllByRoleOrderBySurnameAscNameAsc(Role.TRAINEE);
     }
 
     public List<User> findAllInstructors() {
-        return userRepository.findAllByRole(Role.INSTRUCTOR);
+        return userRepository.findAllByRoleOrderBySurnameAscNameAsc(Role.INSTRUCTOR);
     }
 
     public void deleteUser(UUID uuid) {

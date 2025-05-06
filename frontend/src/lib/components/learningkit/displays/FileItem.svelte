@@ -32,7 +32,7 @@
 	</div>
 
 	<div>
-		<a href={getStaticFileUrl(File.uuid)} class="btn preset-tonal-surface">
+		<a href={getStaticFileUrl(File.uuid)} class="btn preset-tonal-surface" target="_blank">
 			{$_('common.open')}
 		</a>
 		<button

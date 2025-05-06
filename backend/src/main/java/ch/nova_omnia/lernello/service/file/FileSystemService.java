@@ -28,8 +28,6 @@ public class FileSystemService implements FileService {
 
     @Value("${storage.path}")
     private String storagePath;
-    @Value("${server.url}")
-    private String serverUrl;
 
     @Override
     public List<File> findAll() {
@@ -58,7 +56,7 @@ public class FileSystemService implements FileService {
         String uniqueFileName = resolveUniqueFileName(file.getOriginalFilename());
         File savedFile = fileRepository.save(new File(uniqueFileName));
         try {
-            Path filePath = Paths.get(storagePath, savedFile.getUuid().toString() + getExtension(file.getOriginalFilename()));
+            Path filePath = Paths.get(storagePath, savedFile.getUuid().toString());
             Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
         } catch (IOException e) {
@@ -92,19 +90,6 @@ public class FileSystemService implements FileService {
     }
 
 
-    @Override
-    public String getStoragePath(UUID id) {
-        Optional<File> fileOptional = fileRepository.findById(id);
-
-        if (fileOptional.isEmpty()) {
-            throw new RuntimeException("File with ID " + id + " not found");
-        }
-
-        File file = fileOptional.get();
-        String extension = getExtension(file.getName());
-        return serverUrl + id + extension;
-    }
-
     private InputStream loadFileAsStream(UUID fileId) {
         Optional<File> fileOptional = fileRepository.findById(fileId);
         if (fileOptional.isEmpty()) {
@@ -131,10 +116,5 @@ public class FileSystemService implements FileService {
         }
 
         return uniqueFileName;
-    }
-
-    private String getExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        return (dotIndex >= 0) ? fileName.substring(dotIndex) : "";
     }
 }

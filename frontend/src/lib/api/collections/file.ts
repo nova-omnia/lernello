@@ -1,4 +1,5 @@
 import { FileResSchema } from '$lib/schemas/response/FileRes';
+import { StaticFileResSchema } from '$lib/schemas/response/StaticFileRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -47,6 +48,7 @@ export const deleteFile = createEndpoint({
 		defaultValidate: true
 	}
 });
+
 export const getAllFiles = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}/`,
@@ -56,6 +58,19 @@ export const getAllFiles = createEndpoint({
 	},
 	response: {
 		schema: FileResSchema.array(),
+		defaultValidate: true
+	}
+});
+
+export const getStaticFile = createEndpoint({
+	method: 'GET',
+	getPath: (id: string) => `${REQUEST_MAPPING}/static/${id}`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema: StaticFileResSchema,
 		defaultValidate: true
 	}
 });

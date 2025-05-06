@@ -3,9 +3,10 @@ import type { AllowedMethod, Endpoint } from './createEndpoint';
 import { ApiError, isApiErrorResponse } from './apiError';
 import { browser } from '$app/environment';
 import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
+import { PUBLIC_API_BASE_URL } from '$env/static/public';
 
 // TODO handle different environments
-export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = PUBLIC_API_BASE_URL;
 
 function buildRequestInit({
 	endpoint,

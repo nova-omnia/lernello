@@ -8,6 +8,8 @@ import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
 import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
 import { UserSchema } from '$lib/schemas/response/UserSchema';
+import { UserResSchema } from '$lib/schemas/response/UserResSchema';
+import { UpdateUserSchema } from '$lib/schemas/request/UpdateUser';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -59,6 +61,32 @@ export const getUserInfo = createEndpoint({
 	},
 	payload: {
 		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const getUserById = createEndpoint({
+	method: 'GET',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	response: {
+		schema: UserResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const updateUser = createEndpoint({
+	method: 'PATCH',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	response: {
+		schema: UserResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: UpdateUserSchema,
 		defaultValidate: false
 	}
 });

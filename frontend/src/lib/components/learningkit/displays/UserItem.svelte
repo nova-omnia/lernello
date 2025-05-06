@@ -3,6 +3,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import { goto } from '$app/navigation';
 
 	interface UserItemProps {
 		user: ParticipantUser;
@@ -28,21 +29,32 @@
 			<p class="truncate text-sm text-gray-500">{user.username}</p>
 		</div>
 	</div>
-	<button
-		type="button"
-		class="btn preset-filled-error-500"
-		onclick={(e) => {
-			e.preventDefault();
-			showDeleteDialog = true;
-		}}
-	>
-		{#if isRemove}
-			{$_('common.remove')}
-		{/if}
+	<div class="flex gap-2">
 		{#if !isRemove}
-			{$_('common.delete')}
+			<button
+				type="button"
+				class="btn preset-outlined-surface-500"
+				onclick={() => goto(`/users/${user.uuid}/edit-form`)}
+			>
+				{$_('common.edit')}
+			</button>
 		{/if}
-	</button>
+		<button
+			type="button"
+			class="btn preset-filled-error-500"
+			onclick={(e) => {
+				e.preventDefault();
+				showDeleteDialog = true;
+			}}
+		>
+			{#if isRemove}
+				{$_('common.remove')}
+			{/if}
+			{#if !isRemove}
+				{$_('common.delete')}
+			{/if}
+		</button>
+	</div>
 </div>
 
 <ConfirmDialog

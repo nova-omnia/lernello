@@ -6,10 +6,11 @@
 
 	interface UserItemProps {
 		user: ParticipantUser;
+		isRemove?: boolean;
 		onRemoveUser: () => void;
 	}
 
-	const { user, onRemoveUser }: UserItemProps = $props();
+	const { user, isRemove = true, onRemoveUser }: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 
@@ -30,14 +31,21 @@
 		onclick={(e) => {
 			e.preventDefault();
 			showDeleteDialog = true;
-		}}>{$_('common.remove')}</button
+		}}
 	>
+		{#if isRemove}
+			{$_('common.remove')}
+		{/if}
+		{#if !isRemove}
+			{$_('common.delete')}
+		{/if}
+	</button>
 </div>
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}
-	title={$_('blocks.delete_title')}
-	message={$_('blocks.delete_message')}
+	title={$_('common.user.delete')}
+	message={$_('dialog.delete.message', { values: { name: user.surname + ' ' + user.name } })}
 	confirmText={$_('common.delete')}
 	cancelText={$_('common.cancel')}
 	danger={true}

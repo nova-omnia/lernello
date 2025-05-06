@@ -1,7 +1,9 @@
 package ch.nova_omnia.lernello.service;
 
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import ch.nova_omnia.lernello.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final LearningKitRepository learningKitRepository;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -92,9 +95,19 @@ public class UserService {
 
     public void deleteUser(UUID uuid) {
         User user = userRepository.findByUuid(uuid);
-        if (user != null) {
-            userRepository.delete(user);
+        if (user == null) {
+            throw new IllegalArgumentException("User with UUID " + uuid + " not found.");
         }
+        removeUserAllLearningKits(user);
+        userRepository.delete(user);
+    }
+
+    private void removeUserAllLearningKits(User user) {
+        List<LearningKit> kitsWithUser = learningKitRepository.findAllByParticipantsContains(user);
+        for (LearningKit kit : kitsWithUser) {
+            kit.getParticipants().remove(user);
+        }
+        learningKitRepository.saveAll(kitsWithUser);
     }
 
     public User editTrainee(String username, String name, String surname) {

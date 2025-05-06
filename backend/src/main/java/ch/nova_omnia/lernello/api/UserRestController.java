@@ -69,9 +69,9 @@ public class UserRestController {
         return userInfoMapper.toDTO(user);
     }
 
-    @PostMapping("/trainee")
+    @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public @Valid ParticipantUserDTO addTrainee(
+    public @Valid ParticipantUserDTO addUser(
         @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
         User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
@@ -80,10 +80,11 @@ public class UserRestController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public void deleteUser(
+    public UUID deleteUser(
         @PathVariable UUID id
     ) {
         userService.deleteUser(id);
+        return id;
     }
 
     @PostMapping("/locale")

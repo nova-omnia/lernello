@@ -61,9 +61,9 @@ export const getUserInfo = createEndpoint({
 	}
 });
 
-export const addTrainee = createEndpoint({
+export const addUser = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}/trainee`,
+	getPath: () => `${REQUEST_MAPPING}`,
 	response: {
 		schema: ParticipantUserSchema,
 		defaultValidate: true
@@ -78,7 +78,7 @@ export const deleteUser = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
-		schema: z.null(),
+		schema: z.string().uuid(),
 		defaultValidate: true
 	},
 	payload: {

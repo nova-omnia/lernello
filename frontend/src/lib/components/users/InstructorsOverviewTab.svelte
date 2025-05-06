@@ -6,6 +6,7 @@
 	import { deleteUser, getAllInstructors } from '$lib/api/collections/user';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import { _ } from 'svelte-i18n';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -18,6 +19,19 @@
 		mutationFn: (id: string) => api(fetch).req(deleteUser, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['instructors-overview-list']);
+			toaster.create({
+				title: $_('common.success.title'),
+				description: $_('instructors.overview.delete.success'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error deleting instructor:', error);
+			toaster.create({
+				title: $_('common.error.title'),
+				description: $_('error.description', { values: { status: 'unknown' } }),
+				type: 'error'
+			});
 		}
 	});
 </script>
@@ -35,18 +49,11 @@
 		{:else}
 			{#each $instructorsQuery.data ?? [] as trainee (trainee.uuid)}
 				<UserItem
+					isRemove={false}
 					user={trainee}
 					onRemoveUser={() => $deleteInstructorMutation.mutate(trainee.uuid)}
 				/>
 			{/each}
 		{/if}
-	</div>
-	<div class="flex flex-col gap-1">
-		{#each $instructorsQuery.data ?? [] as instructor (instructor.uuid)}
-			<UserItem
-				user={instructor}
-				onRemoveUser={() => $deleteInstructorMutation.mutate(instructor.uuid)}
-			/>
-		{/each}
 	</div>
 </div>

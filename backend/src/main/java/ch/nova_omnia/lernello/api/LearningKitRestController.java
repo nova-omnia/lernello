@@ -6,6 +6,7 @@ import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.CustomUserDetailsService;
 import ch.nova_omnia.lernello.service.LearningKitService;
@@ -101,7 +102,7 @@ public class LearningKitRestController {
         @PathVariable UUID id,
         @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
-        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        User trainee = userService.createUser(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname(), Role.TRAINEE);
         learningKitService.saveTraineeInKit(id, trainee);
         return id;
     }

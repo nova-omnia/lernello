@@ -20,6 +20,6 @@ export const actions = {
 
 		await api(fetch).req(createUser, form.data).parse();
 
-		redirect(303, `/users?tab=${form.data.role}}`);
+		redirect(303, `/users`);
 	})
 } satisfies Actions;

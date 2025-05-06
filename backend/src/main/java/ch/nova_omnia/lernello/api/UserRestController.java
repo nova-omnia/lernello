@@ -2,13 +2,16 @@ package ch.nova_omnia.lernello.api;
 
 import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateUserDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
+import ch.nova_omnia.lernello.dto.response.user.UserDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
 import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
+import ch.nova_omnia.lernello.mapper.user.UserMapper;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
@@ -38,6 +41,7 @@ public class UserRestController {
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
+    private final UserMapper userMapper;
 
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
@@ -71,11 +75,11 @@ public class UserRestController {
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public @Valid ParticipantUserDTO addUser(
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
+    public @Valid UserDTO createUser(
+        @RequestBody @Valid CreateUserDTO userDTO
     ) {
-        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
-        return participantUserMapper.toDTO(trainee);
+        User user = userService.createUser(userDTO.username(), userDTO.name(), userDTO.surname(), userDTO.role());
+        return userMapper.toDTO(user);
     }
 
     @DeleteMapping("/{id}")

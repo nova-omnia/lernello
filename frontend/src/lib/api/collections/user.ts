@@ -65,7 +65,7 @@ export const getUserInfo = createEndpoint({
 
 export const createUser = createEndpoint({
 	method: 'POST',
-	getPath: () => `${REQUEST_MAPPING}`,
+	getPath: () => `${REQUEST_MAPPING}/`,
 	response: {
 		schema: UserSchema,
 		defaultValidate: true

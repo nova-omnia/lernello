@@ -55,6 +55,18 @@ public class UserService {
         return true;
     }
 
+    public User createUser(String username, String name, String surname, Role role) {
+        User user = new User();
+        user.setUsername(username);
+        user.setSurname(surname);
+        user.setName(name);
+        user.setRole(role);
+        user.setPassword(passwordEncoder.encode("defaultPassword"));
+        user.setChangedPassword(false);
+        userRepository.save(user);
+        return user;
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -79,18 +91,6 @@ public class UserService {
 
     public List<User> findAllInstructors() {
         return userRepository.findAllByRole(Role.INSTRUCTOR);
-    }
-
-    public User addTrainee(String username, String name, String surname) {
-        User user = new User();
-        user.setUsername(username);
-        user.setSurname(surname);
-        user.setName(name);
-        user.setRole(Role.TRAINEE);
-        user.setPassword(passwordEncoder.encode("defaultPassword"));
-        user.setChangedPassword(false);
-        userRepository.save(user);
-        return user;
     }
 
     public void deleteUser(UUID uuid) {

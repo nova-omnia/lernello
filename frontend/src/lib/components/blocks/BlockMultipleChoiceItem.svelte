@@ -4,15 +4,9 @@
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
-	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import { type RoleType } from '$lib/schemas/response/UserInfo';
 	import { createDebounced } from '$lib/utils/createDebounced';
-
-	const Tab = {
-		EDIT: 'edit',
-		PREVIEW: 'preview'
-	} as const;
-	type Tab = (typeof Tab)[keyof typeof Tab];
-	let activeTab: Tab = $state(Tab.EDIT);
+	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
@@ -87,54 +81,21 @@
 	}
 </script>
 
-<div class="rounded-lg bg-white p-4 dark:bg-gray-800">
-	{#if role === INSTRUCTOR_ROLE}
-		<div class="mb-4 flex justify-between dark:border-gray-700">
-			<div>
-				<button
-					type="button"
-					class={`rounded-none px-4 py-2 text-sm font-medium ${
-						activeTab === Tab.EDIT
-							? 'border-primary-500 text-primary-500 border-b-2'
-							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-					}`}
-					onclick={() => (activeTab = Tab.EDIT)}
-				>
-					{$_('common.edit')}
-				</button>
-				<button
-					type="button"
-					class={`rounded-none px-4 py-2 text-sm font-medium ${
-						activeTab === Tab.PREVIEW
-							? 'border-primary-500 text-primary-500 border-b-2'
-							: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-					}`}
-					onclick={() => {
-						activeTab = Tab.PREVIEW;
-						isSubmitted = false;
-						selectedAnswer = null;
-					}}
-				>
-					{$_('common.preview')}
-				</button>
-			</div>
-
-			{#if activeTab === Tab.EDIT}
-				<div class="flex items-center space-x-2">
-					<button
-						type="button"
-						onclick={addAnswerField}
-						class="btn preset-tonal-surface"
-						title={$_('block.multipleChoiceBlocks.addButton')}
-					>
-						<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />
-					</button>
-				</div>
-			{/if}
+<EditPreviewTabContainer {role}>
+	{#snippet editHeaderContent()}
+		<div class="flex items-center space-x-2">
+			<button
+				type="button"
+				onclick={addAnswerField}
+				class="btn preset-tonal-surface hover:"
+				title={$_('block.multipleChoiceBlocks.addButton')}
+			>
+				<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />
+			</button>
 		</div>
-	{/if}
+	{/snippet}
 
-	{#if role === INSTRUCTOR_ROLE && activeTab === Tab.EDIT}
+	{#snippet edit()}
 		<input
 			type="text"
 			placeholder={$_('common.block.question')}
@@ -168,14 +129,17 @@
 					class="btn-icon preset-outlined-error-500 ml-auto text-red-500 hover:text-red-700"
 					title={$_('common.remove')}
 					type="button"
+					disabled={currentAnswers.length <= 1}
 				>
 					<Trash size="18" />
 				</button>
 			</div>
 		{/each}
-	{:else}
+	{/snippet}
+
+	{#snippet preview()}
 		<div class="space-y-4">
-			<div class="flex justify-between">
+			<div class="flex items-start justify-between gap-4">
 				<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
 
 				{#if !isSubmitted}
@@ -183,17 +147,23 @@
 						type="button"
 						onclick={handleSubmit}
 						disabled={selectedAnswer === null}
-						class="btn preset-tonal-surface"
+						class="btn preset-filled whitespace-nowrap"
 						title={$_('common.submit')}
 					>
 						{$_('common.submit')}
 					</button>
 				{:else}
-					<div class="mt-4 rounded-lg bg-gray-100 p-3 dark:bg-gray-700">
+					<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
 						{#if selectedAnswer !== null && currentAnswers[selectedAnswer]?.isCorrect}
-							<span class="text-green-600 dark:text-green-400">✓ {$_('block.correctAnswer')}</span>
+							<span class="font-medium text-green-600 dark:text-green-400">
+								<Check class="mr-1 inline-block h-4 w-4" />
+								{$_('block.correctAnswer')}
+							</span>
 						{:else}
-							<span class="text-red-600 dark:text-red-400">✗ {$_('block.incorrectAnswer')}</span>
+							<span class="font-medium text-red-600 dark:text-red-400">
+								<X class="mr-1 inline-block h-4 w-4" />
+								{$_('block.incorrectAnswer')}
+							</span>
 						{/if}
 					</div>
 				{/if}
@@ -202,6 +172,7 @@
 			<div class="space-y-2">
 				{#each currentAnswers as answer, idx (idx)}
 					<button
+						type="button"
 						class={`w-full rounded-lg border p-3 text-left transition-colors
 							${selectedAnswer === idx ? 'border-blue-300 bg-blue-100 dark:bg-blue-900/30' : 'dark:border-gray-600'}
 							${isSubmitted && answer.isCorrect ? 'border-green-300 bg-green-100 dark:bg-green-900/30' : ''}
@@ -215,5 +186,5 @@
 				{/each}
 			</div>
 		</div>
-	{/if}
-</div>
+	{/snippet}
+</EditPreviewTabContainer>

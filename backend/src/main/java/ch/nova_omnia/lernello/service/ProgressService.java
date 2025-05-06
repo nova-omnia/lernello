@@ -199,7 +199,7 @@ public class ProgressService {
                     case MultipleChoiceBlock multipleChoiceBlock -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) block, unitProgress);
                     case QuestionBlock questionBlock -> new QuestionBlockProgress(user, (QuestionBlock) block, unitProgress);
                     default ->
-                        throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getClass().getSimpleName());
+                        throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
                 };
                 unitProgress.addBlockProgress(newBlockProgress);
                 return blockProgressRepository.save(newBlockProgress);

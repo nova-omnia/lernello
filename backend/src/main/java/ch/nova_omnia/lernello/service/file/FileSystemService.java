@@ -91,6 +91,25 @@ public class FileSystemService implements FileService {
         return context.toString();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public String extractTextFromFile(UUID fileId) {
+        StringBuilder context = new StringBuilder();
+
+        try (InputStream inputStream = loadFileAsStream(fileId); PDDocument document = PDDocument.load(inputStream)) {
+
+            String fileContent = new PDFTextStripper().getText(document);
+            if (!fileContent.isBlank()) {
+                context.append(fileContent);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read or parse PDF file with ID: " + fileId, e);
+        }
+
+        return context.toString();
+    }
+
 
     @Override
     public String getStoragePath(UUID id) {

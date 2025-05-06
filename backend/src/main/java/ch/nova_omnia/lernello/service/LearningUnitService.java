@@ -60,8 +60,6 @@ public class LearningUnitService {
     public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
         
-        // TODO: discuss, if we want to keep the blocks in the learning unit
-        // or if we want to replace them with the new ones
         learningUnit.getBlocks().clear();
 
         List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);

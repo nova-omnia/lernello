@@ -11,6 +11,7 @@
 	"block.multipleChoiceQuiz": "Multiple Choice",
 	"block.questionBlock": "Question",
 	"block.theoryBlock": "Theory",
+	"block.name": "Block Name",
 	"block.typeYourAnswer": "Type your answer",
 	"block.typeTheAnswer": "Type the answer",
 	"block.yourAnswer": "Please type your answer",

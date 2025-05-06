@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = AddBlockActionDTO.class, name = "ADD_BLOCK"),
         @JsonSubTypes.Type(value = ReorderBlockActionDTO.class, name = "REORDER_BLOCK"),
         @JsonSubTypes.Type(value = RemoveBlockActionDTO.class, name = "REMOVE_BLOCK"),
-        @JsonSubTypes.Type(value = UpdateBlockActionDTO.class, name = "UPDATE_BLOCK")
+        @JsonSubTypes.Type(value = UpdateBlockActionDTO.class, name = "UPDATE_BLOCK"),
+        @JsonSubTypes.Type(value = UpdateBlockNameActionDTO.class, name = "UPDATE_BLOCK_NAME")
 })
-public sealed interface BlockActionDTO permits AddBlockActionDTO, ReorderBlockActionDTO, RemoveBlockActionDTO, UpdateBlockActionDTO {
+public sealed interface BlockActionDTO permits AddBlockActionDTO, ReorderBlockActionDTO, RemoveBlockActionDTO, UpdateBlockActionDTO, UpdateBlockNameActionDTO {
 }

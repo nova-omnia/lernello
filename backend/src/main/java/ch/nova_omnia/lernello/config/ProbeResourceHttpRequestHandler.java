@@ -22,7 +22,17 @@ public class ProbeResourceHttpRequestHandler extends ResourceHttpRequestHandler 
             if (probed == null) {
                 // fallback to URLConnection’s sniffing
                 try (InputStream in = resource.getInputStream()) {
-                    probed = URLConnection.guessContentTypeFromStream(in);
+                    byte[] magicBytes = new byte[4];
+                    if (in.read(magicBytes) == 4) {
+                        String magic = new String(magicBytes);
+                        if ("%PDF".equals(magic)) {
+                            probed = "application/pdf";
+                        }
+                    }
+                    if (probed == null) {
+                        probed = URLConnection.guessContentTypeFromStream(in);
+                    }
+                    System.out.println("Probed: " + probed);
                 } catch (Exception e) {
                     /* ignore */ }
             }

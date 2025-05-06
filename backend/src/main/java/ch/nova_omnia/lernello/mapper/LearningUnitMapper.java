@@ -19,8 +19,8 @@ import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)

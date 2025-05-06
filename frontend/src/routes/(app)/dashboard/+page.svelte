@@ -9,6 +9,9 @@
 	import { ChevronRight } from 'lucide-svelte';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
+
+	const { data } = $props();
 
 	const kitsQuery = createQuery({
 		queryKey: ['latest-learning-kits-list'],
@@ -43,9 +46,11 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data.content as kit (kit.uuid)}
-						<LearningKitItem title={kit.name} uuid={kit.uuid} />
+						<LearningKitItem title={kit.name} uuid={kit.uuid} role={data.role} />
 					{/each}
-					<AddLearningKit title={$_('learningKit.create')} />
+					{#if data.role === INSTRUCTOR_ROLE}
+						<AddLearningKit title={$_('learningKit.create')} />
+					{/if}
 				{/if}
 			</div>
 		</div>

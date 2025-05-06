@@ -13,6 +13,7 @@ public record UpdateLearningKitDTO(
     @Size(max = 200) JsonNullable<String> description,
     JsonNullable<ZonedDateTime> deadlineDate,
     @Size(max = 200) JsonNullable<String> context,
+    boolean published,
     List<UUID> files,
     List<UUID> participants
 ) {

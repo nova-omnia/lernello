@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data.block;
+package ch.nova_omnia.lernello.model.data.block.scorable;
 
 import static ch.nova_omnia.lernello.model.data.block.BlockType.MULTIPLE_CHOICE;
 
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class MultipleChoiceBlock extends Block {
+public class MultipleChoiceBlock extends ScorableBlock {
 
     @NotBlank
     @Column(name = "question", nullable = true)
@@ -41,6 +41,14 @@ public class MultipleChoiceBlock extends Block {
 
     public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question, List<String> possibleAnswers, List<String> correctAnswers) {
         super(MULTIPLE_CHOICE, name, position, learningUnit);
+        this.question = question;
+        this.possibleAnswers = possibleAnswers;
+        this.correctAnswers = correctAnswers;
+    }
+
+    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question,
+            List<String> possibleAnswers, List<String> correctAnswers, int maxScore) {
+        super(MULTIPLE_CHOICE, name, position, learningUnit, maxScore);
         this.question = question;
         this.possibleAnswers = possibleAnswers;
         this.correctAnswers = correctAnswers;

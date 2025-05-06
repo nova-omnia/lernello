@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
 
-	function goBack() {
+	export function goBack() {
 		if (history.length > 1) {
 			history.back();
 		} else {

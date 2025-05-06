@@ -11,7 +11,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('**{{selection}}**')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title="Bold"
 	>
 		<Bold class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -19,7 +19,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('*{{selection}}*')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title="Italic"
 	>
 		<Italic class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -27,7 +27,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('```\n{{selection}}\n```')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title="Code block"
 	>
 		<Code class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -35,7 +35,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('- {{selection}}')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title="Unordered list"
 	>
 		<List class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -43,7 +43,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('1. {{selection}}')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title="Ordered list"
 	>
 		<ListOrdered class="h-5 w-5 text-gray-600 dark:text-gray-300" />

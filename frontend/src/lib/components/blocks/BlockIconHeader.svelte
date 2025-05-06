@@ -21,7 +21,6 @@
 
 	let blockName = $state(block.name);
 	let isEditing = $state(false);
-	let hasError = $state(false);
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -39,7 +38,6 @@
 	const enableEditing = () => {
 		if (role === INSTRUCTOR_ROLE) {
 			isEditing = true;
-			hasError = false; // Reset error state when editing starts
 		}
 	};
 
@@ -50,11 +48,9 @@
 				description: $_('block.newName.danger'),
 				type: 'warning'
 			});
-			hasError = true;
 			return;
 		}
 		isEditing = false;
-		hasError = false;
 		if (blockName !== block.name) {
 			queueBlockAction({
 				type: ActionType.Enum.UPDATE_BLOCK_NAME,
@@ -71,7 +67,6 @@
 		} else if (event.key === 'Escape') {
 			blockName = block.name;
 			isEditing = false;
-			hasError = false;
 		}
 	};
 </script>

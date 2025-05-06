@@ -5,6 +5,7 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/state';
+	import { dev } from '$app/environment';
 
 	const learningKitId = page.params.learningKitId;
 	let { data } = $props();
@@ -83,6 +84,6 @@
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('createTrainee')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

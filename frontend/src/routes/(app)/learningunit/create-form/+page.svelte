@@ -3,6 +3,7 @@
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
+	import { dev } from '$app/environment';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
@@ -53,6 +54,6 @@
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('learningUnit.create')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

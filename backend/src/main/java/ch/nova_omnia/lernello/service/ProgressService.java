@@ -111,7 +111,7 @@ public class ProgressService {
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
 
-        blockProgressRepository.save(blockProgress); // Save changes and trigger @LastModifiedDate
+        blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
         if (unitProgress.getLearningKitProgress() != null) {
             updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
@@ -138,7 +138,7 @@ public class ProgressService {
 
         boolean isCorrect = dto.answer().equalsIgnoreCase(qBlock.getExpectedAnswer());
 
-        blockProgressRepository.save(blockProgress); // Save changes and trigger @LastModifiedDate
+        blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
         if (unitProgress.getLearningKitProgress() != null) {
             updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
@@ -151,11 +151,10 @@ public class ProgressService {
         Optional<LearningKitProgress> optProgress = learningKitProgressRepository.findByUser_UuidAndLearningKit_Uuid(user.getUuid(), learningKitId);
 
         return optProgress
-            .map(progressMapper::toLearningKitProgressResDTO) // If progress exists, map it to DTO
-            .orElseGet(() -> { // Otherwise, create a default "not started" DTO
+            .map(progressMapper::toLearningKitProgressResDTO)
+            .orElseGet(() -> {
                 LearningKit kit = learningKitRepository.findById(learningKitId)
                     .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
-                // Return a DTO representing a "not started" state
                 return new LearningKitProgressResDTO(kit.getUuid(), false, false, null, null, null, 0);
             });
     }
@@ -165,11 +164,10 @@ public class ProgressService {
         Optional<LearningUnitProgress> optProgress = learningUnitProgressRepository.findByUser_UuidAndLearningUnit_Uuid(user.getUuid(), learningUnitId);
 
         return optProgress
-            .map(progressMapper::toLearningUnitProgressDTO) // If progress exists, map it to DTO
-            .orElseGet(() -> { // Otherwise, create a default "not started" DTO
+            .map(progressMapper::toLearningUnitProgressDTO)
+            .orElseGet(() -> {
                 LearningUnit unit = learningUnitRepository.findById(learningUnitId)
                     .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + learningUnitId));
-                // Return a DTO representing a "not started" state
                 return new LearningUnitProgressDTO(unit.getUuid(), false, false, null, null, null, 0);
             });
     }
@@ -186,7 +184,7 @@ public class ProgressService {
         return learningUnitProgressRepository.findByUserAndLearningUnit(user, learningUnit)
             .orElseGet(() -> {
                 LearningUnitProgress newProgress = new LearningUnitProgress(user, learningUnit);
-                kitProgress.addLearningUnitProgress(newProgress); // Handles bidirectional association
+                kitProgress.addLearningUnitProgress(newProgress);
                 return learningUnitProgressRepository.save(newProgress);
             });
     }
@@ -256,19 +254,18 @@ public class ProgressService {
         long totalBlocksInKit = 0;
         long totalCompletedBlocksInKit = 0;
 
-        User user = kitProgress.getUser(); // Get user from kitProgress
+        User user = kitProgress.getUser();
 
         for (LearningUnit lu : learningUnitsInKit) {
             totalBlocksInKit += lu.getBlocks().size();
-            // Fetch or create unit progress to ensure it's accounted for
             LearningUnitProgress lup = getOrCreateLearningUnitProgress(user, lu, kitProgress);
             totalCompletedBlocksInKit += lup.getUserBlockProgresses().stream()
                 .filter(this::isBlockProgressConsideredComplete)
                 .count();
         }
 
-        if (totalBlocksInKit == 0) { // Should ideally not happen if learningUnitsInKit is not empty and units have blocks
-            kitProgress.setProgressPercentage(100); // Or 0, depending on desired behavior for empty kits/units
+        if (totalBlocksInKit == 0) {
+            kitProgress.setProgressPercentage(100);
         } else {
             int percentage = (int) Math.round(((double) totalCompletedBlocksInKit / totalBlocksInKit) * 100);
             kitProgress.setProgressPercentage(percentage);
@@ -285,27 +282,21 @@ public class ProgressService {
     }
 
     private boolean isBlockProgressConsideredComplete(BlockProgress bp) {
-        Block actualBlockEntity = bp.getBlock(); // Get the associated Block definition
+        Block actualBlockEntity = bp.getBlock();
 
         if (bp instanceof MultipleChoiceBlockProgress mcProgress && actualBlockEntity instanceof MultipleChoiceBlock mcBlockDefinition) {
-            List<String> lastAnswers = mcProgress.getLastAnswers(); // Assumed not null if answered
-            List<String> correctAnswers = mcBlockDefinition.getCorrectAnswers(); // Should be @NotEmpty
+            List<String> lastAnswers = mcProgress.getLastAnswers();
+            List<String> correctAnswers = mcBlockDefinition.getCorrectAnswers();
 
-            // A MultipleChoiceBlock is considered correctly answered if the set of last answers matches the set of correct answers.
             return correctAnswers != null && !correctAnswers.isEmpty() && lastAnswers != null && new HashSet<>(lastAnswers).equals(new HashSet<>(correctAnswers));
         } else if (bp instanceof QuestionBlockProgress qProgress && actualBlockEntity instanceof QuestionBlock qBlockDefinition) {
-            String lastAnswer = qProgress.getLastAnswer(); // Can be null if not answered yet.
-            String expectedAnswer = qBlockDefinition.getExpectedAnswer(); // Should be @NotBlank
+            String lastAnswer = qProgress.getLastAnswer();
+            String expectedAnswer = qBlockDefinition.getExpectedAnswer();
 
-            // A QuestionBlock is considered correctly answered if the last answer matches the expected answer (case-insensitive).
             return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
         } else if (bp instanceof TheoryBlockProgress) {
-            // Theory blocks are considered "completed" if a progress entry exists for them,
-            // meaning they have been opened/viewed.
             return true;
         }
-        // Fallback for any other BlockProgress types not explicitly handled.
-        // Consider logging a warning or throwing an error if new unhandled types are introduced.
         return false;
     }
 }

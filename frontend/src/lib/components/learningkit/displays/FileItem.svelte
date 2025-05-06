@@ -19,7 +19,6 @@
 		showDeleteDialog = false;
 	}
 
-	const fileId = File.uuid;
 	function getStaticFileUrl(fileId: string) {
 		return BASE_URL + '/files/' + fileId;
 	}

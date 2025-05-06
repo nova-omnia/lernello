@@ -135,7 +135,7 @@
 			class="floating"
 		>
 			<div
-				class="preset-filled-surface-100-900 card border-surface-200-800 border-2"
+				class="preset-filled-surface-100-900 card border-surface-200-800 border text-nowrap"
 				role="button"
 				tabindex="0"
 				onkeydown={simulateEscKeyPress}
@@ -145,7 +145,7 @@
 				<nav class="btn-group">
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px]"
+						class="btn preset-filled-primary-500"
 						onclick={() => {
 							addTheoryBlock();
 						}}
@@ -155,7 +155,7 @@
 					</button>
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px]"
+						class="btn preset-filled-primary-500"
 						onclick={() => {
 							addMultipleChoiceBlock();
 						}}
@@ -165,7 +165,7 @@
 					</button>
 					<button
 						type="button"
-						class="btn preset-filled-primary-500 min-w-[250px]"
+						class="btn preset-filled-primary-500"
 						onclick={() => {
 							addQuestionBlock();
 						}}

@@ -83,7 +83,7 @@
 		showCreationDialog = true;
 	}}
 >
-	{#if withTitle === true}
+	{#if withTitle}
 		{$_('block.generateAi')}
 	{/if}
 	<Sparkles size={18} />

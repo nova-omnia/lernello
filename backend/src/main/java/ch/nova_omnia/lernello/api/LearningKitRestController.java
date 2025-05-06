@@ -75,14 +75,9 @@ public class LearningKitRestController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid LearningKitResDTO updateLearningKit(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit, @PathVariable UUID id) {
-        System.err.println(updateLearningKit);
-        System.err.println(id);
         LearningKit destination = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
-        System.out.println(updateLearningKit);
-        System.err.println(destination);
         learningKitMapper.update(updateLearningKit, destination);
         LearningKit savedEntity = learningKitService.save(destination);
-        System.err.println(savedEntity);
         return learningKitMapper.toDTO(savedEntity);
     }
 

@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.model.data.progress.block.scorable;
 
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@DiscriminatorValue("MULTIPLE_CHOICE")
 public class MultipleChoiceBlockProgress extends ScorableBlockProgress {
 
     @ElementCollection
@@ -23,13 +25,17 @@ public class MultipleChoiceBlockProgress extends ScorableBlockProgress {
     @NotEmpty
     private List<String> lastAnswers = new ArrayList<>();
 
-    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, List<String> lastAnswers, int scoreReached) {
-        super(user, block, scoreReached);
+    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers, Integer scoreReached) {
+        super(user, block, unitProgress, scoreReached);
         this.lastAnswers = lastAnswers;
     }
 
-    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, List<String> lastAnswers) {
-        super(user, block);
+    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers) {
+        super(user, block, unitProgress);
         this.lastAnswers = lastAnswers;
+    }
+
+    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress) {
+        super(user, block, unitProgress);
     }
 }

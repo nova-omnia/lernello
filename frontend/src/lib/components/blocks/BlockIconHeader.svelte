@@ -12,14 +12,14 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { ActionType } from '$lib/schemas/request/block/BlockAction';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
 		role: RoleType;
 	}
 	const { block, role }: BlockIconHeaderProps = $props();
-
-	let blockName = $state(block.name);
+	let name = $derived(block.name);
 	let isEditing = $state(false);
 
 	let blockTypeTerm = $derived.by(() => {
@@ -42,7 +42,12 @@
 	};
 
 	const disableEditing = () => {
-		if (blockName.length < 3 || blockName.length > 40) {
+		onUpdateHandler(name);
+		isEditing = false;
+	};
+
+	const onUpdateHandler = createDebounced((newName: string) => {
+		if (newName.length < 3 || newName.length > 40) {
 			toaster.create({
 				title: $_('common.warning.title'),
 				description: $_('block.newName.danger'),
@@ -50,22 +55,22 @@
 			});
 			return;
 		}
-		isEditing = false;
-		if (blockName !== block.name) {
+		if (newName !== block.name) {
 			queueBlockAction({
 				type: ActionType.Enum.UPDATE_BLOCK_NAME,
 				blockId: block.uuid,
-				newName: blockName
+				newName: newName
 			});
+			name = newName;
 		}
-	};
+	}, 500);
 
 	const handleInputKeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			event.preventDefault();
 			disableEditing();
 		} else if (event.key === 'Escape') {
-			blockName = block.name;
+			name = block.name;
 			isEditing = false;
 		}
 	};
@@ -81,7 +86,7 @@
 						class="input"
 						type="text"
 						placeholder={$_('block.name')}
-						bind:value={blockName}
+						bind:value={name}
 						onblur={disableEditing}
 						onkeydown={handleInputKeydown}
 					/>
@@ -100,7 +105,7 @@
 					}}
 					role={role === INSTRUCTOR_ROLE ? 'button' : undefined}
 				>
-					{blockName}
+					{name}
 				</h3>
 			{/if}
 			<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>

@@ -4,17 +4,17 @@
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 
-	interface TraineeItemProps {
+	interface UserItemProps {
 		user: ParticipantUser;
-		onRemoveTrainee: () => void;
+		onRemoveUser: () => void;
 	}
 
-	const { user, onRemoveTrainee }: TraineeItemProps = $props();
+	const { user, onRemoveUser }: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 
-	function removeTrainee() {
-		onRemoveTrainee();
+	function removeUser() {
+		onRemoveUser();
 		showDeleteDialog = false;
 	}
 </script>
@@ -41,7 +41,7 @@
 	confirmText={$_('common.delete')}
 	cancelText={$_('common.cancel')}
 	danger={true}
-	onConfirm={removeTrainee}
+	onConfirm={removeUser}
 	onCancel={() => {
 		showDeleteDialog = false;
 	}}

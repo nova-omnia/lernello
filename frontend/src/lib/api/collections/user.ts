@@ -22,6 +22,19 @@ export const changePassword = createEndpoint({
 	}
 });
 
+export const getAllInstructors = createEndpoint({
+	method: 'GET',
+	getPath: () => `${REQUEST_MAPPING}/instructors`,
+	response: {
+		schema: ParticipantUserSchema.array(),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
 export const getAllTrainees = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}/trainees`,
@@ -61,9 +74,9 @@ export const addTrainee = createEndpoint({
 	}
 });
 
-export const deleteTrainee = createEndpoint({
+export const deleteUser = createEndpoint({
 	method: 'DELETE',
-	getPath: (id: string) => `${REQUEST_MAPPING}/trainee/${id}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
 	response: {
 		schema: z.null(),
 		defaultValidate: true

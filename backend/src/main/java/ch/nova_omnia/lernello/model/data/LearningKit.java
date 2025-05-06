@@ -1,7 +1,20 @@
 package ch.nova_omnia.lernello.model.data;
 
 import ch.nova_omnia.lernello.model.data.user.User;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -59,8 +72,10 @@ public class LearningKit {
     @JoinTable(
         name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @OrderBy("surname ASC")
     private List<User> participants = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @OrderBy("name ASC")
     private List<File> files = new ArrayList<>();
 }

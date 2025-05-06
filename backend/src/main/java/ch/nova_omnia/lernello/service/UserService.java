@@ -1,20 +1,19 @@
 package ch.nova_omnia.lernello.service;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.UUID;
-
 import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class UserService {
 
     public User authenticate(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+            new UsernamePasswordAuthenticationToken(username, password)
         );
         authentication.getPrincipal();
 
@@ -75,6 +74,10 @@ public class UserService {
         return userRepository.findAllByRole(Role.TRAINEE);
     }
 
+    public List<User> findAllInstructors() {
+        return userRepository.findAllByRole(Role.INSTRUCTOR);
+    }
+
     public User addTrainee(String username, String name, String surname) {
         User user = new User();
         user.setUsername(username);
@@ -87,7 +90,7 @@ public class UserService {
         return user;
     }
 
-    public void deleteTrainee(UUID uuid) {
+    public void deleteUser(UUID uuid) {
         User user = userRepository.findByUuid(uuid);
         if (user != null) {
             userRepository.delete(user);

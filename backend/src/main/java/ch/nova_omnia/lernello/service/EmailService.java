@@ -48,60 +48,9 @@ public class EmailService {
 
         String kitUrl = "https://lernello.vercel.app/learningkit/" + learningKit.getUuid();
 
-        String html = """
-            <!DOCTYPE html>
-            <html>
-            <body style="font-family:Arial, sans-serif; line-height:1.55; color:#202022;">
-              <h2 style="color:#2563eb; margin-top:0;">
-                🚀 You’re invited to <strong>%s</strong>!
-              </h2>
-
-              <p style="font-size:15px;">%s</p>
-
-              <table style="margin:20px 0;">
-                <tr><td><strong>Deadline&nbsp;</strong></td><td>%s</td></tr>
-                <tr><td><strong>Context&nbsp;</strong></td><td>%s</td></tr>
-              </table>
-
-              <p>
-                <a href="%s"
-                   style="background:#2563eb; color:#ffffff; padding:12px 24px;
-                          border-radius:6px; text-decoration:none; font-weight:600;"
-                >Open learning kit</a>
-              </p>
-
-              <p style="font-size:12px; color:#6b7280;">
-                If the button doesn’t work, copy this link into your browser:<br>
-                <a href="%s" style="color:#2563eb;">%s</a>
-              </p>
-            </body>
-            </html>
-            """.formatted(
-            learningKit.getName(),
-            learningKit.getDescription(),
-            learningKit.getDeadlineDate(),
-            learningKit.getContext(),
-            kitUrl,
-            kitUrl, kitUrl
-        );
-
+        String html = createHtmlContent(learningKit, kitUrl);
         // Fallback to plain text if HTML is not supported
-        String text = """
-            You’ve been invited to the learning kit: %s
-
-            %s
-
-            Deadline: %s
-            Context : %s
-
-            Open the kit → %s
-            """.formatted(
-            learningKit.getName(),
-            learningKit.getDescription(),
-            learningKit.getDeadlineDate(),
-            learningKit.getContext(),
-            kitUrl
-        );
+        String text = createPlainTextContent(learningKit, kitUrl);
 
         MimeMessage mime = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mime, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
@@ -112,5 +61,45 @@ public class EmailService {
         helper.setText(text, html);
 
         return mime;
+    }
+
+    private String createHtmlContent(LearningKit learningKit, String kitUrl) {
+        return String.format("""
+            <!DOCTYPE html>
+            <html>
+            <body style="font-family:Arial, sans-serif; line-height:1.55; color:#202022;">
+              <h2 style="color:#2563eb; margin-top:0;">
+                🚀 You’re invited to <strong>%s</strong>!
+              </h2>
+              <p style="font-size:15px;">%s</p>
+              <table style="margin:20px 0;">
+                <tr><td><strong>Deadline&nbsp;</strong></td><td>%s</td></tr>
+                <tr><td><strong>Context&nbsp;</strong></td><td>%s</td></tr>
+              </table>
+              <p>
+                <a href="%s" style="background:#2563eb; color:#ffffff; padding:12px 24px; border-radius:6px; text-decoration:none; font-weight:600;">Open learning kit</a>
+              </p>
+              <p style="font-size:12px; color:#6b7280;">
+                If the button doesn’t work, copy this link into your browser:<br>
+                <a href="%s" style="color:#2563eb;">%s</a>
+              </p>
+            </body>
+            </html>
+            """, learningKit.getName(), learningKit.getDescription(), learningKit.getDeadlineDate(), learningKit.getContext(), kitUrl, kitUrl, kitUrl);
+    }
+
+    private String createPlainTextContent(LearningKit learningKit, String kitUrl) {
+        return String.format(
+            "You’ve been invited to the learning kit: %s%n%n" +
+                "%s%n%n" +
+                "Deadline: %s%n" +
+                "Context: %s%n%n" +
+                "Open the kit → %s",
+            learningKit.getName(),
+            learningKit.getDescription(),
+            learningKit.getDeadlineDate(),
+            learningKit.getContext(),
+            kitUrl
+        );
     }
 }

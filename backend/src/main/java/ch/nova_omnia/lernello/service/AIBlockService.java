@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.ai.AIClient;

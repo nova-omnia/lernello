@@ -11,7 +11,6 @@ export const load: PageLoad = async ({ fetch, parent, data }) => {
 	});
 
 	return {
-		queryClient,
 		role: data.role
 	};
 };

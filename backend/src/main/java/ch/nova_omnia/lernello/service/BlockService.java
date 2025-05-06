@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateBlockOrderDTO;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import lombok.RequiredArgsConstructor;

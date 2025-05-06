@@ -23,8 +23,8 @@ import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlock
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
@@ -195,7 +195,7 @@ public class LearningUnitService {
                 mcBlock.setQuestion(updateAction.question());
                 mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
                 mcBlock.setCorrectAnswers(updateAction.correctAnswers());
-                
+
             }
         }
         // Handle full DTO updates if present

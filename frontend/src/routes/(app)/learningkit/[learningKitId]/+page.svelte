@@ -3,7 +3,8 @@
 	import {
 		deleteLearningKit,
 		getLearningKitById,
-		publishLearningKit, updateLearningKit
+		publishLearningKit,
+		updateLearningKit
 	} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -17,7 +18,7 @@
 	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
-	import type {UpdateLearningKit} from "$lib/schemas/request/UpdateLearningKit"; // Import the role constant
+	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit'; // Import the role constant
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -41,7 +42,7 @@
 	});
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
-				api(fetch).req(updateLearningKit, data, id).parse(),
+			api(fetch).req(updateLearningKit, data, id).parse(),
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
@@ -101,7 +102,9 @@
 									onclick={() => {
 										showPublishDialog = true;
 									}}
-								>{$learningKitQuery.data?.published ? $_('learningKit.unpublish.text') : $_('learningKit.publish.text')}
+									>{$learningKitQuery.data?.published
+										? $_('learningKit.unpublish.text')
+										: $_('learningKit.publish.text')}
 								</button>
 								<button
 									type="button"
@@ -155,16 +158,25 @@
 
 	<ConfirmDialog
 		isOpen={showPublishDialog}
-		title={$learningKitQuery.data?.published ? $_('learningKit.unpublish.confirmationTitle') : $_('learningKit.publish.confirmationTitle')}
-		message={$learningKitQuery.data?.published ? $_('learningKit.unpublish.confirmationText', { values: { name: $learningKitQuery.data.name } })
-		 : $_('learningKit.publish.confirmationText', { values: { name: $learningKitQuery.data.name } })}
-		confirmText={$learningKitQuery.data?.published ? $_('learningKit.unpublish.text') : $_('learningKit.publish.text')}
+		title={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.confirmationTitle')
+			: $_('learningKit.publish.confirmationTitle')}
+		message={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.confirmationText', {
+					values: { name: $learningKitQuery.data.name }
+				})
+			: $_('learningKit.publish.confirmationText', {
+					values: { name: $learningKitQuery.data.name }
+				})}
+		confirmText={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.text')
+			: $_('learningKit.publish.text')}
 		danger={false}
 		onConfirm={() => {
 			if ($learningKitQuery.data?.published) {
 				$updateLearningKitMutation.mutate({
 					id: learningKitId,
-					data: { published: false },
+					data: { published: false }
 				});
 			} else {
 				$updateLearningKitMutation.mutate({

@@ -7,15 +7,17 @@
 	import { deleteLearningKit } from '$lib/api/collections/learningKit.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { ProgressRing } from '@skeletonlabs/skeleton-svelte';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 
 	const invalidate = useQueryInvalidation();
 
 	interface LearningKitProps {
 		title: string;
 		uuid: string;
+		role: RoleType;
 	}
 
-	const { title, uuid }: LearningKitProps = $props();
+	const { title, uuid, role }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
 
 	const deleteKitMutation = createMutation({
@@ -49,17 +51,19 @@
 {:else}
 	<a
 		class="text-surface-950-50 card preset-filled-surface-50-950 border-surface-300-700 hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis"
-		href="/learningkit/{uuid}"
+		href="/learningkit/{uuid}?tab=learningUnits"
 	>
-		<button
-			class="absolute top-0 right-0 z-10 flex gap-2 p-2"
-			onclick={(e) => {
-				e.preventDefault();
-				showDeleteDialog = true;
-			}}
-		>
-			<Trash2 class="h-4 w-4 text-red-500" />
-		</button>
+		{#if role === INSTRUCTOR_ROLE}
+			<button
+				class="absolute top-0 right-0 z-10 flex gap-2 p-2"
+				onclick={(e) => {
+					e.preventDefault();
+					showDeleteDialog = true;
+				}}
+			>
+				<Trash2 class="h-4 w-4 text-red-500" />
+			</button>
+		{/if}
 		<p class="w-48 truncate">{title}</p>
 	</a>
 {/if}

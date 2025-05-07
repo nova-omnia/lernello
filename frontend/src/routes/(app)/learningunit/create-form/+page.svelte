@@ -4,6 +4,7 @@
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import PageContainer from '$lib/components/PageContainer.svelte';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 	const invalidate = useQueryInvalidation();
@@ -45,11 +46,14 @@
 			</label>
 		</div>
 		<div class="flex justify-end gap-2">
-			<a class="btn preset-outlined-surface-500" href="/learningkit/{$form.learningKitId}">
+			<a
+				class="btn preset-outlined-surface-500"
+				href="/learningkit/{$form.learningKitId}?tab=learningUnits"
+			>
 				{$_('common.cancel')}
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('learningUnit.create')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

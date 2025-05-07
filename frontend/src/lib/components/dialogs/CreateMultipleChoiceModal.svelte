@@ -3,20 +3,22 @@
 	import { _ } from 'svelte-i18n';
 
 	interface MultipleChoiceModalProps {
+		isLoading: boolean;
 		isOpen: boolean;
 		onConfirm: (selectedBlockId: string) => void;
 		onCancel: () => void;
 		theoryBlocks: { id: string; title: string }[];
 	}
 
-	const { isOpen = false, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps = $props();
+	const { isLoading, isOpen, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps =
+		$props();
 
 	let selectedBlockId = $state<string>('');
 </script>
 
 <Modal
 	open={isOpen}
-	contentBase="card bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-3xl w-full"
+	contentBase="card w-full bg-surface-100-900 p-4 space-y-4 shadow-xl max-w-3xl w-full"
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
@@ -34,14 +36,17 @@
 		</div>
 		<div class="flex justify-end space-x-2">
 			<button
-				class="btn btn-secondary"
+				class="btn preset-tonal-surface"
+				disabled={isLoading}
 				onclick={() => {
 					onCancel();
 					selectedBlockId = '';
-				}}>{$_('common.save')}</button
+				}}>{$_('common.cancel')}</button
 			>
-			<button class="btn btn-primary" onclick={() => onConfirm(selectedBlockId)}
-				>{$_('common.cancel')}</button
+			<button
+				class="btn preset-filled-primary-500"
+				disabled={isLoading}
+				onclick={() => onConfirm(selectedBlockId)}>{$_('common.save')}</button
 			>
 		</div>
 	{/snippet}

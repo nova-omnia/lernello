@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.dto.request.block.blockActions;
 
-import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.ADD;
+import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.ADD_BLOCK;
 
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import jakarta.validation.Valid;
@@ -14,6 +14,6 @@ public record AddBlockActionDTO(
                                 @NotNull @Valid CreateBlockDTO data
 ) implements BlockActionDTO {
     public AddBlockActionDTO {
-        type = ADD;
+        type = ADD_BLOCK;
     }
 }

@@ -47,6 +47,7 @@ export const deleteFile = createEndpoint({
 		defaultValidate: true
 	}
 });
+
 export const getAllFiles = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}/`,

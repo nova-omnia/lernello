@@ -5,6 +5,7 @@
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/state';
+	import { dev } from '$app/environment';
 
 	const learningKitId = page.params.learningKitId;
 	let { data } = $props();
@@ -13,6 +14,7 @@
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
 			invalidate(['learning-kit', learningKitId]);
+			invalidate(['trainees-list']);
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
@@ -77,11 +79,11 @@
 			</label>
 		</div>
 		<div class="flex justify-end gap-2">
-			<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}">
+			<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}?tab=trainees">
 				{$_('common.cancel')}
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('createTrainee')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

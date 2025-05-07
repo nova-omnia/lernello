@@ -8,9 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
-import ch.nova_omnia.lernello.dto.request.block.update.UpdateBlockDTO;
-import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlockDTO;
-import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +15,12 @@ import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
@@ -60,14 +59,20 @@ public class LearningUnitService {
         temporaryKeyMap.clear();
 
         for (BlockActionDTO action : actions) {
-            switch (action) {
-                case AddBlockActionDTO addAction -> addBlock(learningUnit, addAction);
-                case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
-                case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
-                case UpdateBlockActionDTO updateAction -> updateBlock(learningUnit, updateAction);
-                default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
+            try {
+                switch (action) {
+                    case AddBlockActionDTO addAction -> addBlock(learningUnit, addAction);
+                    case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
+                    case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
+                    case UpdateBlockActionDTO updateAction -> updateBlock(learningUnit, updateAction);
+                    case UpdateBlockNameActionDTO updateNameAction -> updateBlockName(learningUnit, updateNameAction);
+                    default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Failed to process action: " + e.getMessage(), e);
             }
         }
+
         blockRepository.flush();
         learningUnitRepository.saveAndFlush(learningUnit);
         return temporaryKeyMap;
@@ -166,28 +171,71 @@ public class LearningUnitService {
     private void updateBlock(LearningUnit learningUnit, UpdateBlockActionDTO updateAction) {
         if (updateAction.blockId() == null) {
             throw new IllegalArgumentException("Block ID cannot be null");
-        } else if (updateAction.blockId().isEmpty()) {
-            throw new IllegalArgumentException("Block ID cannot be empty");
         }
 
-        Block block = blockRepository.getReferenceById(UUID.fromString(updateAction.blockId()));
-        UpdateBlockDTO updateBlockDTO = updateAction.data();
+        Block block = blockRepository.findById(UUID.fromString(updateAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
 
-        switch (updateBlockDTO) {
-            case UpdateTheoryBlockDTO theoryBlockDTO -> {
-                TheoryBlock theoryBlock = (TheoryBlock) block;
-                theoryBlock.setName(theoryBlockDTO.name());
-                theoryBlock.setContent(theoryBlockDTO.content());
+        // Handle direct field updates
+        if (updateAction.content() != null) {
+            if (block instanceof TheoryBlock theoryBlock) {
+                theoryBlock.setContent(updateAction.content());
+            } else {
+                throw new IllegalArgumentException("Content updates only supported for theory blocks");
             }
-            case UpdateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> {
-                MultipleChoiceBlock multipleChoiceBlock = (MultipleChoiceBlock) block;
-                multipleChoiceBlock.setName(multipleChoiceBlockDTO.name());
-                multipleChoiceBlock.setQuestion(multipleChoiceBlockDTO.question());
-                multipleChoiceBlock.setPossibleAnswers(multipleChoiceBlockDTO.possibleAnswers());
-                multipleChoiceBlock.setCorrectAnswers(multipleChoiceBlockDTO.correctAnswers());
-            }
-            case null, default -> throw new IllegalArgumentException("Unknown block type: " + updateAction.type());
         }
+
+        if (updateAction.question() != null) {
+            if (block instanceof QuestionBlock questionBlock) {
+                questionBlock.setQuestion(updateAction.question());
+                questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
+            } else if (block instanceof MultipleChoiceBlock mcBlock) {
+                mcBlock.setQuestion(updateAction.question());
+                mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
+                mcBlock.setCorrectAnswers(updateAction.correctAnswers());
+
+            }
+        }
+        // Handle full DTO updates if present
+        if (updateAction.data() != null) {
+            switch (updateAction.data()) {
+                case UpdateTheoryBlockDTO theoryBlockDTO -> {
+                    TheoryBlock theoryBlock = (TheoryBlock) block;
+                    if (theoryBlockDTO.name() != null) {
+                        theoryBlock.setName(theoryBlockDTO.name());
+                    }
+                    if (theoryBlockDTO.content() != null) {
+                        theoryBlock.setContent(theoryBlockDTO.content());
+                    }
+                }
+                case UpdateMultipleChoiceBlockDTO mcBlockDTO -> {
+                    MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
+                    if (mcBlockDTO.name() != null) {
+                        mcBlock.setName(mcBlockDTO.name());
+                    }
+                    if (mcBlockDTO.question() != null) {
+                        mcBlock.setQuestion(mcBlockDTO.question());
+                    }
+                    if (mcBlockDTO.possibleAnswers() != null) {
+                        mcBlock.setPossibleAnswers(mcBlockDTO.possibleAnswers());
+                    }
+                    if (mcBlockDTO.correctAnswers() != null) {
+                        mcBlock.setCorrectAnswers(mcBlockDTO.correctAnswers());
+                    }
+                }
+                case null, default -> throw new IllegalArgumentException("Unknown block type in update");
+            }
+        }
+
+        blockRepository.saveAndFlush(block);
+    }
+
+    private void updateBlockName(LearningUnit learningUnit, UpdateBlockNameActionDTO updateNameAction) {
+        if (updateNameAction.blockId() == null) {
+            throw new IllegalArgumentException("Block ID cannot be null");
+        }
+
+        Block block = blockRepository.findById(UUID.fromString(updateNameAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
+        block.setName(updateNameAction.newName());
         blockRepository.saveAndFlush(block);
     }
 

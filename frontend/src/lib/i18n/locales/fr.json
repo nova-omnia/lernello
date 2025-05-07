@@ -74,7 +74,7 @@
 	"learningKit.addFile": "Ajouter un fichier",
 	"learningKit.checkpoint": "Point de contrôle",
 	"learningKit.checkpoint.description": "Les participants doivent terminer toutes les unités d'apprentissage ci-dessus pour accéder au reste.",
-	"learningKit.context.description": "Contexte fourni aux outils d'IA",
+	"learningKit.context.description": "Le contexte fourni aux outils d'IA. Faites glisser des fichiers n'importe où pour les télécharger.",
 	"learningKit.create": "Créer un kit d'apprentissage",
 	"learningKit.error.loadList": "Echec du chargement des kits d'apprentissage",
 	"learningKit.error.loadSingle": "Echec du chargement du kit d'apprentissage",

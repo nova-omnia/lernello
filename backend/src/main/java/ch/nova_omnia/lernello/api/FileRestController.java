@@ -53,5 +53,4 @@ public class FileRestController {
     public List<@Valid FileResDTO> getAllFiles() {
         return fileService.findAll().stream().map(fileMapper::toDTO).toList();
     }
-
 }

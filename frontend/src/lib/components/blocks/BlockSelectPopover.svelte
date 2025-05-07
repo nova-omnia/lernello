@@ -70,7 +70,7 @@
 			index: insertIndex,
 			data: {
 				type: BlockType.Enum.THEORY,
-				name: 'Theory Block',
+				name: 'Theory',
 				position: 0,
 				learningUnitId: learningUnitId,
 				content: 'placeholder'
@@ -87,7 +87,7 @@
 			index: insertIndex,
 			data: {
 				type: BlockType.Enum.MULTIPLE_CHOICE,
-				name: 'Multiple Choice Quiz',
+				name: 'Multiple Choice',
 				position: 0,
 				learningUnitId: learningUnitId,
 				question: 'placeholder question?',
@@ -118,15 +118,17 @@
 	}
 </script>
 
-<div>
+<div class="flex items-center gap-2 p-2">
 	<!-- Reference Element -->
+	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<button
 		bind:this={floating.elements.reference}
 		{...interactions.getReferenceProps()}
-		class="btn w-full"
+		class="btn text-gray-400"
 	>
 		<PlusCircle class="h-4 w-4" />
 	</button>
+	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<!-- Floating Element -->
 	{#if open}
 		<div

@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     @Value("${cors.allowed-origins}")
     private String corsAllowedOrigins;
 
-    public static final String[] WHITELIST_URLS = {"/api/auth/**", "/error", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/h2-console/**"
+    public static final String[] WHITELIST_URLS = {"/api/auth/**", "/error", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/h2-console/**", "/files/**"
     };
 
     @Bean

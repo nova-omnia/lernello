@@ -1,97 +1,100 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import type { BlockRes } from '$lib/schemas/response/BlockRes';
+	import {
+		type BlockRes,
+		MULTIPLE_CHOICE_BLOCK_TYPE,
+		QUESTION_BLOCK_TYPE,
+		THEORY_BLOCK_TYPE
+	} from '$lib/schemas/response/BlockRes';
 	import BlockIcon from './BlockIcon.svelte';
-	import { WandSparkles } from 'lucide-svelte';
-	import CreateMultipleChoiceModal from '../dialogs/CreateMultipleChoiceModal.svelte';
-	import { api } from '$lib/api/apiClient';
-	import { getLearningUnitById } from '$lib/api/collections/learningUnit';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import BlockAiGenerationButton from '$lib/components/blocks/BlockAiGenerationButton.svelte';
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { ActionType } from '$lib/schemas/request/block/BlockAction';
+	import { toaster } from '$lib/states/toasterState.svelte';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
 	interface BlockIconHeaderProps {
 		block: BlockRes;
-		learningUnitId?: string;
+		role: RoleType;
 	}
-	const { block, learningUnitId: learningUnitId }: BlockIconHeaderProps = $props();
-
-	const getLearningKit = createQuery({
-		queryKey: ['learning-unit', learningUnitId],
-		enabled: !!learningUnitId,
-		queryFn: () => {
-			if (learningUnitId) {
-				return api(fetch).req(getLearningUnitById, null, learningUnitId).parse();
-			}
-		}
-	});
-
-	let theoryBlocks: BlockRes[] = $state([]);
+	const { block, role }: BlockIconHeaderProps = $props();
+	let name = $derived(block.name);
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
-			case 'THEORY':
+			case THEORY_BLOCK_TYPE:
 				return 'block.theoryBlock';
-			case 'MULTIPLE_CHOICE':
+			case MULTIPLE_CHOICE_BLOCK_TYPE:
 				return 'block.multipleChoiceQuiz';
-			case 'QUESTION':
+			case QUESTION_BLOCK_TYPE:
 				return 'block.questionBlock';
 			default:
 				return 'Unknown Block';
 		}
 	});
 
-	let showCreationDialog = $state(false);
-
-	function handleCreationDialog() {
-		showCreationDialog = false;
-	}
-
-	$effect(() => {
-		if ($getLearningKit.isSuccess && $getLearningKit?.data) {
-			theoryBlocks = $getLearningKit?.data.blocks.filter((b: BlockRes) => b.type === 'THEORY');
+	const onUpdateHandler = createDebounced((newName: string) => {
+		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
+			toaster.create({
+				title: $_('common.warning.title'),
+				description: $_('block.newName.danger'),
+				type: 'warning'
+			});
+			return;
 		}
-	});
+		if (newName !== block.name) {
+			queueBlockAction({
+				type: ActionType.Enum.UPDATE_BLOCK_NAME,
+				blockId: block.uuid,
+				newName: newName
+			});
+		}
+	}, 500);
+
+	const handleInputBlur = () => {
+		onUpdateHandler(name);
+	};
+
+	const handleInputKeydown = (event: KeyboardEvent) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			onUpdateHandler(name);
+			(event.target as HTMLElement).blur();
+		} else if (event.key === 'Escape') {
+			name = block.name;
+			(event.target as HTMLElement).blur();
+		}
+	};
 </script>
 
-<div class="flex items-end gap-2">
-	<BlockIcon iconType={block.type} />
-	<h3 class="font-medium">{block.name}</h3>
-	<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
+<div class="flex justify-between">
+	<div class="flex items-center gap-2">
+		<BlockIcon iconType={block.type} />
+		<div class="flex items-baseline gap-2">
+			{#if role === INSTRUCTOR_ROLE}
+				<label class="label">
+					<input
+						class="input -m-1 p-1 font-medium"
+						type="text"
+						placeholder={$_('block.name')}
+						bind:value={name}
+						onblur={handleInputBlur}
+						onkeydown={handleInputKeydown}
+					/>
+				</label>
+			{:else}
+				<h3 class="font-medium">
+					{name}
+				</h3>
+			{/if}
+			<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
+		</div>
+	</div>
 
-	{#if learningUnitId}
-		<div
-			class="text-primary-400 hover:text-primary-500 cursor-pointer"
-			title={$_('block.generateAi')}
-		>
-			<WandSparkles
-				onclick={(e) => {
-					e.preventDefault();
-					showCreationDialog = true;
-				}}
-			/>
+	{#if role === INSTRUCTOR_ROLE}
+		<div class="ml-auto">
+			<BlockAiGenerationButton {block} />
 		</div>
 	{/if}
 </div>
-
-{#if block.type === 'MULTIPLE_CHOICE'}
-	<CreateMultipleChoiceModal
-		isOpen={showCreationDialog}
-		onConfirm={handleCreationDialog}
-		onCancel={() => (showCreationDialog = false)}
-		theoryBlocks={theoryBlocks.map((theoryBlock) => ({
-			id: theoryBlock.uuid,
-			title: theoryBlock.name
-		}))}
-	/>
-{:else if block.type === 'THEORY'}
-	<!--ToDo: Add Theory Creation Modal-->
-{:else if block.type === 'QUESTION'}
-	<CreateMultipleChoiceModal
-		isOpen={showCreationDialog}
-		onConfirm={handleCreationDialog}
-		onCancel={() => (showCreationDialog = false)}
-		theoryBlocks={theoryBlocks.map((theoryBlock) => ({
-			id: theoryBlock.uuid,
-			title: theoryBlock.name
-		}))}
-	/>
-{/if}

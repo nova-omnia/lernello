@@ -4,24 +4,38 @@
 	import Toolbar from './Toolbar.svelte';
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
 
 	interface TextEditorProps {
 		content: string;
+		onUpdate?: (content: string) => void;
+		role: RoleType;
 	}
 
-	let { content }: TextEditorProps = $props();
+	let { content: initialContent, onUpdate, role }: TextEditorProps = $props();
+	let content = $state(initialContent);
+	let lastSavedContent = $state(initialContent);
+	let editorRef: HTMLTextAreaElement | undefined = $state();
 
-	const Tab = {
-		EDIT: 'edit',
-		PREVIEW: 'preview'
-	} as const;
+	$effect(() => {
+		if (onUpdate && content !== lastSavedContent) {
+			onUpdate(content);
+			lastSavedContent = content;
+		}
+	});
 
-	type Tab = (typeof Tab)[keyof typeof Tab];
-
-	let activeTab: Tab = $state(Tab.EDIT);
+	$effect(() => {
+		content = initialContent;
+		lastSavedContent = initialContent;
+	});
 
 	const insertSyntax = (syntax: string) => {
-		const textarea = document.getElementById('editor') as HTMLTextAreaElement;
+		const textarea = editorRef;
+		if (!textarea) {
+			console.warn('Textarea reference not available for insertSyntax');
+			return;
+		}
 		const start = textarea.selectionStart;
 		const end = textarea.selectionEnd;
 		const selectedText = content.substring(start, end);
@@ -53,47 +67,27 @@
 	};
 </script>
 
-<div class="relative h-full rounded-lg border dark:border-gray-700 dark:bg-gray-900">
-	<div class="flex border-b dark:border-gray-700">
-		<button
-			class={`px-4 py-2 text-sm font-medium ${
-				activeTab === Tab.EDIT
-					? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-					: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-			}`}
-			onclick={() => (activeTab = Tab.EDIT)}
-		>
-			{$_('common.edit')}
-		</button>
-		<button
-			class={`px-4 py-2 text-sm font-medium ${
-				activeTab === Tab.PREVIEW
-					? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-					: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-			}`}
-			onclick={() => (activeTab = Tab.PREVIEW)}
-		>
-			{$_('common.preview')}
-		</button>
-		{#if activeTab === Tab.EDIT}
+<EditPreviewTabContainer {role}>
+	{#snippet editHeaderContent()}
+		{#if role === INSTRUCTOR_ROLE}
 			<Toolbar {insertSyntax} />
 		{/if}
-	</div>
+	{/snippet}
 
-	{#if activeTab === Tab.EDIT}
+	{#snippet edit()}
 		<textarea
-			id="editor"
+			bind:this={editorRef}
 			bind:value={content}
-			class="h-[calc(100%-44px)] min-h-[300px] w-full resize-none bg-white p-4 text-gray-900 focus:outline-none dark:bg-gray-900 dark:text-gray-100"
+			class="focus:border-primary-500 dark:focus:border-primary-500 block h-[300px] min-h-[300px] w-full resize-none rounded-md border border-gray-300 bg-transparent p-2.5 text-gray-900 focus:ring-0 focus:outline-none dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
 			placeholder={$_('markdownEditor.placeholder')}
-		>
-		</textarea>
-	{/if}
-	{#if activeTab === Tab.PREVIEW}
+		></textarea>
+	{/snippet}
+
+	{#snippet preview()}
 		{#await previewContent()}
-			<div class="p-4">{$_('common.loading')}</div>
+			<div class="text-center text-gray-500 dark:text-gray-400">{$_('common.loading')}...</div>
 		{:then safeHtml}
-			<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
+			<div class="prose dark:prose-invert max-w-none" style="min-height: 300px;">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html safeHtml}
 			</div>
@@ -102,11 +96,13 @@
 				throwError(error.message);
 				return '';
 			})()}
-			<div class="prose dark:prose-invert h-[calc(100%-44px)] max-w-none overflow-y-auto p-4">
-				{$_('error.description', {
-					values: { status: 'unknown' }
-				})}
+			<div
+				class="prose dark:prose-invert max-w-none text-red-600 dark:text-red-400"
+				style="min-height: 300px;"
+			>
+				{$_('error.description', { values: { status: 'Preview Generation' } })}
+				<pre class="mt-2 text-xs">{error.message}</pre>
 			</div>
 		{/await}
-	{/if}
-</div>
+	{/snippet}
+</EditPreviewTabContainer>

@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const BlockResTypeSchema = z.enum(['THEORY', 'MULTIPLE_CHOICE', 'QUESTION']);
+export const THEORY_BLOCK_TYPE = 'THEORY' as const;
+export const MULTIPLE_CHOICE_BLOCK_TYPE = 'MULTIPLE_CHOICE' as const;
+export const QUESTION_BLOCK_TYPE = 'QUESTION' as const;
+export const BlockResTypeSchema = z.enum([
+	THEORY_BLOCK_TYPE,
+	MULTIPLE_CHOICE_BLOCK_TYPE,
+	QUESTION_BLOCK_TYPE
+]);
 export type BlockResType = z.infer<typeof BlockResTypeSchema>;
 
 const BaseBlockResSchema = z.object({
@@ -10,20 +17,20 @@ const BaseBlockResSchema = z.object({
 	position: z.number().min(0)
 });
 
-const TheoryBlockResSchema = BaseBlockResSchema.extend({
-	type: z.literal('THEORY'),
+export const TheoryBlockResSchema = BaseBlockResSchema.extend({
+	type: z.literal(THEORY_BLOCK_TYPE),
 	content: z.string()
 });
 
-const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
-	type: z.literal('MULTIPLE_CHOICE'),
+export const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
+	type: z.literal(MULTIPLE_CHOICE_BLOCK_TYPE),
 	question: z.string(),
 	possibleAnswers: z.array(z.string()),
 	correctAnswers: z.array(z.string())
 });
 
-const QuestionBlockResSchema = BaseBlockResSchema.extend({
-	type: z.literal('QUESTION'),
+export const QuestionBlockResSchema = BaseBlockResSchema.extend({
+	type: z.literal(QUESTION_BLOCK_TYPE),
 	question: z.string(),
 	expectedAnswer: z.string()
 });

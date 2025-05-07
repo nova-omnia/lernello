@@ -4,6 +4,7 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
+	import { dev } from '$app/environment';
 
 	let { data } = $props();
 
@@ -25,7 +26,7 @@
 	});
 </script>
 
-<PageContainer title={$_('learningKit.form.title')} centered={true}>
+<PageContainer title={$_('learningKit.form.create.title')} centered={true}>
 	<form method="POST" use:enhance action="?/create" class="space-y-4">
 		<div class="space-y-6">
 			<label class="label">
@@ -64,7 +65,7 @@
 				<textarea
 					name="context"
 					bind:value={$form.context}
-					class="textarea preset-filled-surface-100-900"
+					class="textarea preset-filled-surface-100-900 min-h-24"
 					placeholder={$_('common.additionalContext')}
 					aria-invalid={$errors.context ? 'true' : undefined}
 					{...$constraints.context}
@@ -94,6 +95,6 @@
 			<a class="btn preset-outlined-surface-500" href="/dashboard">{$_('common.cancel')}</a>
 			<button class="btn preset-filled-primary-500">{$_('learningKit.create')}</button>
 		</div>
-		<SuperDebug data={$form} />
+		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

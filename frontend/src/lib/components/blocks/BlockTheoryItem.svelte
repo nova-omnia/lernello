@@ -1,20 +1,29 @@
 <script lang="ts">
-	import AddAITheoryBlockModal from './../AddAITheoryBlockModal.svelte';
 	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
-	import { WandSparkles } from 'lucide-svelte';
+	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import type { BlockRes } from '$lib/schemas/response/BlockRes';
+	import { THEORY_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
+	import { type RoleType } from '$lib/schemas/response/UserInfo';
+	import { createDebounced } from '$lib/utils/createDebounced';
 
-	const { block } = $props();
+	interface BlockTheoryItemProps {
+		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
+		role: RoleType;
+	}
 
-	let content = block.content;
-	let showAddTraineeModal = $state(false);
+	const { block, role }: BlockTheoryItemProps = $props();
+	let lastContent = $derived(block.content);
+
+	const onUpdateHandler = createDebounced((newContent: string) => {
+		if (newContent !== lastContent) {
+			queueBlockAction({
+				type: 'UPDATE_BLOCK',
+				blockId: block.uuid,
+				content: newContent
+			});
+			lastContent = newContent;
+		}
+	}, 500);
 </script>
 
-<div>
-	<TextEditor {content} />
-
-	<button class="btn btn-primary btn-sm mt-2" onclick={() => (showAddTraineeModal = true)}>
-		<WandSparkles />
-	</button>
-</div>
-
-<AddAITheoryBlockModal bind:isOpen={showAddTraineeModal} blockId={block.uuid} />
+<TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record QuestionAnswerValidationResDTO (
     @NotNull
-    UUID blockId,
+    String blockId,
     @NotNull
     boolean isCorrect
 ) {

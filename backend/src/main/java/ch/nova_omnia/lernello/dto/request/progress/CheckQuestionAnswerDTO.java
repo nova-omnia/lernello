@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record CheckQuestionAnswerDTO(
     @NotNull
-    UUID blockId,
+    String blockId,
     @NotNull
     String answer
 ) {

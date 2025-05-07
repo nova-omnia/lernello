@@ -1,0 +1,15 @@
+meta {
+  name: get Learning Unit Progress
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/progress/learning-unit/{{learningUnitId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  learningUnitId: f67122f4-f7ee-4c32-8d58-4005edf6197c
+}

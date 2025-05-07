@@ -1,0 +1,15 @@
+meta {
+  name: get Learning Unit
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/learning-unit/{{id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  id: f67122f4-f7ee-4c32-8d58-4005edf6197c
+}

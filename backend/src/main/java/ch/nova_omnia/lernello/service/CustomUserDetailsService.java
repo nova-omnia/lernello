@@ -78,6 +78,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:write"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_progress:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_progress:write"));
             }
             case TRAINEE -> {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_kits:read"));
@@ -85,6 +87,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 scopes.add(new SimpleGrantedAuthority("SCOPE_learningUnit:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_files:read"));
                 scopes.add(new SimpleGrantedAuthority("SCOPE_blocks:read"));
+                scopes.add(new SimpleGrantedAuthority("SCOPE_progress:read"));
             }
         }
         return scopes;

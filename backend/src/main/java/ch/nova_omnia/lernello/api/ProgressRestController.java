@@ -28,7 +28,7 @@ public class ProgressRestController {
     private final ProgressService progressService;
 
     @PostMapping("/learning-kit/opened")
-    @PreAuthorize("hasAuthority('SCOPE_progress:write') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<LearningKitProgressResDTO> markLearningKitOpened(
         @RequestBody @Valid LearningKitOpened dto,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -37,7 +37,7 @@ public class ProgressRestController {
     }
 
     @PostMapping("/learning-unit/opened")
-    @PreAuthorize("hasAuthority('SCOPE_progress:write') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<LearningUnitProgressDTO> markLearningUnitOpened(
         @RequestBody @Valid LearningUnitOpenedDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -46,7 +46,7 @@ public class ProgressRestController {
     }
 
     @PostMapping("/block/multiple-choice/check")
-    @PreAuthorize("hasAuthority('SCOPE_progress:write') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<MultipleChoiceAnswerValidationResDTO> checkMultipleChoiceAnswer(
         @RequestBody @Valid CheckMultipleChoiceAnswerDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -55,7 +55,7 @@ public class ProgressRestController {
     }
 
     @PostMapping("/block/question/check")
-    @PreAuthorize("hasAuthority('SCOPE_progress:write') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<QuestionAnswerValidationResDTO> checkQuestionAnswer(
         @RequestBody @Valid CheckQuestionAnswerDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -64,7 +64,7 @@ public class ProgressRestController {
     }
 
     @GetMapping("/learning-kit/{learningKitId}")
-    @PreAuthorize("hasAuthority('SCOPE_progress:read') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<LearningKitProgressResDTO> getLearningKitProgress(
         @PathVariable UUID learningKitId,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -73,7 +73,7 @@ public class ProgressRestController {
     }
 
     @GetMapping("/learning-unit/{learningUnitId}")
-    @PreAuthorize("hasAuthority('SCOPE_progress:read') or hasAuthority('ROLE_TRAINEE') or hasAuthority('ROLE_EXPERT')")
+    @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public ResponseEntity<LearningUnitProgressDTO> getLearningUnitProgress(
         @PathVariable UUID learningUnitId,
         @AuthenticationPrincipal UserDetails userDetails) {

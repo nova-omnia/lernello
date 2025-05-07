@@ -3,7 +3,10 @@ package ch.nova_omnia.lernello.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +30,8 @@ public class AIBlockService {
     private final BlockRepository blockRepository;
     private final FileService fileService;
     private final AIClient aiClient;
+
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
         TheoryBlock block = new TheoryBlock();
@@ -97,13 +102,21 @@ public class AIBlockService {
     }
 
     private void generateBlocksFromTopics(JsonNode jsonNode, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
-        jsonNode.fields().forEachRemaining(entry -> {
-            String topicTitle = entry.getKey();
-            String topicContent = entry.getValue().asText();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-            topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
-            createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle));
+        jsonNode.fields().forEachRemaining(entry -> {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                String topicTitle = entry.getKey();
+                String topicContent = entry.getValue().asText();
+
+                topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
+                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle));
+            }, executor);
+
+            futures.add(future);
         });
+        
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     private void createBlocksForTopic(String content, List<Block> topicBlocks) {
@@ -113,17 +126,24 @@ public class AIBlockService {
         }
 
         try {
-            Block theoryBlock = createAndSaveBlock(
-                    generateTheoryBlockFromTopic(content), "Theory Block", BlockType.THEORY
-            );
-            topicBlocks.add(theoryBlock);
+            List<CompletableFuture<Block>> futures = new ArrayList<>();
 
-            Block quizBlock = Math.random() < 0.5 ? createAndSaveBlock(generateQuestionBlockAIFromTopic(content), "Question Block", BlockType.QUESTION) : createAndSaveBlock(generateMultipleChoiceBlockAIFromTopic(content), "Multiple Choice Block", BlockType.MULTIPLE_CHOICE);
+            futures.add(CompletableFuture.supplyAsync(() -> createAndSaveBlock(generateTheoryBlockFromTopic(content), "Theory Block", BlockType.THEORY), executor));
+            futures.add(CompletableFuture.supplyAsync(() -> {
+                if (Math.random() < 0.5) {
+                    return createAndSaveBlock(generateQuestionBlockAIFromTopic(content), "Question Block", BlockType.QUESTION);
+                } else {
+                    return createAndSaveBlock(generateMultipleChoiceBlockAIFromTopic(content), "Multiple Choice Block", BlockType.MULTIPLE_CHOICE);
+                }
+            }, executor));
 
-            topicBlocks.add(quizBlock);
+            List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();
+
+            topicBlocks.addAll(blocks);
 
         } catch (Exception e) {
             System.err.println("Failed to generate blocks for topic: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

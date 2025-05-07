@@ -4,11 +4,8 @@ import ch.nova_omnia.lernello.dto.request.progress.CheckMultipleChoiceAnswerDTO;
 import ch.nova_omnia.lernello.dto.request.progress.CheckQuestionAnswerDTO;
 import ch.nova_omnia.lernello.dto.request.progress.LearningKitOpened;
 import ch.nova_omnia.lernello.dto.request.progress.LearningUnitOpenedDTO;
-import ch.nova_omnia.lernello.dto.response.progress.LearningKitProgressResDTO;
-import ch.nova_omnia.lernello.dto.response.progress.LearningUnitProgressDTO;
 import ch.nova_omnia.lernello.dto.response.progress.MultipleChoiceAnswerValidationResDTO;
 import ch.nova_omnia.lernello.dto.response.progress.QuestionAnswerValidationResDTO;
-import ch.nova_omnia.lernello.mapper.ProgressMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
@@ -45,10 +42,9 @@ public class ProgressService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
     private final UserService userService;
-    private final ProgressMapper progressMapper;
 
     @Transactional
-    public LearningKitProgressResDTO markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
+    public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         LearningKit learningKit = learningKitRepository.findById(dto.learningKitId())
             .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
@@ -59,11 +55,11 @@ public class ProgressService {
         }
         progress.setLastOpenedAt(LocalDateTime.now());
         learningKitProgressRepository.save(progress);
-        return progressMapper.toLearningKitProgressResDTO(progress);
+        return progress;
     }
 
     @Transactional
-    public LearningUnitProgressDTO markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
+    public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId())
             .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
@@ -89,7 +85,7 @@ public class ProgressService {
         if (unitProgress.getLearningKitProgress() != null) {
             updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
         }
-        return progressMapper.toLearningUnitProgressDTO(unitProgress);
+        return unitProgress;
     }
 
     @Transactional
@@ -146,30 +142,27 @@ public class ProgressService {
         return new QuestionAnswerValidationResDTO(dto.blockId(), isCorrect);
     }
 
-    public LearningKitProgressResDTO getLearningKitProgress(UUID learningKitId, UserDetails userDetails) {
+
+    public LearningKitProgress getLearningKitProgress(UUID learningKitId, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         Optional<LearningKitProgress> optProgress = learningKitProgressRepository.findByUser_UuidAndLearningKit_Uuid(user.getUuid(), learningKitId);
 
-        return optProgress
-            .map(progressMapper::toLearningKitProgressResDTO)
-            .orElseGet(() -> {
-                LearningKit kit = learningKitRepository.findById(learningKitId)
-                    .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
-                return new LearningKitProgressResDTO(kit.getUuid(), false, false, null, null, null, 0);
-            });
+        return optProgress.orElseGet(() -> {
+            LearningKit kit = learningKitRepository.findById(learningKitId)
+                .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
+            return new LearningKitProgress(user, kit);
+        });
     }
 
-    public LearningUnitProgressDTO getLearningUnitProgress(UUID learningUnitId, UserDetails userDetails) {
+    public LearningUnitProgress getLearningUnitProgress(UUID learningUnitId, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         Optional<LearningUnitProgress> optProgress = learningUnitProgressRepository.findByUser_UuidAndLearningUnit_Uuid(user.getUuid(), learningUnitId);
 
-        return optProgress
-            .map(progressMapper::toLearningUnitProgressDTO)
-            .orElseGet(() -> {
-                LearningUnit unit = learningUnitRepository.findById(learningUnitId)
-                    .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + learningUnitId));
-                return new LearningUnitProgressDTO(unit.getUuid(), false, false, null, null, null, 0);
-            });
+        return optProgress.orElseGet(() -> {
+            LearningUnit unit = learningUnitRepository.findById(learningUnitId)
+                .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + learningUnitId));
+            return new LearningUnitProgress(user, unit);
+        });
     }
 
     private LearningKitProgress getOrCreateLearningKitProgress(User user, LearningKit learningKit) {

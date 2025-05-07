@@ -5,7 +5,13 @@ import {
 	CreateQuestionBlockSchema
 } from './CreateBlock';
 
-export const ActionType = z.enum(['ADD_BLOCK', 'REORDER_BLOCK', 'REMOVE_BLOCK', 'UPDATE_BLOCK']);
+export const ActionType = z.enum([
+	'ADD_BLOCK',
+	'REORDER_BLOCK',
+	'REMOVE_BLOCK',
+	'UPDATE_BLOCK',
+	'UPDATE_BLOCK_NAME'
+]);
 
 const BaseBlockActionSchema = z.object({
 	blockId: z.string()
@@ -39,11 +45,17 @@ export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
 	correctAnswers: z.array(z.string()).optional()
 });
 
+export const UpdateBlockNameActionSchema = BaseBlockActionSchema.extend({
+	type: z.literal(ActionType.Enum.UPDATE_BLOCK_NAME),
+	newName: z.string().min(3).max(40)
+});
+
 export const BlockActionSchema = z.discriminatedUnion('type', [
 	AddBlockActionSchema,
 	ReorderBlockActionSchema,
 	RemoveBlockActionSchema,
-	UpdateBlockActionSchema
+	UpdateBlockActionSchema,
+	UpdateBlockNameActionSchema
 ]);
 
 type AddBlockActionNoId = Omit<z.infer<typeof AddBlockActionSchema>, 'blockId'>;

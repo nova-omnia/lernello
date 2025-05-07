@@ -11,7 +11,6 @@ import ch.nova_omnia.lernello.dto.response.progress.QuestionAnswerValidationResD
 import ch.nova_omnia.lernello.service.ProgressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,55 +28,49 @@ public class ProgressRestController {
 
     @PostMapping("/learning-kit/opened")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<LearningKitProgressResDTO> markLearningKitOpened(
+    public LearningKitProgressResDTO markLearningKitOpened(
         @RequestBody @Valid LearningKitOpened dto,
         @AuthenticationPrincipal UserDetails userDetails) {
-        LearningKitProgressResDTO response = progressService.markLearningKitOpened(dto, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.markLearningKitOpened(dto, userDetails);
     }
 
     @PostMapping("/learning-unit/opened")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<LearningUnitProgressDTO> markLearningUnitOpened(
+    public @Valid LearningUnitProgressDTO markLearningUnitOpened(
         @RequestBody @Valid LearningUnitOpenedDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
-        LearningUnitProgressDTO response = progressService.markLearningUnitOpened(dto, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.markLearningUnitOpened(dto, userDetails);
     }
 
     @PostMapping("/block/multiple-choice/check")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<MultipleChoiceAnswerValidationResDTO> checkMultipleChoiceAnswer(
+    public @Valid MultipleChoiceAnswerValidationResDTO checkMultipleChoiceAnswer(
         @RequestBody @Valid CheckMultipleChoiceAnswerDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
-        MultipleChoiceAnswerValidationResDTO response = progressService.checkMultipleChoiceAnswer(dto, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.checkMultipleChoiceAnswer(dto, userDetails);
     }
 
     @PostMapping("/block/question/check")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<QuestionAnswerValidationResDTO> checkQuestionAnswer(
+    public @Valid QuestionAnswerValidationResDTO checkQuestionAnswer(
         @RequestBody @Valid CheckQuestionAnswerDTO dto,
         @AuthenticationPrincipal UserDetails userDetails) {
-        QuestionAnswerValidationResDTO response = progressService.checkQuestionAnswer(dto, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.checkQuestionAnswer(dto, userDetails);
     }
 
     @GetMapping("/learning-kit/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<LearningKitProgressResDTO> getLearningKitProgress(
+    public @Valid LearningKitProgressResDTO getLearningKitProgress(
         @PathVariable UUID learningKitId,
         @AuthenticationPrincipal UserDetails userDetails) {
-        LearningKitProgressResDTO response = progressService.getLearningKitProgress(learningKitId, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.getLearningKitProgress(learningKitId, userDetails);
     }
 
     @GetMapping("/learning-unit/{learningUnitId}")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public ResponseEntity<LearningUnitProgressDTO> getLearningUnitProgress(
+    public @Valid LearningUnitProgressDTO getLearningUnitProgress(
         @PathVariable UUID learningUnitId,
         @AuthenticationPrincipal UserDetails userDetails) {
-        LearningUnitProgressDTO response = progressService.getLearningUnitProgress(learningUnitId, userDetails);
-        return ResponseEntity.ok(response);
+        return progressService.getLearningUnitProgress(learningUnitId, userDetails);
     }
 }

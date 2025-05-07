@@ -4,6 +4,8 @@ import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -67,6 +69,15 @@ public class LearningUnitProgress {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Min(0)
+    @Max(100)
+    @Column(
+        name = "progress_percentage",
+        nullable = false,
+        columnDefinition = "INT CHECK (progress_percentage BETWEEN 0 AND 100)"
+    )
+    private int progressPercentage = 0;
 
     public LearningUnitProgress(User user, LearningUnit learningUnit) {
         this.user = user;

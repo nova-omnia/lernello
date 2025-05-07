@@ -3,6 +3,8 @@ package ch.nova_omnia.lernello.model.data.progress;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,6 +56,15 @@ public class LearningKitProgress {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Min(0)
+    @Max(100)
+    @Column(
+        name = "progress_percentage",
+        nullable = false,
+        columnDefinition = "INT CHECK (progress_percentage BETWEEN 0 AND 100)"
+    )
+    private int progressPercentage = 0;
 
     @OneToMany(mappedBy = "learningKitProgress", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude

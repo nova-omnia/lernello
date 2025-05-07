@@ -11,9 +11,8 @@ import java.util.UUID;
 
 @Repository
 public interface LearningKitRepository extends JpaRepository<LearningKit, UUID> {
-    Page<LearningKit> findAllByParticipantsUuid(
-        @NotNull UUID participants_uuid, Pageable pageable
-    );
+    Page<LearningKit> findAllByParticipants_UuidAndPublishedTrue(UUID participantId,
+                                                                 Pageable pageable);
 
     Page<LearningKit> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

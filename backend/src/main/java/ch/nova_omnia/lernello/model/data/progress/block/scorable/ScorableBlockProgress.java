@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.model.data.progress.block.scorable;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
 import jakarta.persistence.Column;
@@ -21,12 +22,12 @@ public abstract class ScorableBlockProgress extends BlockProgress {
     @Column(name = "score_reached", nullable = true)
     private Integer scoreReached;
 
-    public ScorableBlockProgress(User user, Block block, Integer scoreReached) {
-        super(user, block);
+    public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress, Integer scoreReached) {
+        super(user, block, learningUnitProgress);
         this.scoreReached = scoreReached;
     }
 
-    public ScorableBlockProgress(User user, Block block) {
-        super(user, block);
+    public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress) {
+        super(user, block, learningUnitProgress);
     }
 }

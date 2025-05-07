@@ -15,7 +15,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,14 +61,14 @@ public class LearningUnitProgress {
 
     @CreatedDate
     @Column(name = "first_opened_at", nullable = false, updatable = false)
-    private LocalDateTime firstOpenedAt;
+    private ZonedDateTime firstOpenedAt;
 
     @LastModifiedDate
     @Column(name = "last_opened_at")
-    private LocalDateTime lastOpenedAt;
+    private ZonedDateTime lastOpenedAt;
 
     @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    private ZonedDateTime completedAt;
 
     @Min(0)
     @Max(100)
@@ -93,15 +93,15 @@ public class LearningUnitProgress {
     public void markAsOpened() {
         this.opened = true;
         if (this.firstOpenedAt == null) {
-            this.firstOpenedAt = LocalDateTime.now();
+            this.firstOpenedAt = ZonedDateTime.now();
         }
-        this.lastOpenedAt = LocalDateTime.now();
+        this.lastOpenedAt = ZonedDateTime.now();
     }
 
     public void markAsCompleted() {
         this.completed = true;
-        this.completedAt = LocalDateTime.now();
-        this.lastOpenedAt = LocalDateTime.now();
+        this.completedAt = ZonedDateTime.now();
+        this.lastOpenedAt = ZonedDateTime.now();
     }
 
     public void addBlockProgress(BlockProgress blockProgress) {

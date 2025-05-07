@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -50,7 +50,7 @@ public class ProgressService {
         if (!progress.isOpened()) {
             progress.setOpened(true);
         }
-        progress.setLastOpenedAt(LocalDateTime.now());
+        progress.setLastOpenedAt(ZonedDateTime.now());
         learningKitProgressRepository.save(progress);
         return progress;
     }
@@ -70,13 +70,13 @@ public class ProgressService {
         if (!kitProgress.isOpened()) {
             kitProgress.setOpened(true);
         }
-        kitProgress.setLastOpenedAt(LocalDateTime.now());
+        kitProgress.setLastOpenedAt(ZonedDateTime.now());
 
         LearningUnitProgress unitProgress = getOrCreateLearningUnitProgress(user, learningUnit, kitProgress);
         if (!unitProgress.isOpened()) {
             unitProgress.setOpened(true);
         }
-        unitProgress.setLastOpenedAt(LocalDateTime.now());
+        unitProgress.setLastOpenedAt(ZonedDateTime.now());
 
         updateLearningUnitProgressPercentage(unitProgress);
         if (unitProgress.getLearningKitProgress() != null) {
@@ -210,7 +210,7 @@ public class ProgressService {
             unitProgress.setProgressPercentage(100);
             if (!unitProgress.isCompleted()) {
                 unitProgress.setCompleted(true);
-                unitProgress.setCompletedAt(LocalDateTime.now());
+                unitProgress.setCompletedAt(ZonedDateTime.now());
             }
             learningUnitProgressRepository.save(unitProgress);
             return;
@@ -225,7 +225,7 @@ public class ProgressService {
 
         if (percentage == 100 && !unitProgress.isCompleted()) {
             unitProgress.setCompleted(true);
-            unitProgress.setCompletedAt(LocalDateTime.now());
+            unitProgress.setCompletedAt(ZonedDateTime.now());
         } else if (percentage < 100 && unitProgress.isCompleted()) {
             unitProgress.setCompleted(false);
             unitProgress.setCompletedAt(null);
@@ -242,7 +242,7 @@ public class ProgressService {
             kitProgress.setProgressPercentage(100);
             if (!kitProgress.isCompleted()) {
                 kitProgress.setCompleted(true);
-                kitProgress.setCompletedAt(LocalDateTime.now());
+                kitProgress.setCompletedAt(ZonedDateTime.now());
             }
             learningKitProgressRepository.save(kitProgress);
             return;
@@ -270,7 +270,7 @@ public class ProgressService {
 
         if (kitProgress.getProgressPercentage() == 100 && !kitProgress.isCompleted()) {
             kitProgress.setCompleted(true);
-            kitProgress.setCompletedAt(LocalDateTime.now());
+            kitProgress.setCompletedAt(ZonedDateTime.now());
         } else if (kitProgress.getProgressPercentage() < 100 && kitProgress.isCompleted()) {
             kitProgress.setCompleted(false);
             kitProgress.setCompletedAt(null);

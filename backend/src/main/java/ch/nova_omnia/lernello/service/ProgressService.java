@@ -26,10 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +43,7 @@ public class ProgressService {
     @Transactional
     public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningKit learningKit = learningKitRepository.findById(dto.learningKitId())
+        LearningKit learningKit = learningKitRepository.findById(UUID.fromString(dto.learningKitId()))
             .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
 
         LearningKitProgress progress = getOrCreateLearningKitProgress(user, learningKit);
@@ -61,7 +58,7 @@ public class ProgressService {
     @Transactional
     public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId())
+        LearningUnit learningUnit = learningUnitRepository.findById(UUID.fromString(dto.learningUnitId()))
             .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
 
         LearningKit learningKit = learningUnit.getLearningKit();
@@ -91,7 +88,7 @@ public class ProgressService {
     @Transactional
     public MultipleChoiceAnswerValidationResDTO checkMultipleChoiceAnswer(CheckMultipleChoiceAnswerDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(dto.blockId())
+        Block block = blockRepository.findById(UUID.fromString(dto.blockId()))
             .orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         if (!(block instanceof MultipleChoiceBlock mcBlock)) {
@@ -104,6 +101,10 @@ public class ProgressService {
         }
         LearningUnitProgress unitProgress = getOrCreateLearningUnitProgress(user, learningUnit, getOrCreateLearningKitProgress(user, learningUnit.getLearningKit()));
         BlockProgress blockProgress = getOrCreateBlockProgress(user, mcBlock, unitProgress);
+
+        if (blockProgress instanceof MultipleChoiceBlockProgress mcProgress) {
+            mcProgress.setLastAnswers(new ArrayList<>(dto.answers()));
+        }
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
 
@@ -118,7 +119,7 @@ public class ProgressService {
     @Transactional
     public QuestionAnswerValidationResDTO checkQuestionAnswer(CheckQuestionAnswerDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(dto.blockId())
+        Block block = blockRepository.findById(UUID.fromString(dto.blockId()))
             .orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         if (!(block instanceof QuestionBlock qBlock)) {
@@ -132,6 +133,10 @@ public class ProgressService {
         LearningUnitProgress unitProgress = getOrCreateLearningUnitProgress(user, learningUnit, getOrCreateLearningKitProgress(user, learningUnit.getLearningKit()));
         BlockProgress blockProgress = getOrCreateBlockProgress(user, qBlock, unitProgress);
 
+        if (blockProgress instanceof QuestionBlockProgress mcProgress) {
+            mcProgress.setLastAnswer(dto.answer());
+        }
+
         boolean isCorrect = dto.answer().equalsIgnoreCase(qBlock.getExpectedAnswer());
 
         blockProgressRepository.save(blockProgress);
@@ -141,7 +146,6 @@ public class ProgressService {
         }
         return new QuestionAnswerValidationResDTO(dto.blockId(), isCorrect);
     }
-
 
     public LearningKitProgress getLearningKitProgress(UUID learningKitId, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);

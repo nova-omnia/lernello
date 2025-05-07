@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record CheckMultipleChoiceAnswerDTO (
     @NotNull
-    UUID blockId,
+    String blockId,
     @NotNull
     List<String> answers
 ) {

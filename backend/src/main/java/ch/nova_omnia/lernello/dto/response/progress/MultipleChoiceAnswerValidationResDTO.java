@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record MultipleChoiceAnswerValidationResDTO(
     @NotNull
-    UUID blockId,
+    String blockId,
     @NotNull
     boolean isCorrect
 ) {

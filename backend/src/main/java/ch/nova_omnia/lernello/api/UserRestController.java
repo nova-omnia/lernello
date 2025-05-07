@@ -7,7 +7,6 @@ import ch.nova_omnia.lernello.dto.request.user.UpdateUserDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
-import ch.nova_omnia.lernello.dto.response.user.UserDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserResDTO;
 import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
@@ -79,7 +78,7 @@ public class UserRestController {
     @PreAuthorize("hasAuthority('SCOPE_user:read')")
     public @Valid UserResDTO getUser(@PathVariable UUID id) {
         User user = userService.findByUuid(id);
-        return userMapper.toResDTO(user);
+        return userMapper.toDTO(user);
     }
 
     @PatchMapping("/{id}")
@@ -87,12 +86,12 @@ public class UserRestController {
     public @Valid UserResDTO editUser(@PathVariable UUID id, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
         User user = userMapper.toEntity(updateUserDTO);
         User updatedUser = userService.update(id, user);
-        return userMapper.toResDTO(updatedUser);
+        return userMapper.toDTO(updatedUser);
     }
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public @Valid UserDTO createUser(
+    public @Valid UserResDTO createUser(
         @RequestBody @Valid CreateUserDTO userDTO
     ) {
         User user = userService.createUser(userDTO.username(), userDTO.name(), userDTO.surname(), userDTO.role());

@@ -7,7 +7,6 @@ import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
 import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
 import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
-import { UserSchema } from '$lib/schemas/response/UserSchema';
 import { UserResSchema } from '$lib/schemas/response/UserResSchema';
 import { UpdateUserSchema } from '$lib/schemas/request/UpdateUser';
 
@@ -95,7 +94,7 @@ export const createUser = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}/`,
 	response: {
-		schema: UserSchema,
+		schema: UserResSchema,
 		defaultValidate: true
 	},
 	payload: {

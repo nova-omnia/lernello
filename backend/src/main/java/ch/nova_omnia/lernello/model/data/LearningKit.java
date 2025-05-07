@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,12 +20,19 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@ToString(exclude = {
+    "learningUnits",
+    "participants",
+    "files"
+})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 public class LearningKit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
     @NotNull
+    @EqualsAndHashCode.Include
     private UUID uuid;
 
     @Column(name = "name", nullable = false)
@@ -48,11 +52,17 @@ public class LearningKit {
     @Size(max = 200)
     private String context;
 
+    @Column(name = "published")
+    private boolean published;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "learningKit",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
     private List<LearningUnit> learningUnits = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

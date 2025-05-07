@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public abstract class ScorableBlock extends Block {
 
     @Column(name = "max_score", nullable = true)
-    private int maxScore;
+    private Integer maxScore;
 
     public ScorableBlock(BlockType type, String name, int position, LearningUnit learningUnit) {
         super(type, name, position, learningUnit);

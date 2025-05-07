@@ -31,201 +31,147 @@ public class AIBlockService {
     public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
         TheoryBlock block = new TheoryBlock();
         String context = fileService.extractTextFromFiles(fileIds);
-        String prompt = buildTheoryBlockPrompt(context, topic);
+        String prompt = AIPromptTemplate.THEORY_BLOCK.format(context, topic);
         String aiResponse = aiClient.sendPrompt(prompt);
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(aiResponse);
-            block.setContent(jsonNode.get("content").asText());
-            return block;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI TheoryBlock", e);
-        }
+        JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock");
+        block.setContent(jsonNode.get("content").asText());
+        return block;
     }
 
     public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId) {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         MultipleChoiceBlock mcBlock = new MultipleChoiceBlock();
 
-        String prompt = buildMultipleChoicePrompt(theoryBlock.getContent());
+        String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
 
-        try {
-            MultipleChoiceBlock generated = objectMapper.readValue(aiResponse, MultipleChoiceBlock.class);
-            mcBlock.setQuestion(generated.getQuestion());
-            mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
-            mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
-            return mcBlock;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI MultipleChoiceBlock", e);
-        }
+        MultipleChoiceBlock generated = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock");
+        mcBlock.setQuestion(generated.getQuestion());
+        mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
+        mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
+        return mcBlock;
     }
 
     public QuestionBlock generateQuestionBlockAI(UUID theoryBlockId) {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         QuestionBlock questionBlock = new QuestionBlock();
 
-        String prompt = buildQuestionBlockPrompt(theoryBlock.getContent());
+        String prompt = AIPromptTemplate.QUESTION_BLOCK.format(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
 
-        try {
-            QuestionBlock generated = objectMapper.readValue(aiResponse, QuestionBlock.class);
-            questionBlock.setQuestion(generated.getQuestion());
-            questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
-            return questionBlock;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI QuestionBlock", e);
-        }
+        QuestionBlock generated = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock");
+        questionBlock.setQuestion(generated.getQuestion());
+        questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
+        return questionBlock;
     }
 
     public List<Block> generateBlocksAI(List<UUID> fileIds) {
         List<Block> blocks = new ArrayList<>();
-        extractTopicsFromFile(fileIds, blocks);
-        return blocks;
-    }
-
-    private TheoryBlock generateTheoryBlockFromTopic(String topic) {
-        TheoryBlock block = new TheoryBlock();
-        String prompt = buildTheoryBlockPrompt("", topic);
-        String aiResponse = aiClient.sendPrompt(prompt);
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(aiResponse);
-            block.setContent(jsonNode.get("content").asText());
-            return block;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI TheoryBlock for topic: " + topic, e);
-        }
-    }
-
-    private void extractTopicsFromFile(List<UUID> fileIds, List<Block> blocks) {
-        // Use a thread-safe map to store blocks grouped by topics
         ConcurrentHashMap<String, List<Block>> topicBlocksMap = new ConcurrentHashMap<>();
 
-        fileIds.parallelStream().forEach(fileId -> {
-            String context = fileService.extractTextFromFile(fileId);
-            String prompt = """
-                You are an AI assistant. Analyze the following content and divide it into meaningful and complete topics or sections.
-                Each topic should have a title and the corresponding text. Do not omit or truncate any part of the content.
-                Ensure that the topics are comprehensive and cover the entire content.
-
-                Content:
-                %s
-
-                Respond with pure JSON:
-                {
-                    "topic1_title": "topic1_text",
-                    "topic2_title": "topic2_text",
-                    ...
-                }
-                """.formatted(context);
-
-            String aiResponse = aiClient.sendPrompt(prompt);
-            try {
-                JsonNode jsonNode = objectMapper.readTree(aiResponse);
-                jsonNode.fieldNames().forEachRemaining(topic -> {
-                    topicBlocksMap.putIfAbsent(topic, new ArrayList<>());
-                    createBlocksForTopic(topic, topicBlocksMap.get(topic));
-                });
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to parse AI topics", e);
-            }
-        });
+        extractTopicsFromFiles(fileIds, topicBlocksMap);
 
         // Flatten the map into a single list and assign positions
         List<Block> orderedBlocks = new ArrayList<>();
-        topicBlocksMap.forEach((topic, topicBlocks) -> orderedBlocks.addAll(topicBlocks));
+        topicBlocksMap.forEach((_, topicBlocks) -> orderedBlocks.addAll(topicBlocks));
 
         for (int i = 0; i < orderedBlocks.size(); i++) {
             orderedBlocks.get(i).setPosition(i);
         }
 
         blocks.addAll(orderedBlocks);
+        return blocks;
     }
 
-    private void createBlocksForTopic(String topic, List<Block> topicBlocks) {
+    private void extractTopicsFromFiles(List<UUID> fileIds, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
+        fileIds.parallelStream().forEach(fileId -> {
+            String context = fileService.extractTextFromFile(fileId);
+            String prompt = AIPromptTemplate.TOPIC_EXTRACTION.format(context);
+
+            String aiResponse = aiClient.sendPrompt(prompt);
+
+            JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
+            generateBlocksFromTopics(jsonNode, topicBlocksMap);
+        });
+    }
+
+    private void generateBlocksFromTopics(JsonNode jsonNode, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
+        jsonNode.fields().forEachRemaining(entry -> {
+            String topicTitle = entry.getKey();
+            String topicContent = entry.getValue().asText();
+
+            topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
+            createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle));
+        });
+    }
+
+    private void createBlocksForTopic(String content, List<Block> topicBlocks) {
+        if (content == null || content.isBlank()) {
+            System.err.println("Content is null or empty. Cannot generate blocks.");
+            return;
+        }
+
         try {
-            TheoryBlock theoryBlock = generateTheoryBlockFromTopic(topic);
-            theoryBlock.setName("Theory Block");
-            theoryBlock.setType(BlockType.THEORY);
-            blockRepository.save(theoryBlock);
+            Block theoryBlock = createAndSaveBlock(
+                    generateTheoryBlockFromTopic(content), "Theory Block", BlockType.THEORY
+            );
             topicBlocks.add(theoryBlock);
 
-            if (Math.random() < 0.5) {
-                QuestionBlock quizBlock = generateQuestionBlockAIFromTopic(topic);
-                quizBlock.setName("Question Block");
-                quizBlock.setType(BlockType.QUESTION);
-                blockRepository.save(quizBlock);
-                topicBlocks.add(quizBlock);
-            } else {
-                MultipleChoiceBlock quizBlock = generateMultipleChoiceBlockAIFromTopic(topic);
-                quizBlock.setName("Multiple Choice Block");
-                quizBlock.setType(BlockType.MULTIPLE_CHOICE);
-                blockRepository.save(quizBlock);
-                topicBlocks.add(quizBlock);
-            }
+            Block quizBlock = Math.random() < 0.5 ? createAndSaveBlock(generateQuestionBlockAIFromTopic(content), "Question Block", BlockType.QUESTION) : createAndSaveBlock(generateMultipleChoiceBlockAIFromTopic(content), "Multiple Choice Block", BlockType.MULTIPLE_CHOICE);
+
+            topicBlocks.add(quizBlock);
+
         } catch (Exception e) {
-            System.err.println("Failed to generate blocks for topic: " + topic + " - " + e.getMessage());
+            System.err.println("Failed to generate blocks for topic: " + e.getMessage());
         }
+    }
+
+    private Block createAndSaveBlock(Block block, String name, BlockType type) {
+        block.setName(name);
+        block.setType(type);
+        return blockRepository.save(block);
+    }
+
+    private TheoryBlock generateTheoryBlockFromTopic(String topic) {
+        TheoryBlock block = new TheoryBlock();
+        String prompt = AIPromptTemplate.THEORY_BLOCK.format("", topic);
+        String aiResponse = aiClient.sendPrompt(prompt);
+
+        JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock for topic: ");
+        block.setContent(jsonNode.get("content").asText());
+        return block;
     }
 
     private QuestionBlock generateQuestionBlockAIFromTopic(String topic) {
-        String prompt = buildQuestionBlockPrompt(topic);
+        String prompt = AIPromptTemplate.QUESTION_BLOCK.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
 
-        try {
-            QuestionBlock questionBlock = objectMapper.readValue(aiResponse, QuestionBlock.class);
-            return questionBlock;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI QuestionBlock from topic: " + topic, e);
-        }
+        QuestionBlock questionBlock = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock from topic: ");
+        return questionBlock;
     }
 
     private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic) {
-        String prompt = buildMultipleChoicePrompt(topic);
+        String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
 
+        MultipleChoiceBlock mcBlock = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock from topic: ");
+        return mcBlock;
+    }
+
+    private <T> T parseJson(String json, Class<T> clazz, String errorMessage) {
         try {
-            MultipleChoiceBlock mcBlock = objectMapper.readValue(aiResponse, MultipleChoiceBlock.class);
-            return mcBlock;
+            return objectMapper.readValue(json, clazz);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse AI MultipleChoiceBlock from topic: " + topic, e);
+            throw new RuntimeException(errorMessage, e);
         }
     }
 
-    private String buildTheoryBlockPrompt(String context, String topic) {
-        return """
-                You are an AI tutor. Create a theory block on the topic '%s' strictly based on the provided content.
-                The Theory Block should have a maximum of 100 Words.
-                Content:
-                %s
-                Respond with pure JSON:
-                { "content": "..." }
-
-                """.formatted(topic, context);
-    }
-
-    private String buildMultipleChoicePrompt(String content) {
-        return """
-                Based on the following content, create a multiple choice question.
-                Content:
-                %s
-                Respond with pure JSON:
-                { "question": "...", "possibleAnswers": ["..."], "correctAnswers": ["..."] }
-
-                Ensure that the question is not longer than 200 characters and the possibleAnswers and correctAnswers are not longer than 100 characters each.
-                """.formatted(content);
-    }
-
-    private String buildQuestionBlockPrompt(String content) {
-        return """
-                Based on the following content, create a question.
-                Content:
-                %s
-                Respond with pure JSON:
-                { "question": "...", "expectedAnswer": "..." }
-
-                Ensure that both the question and the expectedAnswer are not longer than 200 characters each.
-                """.formatted(content);
+    private JsonNode parseJsonTree(String json, String errorMessage) {
+        try {
+            return objectMapper.readTree(json);
+        } catch (Exception e) {
+            throw new RuntimeException(errorMessage, e);
+        }
     }
 }

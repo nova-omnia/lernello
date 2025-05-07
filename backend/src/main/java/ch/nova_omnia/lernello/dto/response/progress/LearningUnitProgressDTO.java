@@ -3,10 +3,8 @@ package ch.nova_omnia.lernello.dto.response.progress;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.ZonedDateTime;
 
 public record LearningUnitProgressDTO(
     @NotNull
@@ -15,9 +13,9 @@ public record LearningUnitProgressDTO(
     boolean isOpened,
     @NotNull
     boolean isCompleted,
-    LocalDateTime firstOpenedAt,
-    LocalDateTime lastOpenedAt,
-    LocalDateTime completedAt,
+    ZonedDateTime firstOpenedAt,
+    ZonedDateTime lastOpenedAt,
+    ZonedDateTime completedAt,
     @NotNull
     @Min(0)
     @Max(100)

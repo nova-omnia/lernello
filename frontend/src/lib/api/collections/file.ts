@@ -1,4 +1,4 @@
-import { FileResSchema } from '$lib/schemas/response/FileRes';
+import { FilePageSchema, FileResSchema } from '$lib/schemas/response/FileRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 
@@ -57,6 +57,19 @@ export const getAllFiles = createEndpoint({
 	},
 	response: {
 		schema: FileResSchema.array(),
+		defaultValidate: true
+	}
+});
+
+export const getList = createEndpoint({
+	method: 'GET',
+	getPath: ({ page = 0, size = 5 } = {}) => `${REQUEST_MAPPING}/?page=${page}&size=${size}`,
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	},
+	response: {
+		schema:FilePageSchema,
 		defaultValidate: true
 	}
 });

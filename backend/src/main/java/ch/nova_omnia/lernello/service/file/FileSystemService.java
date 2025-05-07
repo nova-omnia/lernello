@@ -13,6 +13,8 @@ import java.util.UUID;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -116,5 +118,9 @@ public class FileSystemService implements FileService {
         }
 
         return uniqueFileName;
+    }
+
+    public Page<File> getList(Pageable pageable) {
+        return fileRepository.findAll(pageable);
     }
 }

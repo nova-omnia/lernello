@@ -2,7 +2,8 @@
 	import { _ } from 'svelte-i18n';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
-	import { deleteLearningUnit, updateLearningUnitsOrder } from '$lib/api/collections/learningUnit';
+	import { deleteLearningUnit } from '$lib/api/collections/learningUnit';
+	import { updateLearningUnitsOrder } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
@@ -14,7 +15,7 @@
 
 	interface LearningUnit {
 		name: string;
-		description: string;
+		description?: string;
 		uuid: string;
 	}
 
@@ -56,7 +57,7 @@
 
 	const updateLearningUnitOrderMutation = createMutation({
 		mutationFn: (newOrderIds: string[]) => {
-			return api(fetch).req(updateLearningUnitsOrder, null, newOrderIds).parse();
+			return api(fetch).req(updateLearningUnitsOrder, newOrderIds, learningKitId).parse();
 		},
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
@@ -114,6 +115,7 @@
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
 					}}
+					{role}
 				/>
 			</div>
 		{/each}

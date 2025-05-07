@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -39,9 +40,8 @@ public class UserService {
         if (existingUser == null) {
             throw new IllegalArgumentException("User with UUID " + user.getUuid() + " not found.");
         }
-        if (user.getRole() == Role.INSTRUCTOR) {
-            removeUserAllLearningKits(existingUser);
-        }
+        removeInstructorFromLearningKits(user, existingUser);
+
         existingUser.setUsername(user.getUsername());
         existingUser.setName(user.getName());
         existingUser.setSurname(user.getSurname());
@@ -79,14 +79,10 @@ public class UserService {
         user.setSurname(surname);
         user.setName(name);
         user.setRole(role);
-        user.setPassword(passwordEncoder.encode("defaultPassword"));
+        user.setPassword(passwordEncoder.encode(generateRandomPassword()));
         user.setChangedPassword(false);
         userRepository.save(user);
         return user;
-    }
-
-    public List<User> findAll() {
-        return userRepository.findAll();
     }
 
     public List<User> findAllByIds(List<UUID> uuids) {
@@ -120,14 +116,6 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private void removeUserAllLearningKits(User user) {
-        List<LearningKit> kitsWithUser = learningKitRepository.findAllByParticipantsContains(user);
-        for (LearningKit kit : kitsWithUser) {
-            kit.getParticipants().remove(user);
-        }
-        learningKitRepository.saveAll(kitsWithUser);
-    }
-
     public User editTrainee(String username, String name, String surname) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -139,11 +127,27 @@ public class UserService {
         return user;
     }
 
-    public Role getCurrentRole(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            return user.getRole();
+    public String generateRandomPassword() {
+        SecureRandom rng = new SecureRandom();
+        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            sb.append(chars.charAt(rng.nextInt(chars.length())));
         }
-        return null;
+        return sb.toString();
+    }
+
+    private void removeUserAllLearningKits(User user) {
+        List<LearningKit> kitsWithUser = learningKitRepository.findAllByParticipantsContains(user);
+        for (LearningKit kit : kitsWithUser) {
+            kit.getParticipants().remove(user);
+        }
+        learningKitRepository.saveAll(kitsWithUser);
+    }
+
+    private void removeInstructorFromLearningKits(User user, User existingUser) {
+        if (user.getRole() == Role.INSTRUCTOR) {
+            removeUserAllLearningKits(existingUser);
+        }
     }
 }

@@ -13,7 +13,9 @@ import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
 import ch.nova_omnia.lernello.mapper.user.UserMapper;
+import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.service.EmailService;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class UserRestController {
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
     private final UserMapper userMapper;
+    private final EmailService emailService;
 
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
@@ -86,6 +89,7 @@ public class UserRestController {
     public @Valid UserResDTO editUser(@PathVariable UUID id, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
         User user = userMapper.toEntity(updateUserDTO);
         User updatedUser = userService.update(id, user);
+        isNewInstructorSendLoginMail(updateUserDTO.role(), updatedUser);
         return userMapper.toDTO(updatedUser);
     }
 
@@ -95,6 +99,7 @@ public class UserRestController {
         @RequestBody @Valid CreateUserDTO userDTO
     ) {
         User user = userService.createUser(userDTO.username(), userDTO.name(), userDTO.surname(), userDTO.role());
+        isNewInstructorSendLoginMail(userDTO.role(), user);
         return userMapper.toDTO(user);
     }
 
@@ -124,5 +129,11 @@ public class UserRestController {
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
+    }
+
+    private void isNewInstructorSendLoginMail(Role updateUserDTO, User updatedUser) {
+        if (updateUserDTO == Role.INSTRUCTOR) {
+            emailService.sendInstructorLoginData(updatedUser);
+        }
     }
 }

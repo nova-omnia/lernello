@@ -1,14 +1,15 @@
 package ch.nova_omnia.lernello.dto.response.progress;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record LearningKitProgressResDTO(
     @NotNull
-    UUID learningKitId,
+    String learningKitId,
     @NotNull
     boolean isOpened,
     @NotNull
@@ -17,7 +18,8 @@ public record LearningKitProgressResDTO(
     LocalDateTime lastOpenedAt,
     LocalDateTime completedAt,
     @NotNull
-    @Size(min = 0, max = 100)
+    @Min(0)
+    @Max(100)
     int progressPercentage
 ) {
 }

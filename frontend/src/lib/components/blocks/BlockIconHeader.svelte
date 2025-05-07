@@ -20,7 +20,6 @@
 	}
 	const { block, role }: BlockIconHeaderProps = $props();
 	let name = $derived(block.name);
-	let isEditing = $state(false);
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -35,19 +34,8 @@
 		}
 	});
 
-	const enableEditing = () => {
-		if (role === INSTRUCTOR_ROLE) {
-			isEditing = true;
-		}
-	};
-
-	const disableEditing = () => {
-		onUpdateHandler(name);
-		isEditing = false;
-	};
-
 	const onUpdateHandler = createDebounced((newName: string) => {
-		if (newName.length < 3 || newName.length > 40) {
+		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
 			toaster.create({
 				title: $_('common.warning.title'),
 				description: $_('block.newName.danger'),
@@ -61,17 +49,21 @@
 				blockId: block.uuid,
 				newName: newName
 			});
-			name = newName;
 		}
 	}, 500);
+
+	const handleInputBlur = () => {
+		onUpdateHandler(name);
+	};
 
 	const handleInputKeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			disableEditing();
+			onUpdateHandler(name);
+			(event.target as HTMLElement).blur();
 		} else if (event.key === 'Escape') {
 			name = block.name;
-			isEditing = false;
+			(event.target as HTMLElement).blur();
 		}
 	};
 </script>
@@ -80,31 +72,19 @@
 	<div class="flex items-center gap-2">
 		<BlockIcon iconType={block.type} />
 		<div class="flex items-baseline gap-2">
-			{#if role === INSTRUCTOR_ROLE && isEditing}
+			{#if role === INSTRUCTOR_ROLE}
 				<label class="label">
 					<input
-						class="input"
+						class="input -m-1 p-1 font-medium"
 						type="text"
 						placeholder={$_('block.name')}
 						bind:value={name}
-						onblur={disableEditing}
+						onblur={handleInputBlur}
 						onkeydown={handleInputKeydown}
 					/>
 				</label>
 			{:else}
-				<h3
-					class="font-medium {role === INSTRUCTOR_ROLE
-						? 'hover:bg-surface-100 dark:hover:bg-surface-700 -m-1 cursor-pointer rounded-md p-1'
-						: ''}"
-					onclick={enableEditing}
-					onkeydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							e.preventDefault();
-							enableEditing();
-						}
-					}}
-					role={role === INSTRUCTOR_ROLE ? 'button' : undefined}
-				>
+				<h3 class="font-medium">
 					{name}
 				</h3>
 			{/if}

@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.dto.request.block.blockActions;
 
-import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.UPDATE;
+import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.UPDATE_BLOCK;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ public record UpdateBlockActionDTO(
                                    String question,
                                    List<String> possibleAnswers,
                                    List<String> correctAnswers,
-                                   String expectedAnswer, 
+                                   String expectedAnswer,
                                    @Valid UpdateBlockDTO data
 ) implements BlockActionDTO {
     public UpdateBlockActionDTO {
-        type = UPDATE;
+        type = UPDATE_BLOCK;
     }
 }
 

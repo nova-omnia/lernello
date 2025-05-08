@@ -68,7 +68,7 @@
 	<div class="grid gap-1">
 		{#each learningUnits ?? [] as learningUnit (learningUnit.uuid)}
 			<LearningUnitItem
-				isLoading={$generateLearningUnitMutation.isPending}
+				isLoading={$generateLearningUnitMutation.isPending && $generateLearningUnitMutation.variables.id === learningUnit.uuid}
 				{learningUnit}
 				onDeleteLearningUnit={() => {
 					$deleteLearningUnitMutation.mutate(learningUnit.uuid);

@@ -19,6 +19,8 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit'; // Import the role constant
+	import { markLearningKitOpened } from '$lib/api/collections/progress';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -59,6 +61,25 @@
 		day: '2-digit',
 		hour: '2-digit',
 		minute: '2-digit'
+	});
+
+	$effect.pre(() => {
+		if ($learningKitQuery.data && data.role === TRAINEE_ROLE && $learningKitQuery.data.uuid) {
+			api(fetch)
+				.req(markLearningKitOpened, { learningKitId: $learningKitQuery.data.uuid })
+				.parse()
+				.then(() => {
+					console.log('Learning kit marked as opened successfully');
+				})
+				.catch((err) => {
+					console.error('Failed to mark learning kit as opened:', err);
+					toaster.create({
+						title: $_('learningKit.error.markOpened'),
+						description: $_('error.description', { values: { status: 'unknown' } }),
+						type: 'error'
+					});
+				});
+		}
 	});
 </script>
 

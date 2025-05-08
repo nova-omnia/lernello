@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public record LearningUnitOpenedDTO(
     @NotNull
-    UUID learningUnitId
+    String learningUnitId
 ) {
 }

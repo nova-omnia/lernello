@@ -1,0 +1,17 @@
+meta {
+  name: mark Learning Unit Opened
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/progress/learning-unit/opened
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "learningUnitId": "8a2f3310-ea45-4c8d-b9b6-9b8d790e339d"
+  }
+}

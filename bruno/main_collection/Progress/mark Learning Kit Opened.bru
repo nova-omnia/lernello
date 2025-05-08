@@ -1,0 +1,17 @@
+meta {
+  name: mark Learning Kit Opened
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/progress/learning-kit/opened
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "learningKitId": "58f89572-9424-4e93-84b8-b5b1eba5f3cc"
+  }
+}

@@ -8,6 +8,7 @@ import ch.nova_omnia.lernello.model.data.user.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,10 @@ public class UserService {
         ZonedDateTime expirationTime = ZonedDateTime.now().plus(jwtUtil.getExpirationTime());
         user.setExpires(expirationTime);
         return user;
+    }
+
+    public User getUserFromUserDetails(UserDetails userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername());
     }
 
 

@@ -20,7 +20,7 @@ public class QuestionBlockProgress extends ScorableBlockProgress {
     @Column(name = "score_reached", nullable = true)
     private Integer scoreReached;
 
-    @Column(name = "last_answer", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "last_answer", columnDefinition = "TEXT", nullable = true)
     private String lastAnswer;
 
     public QuestionBlockProgress(User user, QuestionBlock block, String lastAnswer, LearningUnitProgress unitProgress) {

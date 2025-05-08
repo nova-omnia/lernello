@@ -24,7 +24,4 @@ public interface FileService {
     public String extractTextFromFiles(List<UUID> fileIds);
 
     public String extractTextFromFile(UUID fileId);
-
-    public String getStoragePath(UUID id);
-
 }

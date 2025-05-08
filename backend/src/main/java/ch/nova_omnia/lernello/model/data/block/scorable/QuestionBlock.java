@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.model.data.block;
+package ch.nova_omnia.lernello.model.data.block.scorable;
 
 import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class QuestionBlock extends Block {
+public class QuestionBlock extends ScorableBlock {
 
     @NotBlank
     @Column(name = "question", nullable = true)
@@ -26,6 +26,13 @@ public class QuestionBlock extends Block {
 
     public QuestionBlock(String name, int position, LearningUnit learningUnit, String question, String expectedAnswer) {
         super(QUESTION, name, position, learningUnit);
+        this.question = question;
+        this.expectedAnswer = expectedAnswer;
+    }
+
+    public QuestionBlock(String name, int position, LearningUnit learningUnit, String question,
+            String expectedAnswer, int maxScore) {
+        super(QUESTION, name, position, learningUnit, maxScore);
         this.question = question;
         this.expectedAnswer = expectedAnswer;
     }

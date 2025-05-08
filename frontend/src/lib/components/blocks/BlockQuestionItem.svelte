@@ -6,6 +6,11 @@
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
 	import { createDebounced } from '$lib/utils/createDebounced';
 	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
+	import { createMutation } from '@tanstack/svelte-query';
+	import type { CheckQuestionAnswer } from '$lib/schemas/request/progress/CheckQuestionAnswerSchema';
+	import { api } from '$lib/api/apiClient';
+	import { checkQuestionAnswer } from '$lib/api/collections/progress';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;
@@ -19,6 +24,7 @@
 
 	let traineeAnswer = $state('');
 	let isSubmitted = $state(false);
+	let isCorrect = $state<boolean | null>(null);
 
 	const onUpdateHandler = createDebounced(() => {
 		if (currentQuestion !== block.question || currentExpectedAnswer !== block.expectedAnswer) {
@@ -31,13 +37,30 @@
 		}
 	}, 500);
 
-	function handleSubmit() {
-		isSubmitted = true;
-	}
+	const checkAnswerMutation = createMutation({
+		mutationFn: (payload: CheckQuestionAnswer) =>
+			api(fetch).req(checkQuestionAnswer, payload).parse(),
+		onSuccess: (data) => {
+			isCorrect = data.isCorrect;
+			isSubmitted = true;
+		},
+		onError: (error) => {
+			console.error('Error checking question answer:', error);
+			toaster.create({
+				title: $_('block.error.checkAnswer'),
+				description: $_('error.description', { values: { status: 'unknown' } }),
+				type: 'error'
+			});
+			isSubmitted = true;
+			isCorrect = null;
+		}
+	});
 
-	let isCorrect = $derived(
-		isSubmitted && traineeAnswer.trim().toLowerCase() === currentExpectedAnswer.trim().toLowerCase()
-	);
+	function handleSubmit() {
+		if (traineeAnswer.trim() !== '') {
+			$checkAnswerMutation.mutate({ blockId: block.uuid, answer: traineeAnswer });
+		}
+	}
 </script>
 
 <EditPreviewTabContainer {role}>
@@ -83,7 +106,7 @@
 						type="text"
 						placeholder={$_('block.typeYourAnswer')}
 						bind:value={traineeAnswer}
-						disabled={isSubmitted}
+						disabled={isSubmitted || $checkAnswerMutation.isPending}
 						class="input w-full border p-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
 					/>
 				</div>
@@ -91,11 +114,15 @@
 					<button
 						type="button"
 						onclick={handleSubmit}
-						disabled={traineeAnswer.trim() === ''}
+						disabled={traineeAnswer.trim() === '' || $checkAnswerMutation.isPending}
 						class="btn preset-filled self-end whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50"
 						title={$_('common.submit')}
 					>
-						{$_('common.submit')}
+						{#if $checkAnswerMutation.isPending}
+							{$_('common.submitting')}...
+						{:else}
+							{$_('common.submit')}
+						{/if}
 					</button>
 				{/if}
 			</div>
@@ -103,17 +130,19 @@
 			{#if isSubmitted}
 				<div
 					class={`mt-4 rounded-lg border p-3 ${
-						isCorrect
+						isCorrect === true
 							? 'border-green-300 bg-green-50 text-green-800 dark:border-green-700 dark:bg-green-900/30 dark:text-green-300'
-							: 'border-red-300 bg-red-50 text-red-800 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300'
+							: isCorrect === false
+								? 'border-red-300 bg-red-50 text-red-800 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300'
+								: 'border-gray-300 bg-gray-50 text-gray-800 dark:border-gray-700 dark:bg-gray-900/30 dark:text-gray-300'
 					}`}
 				>
-					{#if isCorrect}
+					{#if isCorrect === true}
 						<div class="flex items-center font-medium">
 							<Check class="mr-2 h-5 w-5" />
 							{$_('block.correctAnswer')}
 						</div>
-					{:else}
+					{:else if isCorrect === false}
 						<div class="flex items-center font-medium">
 							<X class="mr-2 h-5 w-5" />
 							{$_('block.incorrectAnswer')}
@@ -124,6 +153,10 @@
 								<code class="font-mono">{currentExpectedAnswer}</code>
 							</p>
 						{/if}
+					{:else}
+						<div class="flex items-center font-medium">
+							{$_('block.feedbackUnavailable')}
+						</div>
 					{/if}
 				</div>
 			{/if}

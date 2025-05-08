@@ -1,0 +1,11 @@
+meta {
+  name: get Learning Kit Progress
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/progress/learning-kit/{{learningKitId}}
+  body: none
+  auth: inherit
+}

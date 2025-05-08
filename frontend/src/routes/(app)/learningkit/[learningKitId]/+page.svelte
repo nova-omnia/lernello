@@ -3,7 +3,8 @@
 	import {
 		deleteLearningKit,
 		getLearningKitById,
-		publishLearningKit
+		publishLearningKit,
+		updateLearningKit
 	} from '$lib/api/collections/learningKit';
 	import { goto } from '$app/navigation';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -16,7 +17,10 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitTabs from '$lib/components/learningkit/LearningKitTabs.svelte';
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
-	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte'; // Import the role constant
+	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
+	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit'; // Import the role constant
+	import { markLearningKitOpened } from '$lib/api/collections/progress';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -38,6 +42,15 @@
 	const publishLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse()
 	});
+	const updateLearningKitMutation = createMutation({
+		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
+			api(fetch).req(updateLearningKit, data, id).parse(),
+		onSuccess: () => {
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
+			invalidate(['learning-kit', learningKitId]);
+		}
+	});
 
 	let showDeleteDialog = $state(false);
 	let showPublishDialog = $state(false);
@@ -48,6 +61,25 @@
 		day: '2-digit',
 		hour: '2-digit',
 		minute: '2-digit'
+	});
+
+	$effect.pre(() => {
+		if ($learningKitQuery.data && data.role === TRAINEE_ROLE && $learningKitQuery.data.uuid) {
+			api(fetch)
+				.req(markLearningKitOpened, { learningKitId: $learningKitQuery.data.uuid })
+				.parse()
+				.then(() => {
+					console.log('Learning kit marked as opened successfully');
+				})
+				.catch((err) => {
+					console.error('Failed to mark learning kit as opened:', err);
+					toaster.create({
+						title: $_('learningKit.error.markOpened'),
+						description: $_('error.description', { values: { status: 'unknown' } }),
+						type: 'error'
+					});
+				});
+		}
 	});
 </script>
 
@@ -91,7 +123,9 @@
 									onclick={() => {
 										showPublishDialog = true;
 									}}
-									>{$_('learningKit.publish')}
+									>{$learningKitQuery.data?.published
+										? $_('learningKit.unpublish.text')
+										: $_('learningKit.publish.text')}
 								</button>
 								<button
 									type="button"
@@ -145,14 +179,33 @@
 
 	<ConfirmDialog
 		isOpen={showPublishDialog}
-		title={$_('learningKit.publish.confirmationTitle')}
-		message={$_('learningKit.publish.confirmationText', {
-			values: { name: $learningKitQuery.data.name }
-		})}
-		confirmText={$_('learningKit.publish.text')}
+		title={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.confirmationTitle')
+			: $_('learningKit.publish.confirmationTitle')}
+		message={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.confirmationText', {
+					values: { name: $learningKitQuery.data.name }
+				})
+			: $_('learningKit.publish.confirmationText', {
+					values: { name: $learningKitQuery.data.name }
+				})}
+		confirmText={$learningKitQuery.data?.published
+			? $_('learningKit.unpublish.text')
+			: $_('learningKit.publish.text')}
 		danger={false}
 		onConfirm={() => {
-			$publishLearningKitMutation.mutate(learningKitId);
+			if ($learningKitQuery.data?.published) {
+				$updateLearningKitMutation.mutate({
+					id: learningKitId,
+					data: { published: false }
+				});
+			} else {
+				$updateLearningKitMutation.mutate({
+					id: $learningKitQuery.data.uuid,
+					data: { published: true }
+				});
+				$publishLearningKitMutation.mutate(learningKitId);
+			}
 
 			showPublishDialog = false;
 		}}

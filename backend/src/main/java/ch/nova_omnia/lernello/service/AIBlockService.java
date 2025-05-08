@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.aiClient.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;

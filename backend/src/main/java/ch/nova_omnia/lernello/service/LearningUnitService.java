@@ -7,14 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -23,8 +19,8 @@ import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlock
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.QuestionBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
@@ -86,6 +82,7 @@ public class LearningUnitService {
                     case RemoveBlockActionDTO removeAction -> removeBlock(learningUnit, removeAction);
                     case ReorderBlockActionDTO reorderAction -> reorderBlocks(learningUnit, reorderAction);
                     case UpdateBlockActionDTO updateAction -> updateBlock(learningUnit, updateAction);
+                    case UpdateBlockNameActionDTO updateNameAction -> updateBlockName(learningUnit, updateNameAction);
                     default -> throw new IllegalArgumentException("Unknown action type: " + action.getClass());
                 }
             } catch (Exception e) {
@@ -246,6 +243,16 @@ public class LearningUnitService {
             }
         }
 
+        blockRepository.saveAndFlush(block);
+    }
+
+    private void updateBlockName(LearningUnit learningUnit, UpdateBlockNameActionDTO updateNameAction) {
+        if (updateNameAction.blockId() == null) {
+            throw new IllegalArgumentException("Block ID cannot be null");
+        }
+
+        Block block = blockRepository.findById(UUID.fromString(updateNameAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
+        block.setName(updateNameAction.newName());
         blockRepository.saveAndFlush(block);
     }
 

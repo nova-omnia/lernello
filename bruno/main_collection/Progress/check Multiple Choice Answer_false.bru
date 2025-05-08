@@ -1,0 +1,18 @@
+meta {
+  name: check Multiple Choice Answer_false
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/progress/block/multiple-choice/check
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "blockId": "7db3665a-f95c-47c2-8381-f7a6077c30a7",
+    "answers": ["A", "B"]
+  }
+}

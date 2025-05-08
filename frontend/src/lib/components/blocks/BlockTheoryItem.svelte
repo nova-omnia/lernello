@@ -9,7 +9,8 @@
 	import { api } from '$lib/api/apiClient.js';
 	import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
@@ -17,7 +18,7 @@
 	}
 
 	const { block, role }: BlockTheoryItemProps = $props();
-	let lastContent = $derived(block.content);
+	let lastContent = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.content ?? block.content);
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
@@ -59,4 +60,4 @@
 	});
 </script>
 
-<TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />
+<TextEditor content={block.localizedContents.find(content => content.languageCode == get(locale))?.content ?? block.content} onUpdate={onUpdateHandler} {role} />

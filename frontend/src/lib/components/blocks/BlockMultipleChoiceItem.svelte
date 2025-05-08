@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { Plus, Check, X, Trash } from 'lucide-svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
@@ -12,6 +12,7 @@
 	import { checkMultipleChoiceAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import { api } from '$lib/api/apiClient';
+	import { get } from 'svelte/store';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
@@ -22,12 +23,12 @@
 
 	type Answer = { value: string; isCorrect: boolean };
 
-	let currentQuestion = $derived(block.question);
+	let currentQuestion = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question);
 	let currentAnswers = $derived<Answer[]>(
-		block.possibleAnswers.map(
+		(block.localizedContents.find(content => content.languageCode == get(locale))?.possibleAnswers ?? block.possibleAnswers).map(
 			(answer): Answer => ({
 				value: answer,
-				isCorrect: block.correctAnswers.includes(answer)
+				isCorrect: (block.localizedContents.find(content => content.languageCode == get(locale))?.correctAnswers ?? block.correctAnswers).includes(answer)
 			})
 		)
 	);
@@ -37,10 +38,13 @@
 		const newCorrectAnswers = currentAnswers
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
+		let localQuestion = block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question;
+		let localPossibleAnswers = block.localizedContents.find(content => content.languageCode == get(locale))?.possibleAnswers ?? block.possibleAnswers;
+		let localCorrectAnswers = block.localizedContents.find(content => content.languageCode == get(locale))?.correctAnswers ?? block.correctAnswers;
 		if (
-			currentQuestion !== block.question ||
-			JSON.stringify(newPossibleAnswers) !== JSON.stringify(block.possibleAnswers) ||
-			JSON.stringify(newCorrectAnswers) !== JSON.stringify(block.correctAnswers)
+			currentQuestion !== localQuestion ||
+			JSON.stringify(newPossibleAnswers) !== JSON.stringify(localPossibleAnswers) ||
+			JSON.stringify(newCorrectAnswers) !== JSON.stringify(localCorrectAnswers)
 		) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',

@@ -18,7 +18,8 @@ public record MultipleChoiceBlockResDTO(
                                         @Min(0) int position,
                                         @NotBlank String question,
                                         @NotNull List<String> possibleAnswers,
-                                        @NotNull List<String> correctAnswers
+                                        @NotNull List<String> correctAnswers,
+                                        @NotNull List<LocalizedBlockResDTO> localizedContents
 ) implements BlockResDTO {
     public MultipleChoiceBlockResDTO {
         type = MULTIPLE_CHOICE;

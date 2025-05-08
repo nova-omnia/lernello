@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import { Check, X } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, QUESTION_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
@@ -11,6 +11,7 @@
 	import { api } from '$lib/api/apiClient';
 	import { checkQuestionAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { get } from 'svelte/store';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;
@@ -19,15 +20,17 @@
 
 	const { block, role }: BlockQuestionItemProps = $props();
 
-	let currentQuestion = $derived(block.question);
-	let currentExpectedAnswer = $derived(block.expectedAnswer);
+	let currentQuestion = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question);
+	let currentExpectedAnswer = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.expectedAnswer ?? block.expectedAnswer);
 
 	let traineeAnswer = $state('');
 	let isSubmitted = $state(false);
 	let isCorrect = $state<boolean | null>(null);
 
 	const onUpdateHandler = createDebounced(() => {
-		if (currentQuestion !== block.question || currentExpectedAnswer !== block.expectedAnswer) {
+		let localBlockQuestion = block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question;
+		let localExpectedAnswer = block.localizedContents.find(content => content.languageCode == get(locale))?.expectedAnswer ?? block.expectedAnswer;
+		if (currentQuestion !== localBlockQuestion || currentExpectedAnswer !== localExpectedAnswer) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,

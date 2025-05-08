@@ -26,12 +26,11 @@
 
 <div class="flex items-center">
 	<div use:dragHandle aria-label={`drag-handle for ${learningUnit.name}`}>
-		<GripVertical size={28} class="text-surface-300-700" />
+		{#if role === INSTRUCTOR_ROLE}
+			<GripVertical size={28} class="text-surface-300-700" />
+		{/if}
 	</div>
 
-	{#if role === INSTRUCTOR_ROLE}
-		<GripVertical size={28} class="text-surface-300-700" />
-	{/if}
 	<a
 		class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4"
 		href={`/learningunit/${learningUnit.uuid}`}

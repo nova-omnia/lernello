@@ -88,15 +88,6 @@
 			</a>
 		{/if}
 	</div>
-	<div class="grid gap-1">
-		{#each learningUnits ?? [] as learningUnit (learningUnit.uuid)}
-			<LearningUnitItem
-				{learningUnit}
-				onDeleteLearningUnit={() => {
-					$deleteLearningUnitMutation.mutate(learningUnit.uuid);
-				}}
-				{role}
-			/>
 	<div
 		class="grid gap-1"
 		use:dragHandleZone={{

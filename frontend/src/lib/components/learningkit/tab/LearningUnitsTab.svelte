@@ -7,6 +7,7 @@
 	import LearningUnitItem from '$lib/components/learningkit/displays/LearningUnitItem.svelte';
 	import { Plus } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -30,10 +31,20 @@
 	});
 
 	const generateLearningUnitMutation = createMutation({
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningUnit.generate.isGenerating'),
+				type: 'info'
+			});
+		},
 		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
 			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningUnit.generate.generated'),
+				type: 'info'
+			});
 		}
 	});
 </script>
@@ -57,6 +68,7 @@
 	<div class="grid gap-1">
 		{#each learningUnits ?? [] as learningUnit (learningUnit.uuid)}
 			<LearningUnitItem
+				isLoading={$generateLearningUnitMutation.isPending}
 				{learningUnit}
 				onDeleteLearningUnit={() => {
 					$deleteLearningUnitMutation.mutate(learningUnit.uuid);

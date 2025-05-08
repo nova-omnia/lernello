@@ -118,6 +118,8 @@
 	"learningUnit.trainingTitle": "Learning Unit Training",
 	"learningUnit.reorderBlocks": "Reorder Blocks",
 	"learningUnit.error.markOpened": "Failed to mark Learning Unit as opened",
+	"learningUnit.generate.isGenerating": "Generating Learning Unit with Ai",
+	"learningUnit.generate.generated": "Learning Unit successfully generated with Ai",
 	"login.signIn": "Sign in",
 	"login.title": "Sign in",
 	"markdownEditor.placeholder": "Write your markdown here...",

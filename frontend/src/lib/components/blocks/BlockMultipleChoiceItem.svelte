@@ -7,6 +7,11 @@
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
 	import { createDebounced } from '$lib/utils/createDebounced';
 	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
+	import { createMutation } from '@tanstack/svelte-query';
+	import type { CheckMultipleChoiceAnswer } from '$lib/schemas/request/progress/CheckMultipleChoiceAnswerSchema';
+	import { checkMultipleChoiceAnswer } from '$lib/api/collections/progress';
+	import { toaster } from '$lib/states/toasterState.svelte';
+	import { api } from '$lib/api/apiClient';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
@@ -73,11 +78,44 @@
 		onUpdateHandler();
 	}
 
-	let selectedAnswer = $state<number | null>(null);
+	let selectedAnswers = $state<number[]>([]);
 	let isSubmitted = $state(false);
+	let submissionCorrect = $state<boolean | null>(null);
+
+	const checkAnswerMutation = createMutation({
+		mutationFn: (payload: CheckMultipleChoiceAnswer) =>
+			api(fetch).req(checkMultipleChoiceAnswer, payload).parse(),
+		onSuccess: (data) => {
+			submissionCorrect = data.isCorrect;
+			isSubmitted = true;
+		},
+		onError: (error) => {
+			console.error('Error checking multiple choice answer:', error);
+			toaster.create({
+				title: $_('block.error.checkAnswer'),
+				description: $_('error.description', { values: { status: 'unknown' } }),
+				type: 'error'
+			});
+			isSubmitted = true;
+			submissionCorrect = null;
+		}
+	});
+
+	function toggleSelectedAnswer(index: number) {
+		if (isSubmitted || $checkAnswerMutation.isPending) return;
+		const currentIndexPosition = selectedAnswers.indexOf(index);
+		if (currentIndexPosition === -1) {
+			selectedAnswers = [...selectedAnswers, index];
+		} else {
+			selectedAnswers = selectedAnswers.filter((i) => i !== index);
+		}
+	}
 
 	function handleSubmit() {
-		isSubmitted = true;
+		if (selectedAnswers.length > 0) {
+			const answersToSubmit = selectedAnswers.map((index) => currentAnswers[index].value);
+			$checkAnswerMutation.mutate({ blockId: block.uuid, answers: answersToSubmit });
+		}
 	}
 </script>
 
@@ -146,23 +184,31 @@
 					<button
 						type="button"
 						onclick={handleSubmit}
-						disabled={selectedAnswer === null}
+						disabled={selectedAnswers.length === 0 || $checkAnswerMutation.isPending}
 						class="btn preset-filled whitespace-nowrap"
 						title={$_('common.submit')}
 					>
-						{$_('common.submit')}
+						{#if $checkAnswerMutation.isPending}
+							{$_('common.submitting')}...
+						{:else}
+							{$_('common.submit')}
+						{/if}
 					</button>
 				{:else}
 					<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
-						{#if selectedAnswer !== null && currentAnswers[selectedAnswer]?.isCorrect}
+						{#if submissionCorrect === true}
 							<span class="font-medium text-green-600 dark:text-green-400">
 								<Check class="mr-1 inline-block h-4 w-4" />
 								{$_('block.correctAnswer')}
 							</span>
-						{:else}
+						{:else if submissionCorrect === false}
 							<span class="font-medium text-red-600 dark:text-red-400">
 								<X class="mr-1 inline-block h-4 w-4" />
 								{$_('block.incorrectAnswer')}
+							</span>
+						{:else}
+							<span class="font-medium text-gray-600 dark:text-gray-400">
+								{$_('block.feedbackUnavailable')}
 							</span>
 						{/if}
 					</div>
@@ -174,12 +220,20 @@
 					<button
 						type="button"
 						class={`w-full rounded-lg border p-3 text-left transition-colors
-							${selectedAnswer === idx ? 'border-blue-300 bg-blue-100 dark:bg-blue-900/30' : 'dark:border-gray-600'}
-							${isSubmitted && answer.isCorrect ? 'border-green-300 bg-green-100 dark:bg-green-900/30' : ''}
-							${isSubmitted && selectedAnswer === idx && !answer.isCorrect ? 'border-red-300 bg-red-100 dark:bg-red-900/30' : ''}
-							${!isSubmitted ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : ''}`}
-						onclick={() => !isSubmitted && (selectedAnswer = idx)}
-						disabled={isSubmitted}
+                                ${
+																	isSubmitted
+																		? answer.isCorrect
+																			? 'border-green-300 bg-green-100 dark:bg-green-900/30'
+																			: selectedAnswers.includes(idx)
+																				? 'border-red-300 bg-red-100 dark:bg-red-900/30'
+																				: 'dark:border-gray-600'
+																		: selectedAnswers.includes(idx)
+																			? 'border-blue-300 bg-blue-100 dark:bg-blue-900/30'
+																			: 'dark:border-gray-600'
+																}
+                                ${!isSubmitted ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : ''}`}
+						onclick={() => toggleSelectedAnswer(idx)}
+						disabled={isSubmitted || $checkAnswerMutation.isPending}
 					>
 						{answer.value}
 					</button>

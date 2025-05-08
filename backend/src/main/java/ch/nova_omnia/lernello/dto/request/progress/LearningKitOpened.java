@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public record LearningKitOpened(
     @NotNull
-    UUID learningKitId
+    String learningKitId
 ) {
 }

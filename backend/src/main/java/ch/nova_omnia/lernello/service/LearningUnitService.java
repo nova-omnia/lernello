@@ -8,6 +8,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
+import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +35,9 @@ import lombok.RequiredArgsConstructor;
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
+    private final LearningUnitProgressRepository learningUnitProgressRepository;
     private final AIBlockService aiBlockService;
+    private final BlockProgressRepository blockProgressRepository;
 
     private Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
@@ -48,14 +54,17 @@ public class LearningUnitService {
         return learningUnitRepository.findAll();
     }
 
+    @Transactional
     public void deleteById(UUID id) {
+        List<LearningUnitProgress> progressesToDelete = learningUnitProgressRepository.findAllByLearningUnit_Uuid(id);
+        learningUnitProgressRepository.deleteAll(progressesToDelete);
         learningUnitRepository.deleteById(id);
     }
 
     @Transactional
     public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
-        
+
         learningUnit.getBlocks().clear();
 
         List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
@@ -135,6 +144,10 @@ public class LearningUnitService {
         }
 
         UUID blockUuid = UUID.fromString(removeAction.blockId());
+
+        List<BlockProgress> associatedProgresses = blockProgressRepository.findByBlock_Uuid(blockUuid);
+        blockProgressRepository.deleteAll(associatedProgresses);
+
         boolean removed = learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(blockUuid));
 
         if (!removed) {

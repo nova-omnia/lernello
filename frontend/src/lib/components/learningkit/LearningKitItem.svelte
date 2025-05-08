@@ -45,7 +45,7 @@
 		$kitProgressQuery.isSuccess && $kitProgressQuery.data?.progressPercentage === 100
 	);
 
-	let meterBg = $derived(isCompleted ? 'bg-green-500' : 'bg-yellow-500');
+	const meterBg = 'bg-green-500';
 
 	let cardCompletedClass = $derived(() => {
 		if (isCompleted) {

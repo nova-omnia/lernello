@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { THEORY_BLOCK_TYPE, type BlockRes } from '$lib/schemas/response/BlockRes';
-	import CreateMultipleChoiceModal from '$lib/components/dialogs/CreateMultipleChoiceModal.svelte';
-	import GenerateTheoryModal from '$lib/components/GenerateTheoryModal.svelte';
+	import GenerateQuizModal from '$lib/components/dialogs/GenerateQuizModal.svelte';
+	import GenerateTheoryModal from '$lib/components/dialogs/GenerateTheoryModal.svelte';
 	import { _ } from 'svelte-i18n';
 	import { Sparkles } from 'lucide-svelte';
 	import { createMutation } from '@tanstack/svelte-query';
@@ -87,7 +87,7 @@
 </button>
 
 {#if block.type === 'MULTIPLE_CHOICE'}
-	<CreateMultipleChoiceModal
+	<GenerateQuizModal
 		isLoading={$generateMultipleChoiceMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId) => {
@@ -113,7 +113,7 @@
 		}}
 	/>
 {:else if block.type === 'QUESTION'}
-	<CreateMultipleChoiceModal
+	<GenerateQuizModal
 		isLoading={$generateQuestionMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId: string) => {

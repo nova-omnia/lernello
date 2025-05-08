@@ -8,6 +8,8 @@ import { LearningKitOpenedSchema } from '$lib/schemas/request/progress/LearningK
 import { LearningKitProgressResSchema } from '$lib/schemas/response/progress/LearningKitProgressResSchema';
 import { CheckQuestionAnswerSchema } from '$lib/schemas/request/progress/CheckQuestionAnswerSchema';
 import { QuestionAnswerValidationResSchema } from '$lib/schemas/response/progress/QuestionAnswerValidationResSchema';
+import { TheoryBlockViewedSchema } from '$lib/schemas/request/progress/TheoryBlockViewedSchema';
+import { TheoryBlockViewedResSchema } from '$lib/schemas/response/progress/TheoryBlockViewedResSchema';
 
 const REQUEST_MAPPING = '/api/progress';
 
@@ -59,6 +61,19 @@ export const checkQuestionAnswer = createEndpoint({
 	},
 	response: {
 		schema: QuestionAnswerValidationResSchema,
+		defaultValidate: true
+	}
+});
+
+export const markTheoryBlockViewed = createEndpoint({
+	method: 'POST',
+	getPath: () => `${REQUEST_MAPPING}/block/theory/viewed`,
+	payload: {
+		schema: TheoryBlockViewedSchema,
+		defaultValidate: false
+	},
+	response: {
+		schema: TheoryBlockViewedResSchema,
 		defaultValidate: true
 	}
 });

@@ -77,7 +77,6 @@ public class AIBlockService {
 
         extractTopicsFromFiles(fileIds, topicBlocksMap);
 
-        // Flatten the map into a single list and assign positions
         List<Block> orderedBlocks = new ArrayList<>();
         topicBlocksMap.forEach((_, topicBlocks) -> orderedBlocks.addAll(topicBlocks));
 

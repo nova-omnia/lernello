@@ -19,16 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
+import ch.nova_omnia.lernello.dto.response.user.LoggedInUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
 import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
+import ch.nova_omnia.lernello.mapper.user.UserLoginMapper;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -39,11 +42,12 @@ public class UserRestController {
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
+    private final UserLoginMapper userLoginMapper;
 
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
     public @Valid PasswordStatusDTO changePassword(
-        @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
+                                                   @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         boolean status = userService.changePassword(userDetails.getUsername(), data.newPassword());
         return new PasswordStatusDTO(status);
@@ -58,7 +62,7 @@ public class UserRestController {
     @GetMapping("/info")
     @PreAuthorize("hasAuthority('SCOPE_self:read')")
     public @Valid UserInfoDTO getUserInfo(
-        @AuthenticationPrincipal UserDetails userDetails
+                                          @AuthenticationPrincipal UserDetails userDetails
     ) {
         User user = userService.findByUsername(userDetails.getUsername());
         return userInfoMapper.toDTO(user);
@@ -67,7 +71,7 @@ public class UserRestController {
     @PostMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public @Valid ParticipantUserDTO addTrainee(
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
+                                                @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
         User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
@@ -76,7 +80,7 @@ public class UserRestController {
     @DeleteMapping("/trainee/{id}")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public void deleteTrainee(
-        @PathVariable UUID id
+                              @PathVariable UUID id
     ) {
         userService.deleteTrainee(id);
     }
@@ -84,7 +88,7 @@ public class UserRestController {
     @PostMapping("/locale")
     @PreAuthorize("hasAuthority('SCOPE_self:write')")
     public @Valid UserLocaleDTO setUserLocale(
-        @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
+                                              @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         String locale = userService.setLocale(userDetails.getUsername(), data.locale());
         return userLocaleMapper.toDTO(locale);
@@ -94,9 +98,16 @@ public class UserRestController {
     @PatchMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public @Valid ParticipantUserDTO editTrainee(
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
+                                                 @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
     }
+
+    @GetMapping("/token")
+    public @Valid LoggedInUserDTO getFreshToken(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByUsername(userDetails.getUsername());
+        return userLoginMapper.toDTO(user);
+    }
+
 }

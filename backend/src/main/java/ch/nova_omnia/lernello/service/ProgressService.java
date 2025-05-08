@@ -1,9 +1,6 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.dto.request.progress.CheckMultipleChoiceAnswerDTO;
-import ch.nova_omnia.lernello.dto.request.progress.CheckQuestionAnswerDTO;
-import ch.nova_omnia.lernello.dto.request.progress.LearningKitOpened;
-import ch.nova_omnia.lernello.dto.request.progress.LearningUnitOpenedDTO;
+import ch.nova_omnia.lernello.dto.request.progress.*;
 import ch.nova_omnia.lernello.dto.response.progress.MultipleChoiceAnswerValidationResDTO;
 import ch.nova_omnia.lernello.dto.response.progress.QuestionAnswerValidationResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
@@ -147,6 +144,48 @@ public class ProgressService {
         return new QuestionAnswerValidationResDTO(dto.blockId(), isCorrect);
     }
 
+    @Transactional
+    public TheoryBlockProgress markTheoryBlockViewed(TheoryBlockViewedDTO dto, UserDetails userDetails) {
+        User user = userService.getUserFromUserDetails(userDetails);
+        Block block = blockRepository.findById(UUID.fromString(dto.blockId()))
+            .orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+
+        if (!(block instanceof TheoryBlock theoryBlock)) {
+            throw new IllegalArgumentException("Block is not a Theory Block");
+        }
+
+        LearningUnit learningUnit = theoryBlock.getLearningUnit();
+        if (learningUnit == null) {
+            throw new IllegalStateException("Block " + theoryBlock.getUuid() + " is not associated with a Learning Unit");
+        }
+
+        LearningKit learningKit = learningUnit.getLearningKit();
+        if (learningKit == null) {
+            throw new IllegalStateException("LearningUnit " + learningUnit.getUuid() + " is not associated with a LearningKit.");
+        }
+
+        LearningKitProgress kitProgress = getOrCreateLearningKitProgress(user, learningKit);
+        LearningUnitProgress unitProgress = getOrCreateLearningUnitProgress(user, learningUnit, kitProgress);
+
+        BlockProgress blockProgress = getOrCreateBlockProgress(user, theoryBlock, unitProgress);
+
+        if (blockProgress instanceof TheoryBlockProgress theoryBlockProgress) {
+            theoryBlockProgress.setViewed(true);
+        }
+
+        blockProgressRepository.save(blockProgress);
+
+        updateLearningUnitProgressPercentage(unitProgress);
+        if (unitProgress.getLearningKitProgress() != null) {
+            updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
+        }
+
+        if (blockProgress instanceof TheoryBlockProgress) {
+            return (TheoryBlockProgress) blockProgress;
+        }
+        throw new IllegalStateException("BlockProgress is not of type TheoryBlockProgress");
+    }
+
     public LearningKitProgress getLearningKitProgress(UUID learningKitId, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         Optional<LearningKitProgress> optProgress = learningKitProgressRepository.findByUser_UuidAndLearningKit_Uuid(user.getUuid(), learningKitId);
@@ -216,7 +255,9 @@ public class ProgressService {
             return;
         }
 
-        long completedBlocksCount = unitProgress.getUserBlockProgresses().stream()
+        List<BlockProgress> currentBlockProgresses = blockProgressRepository.findByLearningUnitProgress_Uuid(unitProgress.getUuid());
+
+        long completedBlocksCount = currentBlockProgresses.stream()
             .filter(this::isBlockProgressConsideredComplete)
             .count();
 
@@ -256,7 +297,11 @@ public class ProgressService {
         for (LearningUnit lu : learningUnitsInKit) {
             totalBlocksInKit += lu.getBlocks().size();
             LearningUnitProgress lup = getOrCreateLearningUnitProgress(user, lu, kitProgress);
-            totalCompletedBlocksInKit += lup.getUserBlockProgresses().stream()
+
+            List<BlockProgress> blockProgressesInLup = blockProgressRepository
+                .findByLearningUnitProgress_Uuid(lup.getUuid());
+
+            totalCompletedBlocksInKit += blockProgressesInLup.stream()
                 .filter(this::isBlockProgressConsideredComplete)
                 .count();
         }
@@ -281,18 +326,25 @@ public class ProgressService {
     private boolean isBlockProgressConsideredComplete(BlockProgress bp) {
         Block actualBlockEntity = bp.getBlock();
 
-        if (bp instanceof MultipleChoiceBlockProgress mcProgress && actualBlockEntity instanceof MultipleChoiceBlock mcBlockDefinition) {
-            List<String> lastAnswers = mcProgress.getLastAnswers();
-            List<String> correctAnswers = mcBlockDefinition.getCorrectAnswers();
+        switch (bp) {
+            case
+                MultipleChoiceBlockProgress mcProgress when actualBlockEntity instanceof MultipleChoiceBlock mcBlockDefinition -> {
+                List<String> lastAnswers = mcProgress.getLastAnswers();
+                List<String> correctAnswers = mcBlockDefinition.getCorrectAnswers();
 
-            return correctAnswers != null && !correctAnswers.isEmpty() && lastAnswers != null && new HashSet<>(lastAnswers).equals(new HashSet<>(correctAnswers));
-        } else if (bp instanceof QuestionBlockProgress qProgress && actualBlockEntity instanceof QuestionBlock qBlockDefinition) {
-            String lastAnswer = qProgress.getLastAnswer();
-            String expectedAnswer = qBlockDefinition.getExpectedAnswer();
+                return correctAnswers != null && !correctAnswers.isEmpty() && lastAnswers != null && new HashSet<>(lastAnswers).equals(new HashSet<>(correctAnswers));
+            }
+            case QuestionBlockProgress qProgress when actualBlockEntity instanceof QuestionBlock qBlockDefinition -> {
+                String lastAnswer = qProgress.getLastAnswer();
+                String expectedAnswer = qBlockDefinition.getExpectedAnswer();
 
-            return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
-        } else if (bp instanceof TheoryBlockProgress) {
-            return true;
+                return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
+            }
+            case TheoryBlockProgress theoryBlockProgress -> {
+                return theoryBlockProgress.isViewed();
+            }
+            default -> {
+            }
         }
         return false;
     }

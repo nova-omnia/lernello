@@ -12,7 +12,13 @@
 	} from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
+	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import type { SvelteComponent } from 'svelte';
+
+	interface SidebarProps {
+		role: RoleType;
+	}
+	const { role }: SidebarProps = $props();
 
 	const iconSize = 24;
 </script>
@@ -74,14 +80,16 @@
 		{/if}
 		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
 		{@render sidebarItem($_('learningKits.title'), '/learningkits', Boxes)}
-		{#if sidebarState.isExpanded}
-			<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
-		{:else}
-			<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+		{#if role === INSTRUCTOR_ROLE}
+			{#if sidebarState.isExpanded}
+				<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
+			{:else}
+				<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
+			{/if}
+			{@render sidebarItem($_('sidebar.users'), '/users', Users)}
+			{@render sidebarItem($_('common.files'), '/files', Folder)}
+			{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 		{/if}
-		{@render sidebarItem($_('sidebar.users'), '/users', Users)}
-		{@render sidebarItem($_('common.files'), '/files', Folder)}
-		{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 	</div>
 
 	<div class="mt-auto flex w-full flex-col items-center gap-1 pb-4">

@@ -1,17 +1,7 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
-import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.service.CustomUserDetailsService;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import ch.nova_omnia.lernello.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,7 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
+import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.service.CustomUserDetailsService;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import ch.nova_omnia.lernello.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/learning-kits")
@@ -104,5 +105,13 @@ public class LearningKitRestController {
         User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         learningKitService.saveTraineeInKit(id, trainee);
         return id;
+    }
+
+    @PatchMapping("/{id}/reorder/learning-units")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid LearningKitResDTO reorderLearningUnits(@PathVariable UUID id, @RequestBody String[] learningUnitIds) {
+        LearningKit learningKit = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitService.reorderLearningUnits(learningKit, learningUnitIds);
+        return learningKitMapper.toDTO(learningKit);
     }
 }

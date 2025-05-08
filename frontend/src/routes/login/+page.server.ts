@@ -36,14 +36,24 @@ export const actions = {
 			const loggedInUser = signin.response.schema.parse(loggedInUserResJson);
 			const expiresDate = new Date(loggedInUser.expires);
 			const expiresMs = expiresDate.getTime() - Date.now();
+			const refreshExpiresDate = new Date(loggedInUser.refreshExpires);
+			const refreshExpiresMs = refreshExpiresDate.getTime() - Date.now();
 			if (expiresMs < 0) {
 				throw new Error('Newly retrieved token is expired');
+			}
+			if (refreshExpiresMs < 0) {
+				throw new Error('Newly retrieved refresh token is expired');
 			}
 
 			cookies.set('lernello_auth_token', loggedInUser.token, {
 				httpOnly: true,
 				path: '/',
 				maxAge: Math.floor(expiresMs / 1000)
+			});
+			cookies.set('lernello_refresh_token', loggedInUser.refreshToken, {
+				httpOnly: true,
+				path: '/',
+				maxAge: Math.floor(refreshExpiresMs / 1000)
 			});
 
 			return message(form, {

@@ -76,7 +76,13 @@ public class User {
     private String token;
 
     @Transient
+    private String refreshToken;
+
+    @Transient
     private ZonedDateTime expires;
+
+    @Transient
+    private ZonedDateTime refreshExpires;
 
     public User(String username, String surname, String name, String password, String locale, Role role) {
         this.username = username;

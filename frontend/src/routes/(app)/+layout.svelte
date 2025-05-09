@@ -46,15 +46,17 @@
 		}, refreshExpiresMs);
 
 		const refetchTimer = setTimeout(async () => {
-			const data = await fetch('/refresh', {
-				method: 'GET'
-			});
-			const json = await data.json();
-			const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
-			setNewTokenData(loggedInUserNoRefresh);
-
-			clearInterval(autoLogoutTimer);
-			queueRefresh();
+			try {
+				const data = await fetch('/refresh', {
+					method: 'GET'
+				});
+				const json = await data.json();
+				const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
+				setNewTokenData(loggedInUserNoRefresh);
+			} finally {
+				clearInterval(autoLogoutTimer);
+				queueRefresh();
+			}
 		}, expiresMs / 2);
 
 		function clearAllTimers() {
@@ -66,11 +68,7 @@
 		};
 	}
 
-	onMount(() => {
-		if (data.refreshedToken) {
-			console.log('Token recovered from by server');
-			setNewTokenData(data.refreshedToken);
-		}
+	$effect.pre(() => {
 		const { clearAllTimers } = queueRefresh();
 		return () => {
 			clearAllTimers();

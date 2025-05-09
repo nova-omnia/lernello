@@ -1,16 +1,15 @@
 import { BASE_URL } from '$lib/api/apiClient';
 import { initi18n } from '$lib/i18n/i18n';
-import { loadUserInfo, isLoggedIn, recoverSession } from '$lib/server/auth';
+import { isLoggedIn, recoverSession } from '$lib/server/auth';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const refreshTokenCookie = event.cookies.get('lernello_refresh_token');
 	if (!isLoggedIn() && refreshTokenCookie) {
-		await recoverSession();
-	}
-	if (isLoggedIn()) {
-		await loadUserInfo();
+		const freshTokens = await recoverSession();
+		event.locals.recoveredToken = freshTokens;
+		event.locals.isLoggedIn = true;
 	}
 
 	const lang =
@@ -20,8 +19,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		await initi18n(lang);
 		locale.set(lang);
 	}
-
-	console.log(`Request URL: ${event.request.url}`);
 
 	return resolve(event);
 };

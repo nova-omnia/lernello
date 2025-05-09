@@ -1,5 +1,17 @@
 package ch.nova_omnia.lernello.service.file;
 
+import ch.nova_omnia.lernello.model.data.File;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.repository.FileRepository;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import lombok.RequiredArgsConstructor;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,21 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import ch.nova_omnia.lernello.model.data.File;
-import ch.nova_omnia.lernello.repository.FileRepository;
-import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class FileSystemService implements FileService {
     private final FileRepository fileRepository;
+    private final LearningKitRepository learningKitRepository;
 
     @Value("${storage.path}")
     private String storagePath;
@@ -47,6 +49,11 @@ public class FileSystemService implements FileService {
     @Override
     @Transactional
     public void deleteById(UUID uuid) {
+        Optional<File> fileOptional = fileRepository.findById(uuid);
+        if (fileOptional.isEmpty()) {
+            throw new RuntimeException("File with ID " + uuid + " not found");
+        }
+        removeFileFromAllLearningKits(fileOptional.get());
         fileRepository.deleteById(uuid);
     }
 
@@ -108,6 +115,13 @@ public class FileSystemService implements FileService {
         return context.toString();
     }
 
+    private void removeFileFromAllLearningKits(File file) {
+        List<LearningKit> kitsWithFile = learningKitRepository.findAllByFilesContains(file);
+        for (LearningKit kit : kitsWithFile) {
+            kit.getFiles().remove(file);
+        }
+        learningKitRepository.saveAll(kitsWithFile);
+    }
 
     private InputStream loadFileAsStream(UUID fileId) {
         Optional<File> fileOptional = fileRepository.findById(fileId);

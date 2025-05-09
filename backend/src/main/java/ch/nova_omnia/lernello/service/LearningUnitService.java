@@ -7,10 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockNameActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -19,10 +25,14 @@ import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlock
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +41,9 @@ import lombok.RequiredArgsConstructor;
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
+    private final LearningUnitProgressRepository learningUnitProgressRepository;
     private final AIBlockService aiBlockService;
+    private final BlockProgressRepository blockProgressRepository;
 
     private Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
@@ -48,14 +60,33 @@ public class LearningUnitService {
         return learningUnitRepository.findAll();
     }
 
+    @Transactional
+    public void updateLearningUnitPosition(UUID learningKitId, UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+        List<UUID> learningUnitIds = updateLearningUnitOrderDTO.learningUnitUuidsInOrder();
+        List<LearningUnit> learningUnits = learningUnitRepository.findLearningUnitAsc(learningKitId);
+
+        if (learningUnits.size() != learningUnitIds.size()) {
+            throw new IllegalArgumentException("Mismatch between provided IDs and existing learning units.");
+        }
+        for (int i = 0; i < learningUnitIds.size(); i++) {
+            UUID expectedId = learningUnitIds.get(i);
+            LearningUnit learningUnit = learningUnits.stream().filter(lu -> lu.getUuid().equals(expectedId)).findFirst().orElseThrow(() -> new RuntimeException("Learning Unit not found: " + expectedId));
+
+            learningUnitRepository.updatePosition(i, learningUnit.getUuid());
+        }
+    }
+
+    @Transactional
     public void deleteById(UUID id) {
+        List<LearningUnitProgress> progressesToDelete = learningUnitProgressRepository.findAllByLearningUnit_Uuid(id);
+        learningUnitProgressRepository.deleteAll(progressesToDelete);
         learningUnitRepository.deleteById(id);
     }
 
     @Transactional
     public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
-        
+
         learningUnit.getBlocks().clear();
 
         List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
@@ -90,7 +121,15 @@ public class LearningUnitService {
             }
         }
 
-        blockRepository.flush();
+        List<Block> finalBlocks = learningUnit.getBlocks();
+        for (int i = 0; i < finalBlocks.size(); i++) {
+            Block block = finalBlocks.get(i);
+            if (block.getPosition() != i) {
+                block.setPosition(i);
+                blockRepository.saveAndFlush(block);
+            }
+        }
+
         learningUnitRepository.saveAndFlush(learningUnit);
         return temporaryKeyMap;
     }
@@ -112,18 +151,19 @@ public class LearningUnitService {
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
         };
 
-        if (addAction.index() != null) {
-            learningUnit.getBlocks().add(addAction.index(), block);
+        blockRepository.save(block);
+
+        if (addAction.index() != null && addAction.index() >= 0 && addAction.index() <= learningUnit.getBlocks().size() + 1) {
+            int insertionIndex = addAction.index();
+            learningUnit.getBlocks().add(insertionIndex, block);
         } else {
             learningUnit.getBlocks().add(block);
         }
 
-        blockRepository.saveAndFlush(block);
-
         if (addAction.blockId() != null) {
             temporaryKeyMap.put(addAction.blockId(), block.getUuid());
         } else {
-            throw new RuntimeException("addAction is null");
+            throw new RuntimeException("addAction.blockId() is null, which is unexpected for new blocks needing temp ID mapping.");
         }
     }
 
@@ -134,11 +174,20 @@ public class LearningUnitService {
             throw new IllegalArgumentException("Block ID cannot be empty");
         }
 
-        UUID blockUuid = UUID.fromString(removeAction.blockId());
-        boolean removed = learningUnit.getBlocks().removeIf(block -> block.getUuid().equals(blockUuid));
+        UUID blockUuid;
+        try {
+            blockUuid = UUID.fromString(removeAction.blockId());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid Block ID format: " + removeAction.blockId());
+        }
+
+        List<BlockProgress> associatedProgresses = blockProgressRepository.findByBlock_Uuid(blockUuid);
+        blockProgressRepository.deleteAll(associatedProgresses);
+
+        boolean removed = learningUnit.getBlocks().removeIf(b -> b.getUuid().equals(blockUuid));
 
         if (!removed) {
-            throw new IllegalArgumentException("Block with ID " + removeAction.blockId() + " not found");
+            System.err.println("Block with ID " + removeAction.blockId() + " not found in learning unit for removal, or already removed.");
         }
     }
 
@@ -150,38 +199,15 @@ public class LearningUnitService {
 
         List<Block> blocks = learningUnit.getBlocks();
 
-        int currentIndex = -1;
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i).getUuid().equals(targetId)) {
-                currentIndex = i;
-                break;
-            }
-        }
+        Block blockToMove = blocks.stream().filter(block -> block.getUuid().equals(targetId)).findFirst().orElseThrow(() -> new IllegalArgumentException("Block not found for reorder: " + tempKey + " (resolved to UUID: " + targetId + ")"));
 
-        if (currentIndex == -1) {
-            throw new IllegalArgumentException("Block not found: " + tempKey);
-        }
+        blocks.remove(blockToMove);
 
-        if (newIndex < 0) {
-            throw new IllegalArgumentException("New index cannot be negative");
+        if (newIndex <= learningUnit.getBlocks().size() + 1) {
+            blocks.add(newIndex, blockToMove);
+        } else {
+            blocks.add(blockToMove);
         }
-        if (newIndex > blocks.size() - 1) {
-            newIndex = blocks.size() - 1;
-        }
-        if (currentIndex < newIndex) {
-            newIndex = newIndex - 1;
-        }
-
-        Block blockToMove = blocks.remove(currentIndex);
-        blocks.add(newIndex, blockToMove);
-
-        for (int i = 0; i < blocks.size(); i++) {
-            Block block = blocks.get(i);
-            block.setPosition(i);
-            blockRepository.save(block);
-        }
-
-        blockRepository.flush();
     }
 
 
@@ -192,7 +218,6 @@ public class LearningUnitService {
 
         Block block = blockRepository.findById(UUID.fromString(updateAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
 
-        // Handle direct field updates
         if (updateAction.content() != null) {
             if (block instanceof TheoryBlock theoryBlock) {
                 theoryBlock.setContent(updateAction.content());
@@ -212,7 +237,7 @@ public class LearningUnitService {
 
             }
         }
-        // Handle full DTO updates if present
+
         if (updateAction.data() != null) {
             switch (updateAction.data()) {
                 case UpdateTheoryBlockDTO theoryBlockDTO -> {
@@ -242,8 +267,6 @@ public class LearningUnitService {
                 case null, default -> throw new IllegalArgumentException("Unknown block type in update");
             }
         }
-
-        blockRepository.saveAndFlush(block);
     }
 
     private void updateBlockName(LearningUnit learningUnit, UpdateBlockNameActionDTO updateNameAction) {
@@ -253,7 +276,6 @@ public class LearningUnitService {
 
         Block block = blockRepository.findById(UUID.fromString(updateNameAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
         block.setName(updateNameAction.newName());
-        blockRepository.saveAndFlush(block);
     }
 
     private LearningUnit getLearningUnit(UUID id) {

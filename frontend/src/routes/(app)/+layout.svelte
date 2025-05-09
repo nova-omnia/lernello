@@ -2,12 +2,9 @@
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import Topbar from '$lib/components/layout/Topbar.svelte';
 	import { _ } from 'svelte-i18n';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
-	import {
-		LoggedInUserNoRefreshSchema,
-		type LoggedInUserNoRefresh
-	} from '$lib/schemas/response/LoggedInUser';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	function goBack() {
 		if (history.length > 1) {
@@ -18,6 +15,13 @@
 	}
 
 	let { children } = $props();
+
+	const queryClient = useQueryClient();
+
+	afterNavigate(() => {
+		queryClient.invalidateQueries({ queryKey: ['learning-kit-progress'] });
+		queryClient.invalidateQueries({ queryKey: ['learning-unit-progress'] });
+	});
 </script>
 
 <div class="flex h-full">

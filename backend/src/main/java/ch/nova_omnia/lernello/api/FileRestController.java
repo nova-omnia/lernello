@@ -1,9 +1,10 @@
 package ch.nova_omnia.lernello.api;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import ch.nova_omnia.lernello.dto.response.FileResDTO;
+import ch.nova_omnia.lernello.mapper.FileMapper;
+import ch.nova_omnia.lernello.service.file.FileSystemService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.nova_omnia.lernello.dto.response.FileResDTO;
-import ch.nova_omnia.lernello.mapper.FileMapper;
-import ch.nova_omnia.lernello.service.file.FileSystemService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/files")
@@ -44,8 +43,9 @@ public class FileRestController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_files:write')")
-    public void deleteFile(@PathVariable UUID id) {
+    public UUID deleteFile(@PathVariable UUID id) {
         fileService.deleteById(id);
+        return id;
     }
 
     @GetMapping("/")

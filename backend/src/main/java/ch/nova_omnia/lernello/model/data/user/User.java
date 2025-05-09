@@ -1,12 +1,5 @@
 package ch.nova_omnia.lernello.model.data.user;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +15,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -60,7 +59,7 @@ public class User {
     private String locale;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, updatable = false)
+    @Column(name = "role", nullable = false)
     @NotNull
     private Role role;
 

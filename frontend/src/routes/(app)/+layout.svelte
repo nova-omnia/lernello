@@ -4,7 +4,6 @@
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	import {
 		LoggedInUserNoRefreshSchema,
 		type LoggedInUserNoRefresh
@@ -18,7 +17,7 @@
 		}
 	}
 
-	let { children, data } = $props();
+	let { children } = $props();
 
 	function setNewTokenData(loggedInUserNoRefresh: LoggedInUserNoRefresh) {
 		localStorage.setItem('lernello_auth_token', JSON.stringify(loggedInUserNoRefresh));
@@ -53,8 +52,10 @@
 				const json = await data.json();
 				const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
 				setNewTokenData(loggedInUserNoRefresh);
-			} finally {
 				clearInterval(autoLogoutTimer);
+				queueRefresh();
+			} catch (error) {
+				console.error('Error refreshing token:', error);
 				queueRefresh();
 			}
 		}, expiresMs / 2);
@@ -63,6 +64,7 @@
 			clearTimeout(autoLogoutTimer);
 			clearTimeout(refetchTimer);
 		}
+
 		return {
 			clearAllTimers
 		};

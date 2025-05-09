@@ -17,15 +17,13 @@
 
 	const uploadFileMutation = createMutation({
 		mutationFn: (data: FormData) => api(fetch).req(uploadFile, data).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('files.upload.uploading'),
-				description: $_('files.upload.uploading.description'),
-				type: 'info'
-			});
-		},
 		onSuccess: (uploadedFileInfo) => {
 			onFileUploaded(uploadedFileInfo);
+			toaster.create({
+				title: $_('files.upload.success'),
+				description: $_('files.upload.success.description'),
+				type: 'success'
+			});
 		},
 		onError: (error) => {
 			console.error('Error uploading file:', error);

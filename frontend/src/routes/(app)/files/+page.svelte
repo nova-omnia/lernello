@@ -9,6 +9,7 @@
 	import { deleteFile } from '$lib/api/collections/file.js';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { error } from '@sveltejs/kit';
+	import FileUpload from '$lib/components/FileUpload.svelte';
 
 	const { data } = $props();
 	const invalidate = useQueryInvalidation();
@@ -22,6 +23,7 @@
 		mutationFn: (id: string) => api(fetch).req(deleteFile, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['files-overview']);
+			invalidate(['learning-kit']);
 		}
 	});
 </script>
@@ -33,16 +35,12 @@
 				<h1 class="preset-typo-headline">{$_('common.files')}</h1>
 				<p>{$_('learningKit.context.description')}</p>
 			</div>
-			<!--		<FileUpload-->
-			<!--			onFileUploaded={(fileInfo) => {-->
-			<!--				$updateLearningKitMutation.mutate({-->
-			<!--					id: learningKitId,-->
-			<!--					data: {-->
-			<!--						files: [...files.map((file) => file.uuid), fileInfo.uuid]-->
-			<!--					}-->
-			<!--				});-->
-			<!--			}}-->
-			<!--		/>-->
+			<FileUpload
+				onFileUploaded={() => {
+					invalidate(['files-overview']);
+					invalidate(['learning-kit']);
+				}}
+			/>
 		</div>
 		<div class="flex flex-col gap-1">
 			{#if $filesQuery.status === 'pending'}

@@ -6,7 +6,7 @@
 	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { goto } from '$app/navigation';
-	import LearningKitsStatisticsOverview from "$lib/components/statistics/LearningKitStatisticsOverview.svelte";
+	import LearningKitsStatisticsOverview from '$lib/components/statistics/LearningKitStatisticsOverview.svelte';
 
 	const { data } = $props();
 

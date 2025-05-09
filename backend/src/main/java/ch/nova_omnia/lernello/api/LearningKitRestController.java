@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException
-;
+import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
@@ -29,6 +28,8 @@ import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.CustomUserDetailsService;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import ch.nova_omnia.lernello.service.LearningUnitService;

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -112,8 +113,8 @@ public class LearningKitRestController {
 
     @PatchMapping("/{id}/reorder/learning-units/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public Void reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+    public ResponseEntity<String> reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
         learningUnitService.updateLearningUnitPosition(id, updateLearningUnitOrderDTO);
-        return null;
+        return ResponseEntity.ok("Learning units reordered successfully");
     }
 }

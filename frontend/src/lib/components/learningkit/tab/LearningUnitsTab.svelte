@@ -46,12 +46,14 @@
 
 		if (newIdx === oldIdx) return;
 		learningUnitsSnapshot = e.detail.items;
-		$updateLearningUnitOrderMutation.mutate(learningUnitsSnapshot.map((unit) => unit.uuid));
+		$updateLearningUnitOrderMutation.mutate({
+			learningUnitUuidsInOrder: learningUnitsSnapshot.map((unit) => unit.uuid)
+		});
 	}
 
 	const updateLearningUnitOrderMutation = createMutation({
-		mutationFn: (newOrderIds: string[]) => {
-			return api(fetch).req(updateLearningUnitsOrder, newOrderIds, learningKitId).parse();
+		mutationFn: (newOrder: { learningUnitUuidsInOrder: string[] }) => {
+			return api(fetch).req(updateLearningUnitsOrder, newOrder, learningKitId).parse();
 		},
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
@@ -111,7 +113,7 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}	
+		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
 					isLoading={$generateLearningUnitMutation.isPending}

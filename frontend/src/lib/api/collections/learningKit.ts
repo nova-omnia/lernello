@@ -4,6 +4,7 @@ import { LearningKitPageSchema, LearningKitResSchema } from '$lib/schemas/respon
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
 import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
+import { UpdateLearningUnitOrderSchema } from '$lib/schemas/request/UpdateLearningUnitOrder';
 
 const REQUEST_MAPPING = '/api/learning-kits';
 
@@ -100,13 +101,13 @@ export const publishLearningKit = createEndpoint({
 
 export const updateLearningUnitsOrder = createEndpoint({
 	method: 'PATCH',
-	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/reorder/learning-units`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/reorder/learning-units/`,
 	response: {
 		schema: z.void(),
 		defaultValidate: true
 	},
 	payload: {
-		schema: z.array(z.string().uuid()),
+		schema: UpdateLearningUnitOrderSchema,
 		defaultValidate: false
 	}
 });

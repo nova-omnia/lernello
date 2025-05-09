@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ResponseStatusException
+;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
@@ -104,7 +105,7 @@ public class LearningKitRestController {
     public @Valid UUID addTrainee(
                                   @PathVariable UUID id, @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
-        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        User trainee = userService.createUser(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname(), Role.TRAINEE);
         learningKitService.saveTraineeInKit(id, trainee);
         return id;
     }

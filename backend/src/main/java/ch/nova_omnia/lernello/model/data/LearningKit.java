@@ -84,8 +84,10 @@ public class LearningKit {
     @JoinTable(
             name = "learning_kit_participants", joinColumns = @JoinColumn(name = "learning_kit_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @OrderBy("surname ASC")
     private List<User> participants = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @OrderBy("name ASC")
     private List<File> files = new ArrayList<>();
 }

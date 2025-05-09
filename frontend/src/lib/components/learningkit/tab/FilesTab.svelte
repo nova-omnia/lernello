@@ -32,7 +32,6 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
-			invalidate(['files-list']);
 		}
 	});
 </script>
@@ -77,7 +76,7 @@
 		<div class="flex flex-col gap-1">
 			{#each files as file (file.uuid)}
 				<FileItem
-					File={file}
+					{file}
 					onRemoveFile={() => {
 						const updated = files.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
 

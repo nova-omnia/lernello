@@ -56,7 +56,7 @@
 					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
-								File={{ uuid: file.uuid, name: file.label }}
+								file={{ uuid: file.uuid, name: file.label }}
 								onRemoveFile={() => {
 									selectedFiles = selectedFiles.filter((f) => f.uuid !== file.uuid);
 								}}

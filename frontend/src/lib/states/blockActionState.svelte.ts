@@ -51,7 +51,7 @@ export function addBlockActionListener(onBlockAction: (event: CustomBlockActionE
 
 function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 	switch (action.type) {
-		case 'ADD_BLOCK': {
+		case ActionType.enum.ADD_BLOCK: {
 			let newBlock: BlockRes;
 
 			if (action.data.type === BlockType.Enum.THEORY) {
@@ -93,7 +93,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			break;
 		}
 
-		case 'REORDER_BLOCK': {
+		case ActionType.Enum.REORDER_BLOCK: {
 			const blockToMove = blocks.find((block) => block.uuid === action.blockId);
 			if (blockToMove) {
 				blocks = blocks.filter((block) => block.uuid !== action.blockId);
@@ -102,12 +102,12 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			break;
 		}
 
-		case 'REMOVE_BLOCK': {
+		case ActionType.Enum.REMOVE_BLOCK: {
 			blocks = blocks.filter((block) => block.uuid !== action.blockId);
 			break;
 		}
 
-		case 'UPDATE_BLOCK': {
+		case ActionType.Enum.UPDATE_BLOCK: {
 			return blocks.map((block) => {
 				if (block.uuid === action.blockId) {
 					return {
@@ -127,6 +127,18 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 			});
 		}
 
+		case ActionType.Enum.UPDATE_BLOCK_NAME: {
+			return blocks.map((block) => {
+				if (block.uuid === action.blockId) {
+					return {
+						...block,
+						name: action.newName
+					};
+				}
+				return block;
+			});
+		}
+
 		default:
 			throw new Error(`Unknown action type`);
 	}
@@ -140,7 +152,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 	if (action.type === ActionType.Enum.ADD_BLOCK) {
 		if (action.data.type === BlockType.Enum.THEORY) {
 			parsedAction = {
-				type: 'ADD_BLOCK',
+				type: ActionType.Enum.ADD_BLOCK,
 				index: action.index,
 				blockId: getTempId(),
 				data: {
@@ -152,7 +164,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 			};
 		} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
 			parsedAction = {
-				type: 'ADD_BLOCK',
+				type: ActionType.Enum.ADD_BLOCK,
 				index: action.index,
 				blockId: getTempId(),
 				data: {
@@ -166,7 +178,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 			};
 		} else if (action.data.type === BlockType.Enum.QUESTION) {
 			parsedAction = {
-				type: 'ADD_BLOCK',
+				type: ActionType.Enum.ADD_BLOCK,
 				index: action.index,
 				blockId: getTempId(),
 				data: {
@@ -182,19 +194,25 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 		}
 	} else if (action.type === ActionType.Enum.REORDER_BLOCK) {
 		parsedAction = {
-			type: 'REORDER_BLOCK',
+			type: ActionType.Enum.REORDER_BLOCK,
 			blockId: action.blockId,
 			newIndex: action.newIndex
 		};
 	} else if (action.type === ActionType.Enum.UPDATE_BLOCK) {
 		parsedAction = {
-			type: 'UPDATE_BLOCK',
+			type: ActionType.Enum.UPDATE_BLOCK,
 			blockId: action.blockId,
 			...(action.content !== undefined && { content: action.content }),
 			...(action.question !== undefined && { question: action.question }),
 			...(action.expectedAnswer !== undefined && { expectedAnswer: action.expectedAnswer }),
 			...(action.possibleAnswers !== undefined && { possibleAnswers: action.possibleAnswers }),
 			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers })
+		};
+	} else if (action.type === ActionType.Enum.UPDATE_BLOCK_NAME) {
+		parsedAction = {
+			type: ActionType.Enum.UPDATE_BLOCK_NAME,
+			blockId: action.blockId,
+			newName: action.newName
 		};
 	} else {
 		parsedAction = action;

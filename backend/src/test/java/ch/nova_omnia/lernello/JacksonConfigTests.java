@@ -14,10 +14,8 @@ import ch.nova_omnia.lernello.mapper.example.EntityEx;
 import ch.nova_omnia.lernello.mapper.example.EntityMapper;
 import ch.nova_omnia.lernello.mapper.example.EntityUpdateDTO;
 
-
 @SpringBootTest
 public class JacksonConfigTests {
-
 
     @Autowired
     private EntityMapper mapper;
@@ -42,6 +40,7 @@ public class JacksonConfigTests {
         EntityUpdateDTO update = new EntityUpdateDTO(null, null, JsonNullable.of(null), JsonNullable.of(null), null);
         EntityEx destination = new EntityEx(1L, "RTX3080", 0, "Great GPU", "NVIDIA", new ArrayList<>(List.of(50.0)));
         EntityEx expected = new EntityEx(1L, "RTX3080", 0, null, null, List.of(50.0));
+
         mapper.update(update, destination);
         assertEquals(expected.getId(), destination.getId());
         assertEquals(expected.getDescription(), destination.getDescription());
@@ -51,12 +50,12 @@ public class JacksonConfigTests {
         assertEquals(expected.getPrice(), destination.getPrice());
     }
 
-
     @Test
     void shouldNotUpdateAnyFieldInEntityEx() {
         EntityUpdateDTO update = new EntityUpdateDTO(null, null, JsonNullable.undefined(), JsonNullable.undefined(), null);
         EntityEx destination = new EntityEx(1L, "RTX3080", 0, "Great GPU", "NVIDIA", new ArrayList<>(List.of(50.0)));
         EntityEx expected = new EntityEx(1L, "RTX3080", 0, "Great GPU", "NVIDIA", List.of(50.0));
+
         mapper.update(update, destination);
         assertEquals(expected.getId(), destination.getId());
         assertEquals(expected.getDescription(), destination.getDescription());
@@ -71,6 +70,7 @@ public class JacksonConfigTests {
         EntityUpdateDTO update = new EntityUpdateDTO(null, null, null, null, null);
         EntityEx destination = new EntityEx(1L, "RTX3080", 0, "Great GPU", "NVIDIA", new ArrayList<>(List.of(50.0)));
         EntityEx expected = new EntityEx(1L, "RTX3080", 0, "Great GPU", "NVIDIA", List.of(50.0));
+
         mapper.update(update, destination);
         assertEquals(expected.getId(), destination.getId());
         assertEquals(expected.getDescription(), destination.getDescription());

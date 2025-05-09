@@ -1,6 +1,6 @@
 package ch.nova_omnia.lernello.dto.request.block.blockActions;
 
-import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.REORDER;
+import static ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType.REORDER_BLOCK;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ public record ReorderBlockActionDTO(
                                     @NotNull @Min(0) int newIndex
 ) implements BlockActionDTO {
     public ReorderBlockActionDTO {
-        type = REORDER;
+        type = REORDER_BLOCK;
     }
 }
 

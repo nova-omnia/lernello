@@ -1,6 +1,6 @@
 <script lang="ts">
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
 	import { UserPlus } from 'lucide-svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { _ } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LanguageSelect from '$lib/components/LanguageSelect.svelte';
+	import LanguageSelect from '$lib/components/select/LanguageSelect.svelte';
 	import { sidebarState } from '$lib/states/sidebarState.svelte';
 	import { SidebarOpen } from 'lucide-svelte';
 </script>

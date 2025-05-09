@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
+	import GenerateLearningUnitModal from '$lib/components/dialogs/GenerateLearningUnitModal.svelte';
 	import { _ } from 'svelte-i18n';
-	import { AlignLeft, GripVertical } from 'lucide-svelte';
+	import { AlignLeft, GripVertical, Loader } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 
 	interface LearningUnitProps {
@@ -11,11 +12,21 @@
 			uuid: string;
 		};
 		onDeleteLearningUnit: () => void;
+		onGenerateLearningUnit: (files: string[]) => void;
 		role: RoleType;
+		isLoading: boolean;
 	}
 
-	const { learningUnit, onDeleteLearningUnit, role }: LearningUnitProps = $props();
+	const {
+		learningUnit,
+		onDeleteLearningUnit,
+		onGenerateLearningUnit,
+		role,
+		isLoading
+	}: LearningUnitProps = $props();
+
 	let showDeleteDialog = $state(false);
+	let showGenerationDialog = $state(false);
 
 	function deleteLearningUnitHandler() {
 		onDeleteLearningUnit();
@@ -28,7 +39,9 @@
 		<GripVertical size={28} class="text-surface-300-700" />
 	{/if}
 	<a
-		class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4"
+		aria-disabled={isLoading}
+		class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4
+		{isLoading ? 'pointer-events-none cursor-not-allowed opacity-50' : ''}"
 		href={`/learningunit/${learningUnit.uuid}`}
 	>
 		<div class="flex w-full max-w-sm items-center gap-4">
@@ -47,15 +60,30 @@
 					type="button"
 					onclick={(e) => {
 						e.preventDefault();
+						showGenerationDialog = true;
+					}}
+					class="btn preset-filled-primary-500"
+					disabled={isLoading}
+				>
+					{$_('common.generate')}
+				</button>
+				<button
+					type="button"
+					onclick={(e) => {
+						e.preventDefault();
 						showDeleteDialog = true;
 					}}
 					class="btn preset-filled-error-500"
+					disabled={isLoading}
 				>
 					{$_('common.delete')}
 				</button>
 			</div>
 		{/if}
 	</a>
+	{#if isLoading}
+		<Loader class="ml-4 animate-spin" size={24} />
+	{/if}
 </div>
 
 <ConfirmDialog
@@ -68,5 +96,17 @@
 	onConfirm={deleteLearningUnitHandler}
 	onCancel={() => {
 		showDeleteDialog = false;
+	}}
+/>
+
+<GenerateLearningUnitModal
+	bind:isOpen={showGenerationDialog}
+	isLoading={false}
+	onConfirm={(files) => {
+		onGenerateLearningUnit(files);
+		showGenerationDialog = false;
+	}}
+	onCancel={() => {
+		showGenerationDialog = false;
 	}}
 />

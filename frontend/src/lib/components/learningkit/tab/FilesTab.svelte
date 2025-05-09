@@ -1,5 +1,5 @@
 <script lang="ts">
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import { _ } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';

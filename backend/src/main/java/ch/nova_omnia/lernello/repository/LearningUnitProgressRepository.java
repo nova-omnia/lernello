@@ -15,4 +15,5 @@ public interface LearningUnitProgressRepository extends JpaRepository<LearningUn
     Optional<LearningUnitProgress> findByUserAndLearningUnit(User user, LearningUnit learningUnit);
     Optional<LearningUnitProgress> findByUser_UuidAndLearningUnit_Uuid(UUID userId, UUID learningUnitId);
     List<LearningUnitProgress> findAllByUser_UuidAndLearningKitProgress_LearningKit_Uuid(UUID userId, UUID learningKitId);
+    List<LearningUnitProgress> findAllByLearningUnit_Uuid(UUID learningUnitId);
 }

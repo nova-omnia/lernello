@@ -64,18 +64,24 @@ export async function recoverSession() {
 		throw new Error('No refresh token found');
 	}
 
-	const refreshRes = await fetch(`${BASE_URL}${refreshToken.getPath()}`, {
-		method: refreshToken.method,
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${refreshTokenCookie}`
-		}
-	});
-	const refreshResJson = await refreshRes.json();
-	const loggedInUser = refreshToken.response.schema.parse(refreshResJson);
-	const loggedInUserNoRefresh = setAuthCookies(cookies, loggedInUser);
+	try {
+		const refreshRes = await fetch(`${BASE_URL}${refreshToken.getPath()}`, {
+			method: refreshToken.method,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${refreshTokenCookie}`
+			}
+		});
+		const refreshResJson = await refreshRes.json();
+		const loggedInUser = refreshToken.response.schema.parse(refreshResJson);
+		const loggedInUserNoRefresh = setAuthCookies(cookies, loggedInUser);
 
-	return loggedInUserNoRefresh;
+		return loggedInUserNoRefresh;
+	} catch (error) {
+		console.error('Failed to refresh session:', error);
+		cookies.delete('lernello_refresh_token', { path: '/' });
+		redirect(307, '/login');
+	}
 }
 
 export function setAuthCookies(cookies: Cookies, loggedInUser: LoggedInUser) {

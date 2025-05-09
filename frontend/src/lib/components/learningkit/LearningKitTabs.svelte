@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import { BookText, Files, Users } from 'lucide-svelte';
+	import { BookText, ChartLine, Files, Users } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
 	import TraineesTab from '$lib/components/learningkit/tab/TraineesTab.svelte';
@@ -8,11 +8,14 @@
 	import { goto } from '$app/navigation';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
 	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
+	import LearningKitStatistics from '$lib/components/statistics/LearningKitStatistics.svelte';
+	import LearningKitStatistic from '$lib/components/statistics/LearningKitStatistic.svelte';
 
 	const tabs = {
 		learningUnits: 'learningUnits',
 		trainees: 'trainees',
-		files: 'files'
+		files: 'files',
+		statistics: 'statistics'
 	};
 
 	interface LearningKitTabsProps {
@@ -51,6 +54,12 @@
 			{/snippet}
 			{$_('sidebar.files')}
 		</Tabs.Control>
+		<Tabs.Control value={tabs.statistics}>
+			{#snippet lead()}
+				<ChartLine size={20} />
+			{/snippet}
+			{$_('sidebar.statistics')}
+		</Tabs.Control>
 	{/snippet}
 	{#snippet content()}
 		<Tabs.Panel value={tabs.learningUnits}>
@@ -66,6 +75,9 @@
 		</Tabs.Panel>
 		<Tabs.Panel value={tabs.files}>
 			<FilesTab learningKitId={learningKit.uuid} files={learningKit.files ?? []} />
+		</Tabs.Panel>
+		<Tabs.Panel value={tabs.statistics}>
+			<LearningKitStatistic learningKitId={learningKit.uuid} />
 		</Tabs.Panel>
 	{/snippet}
 </Tabs>

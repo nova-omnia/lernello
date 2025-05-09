@@ -3,9 +3,9 @@
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import { _ } from 'svelte-i18n';
-	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { dev } from '$app/environment';
 	import { Role } from '$lib/schemas/response/UserInfo';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
 

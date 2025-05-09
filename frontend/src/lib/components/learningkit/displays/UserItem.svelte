@@ -18,7 +18,7 @@
 	}
 
 	const invalidate = useQueryInvalidation();
-	const { user, usersView = true, onRemoveUser }: UserItemProps = $props();
+	const { user, usersView = false, onRemoveUser }: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 	let showUserPasswordResetDialog = $state(false);
@@ -33,6 +33,7 @@
 			});
 		},
 		onSuccess: () => {
+			// TODO does not invalidate
 			invalidate(['learning-kit']);
 			toaster.create({
 				title: $_('common.loading'),

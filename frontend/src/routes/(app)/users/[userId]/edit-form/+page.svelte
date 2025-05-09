@@ -3,9 +3,9 @@
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation.js';
 	import { _ } from 'svelte-i18n';
-	import PageContainer from '$lib/components/PageContainer.svelte';
 	import { dev } from '$app/environment';
 	import { Role } from '$lib/schemas/response/UserInfo';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
 
@@ -15,6 +15,14 @@
 		onResult() {
 			invalidate(['instructors-overview-list']);
 			invalidate(['trainees-overview-list']);
+			invalidate(['trainees-list']);
+			// TODO does not invalidate
+			invalidate(['learning-kit']);
+			toaster.create({
+				title: $_('common.success.title'),
+				description: $_('user.form.edit.success'),
+				type: 'success'
+			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);

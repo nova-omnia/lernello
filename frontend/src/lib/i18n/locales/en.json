@@ -170,5 +170,6 @@
 	"trainees.overview.delete.success": "Trainee deleted successfully",
 	"user.create": "Create User",
 	"user.form.create.title": "Create a new User",
-	"user.form.edit.title": "Edit User"
+	"user.form.edit.title": "Edit User",
+	"user.form.edit.success": "User edited successfully"
 }

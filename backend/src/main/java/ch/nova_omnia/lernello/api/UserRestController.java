@@ -13,7 +13,6 @@ import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
 import ch.nova_omnia.lernello.mapper.user.UserMapper;
-import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.service.EmailService;
 import ch.nova_omnia.lernello.service.UserService;
@@ -89,7 +88,6 @@ public class UserRestController {
     public @Valid UserResDTO editUser(@PathVariable UUID id, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
         User user = userMapper.toEntity(updateUserDTO);
         User updatedUser = userService.update(id, user);
-        isNewInstructorSendLoginMail(updateUserDTO.role(), updatedUser);
         return userMapper.toDTO(updatedUser);
     }
 
@@ -99,8 +97,15 @@ public class UserRestController {
         @RequestBody @Valid CreateUserDTO userDTO
     ) {
         User user = userService.createUser(userDTO.username(), userDTO.name(), userDTO.surname(), userDTO.role());
-        isNewInstructorSendLoginMail(userDTO.role(), user);
         return userMapper.toDTO(user);
+    }
+
+    @PatchMapping("/reset/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public @Valid UUID resetUserPassword(@PathVariable UUID id) {
+        User user = userService.findByUuid(id);
+        emailService.sendNewLoginData(user);
+        return id;
     }
 
     @DeleteMapping("/{id}")
@@ -129,11 +134,5 @@ public class UserRestController {
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);
-    }
-
-    private void isNewInstructorSendLoginMail(Role updateUserDTO, User updatedUser) {
-        if (updateUserDTO == Role.INSTRUCTOR) {
-            emailService.sendInstructorLoginData(updatedUser);
-        }
     }
 }

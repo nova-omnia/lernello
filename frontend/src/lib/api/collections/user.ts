@@ -129,6 +129,19 @@ export const setUserLocale = createEndpoint({
 	}
 });
 
+export const resetUserPasswordAPI = createEndpoint({
+	method: 'PATCH',
+	getPath: (id: string) => `${REQUEST_MAPPING}/reset/${id}`,
+	response: {
+		schema: z.string().uuid(),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
 export const editTrainee = createEndpoint({
 	method: 'PATCH',
 	getPath: () => `${REQUEST_MAPPING}/trainee`,

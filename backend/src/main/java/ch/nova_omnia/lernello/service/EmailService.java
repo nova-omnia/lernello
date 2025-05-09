@@ -35,8 +35,6 @@ public class EmailService {
             String plainPassword = null;
             if (!user.isChangedPassword()) {
                 plainPassword = userService.generateRandomPassword();
-                user.setPassword(passwordEncoder.encode(plainPassword));
-                userRepository.save(user);
             }
 
             MimeMessage mime = buildMimeMessage(
@@ -48,32 +46,36 @@ public class EmailService {
 
             javaMailSender.send(mime);
             log.info("Sent learning kit invitation to {}", user.getUsername());
+
+            if (plainPassword != null) {
+                user.setChangedPassword(false);
+                user.setPassword(passwordEncoder.encode(plainPassword));
+                userRepository.save(user);
+            }
         } catch (Exception ex) {
             log.error("Failed to send learning kit invitation to {}: {}", user.getUsername(), ex.getMessage(), ex);
             throw new RuntimeException("Failed to send email", ex);
         }
     }
 
-    public void sendInstructorLoginData(User user) {
+    public void sendNewLoginData(User user) {
         try {
             String plainPassword = userService.generateRandomPassword();
-            if (user.isChangedPassword()) {
-                throw new IllegalStateException("User has already changed their password.");
-            }
-            user.setPassword(passwordEncoder.encode(plainPassword));
-            userRepository.save(user);
-
             MimeMessage mime = buildMimeMessage(
                 user.getUsername(),
-                "Instructor Login Data",
-                buildInstructorTextContent(user.getUsername(), plainPassword),
-                buildInstructorHtmlContent(user.getUsername(), plainPassword)
+                "New Login Data",
+                builtResetPasswordTextContent(user.getUsername(), plainPassword),
+                buildResetPasswordHtmlContent(user.getUsername(), plainPassword)
             );
 
             javaMailSender.send(mime);
-            log.info("Sent instructor login data to {}", user.getUsername());
+            log.info("Sent new login data to {}", user.getUsername());
+
+            user.setPassword(passwordEncoder.encode(plainPassword));
+            user.setChangedPassword(false);
+            userRepository.save(user);
         } catch (Exception ex) {
-            log.error("Failed to send instructor login data to {}: {}", user.getUsername(), ex.getMessage(), ex);
+            log.error("Failed to send new login data to {}: {}", user.getUsername(), ex.getMessage(), ex);
             throw new RuntimeException("Failed to send email", ex);
         }
     }
@@ -89,10 +91,10 @@ public class EmailService {
         return mime;
     }
 
-    private String buildInstructorHtmlContent(String username, String pwd) {
+    private String buildResetPasswordHtmlContent(String username, String pwd) {
         return baseHtmlWrapper("""
                 <h2 style="color:#2563eb; margin-top:0;">Welcome, %s</h2>
-                <p style="font-size:15px;">You can now log in to Lernello as an instructor.</p>
+                <p style="font-size:15px;">You can now log in to Lernello with your new password.</p>
                 <p style="margin-top:30px;">
                   <strong>🔑 First‑login password:</strong><br>
                   <code style="background:#f1f5f9; padding:4px 8px; border-radius:4px;">%s</code>
@@ -100,11 +102,11 @@ public class EmailService {
             """.formatted(username, pwd));
     }
 
-    private String buildInstructorTextContent(String username, String pwd) {
+    private String builtResetPasswordTextContent(String username, String pwd) {
         return """
                 Welcome, %s
 
-                You can now log in to Lernello as an instructor.
+                You can now log in to Lernello with your new password.
 
                 First‑login password: %s
             """.formatted(username, pwd);

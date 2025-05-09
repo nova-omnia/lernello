@@ -61,10 +61,17 @@ public class LearningUnitService {
     }
 
     @Transactional
-    public void updateLearningUnitPosition(UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+    public void updateLearningUnitPosition(UUID learningKitId, UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
         List<UUID> learningUnitIds = updateLearningUnitOrderDTO.learningUnitUuidsInOrder();
+        List<LearningUnit> learningUnits = learningUnitRepository.findLearningUnitAsc(learningKitId);
+
+        if (learningUnits.size() != learningUnitIds.size()) {
+            throw new IllegalArgumentException("Mismatch between provided IDs and existing learning units.");
+        }
         for (int i = 0; i < learningUnitIds.size(); i++) {
-            LearningUnit learningUnit = learningUnitRepository.findById(learningUnitIds.get(i)).orElseThrow(() -> new RuntimeException("Learning Unit not found"));
+            UUID expectedId = learningUnitIds.get(i);
+            LearningUnit learningUnit = learningUnits.stream().filter(lu -> lu.getUuid().equals(expectedId)).findFirst().orElseThrow(() -> new RuntimeException("Learning Unit not found: " + expectedId));
+
             learningUnitRepository.updatePosition(i, learningUnit.getUuid());
         }
     }

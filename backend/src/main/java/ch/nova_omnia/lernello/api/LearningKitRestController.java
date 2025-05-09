@@ -112,7 +112,7 @@ public class LearningKitRestController {
     @PatchMapping("/{id}/reorder/learning-units/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public Void reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
-        learningUnitService.updateLearningUnitPosition(updateLearningUnitOrderDTO);
+        learningUnitService.updateLearningUnitPosition(id, updateLearningUnitOrderDTO);
         return null;
     }
 }

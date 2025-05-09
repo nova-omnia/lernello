@@ -8,6 +8,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
 	import { api } from '$lib/api/apiClient';
+	import {SquareArrowOutUpRight} from "lucide-svelte";
 
 	const { data: pageData } = $props();
 
@@ -27,8 +28,13 @@
 	}
 </script>
 
-<PageContainer title={$learningKitQuery.data?.name ?? $_('statistics.loadingTitle')}>
-	<div class="mb-4 flex justify-end">
+<PageContainer>
+	<div class="flex w-full justify-between gap-4">
+
+	<h1 class="preset-typo-headline">
+		{ $_('statistics.title.withName', {values: { name: $learningKitQuery.data?.name ?? $_('statistics.loadingTitle') }}) }
+	</h1>
+	<div class="mb-4 flex justify-end h-full">
 		<button
 			type="button"
 			class="btn preset-filled-primary-500 h-full"
@@ -36,7 +42,9 @@
 		>
 			{$_('actions.open')}
 			{$learningKitQuery.data?.name ?? $_('learningKit.title')}
+			<SquareArrowOutUpRight />
 		</button>
+	</div>
 	</div>
 	<LearningKitStatistic {learningKitId} />
 </PageContainer>

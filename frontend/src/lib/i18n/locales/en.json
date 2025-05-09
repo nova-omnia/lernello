@@ -170,6 +170,7 @@
 	"sidebar.settings": "Settings",
 	"sidebar.statistics": "Statistics",
 	"sidebar.toggleSidebar": "Toggle Sidebar",
+	"statistics.title.withName": "Statistics: {name}",
 	"statistics.overview.title": "Statistics Overview",
 	"statistics.overview.noData": "No data available",
 	"statistics.learningKit.title": "Learning Kit Statistics",

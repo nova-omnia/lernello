@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
@@ -50,7 +49,7 @@ public class UserRestController {
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
     public @Valid PasswordStatusDTO changePassword(
-                                                   @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
+        @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         boolean status = userService.changePassword(userDetails.getUsername(), data.newPassword());
         return new PasswordStatusDTO(status);
@@ -71,7 +70,7 @@ public class UserRestController {
     @GetMapping("/info")
     @PreAuthorize("hasAuthority('SCOPE_self:read')")
     public @Valid UserInfoDTO getUserInfo(
-                                          @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal UserDetails userDetails
     ) {
         User user = userService.findByUsername(userDetails.getUsername());
         return userInfoMapper.toDTO(user);
@@ -121,7 +120,7 @@ public class UserRestController {
     @PostMapping("/locale")
     @PreAuthorize("hasAuthority('SCOPE_self:write')")
     public @Valid UserLocaleDTO setUserLocale(
-                                              @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
+        @RequestBody @Valid UserLocaleDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         String locale = userService.setLocale(userDetails.getUsername(), data.locale());
         return userLocaleMapper.toDTO(locale);
@@ -131,7 +130,7 @@ public class UserRestController {
     @PatchMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
     public @Valid ParticipantUserDTO editTrainee(
-                                                 @RequestBody @Valid CreateParticipantDTO traineeDetails
+        @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
         return participantUserMapper.toDTO(trainee);

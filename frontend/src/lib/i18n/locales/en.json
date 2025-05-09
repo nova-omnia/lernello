@@ -93,6 +93,8 @@
 	"files.upload.reject.description": "File rejected ({reason})",
 	"files.upload.reject.title": "File rejected",
 	"files.upload.success": "File uploaded",
+	"files.delete.error": "File deletion failed",
+	"files.delete.success": "File deleted successfully",
 	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.uploading": "Uploading...",
 	"files.upload.uploading.description": "File is being uploaded",
@@ -173,5 +175,9 @@
 	"user.create": "Create User",
 	"user.form.create.title": "Create a new User",
 	"user.form.edit.title": "Edit User",
-	"user.form.edit.success": "User edited successfully"
+	"user.form.edit.success": "User edited successfully",
+	"files.delete.title": "Delete File",
+	"files.remove.title": "Remove File",
+	"files.delete.message": "Are you sure you want to delete {name}? This action cannot be undone.",
+	"files.remove.message": "Are you sure you want to remove {name}? This action cannot be undone."
 }

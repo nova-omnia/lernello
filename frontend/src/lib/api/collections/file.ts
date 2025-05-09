@@ -43,7 +43,7 @@ export const deleteFile = createEndpoint({
 		defaultValidate: false
 	},
 	response: {
-		schema: z.null(),
+		schema: z.string().uuid(),
 		defaultValidate: true
 	}
 });

@@ -14,12 +14,6 @@
 
 	const invalidate = useQueryInvalidation();
 
-	interface LearningUnit {
-		name: string;
-		description?: string;
-		uuid: string;
-	}
-
 	interface LearningUnitsProps {
 		learningKitId: string;
 		learningUnits: {
@@ -33,9 +27,8 @@
 	const { learningKitId, learningUnits, role }: LearningUnitsProps = $props();
 
 	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, id: unit.uuid })));
-
 	let currentlyDraggingId: string | null = null;
-	type LearningUnitWithId = LearningUnit & { id: string };
+	type LearningUnitWithId = { name: string; description?: string; uuid: string; id: string };
 
 	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitWithId>>) {
 		learningUnitsSnapshot = e.detail.items;
@@ -118,10 +111,10 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}
+		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}	
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
-				isLoading={$generateLearningUnitMutation.isPending}
+					isLoading={$generateLearningUnitMutation.isPending}
 					{learningUnit}
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);

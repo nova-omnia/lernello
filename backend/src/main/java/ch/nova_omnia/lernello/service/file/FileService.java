@@ -22,4 +22,6 @@ public interface FileService {
     public File save(MultipartFile file);
 
     public String extractTextFromFiles(List<UUID> fileIds);
+
+    public String extractTextFromFile(UUID fileId);
 }

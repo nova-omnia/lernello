@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { File as FileIcon } from 'lucide-svelte';
+	import { File as FileIcon, X as XIcon } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -8,9 +8,10 @@
 	interface FileItemProps {
 		File: FileRes;
 		onRemoveFile: () => void;
+		isForModal?: boolean;
 	}
 
-	const { File, onRemoveFile }: FileItemProps = $props();
+	const { File, onRemoveFile, isForModal = false }: FileItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 
@@ -31,19 +32,32 @@
 	</div>
 
 	<div>
-		<a href={getStaticFileUrl(File.uuid)} class="btn preset-tonal-surface" target="_blank">
-			{$_('common.open')}
-		</a>
-		<button
-			type="button"
-			class="btn preset-filled-error-500"
-			onclick={(e) => {
-				e.preventDefault();
-				showDeleteDialog = true;
-			}}
-		>
-			{$_('common.remove')}
-		</button>
+		{#if !isForModal}
+			<a href={getStaticFileUrl(File.uuid)} class="btn preset-tonal-surface" target="_blank">
+				{$_('common.open')}
+			</a>
+			<button
+				type="button"
+				class="btn preset-filled-error-500"
+				onclick={(e) => {
+					e.preventDefault();
+					showDeleteDialog = true;
+				}}
+			>
+				{$_('common.remove')}
+			</button>
+		{:else}
+			<button
+				type="button"
+				class="btn-icon"
+				onclick={(e) => {
+					e.preventDefault();
+					onRemoveFile();
+				}}
+			>
+				<XIcon class="h-5 w-5" />
+			</button>
+		{/if}
 	</div>
 </div>
 

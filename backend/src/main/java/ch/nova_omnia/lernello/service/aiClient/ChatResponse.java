@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.service.ai;
+package ch.nova_omnia.lernello.service.aiClient;
 
 import java.util.List;
 

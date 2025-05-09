@@ -1,6 +1,6 @@
 <!--AITheoryBlock-->
 <script lang="ts">
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { getAllFiles } from '$lib/api/collections/file';
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { createQuery } from '@tanstack/svelte-query';

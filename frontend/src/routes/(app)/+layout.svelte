@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Topbar from '$lib/components/Topbar.svelte';
+	import Sidebar from '$lib/components/layout/Sidebar.svelte';
+	import Topbar from '$lib/components/layout/Topbar.svelte';
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';

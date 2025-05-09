@@ -23,7 +23,7 @@
 		learningUnitId: string;
 	}
 	const { index, learningUnitId }: BlockSelectPopoverProps = $props();
-	const insertIndex = index + 1;
+	let insertIndex = $derived(index + 1);
 
 	// State
 	let open = $state(false);
@@ -68,7 +68,7 @@
 			data: {
 				type: BlockType.Enum.THEORY,
 				name: 'Theory',
-				position: 0,
+				position: insertIndex,
 				learningUnitId: learningUnitId,
 				content: 'placeholder'
 			}
@@ -85,7 +85,7 @@
 			data: {
 				type: BlockType.Enum.MULTIPLE_CHOICE,
 				name: 'Multiple Choice',
-				position: 0,
+				position: insertIndex,
 				learningUnitId: learningUnitId,
 				question: 'placeholder question?',
 				possibleAnswers: ['A', 'B'],
@@ -104,7 +104,7 @@
 			data: {
 				type: BlockType.Enum.QUESTION,
 				name: 'Question',
-				position: 0,
+				position: insertIndex,
 				learningUnitId: learningUnitId,
 				question: 'placeholder question?',
 				expectedAnswer: 'placeholder answer'

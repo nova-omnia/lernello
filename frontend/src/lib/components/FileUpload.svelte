@@ -8,6 +8,9 @@
 	import { UploadIcon } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
+
+	const invalidate = useQueryInvalidation();
 
 	interface FileUploadProps {
 		onFileUploaded: (uploadedFileInfo: FileRes) => void;
@@ -19,6 +22,8 @@
 		mutationFn: (data: FormData) => api(fetch).req(uploadFile, data).parse(),
 		onSuccess: (uploadedFileInfo) => {
 			onFileUploaded(uploadedFileInfo);
+			invalidate(['files-overview']);
+			invalidate(['files-list']);
 			toaster.create({
 				title: $_('files.upload.success'),
 				description: $_('files.upload.success.description'),

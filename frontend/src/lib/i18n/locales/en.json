@@ -93,6 +93,8 @@
 	"files.upload.reject.description": "File rejected ({reason})",
 	"files.upload.reject.title": "File rejected",
 	"files.upload.success": "File uploaded",
+	"files.delete.error": "File deletion failed",
+	"files.delete.success": "File deleted successfully",
 	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.uploading": "Uploading...",
 	"files.upload.uploading.description": "File is being uploaded",

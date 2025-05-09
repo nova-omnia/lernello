@@ -4,7 +4,6 @@
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { BASE_URL } from '$lib/api/apiClient';
-	import { goto } from '$app/navigation';
 
 	interface FileItemProps {
 		file: FileRes;
@@ -35,15 +34,9 @@
 
 	<div>
 		{#if !isForModal}
-			<button
-				type="button"
-				class="btn preset-outlined-surface-500"
-				onclick={() => {
-					goto(getStaticFileUrl(file.uuid));
-				}}
-			>
+			<a class="btn preset-outlined-surface-500" href={getStaticFileUrl(file.uuid)} target="_blank">
 				{$_('common.open')}
-			</button>
+			</a>
 			<button
 				type="button"
 				class="btn preset-filled-error-500"

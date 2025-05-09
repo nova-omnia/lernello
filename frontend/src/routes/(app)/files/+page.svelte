@@ -10,6 +10,7 @@
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { error } from '@sveltejs/kit';
 	import FileUpload from '$lib/components/FileUpload.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const { data } = $props();
 	const invalidate = useQueryInvalidation();
@@ -24,6 +25,18 @@
 		onSuccess: () => {
 			invalidate(['files-overview']);
 			invalidate(['learning-kit']);
+			toaster.create({
+				title: $_('common.success.title'),
+				description: $_('files.delete.success'),
+				type: 'success'
+			});
+		},
+		onError: () => {
+			toaster.create({
+				title: $_('common.error'),
+				description: $_('files.delete.error'),
+				type: 'error'
+			});
 		}
 	});
 </script>
@@ -35,12 +48,7 @@
 				<h1 class="preset-typo-headline">{$_('common.files')}</h1>
 				<p>{$_('learningKit.context.description')}</p>
 			</div>
-			<FileUpload
-				onFileUploaded={() => {
-					invalidate(['files-overview']);
-					invalidate(['learning-kit']);
-				}}
-			/>
+			<FileUpload onFileUploaded={() => invalidate(['learning-kit'])} />
 		</div>
 		<div class="flex flex-col gap-1">
 			{#if $filesQuery.status === 'pending'}

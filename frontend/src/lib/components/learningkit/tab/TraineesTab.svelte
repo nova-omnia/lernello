@@ -1,7 +1,6 @@
 <script lang="ts">
-	import TraineeItem from '$lib/components/learningkit/displays/TraineeItem.svelte';
-	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { UserPlus } from 'lucide-svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { _ } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
@@ -9,17 +8,14 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit';
 	import { updateLearningKit } from '$lib/api/collections/learningKit';
+	import UserItem from '$lib/components/learningkit/displays/UserItem.svelte';
+	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 
 	const invalidate = useQueryInvalidation();
 
 	interface TraineesTabProps {
 		learningKitId: string;
-		participants: {
-			uuid: string;
-			username: string;
-			name: string;
-			surname: string;
-		}[];
+		participants: ParticipantUser[];
 	}
 
 	const { learningKitId, participants }: TraineesTabProps = $props();
@@ -76,9 +72,9 @@
 		/>
 		<div class="flex flex-col gap-1">
 			{#each participants ?? [] as trainee (trainee.uuid)}
-				<TraineeItem
+				<UserItem
 					user={trainee}
-					onRemoveTrainee={() => {
+					onRemoveUser={() => {
 						const updated = participants.filter((t) => t.uuid !== trainee.uuid).map((t) => t.uuid);
 
 						$updateLearningKitMutation.mutate({

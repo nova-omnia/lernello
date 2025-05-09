@@ -15,4 +15,5 @@ public record LearningUnitResDTO(
                                  @NotNull List<BlockResDTO> blocks,
                                  @Min(0) int position
 ) {
+
 }

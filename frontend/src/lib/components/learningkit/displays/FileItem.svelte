@@ -6,12 +6,13 @@
 	import { BASE_URL } from '$lib/api/apiClient';
 
 	interface FileItemProps {
-		File: FileRes;
+		file: FileRes;
+		isFilesView?: boolean;
 		onRemoveFile: () => void;
 		isForModal?: boolean;
 	}
 
-	const { File, onRemoveFile, isForModal = false }: FileItemProps = $props();
+	const { file, isFilesView = false, onRemoveFile, isForModal = false }: FileItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 
@@ -28,12 +29,12 @@
 <div class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4">
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
 		<FileIcon class="h-10 w-10" />
-		<p class="text-black-700 ml-3 text-xs font-bold">{File.name}</p>
+		<p class="text-black-700 ml-3 text-xs font-bold">{file.name}</p>
 	</div>
 
 	<div>
 		{#if !isForModal}
-			<a href={getStaticFileUrl(File.uuid)} class="btn preset-tonal-surface" target="_blank">
+			<a class="btn preset-outlined-surface-500" href={getStaticFileUrl(file.uuid)} target="_blank">
 				{$_('common.open')}
 			</a>
 			<button
@@ -44,7 +45,11 @@
 					showDeleteDialog = true;
 				}}
 			>
-				{$_('common.remove')}
+				{#if isFilesView}
+					{$_('common.delete')}
+				{:else}
+					{$_('common.remove')}
+				{/if}
 			</button>
 		{:else}
 			<button
@@ -63,9 +68,11 @@
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}
-	title={$_('blocks.delete_title')}
-	message={$_('blocks.delete_message')}
-	confirmText={$_('common.delete')}
+	title={isFilesView ? $_('files.delete.title') : $_('files.remove.title')}
+	message={isFilesView
+		? $_('files.delete.message', { values: { name: file.name } })
+		: $_('files.remove.message', { values: { name: file.name } })}
+	confirmText={isFilesView ? $_('common.delete') : $_('common.remove')}
 	cancelText={$_('common.cancel')}
 	danger={true}
 	onConfirm={removeFile}

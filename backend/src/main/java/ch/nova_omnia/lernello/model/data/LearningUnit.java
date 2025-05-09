@@ -32,6 +32,8 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class LearningUnit {
+    private static int  positionCounter = 0;
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,5 +62,7 @@ public class LearningUnit {
     public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;
         this.learningKit = learningKit;
+        this.position = positionCounter++;
     }
+
 }

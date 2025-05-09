@@ -1,8 +1,12 @@
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ url }) => {
-	const refreshedToken = await requireLogin();
+export const load = async ({ url, locals }) => {
+	requireLogin();
+	const refreshedToken = locals.recoveredToken;
+	if (refreshedToken) {
+		locals.recoveredToken = undefined; // we have recovered it to return it to the client already
+	}
 
 	const userInfo = await loadUserInfo();
 
@@ -16,6 +20,7 @@ export const load = async ({ url }) => {
 	}
 
 	return {
-		refreshedToken
+		refreshedToken,
+		userInfo
 	};
 };

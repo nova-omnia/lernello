@@ -15,7 +15,7 @@
 	blockActionState.setBlocks(data.learningUnit.blocks);
 
 	$effect.pre(() => {
-		if (data && data.role === TRAINEE_ROLE && data.learningUnitId) {
+		if (data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
 			api(fetch)
 				.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
 				.parse()

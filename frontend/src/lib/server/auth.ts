@@ -34,19 +34,8 @@ export async function loadUserInfo() {
 	return locals.userInfo;
 }
 
-export async function requireLogin() {
-	const { url, cookies } = getRequestEvent();
-
-	const refreshTokenCookie = cookies.get('lernello_refresh_token');
-	if (refreshTokenCookie && !isLoggedIn()) {
-		try {
-			const refreshedToken = await recoverSession();
-			isLoggedIn(); // Updates locals.isLoggedIn
-			return refreshedToken;
-		} catch (error) {
-			console.error('Failed to recover session:', error);
-		}
-	}
+export function requireLogin() {
+	const { url } = getRequestEvent();
 
 	if (!isLoggedIn()) {
 		const redirectTo = parseRedirectTo(url, url.pathname + url.search);

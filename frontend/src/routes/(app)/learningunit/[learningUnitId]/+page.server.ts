@@ -18,7 +18,6 @@ export const load = handleApiError(async ({ params, fetch }) => {
 
 	return {
 		learningUnitId,
-		learningUnit,
-		role
+		learningUnit
 	};
 });

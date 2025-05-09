@@ -5,5 +5,5 @@ export const CreateLearningUnitSchema = z.object({
 		.string()
 		.min(3, { message: 'Name must be at least 3 characters' })
 		.max(40, { message: 'Name cannot exceed 40 characters' }),
-	learningKitId: z.string().uuid({ message: 'Invalid learningKitId format' }).nonempty(),
+	learningKitId: z.string().uuid({ message: 'Invalid learningKitId format' }).nonempty()
 });

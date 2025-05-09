@@ -117,7 +117,7 @@
 			<div class="placeholder card h-24"></div>
 		</div>
 		<div class="placeholder h-6 w-1/4"></div>
-		{#each Array(3) as _}
+		{#each Array(3)}
 			<div class="card placeholder flex h-16 items-center justify-between p-4"></div>
 		{/each}
 	</div>

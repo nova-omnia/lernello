@@ -91,7 +91,7 @@
 
 {#if isLoading}
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		{#each Array(initialKitCount || maxKitsToShow) as _}
+		{#each Array(initialKitCount || maxKitsToShow)}
 			<PlaceholderLearningKit />
 		{/each}
 	</div>

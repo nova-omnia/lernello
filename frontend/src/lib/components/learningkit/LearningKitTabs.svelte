@@ -8,7 +8,6 @@
 	import { goto } from '$app/navigation';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
 	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
-	import LearningKitStatistics from '$lib/components/statistics/LearningKitStatistics.svelte';
 	import LearningKitStatistic from '$lib/components/statistics/LearningKitStatistic.svelte';
 
 	const tabs = {

@@ -49,7 +49,7 @@
 		{:else}
 			{#each $traineesQuery.data ?? [] as trainee (trainee.uuid)}
 				<UserItem
-					usersView={true}
+					isUsersView={true}
 					user={trainee}
 					onRemoveUser={() => $deleteTraineeMutation.mutate(trainee.uuid)}
 				/>

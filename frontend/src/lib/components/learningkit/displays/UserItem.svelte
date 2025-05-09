@@ -12,13 +12,13 @@
 
 	interface UserItemProps {
 		user: ParticipantUser;
-		usersView?: boolean;
+		isUsersView?: boolean;
 		onRemoveUser: () => void;
 		onResetUser?: () => void;
 	}
 
 	const invalidate = useQueryInvalidation();
-	const { user, usersView = false, onRemoveUser }: UserItemProps = $props();
+	const { user, isUsersView = false, onRemoveUser }: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 	let showUserPasswordResetDialog = $state(false);
@@ -70,7 +70,7 @@
 		</div>
 	</div>
 	<div class="flex gap-2">
-		{#if usersView}
+		{#if isUsersView}
 			<button
 				type="button"
 				class="btn preset-outlined-surface-500"
@@ -97,10 +97,10 @@
 				showDeleteDialog = true;
 			}}
 		>
-			{#if !usersView}
+			{#if !isUsersView}
 				{$_('common.remove')}
 			{/if}
-			{#if usersView}
+			{#if isUsersView}
 				{$_('common.delete')}
 			{/if}
 		</button>
@@ -109,9 +109,11 @@
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}
-	title={$_('common.user.delete')}
-	message={$_('dialog.delete.message', { values: { name: user.surname + ' ' + user.name } })}
-	confirmText={$_('common.delete')}
+	title={isUsersView ? $_('common.user.delete') : $_('common.user.remove')}
+	message={isUsersView
+		? $_('dialog.delete.message', { values: { name: user.surname + ' ' + user.name } })
+		: $_('dialog.remove.message', { values: { name: user.surname + ' ' + user.name } })}
+	confirmText={isUsersView ? $_('common.delete') : $_('common.remove')}
 	cancelText={$_('common.cancel')}
 	danger={true}
 	onConfirm={removeUser}

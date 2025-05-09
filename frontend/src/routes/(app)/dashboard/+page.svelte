@@ -7,7 +7,7 @@
 	import AddLearningKit from '$lib/components/learningkit/AddLearningKit.svelte';
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import { ChevronRight } from 'lucide-svelte';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 

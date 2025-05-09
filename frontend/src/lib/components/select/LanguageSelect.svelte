@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { _, locale, locales } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
-	import Select from '$lib/components/Select.svelte';
+	import Select from '$lib/components/select/Select.svelte';
 	import { setUserLocale } from '$lib/api/collections/user';
 	import { api } from '$lib/api/apiClient';
 

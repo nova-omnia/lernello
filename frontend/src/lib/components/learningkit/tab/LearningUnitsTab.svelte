@@ -2,7 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
-	import { deleteLearningUnit } from '$lib/api/collections/learningUnit';
+	import { deleteLearningUnit, generateLearningUnit } from '$lib/api/collections/learningUnit';
 	import { updateLearningUnitsOrder } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
@@ -10,6 +10,7 @@
 	import LearningUnitItem from '$lib/components/learningkit/displays/LearningUnitItem.svelte';
 	import { Plus } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -70,6 +71,24 @@
 			invalidate(['learning-kit', learningKitId]);
 		}
 	});
+
+	const generateLearningUnitMutation = createMutation({
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningUnit.generate.isGenerating'),
+				type: 'info'
+			});
+		},
+		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
+			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
+		onSuccess: () => {
+			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningUnit.generate.generated'),
+				type: 'info'
+			});
+		}
+	});
 </script>
 
 <div class="flex w-full flex-col gap-4 p-4">
@@ -102,9 +121,16 @@
 		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
+				isLoading={$generateLearningUnitMutation.isPending}
 					{learningUnit}
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
+					}}
+					onGenerateLearningUnit={(files) => {
+						$generateLearningUnitMutation.mutate({
+							id: learningUnit.uuid,
+							files
+						});
 					}}
 					{role}
 				/>

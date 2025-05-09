@@ -6,7 +6,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKits } from '$lib/api/collections/learningKit';
-	import PageContainer from '$lib/components/PageContainer.svelte';
+	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -52,6 +53,7 @@ public class LearningUnit {
     private int position;
 
     @OneToMany(mappedBy = "learningUnit", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Block> blocks = new ArrayList<>();
 
     public LearningUnit(String name, LearningKit learningKit) {

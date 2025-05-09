@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TraineeItem from '$lib/components/learningkit/displays/TraineeItem.svelte';
-	import MultiSelect from '$lib/components/MultiSelect.svelte';
+	import MultiSelect from '$lib/components/select/MultiSelect.svelte';
 	import { UserPlus } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';

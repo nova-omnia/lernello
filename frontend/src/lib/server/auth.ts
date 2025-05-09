@@ -34,10 +34,20 @@ export async function loadUserInfo() {
 	return locals.userInfo;
 }
 
-export function requireLogin() {
-	const { url } = getRequestEvent();
+export async function requireLogin() {
+	const { url, cookies } = getRequestEvent();
 
-	// assume `locals.user` is populated in `handle`
+	const refreshTokenCookie = cookies.get('lernello_refresh_token');
+	if (refreshTokenCookie && !isLoggedIn()) {
+		try {
+			const refreshedToken = await recoverSession();
+			isLoggedIn(); // Updates locals.isLoggedIn
+			return refreshedToken;
+		} catch (error) {
+			console.error('Failed to recover session:', error);
+		}
+	}
+
 	if (!isLoggedIn()) {
 		const redirectTo = parseRedirectTo(url, url.pathname + url.search);
 		const params = new URLSearchParams({ redirectTo });

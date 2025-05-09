@@ -5,7 +5,10 @@
 	import { goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import { LoggedInUserNoRefreshSchema } from '$lib/schemas/response/LoggedInUser';
+	import {
+		LoggedInUserNoRefreshSchema,
+		type LoggedInUserNoRefresh
+	} from '$lib/schemas/response/LoggedInUser';
 
 	function goBack() {
 		if (history.length > 1) {
@@ -15,7 +18,11 @@
 		}
 	}
 
-	let { children } = $props();
+	let { children, data } = $props();
+
+	function setNewTokenData(loggedInUserNoRefresh: LoggedInUserNoRefresh) {
+		localStorage.setItem('lernello_auth_token', JSON.stringify(loggedInUserNoRefresh));
+	}
 
 	function parseTokenFromLocalStorage() {
 		const token = localStorage.getItem('lernello_auth_token') ?? '{}';
@@ -44,7 +51,7 @@
 			});
 			const json = await data.json();
 			const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
-			localStorage.setItem('lernello_auth_token', JSON.stringify(loggedInUserNoRefresh));
+			setNewTokenData(loggedInUserNoRefresh);
 
 			clearInterval(autoLogoutTimer);
 			queueRefresh();
@@ -60,6 +67,10 @@
 	}
 
 	onMount(() => {
+		if (data.refreshedToken) {
+			console.log('Token recovered from by server');
+			setNewTokenData(data.refreshedToken);
+		}
 		const { clearAllTimers } = queueRefresh();
 		return () => {
 			clearAllTimers();

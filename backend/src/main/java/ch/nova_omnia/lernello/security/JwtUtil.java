@@ -72,26 +72,15 @@ public class JwtUtil {
     }
 
     /**
-     * Extracts the userId from a JWT token.
-     *
-     * @param token The token to extract the userId from.
-     * @return The userId.
-     */
-    public UUID getUserIdFromToken(String token) {
-        String uuidString = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
-        return UUID.fromString(uuidString);
-    }
-
-    /**
      * Validates a JWT token.
      *
      * @param token The token to validate.
-     * @return Whether the token is valid.
+     * @return The subject of the token if valid, null otherwise.
      */
-    public boolean validateJwtToken(String token) {
+    public String validateJwtToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return claims.getSubject();
         } catch (SecurityException e) {
             //TODO add logging here
         } catch (MalformedJwtException e) {
@@ -103,6 +92,6 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             //TODO add logging here
         }
-        return false;
+        return null;
     }
 }

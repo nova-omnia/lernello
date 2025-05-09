@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
+	import { LoggedInUserNoRefreshSchema } from '$lib/schemas/response/LoggedInUser';
 
 	function goBack() {
 		if (history.length > 1) {
@@ -17,32 +17,53 @@
 
 	let { children } = $props();
 
-	onMount(() => {
+	function parseTokenFromLocalStorage() {
 		const token = localStorage.getItem('lernello_auth_token') ?? '{}';
-		try {
-			const parsedToken = LoggedInUserSchema.parse(JSON.parse(token));
-			const tokenExp = new Date(parsedToken.expires).getTime() - Date.now();
-			const refreshTokenExp = new Date(parsedToken.refreshExpires).getTime() - Date.now();
-			const createAutoLogoutTimer = () => {
-				return setTimeout(() => {
-					localStorage.removeItem('lernello_auth_token');
-					goto('/login');
-				}, refreshTokenExp);
-			};
-			let autoLogoutTimer = createAutoLogoutTimer();
-			setTimeout(async () => {
-				// refresh
-				alert('TIME TO REFRESH THE TOKEN!');
+		const parsedToken = LoggedInUserNoRefreshSchema.parse(JSON.parse(token));
 
-				clearInterval(autoLogoutTimer);
-				autoLogoutTimer = createAutoLogoutTimer();
-			}, tokenExp / 2);
-			console.log('Parsed token:', parsedToken);
-			console.log('Token expires in:', tokenExp, 'ms');
-			console.log('Refresh token expires in:', refreshTokenExp, 'ms');
-		} catch (e) {
-			console.error('Error parsing token:', e);
+		const tokenExp = new Date(parsedToken.expires).getTime() - Date.now();
+		const refreshTokenExp = new Date(parsedToken.refreshExpires).getTime() - Date.now();
+
+		return {
+			expiresMs: Math.max(tokenExp, 0),
+			refreshExpiresMs: refreshTokenExp
+		};
+	}
+
+	function queueRefresh() {
+		const { expiresMs, refreshExpiresMs } = parseTokenFromLocalStorage();
+
+		const autoLogoutTimer = setTimeout(() => {
+			localStorage.removeItem('lernello_auth_token');
+			window.location.reload();
+		}, refreshExpiresMs);
+
+		const refetchTimer = setTimeout(async () => {
+			const data = await fetch('/refresh', {
+				method: 'GET'
+			});
+			const json = await data.json();
+			const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
+			localStorage.setItem('lernello_auth_token', JSON.stringify(loggedInUserNoRefresh));
+
+			clearInterval(autoLogoutTimer);
+			queueRefresh();
+		}, expiresMs / 2);
+
+		function clearAllTimers() {
+			clearTimeout(autoLogoutTimer);
+			clearTimeout(refetchTimer);
 		}
+		return {
+			clearAllTimers
+		};
+	}
+
+	onMount(() => {
+		const { clearAllTimers } = queueRefresh();
+		return () => {
+			clearAllTimers();
+		};
 	});
 </script>
 

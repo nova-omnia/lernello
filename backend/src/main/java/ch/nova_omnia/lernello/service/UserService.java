@@ -4,6 +4,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,19 +25,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public User authenticate(String username, String password) {
-        User user = this.findByUsername(username);
+    private void generateUserTokens(User user) {
         user.setToken(jwtUtil.generateToken(user.getUuid()));
         UUID jitUuid = UUID.randomUUID();
         String refreshToken = jwtUtil.generateRefreshToken(jitUuid);
         RefreshToken refreshTokenEntity = new RefreshToken();
-        refreshTokenEntity.setJti(jitUuid.toString());
+        refreshTokenEntity.setJti(jitUuid);
         refreshTokenEntity.setUser(user);
         refreshTokenRepository.save(refreshTokenEntity);
 
@@ -43,6 +46,34 @@ public class UserService {
         user.setExpires(expirationTime);
         ZonedDateTime refreshExpirationTime = ZonedDateTime.now().plus(jwtUtil.getRefreshExpirationTime());
         user.setRefreshExpires(refreshExpirationTime);
+    }
+
+    public User authenticate(String username, String password) {
+        // login using username and password
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
+        authentication.getPrincipal();
+
+        User user = this.findByUsername(username);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+        generateUserTokens(user);
+        return user;
+    }
+
+    public User refreshToken(String refreshToken) {
+        String tokenSubject = jwtUtil.validateJwtToken(refreshToken);
+        UUID jti = UUID.fromString(tokenSubject);
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findByJti(jti).orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+        User user = refreshTokenEntity.getUser();
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid refresh token");
+        }
+        generateUserTokens(user);
+        refreshTokenRepository.delete(refreshTokenEntity);
         return user;
     }
 

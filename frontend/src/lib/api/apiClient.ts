@@ -2,10 +2,9 @@ import type { z } from 'zod';
 import type { AllowedMethod, Endpoint } from './createEndpoint';
 import { ApiError, isApiErrorResponse } from './apiError';
 import { browser } from '$app/environment';
-import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
+import { LoggedInUserNoRefreshSchema } from '$lib/schemas/response/LoggedInUser';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 
-// TODO handle different environments
 export const BASE_URL = PUBLIC_API_BASE_URL;
 
 function buildRequestInit({
@@ -81,7 +80,7 @@ export function api(fetchFn: typeof fetch) {
 		if (browser) {
 			const token = localStorage.getItem('lernello_auth_token');
 			if (token) {
-				const parsedToken = LoggedInUserSchema.parse(JSON.parse(token));
+				const parsedToken = LoggedInUserNoRefreshSchema.parse(JSON.parse(token));
 				init.headers = {
 					...init.headers,
 					Authorization: `Bearer ${parsedToken.token}`

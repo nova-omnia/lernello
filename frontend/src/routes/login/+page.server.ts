@@ -3,23 +3,23 @@ import { fail, redirect } from '@sveltejs/kit';
 import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { isLoggedIn, parseRedirectTo } from '$lib/server/auth';
+import { isLoggedIn, parseRedirectTo, setAuthCookies } from '$lib/server/auth';
 import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
 import { signin } from '$lib/api/collections/auth';
-import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
+import { type LoggedInUserNoRefresh } from '$lib/schemas/response/LoggedInUser';
 import { api } from '$lib/api/apiClient.js';
 
 export const load = async ({ url }) => {
-	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
-
 	if (isLoggedIn()) {
 		redirect(303, parseRedirectTo(url));
 	}
 
+	const form = await superValidate<Infer<typeof UserLoginSchema>, Message>(zod(UserLoginSchema));
+
 	return { form };
 };
 
-type Message = { redirectTo: string; tokenInfo: LoggedInUser };
+type Message = { redirectTo: string; tokenInfo: LoggedInUserNoRefresh };
 
 export const actions = {
 	login: handleApiError(async ({ request, cookies, url, fetch }) => {
@@ -34,31 +34,10 @@ export const actions = {
 			const loggedInUserRes = await api(fetch).req(signin, form.data, undefined).response;
 			const loggedInUserResJson = await loggedInUserRes.json();
 			const loggedInUser = signin.response.schema.parse(loggedInUserResJson);
-			const expiresDate = new Date(loggedInUser.expires);
-			const expiresMs = expiresDate.getTime() - Date.now();
-			const refreshExpiresDate = new Date(loggedInUser.refreshExpires);
-			const refreshExpiresMs = refreshExpiresDate.getTime() - Date.now();
-			if (expiresMs < 0) {
-				throw new Error('Newly retrieved token is expired');
-			}
-			if (refreshExpiresMs < 0) {
-				throw new Error('Newly retrieved refresh token is expired');
-			}
-
-			cookies.set('lernello_auth_token', loggedInUser.token, {
-				httpOnly: true,
-				path: '/',
-				maxAge: Math.floor(expiresMs / 1000)
-			});
-			cookies.set('lernello_refresh_token', loggedInUser.refreshToken, {
-				httpOnly: true,
-				path: '/',
-				maxAge: Math.floor(refreshExpiresMs / 1000)
-			});
-
+			const loggedInUserNoRefresh = setAuthCookies(cookies, loggedInUser);
 			return message(form, {
 				redirectTo: parseRedirectTo(url),
-				tokenInfo: loggedInUser
+				tokenInfo: loggedInUserNoRefresh
 			});
 		} catch (error) {
 			if (error instanceof ApiError) {

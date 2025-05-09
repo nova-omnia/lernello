@@ -1,7 +1,9 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, type Cookies } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import { getUserInfo } from '$lib/api/collections/user';
-import { api } from '$lib/api/apiClient';
+import { api, BASE_URL } from '$lib/api/apiClient';
+import { LoggedInUserNoRefreshSchema, type LoggedInUser } from '$lib/schemas/response/LoggedInUser';
+import { refreshToken } from '$lib/api/collections/auth';
 
 export function isLoggedIn() {
 	const { locals, cookies } = getRequestEvent();
@@ -42,8 +44,6 @@ export function requireLogin() {
 
 		redirect(307, `/login?${params}`);
 	}
-
-	return isLoggedIn;
 }
 
 export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {
@@ -56,4 +56,51 @@ export function parseRedirectTo(url: URL, fallback: string = '/dashboard') {
 		return redirectTo;
 	}
 	return fallback;
+}
+
+export async function recoverSession() {
+	const { cookies, fetch } = getRequestEvent();
+	const refreshTokenCookie = cookies.get('lernello_refresh_token');
+	if (!refreshTokenCookie) {
+		throw new Error('No refresh token found');
+	}
+
+	const refreshRes = await fetch(`${BASE_URL}${refreshToken.getPath()}`, {
+		method: refreshToken.method,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${refreshTokenCookie}`
+		}
+	});
+	const refreshResJson = await refreshRes.json();
+	const loggedInUser = refreshToken.response.schema.parse(refreshResJson);
+	const loggedInUserNoRefresh = setAuthCookies(cookies, loggedInUser);
+
+	return loggedInUserNoRefresh;
+}
+
+export function setAuthCookies(cookies: Cookies, loggedInUser: LoggedInUser) {
+	const expiresDate = new Date(loggedInUser.expires);
+	const expiresMs = expiresDate.getTime() - Date.now();
+	const refreshExpiresDate = new Date(loggedInUser.refreshExpires);
+	const refreshExpiresMs = refreshExpiresDate.getTime() - Date.now();
+	if (expiresMs < 0) {
+		throw new Error('Newly retrieved token is expired');
+	}
+	if (refreshExpiresMs < 0) {
+		throw new Error('Newly retrieved refresh token is expired');
+	}
+
+	cookies.set('lernello_auth_token', loggedInUser.token, {
+		httpOnly: true,
+		path: '/',
+		maxAge: Math.floor(expiresMs / 1000)
+	});
+	cookies.set('lernello_refresh_token', loggedInUser.refreshToken, {
+		httpOnly: true,
+		path: '/',
+		maxAge: Math.floor(refreshExpiresMs / 1000)
+	});
+
+	return LoggedInUserNoRefreshSchema.parse(loggedInUser);
 }

@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.model.data.user;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -25,14 +26,11 @@ public class RefreshToken {
     private Long id;
 
     @Column(name = "jti", nullable = false, unique = true)
-    String jti;
+    UUID jti;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
-
-    @Column(name = "revoked")
-    private boolean revoked;
 
     @Column(name = "created_at")
     @CreatedDate

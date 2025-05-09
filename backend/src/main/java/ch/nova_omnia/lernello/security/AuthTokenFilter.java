@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,12 +44,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(
-                                    HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+                                    @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                UUID uuid = jwtUtils.getUserIdFromToken(jwt);
+            String tokenSubject = jwtUtils.validateJwtToken(jwt);
+            if (jwt != null && tokenSubject != null) {
+                UUID uuid = UUID.fromString(tokenSubject);
                 String username = userRepository.findByUuid(uuid).getUsername();
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

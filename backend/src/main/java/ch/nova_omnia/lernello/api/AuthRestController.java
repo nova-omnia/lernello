@@ -1,8 +1,11 @@
 package ch.nova_omnia.lernello.api;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,5 +38,14 @@ public class AuthRestController {
     public @Valid LoggedInUserDTO signin(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         User authenticatedUser = userService.authenticate(userLoginDTO.username(), userLoginDTO.password());
         return userLoginMapper.toDTO(authenticatedUser);
+    }
+
+
+    @GetMapping("/refresh-token")
+    @Transactional
+    public @Valid LoggedInUserDTO getFreshToken(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        User user = userService.refreshToken(token);
+        return userLoginMapper.toDTO(user);
     }
 }

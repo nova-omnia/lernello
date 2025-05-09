@@ -31,6 +31,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class LearningUnit {
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

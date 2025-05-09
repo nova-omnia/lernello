@@ -26,8 +26,7 @@ public class LearningKitService {
 
     public Page<LearningKit> getList(Pageable pageable, UUID userID) {
         if (isParticipant(userID)) {
-            return learningKitRepository
-                .findAllByParticipants_UuidAndPublishedTrue(userID, pageable);
+            return learningKitRepository.findAllByParticipants_UuidAndPublishedTrue(userID, pageable);
         }
         return learningKitRepository.findAllByOrderByCreatedAtDesc(pageable);
     }

@@ -5,6 +5,7 @@
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { invalidateAll } from '$app/navigation';
 	import { dev } from '$app/environment';
+	import { setNewTokenData } from '$lib/api/apiClientAuthMiddleware.js';
 
 	let { data } = $props();
 
@@ -12,7 +13,7 @@
 		invalidateAll: false, // redirect inside load function would prevent onUpdated from being called
 		async onUpdated({ form }) {
 			if (form.valid && form.message) {
-				localStorage.setItem('lernello_auth_token', JSON.stringify(form.message.tokenInfo));
+				setNewTokenData(form.message.tokenInfo);
 				await invalidateAll(); // will call load function aka redirect
 			}
 		},

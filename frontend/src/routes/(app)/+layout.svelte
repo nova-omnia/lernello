@@ -18,64 +18,6 @@
 	}
 
 	let { children } = $props();
-
-	function setNewTokenData(loggedInUserNoRefresh: LoggedInUserNoRefresh) {
-		localStorage.setItem('lernello_auth_token', JSON.stringify(loggedInUserNoRefresh));
-	}
-
-	function parseTokenFromLocalStorage() {
-		const token = localStorage.getItem('lernello_auth_token') ?? '{}';
-		const parsedToken = LoggedInUserNoRefreshSchema.parse(JSON.parse(token));
-
-		const tokenExp = new Date(parsedToken.expires).getTime() - Date.now();
-		const refreshTokenExp = new Date(parsedToken.refreshExpires).getTime() - Date.now();
-
-		return {
-			expiresMs: Math.max(tokenExp, 0),
-			refreshExpiresMs: refreshTokenExp
-		};
-	}
-
-	function queueRefresh() {
-		const { expiresMs, refreshExpiresMs } = parseTokenFromLocalStorage();
-
-		const autoLogoutTimer = setTimeout(() => {
-			localStorage.removeItem('lernello_auth_token');
-			window.location.reload();
-		}, refreshExpiresMs);
-
-		const refetchTimer = setTimeout(async () => {
-			try {
-				const data = await fetch('/refresh', {
-					method: 'GET'
-				});
-				const json = await data.json();
-				const loggedInUserNoRefresh = LoggedInUserNoRefreshSchema.parse(json);
-				setNewTokenData(loggedInUserNoRefresh);
-				clearInterval(autoLogoutTimer);
-				queueRefresh();
-			} catch (error) {
-				console.error('Error refreshing token:', error);
-				queueRefresh();
-			}
-		}, expiresMs / 2);
-
-		function clearAllTimers() {
-			clearTimeout(autoLogoutTimer);
-			clearTimeout(refetchTimer);
-		}
-
-		return {
-			clearAllTimers
-		};
-	}
-
-	$effect.pre(() => {
-		const { clearAllTimers } = queueRefresh();
-		return () => {
-			clearAllTimers();
-		};
-	});
 </script>
 
 <div class="flex h-full">

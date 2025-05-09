@@ -1,8 +1,9 @@
 import { browser } from '$app/environment';
+import { setNewTokenData } from '$lib/api/apiClientAuthMiddleware';
 
 export const load = async ({ data }) => {
 	if (browser && data.refreshedToken) {
-		localStorage.setItem('lernello_auth_token', JSON.stringify(data.refreshedToken));
+		setNewTokenData(data.refreshedToken);
 	}
 
 	return data;

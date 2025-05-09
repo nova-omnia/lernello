@@ -1,0 +1,31 @@
+meta {
+  name: Reorder LearningUnits
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/api/learning-kits/{{id}}/reorder/learning-units
+  body: json
+  auth: inherit
+}
+
+params:query {
+  : 
+}
+
+body:json {
+  {
+    "learningUnitUuidsInOrder": [
+      "0959dbfc-f092-4939-a724-40cb2c16713b",
+      "65a64f71-387e-4898-b0e1-1c83bf21c742",
+      "15a77733-8f15-4b64-a3c9-8196844eb4ed",
+      "468a05c6-7687-4ab8-b85e-b02de945ccbe",
+      "63def96f-3fa7-4a5b-8d67-2f4f8b3486c3"
+    ]
+  }
+}
+
+vars:pre-request {
+  id: 21c7e3c2-3903-45ec-a72c-abf2010ef2ca
+}

@@ -7,14 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
-import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
-import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
-import ch.nova_omnia.lernello.repository.BlockProgressRepository;
-import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockNameActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -23,10 +25,14 @@ import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlock
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -52,6 +58,15 @@ public class LearningUnitService {
 
     public List<LearningUnit> findAll() {
         return learningUnitRepository.findAll();
+    }
+
+    @Transactional
+    public void updateLearningUnitPosition(UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+        List<UUID> learningUnitIds = updateLearningUnitOrderDTO.learningUnitUuidsInOrder();
+        for (int i = 0; i < learningUnitIds.size(); i++) {
+            LearningUnit learningUnit = learningUnitRepository.findById(learningUnitIds.get(i)).orElseThrow(() -> new RuntimeException("Learning Unit not found"));
+            learningUnitRepository.updatePosition(i, learningUnit.getUuid());
+        }
     }
 
     @Transactional
@@ -118,13 +133,13 @@ public class LearningUnitService {
 
         block = switch (createBlockDTO) {
             case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
-                theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
+                    theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
             );
             case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
-                multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
+                    multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
             );
             case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
-                questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
+                    questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
             );
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
         };
@@ -177,10 +192,7 @@ public class LearningUnitService {
 
         List<Block> blocks = learningUnit.getBlocks();
 
-        Block blockToMove = blocks.stream()
-            .filter(block -> block.getUuid().equals(targetId))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Block not found for reorder: " + tempKey + " (resolved to UUID: " + targetId + ")"));
+        Block blockToMove = blocks.stream().filter(block -> block.getUuid().equals(targetId)).findFirst().orElseThrow(() -> new IllegalArgumentException("Block not found for reorder: " + tempKey + " (resolved to UUID: " + targetId + ")"));
 
         blocks.remove(blockToMove);
 

@@ -1,24 +1,33 @@
 <script lang="ts">
-	import { Avatar } from '@skeletonlabs/skeleton-svelte';
+	import { Avatar, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { resetUserPasswordAPI } from '$lib/api/collections/user';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { CheckCircle2 } from 'lucide-svelte';
 
 	interface UserItemProps {
 		user: ParticipantUser;
 		isUsersView?: boolean;
 		onRemoveUser: () => void;
-		onResetUser?: () => void;
+		showProgress?: boolean;
+		progressPercentage?: number;
+		isCompleted?: boolean;
 	}
 
 	const invalidate = useQueryInvalidation();
-	const { user, isUsersView = false, onRemoveUser }: UserItemProps = $props();
+	const {
+		user,
+		isUsersView = false,
+		onRemoveUser,
+		showProgress = false,
+		progressPercentage,
+		isCompleted
+	}: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
 	let showUserPasswordResetDialog = $state(false);
@@ -33,10 +42,9 @@
 			});
 		},
 		onSuccess: () => {
-			// TODO does not invalidate
 			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.loading'),
+				title: $_('common.success'),
 				description: $_('users.overview.reset.loading'),
 				type: 'success'
 			});
@@ -61,50 +69,73 @@
 	}
 </script>
 
-<div class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4">
+<div
+	class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4 {showProgress &&
+	isCompleted
+		? 'border-l-4 border-green-500'
+		: 'border-surface-100-900 border-l-4'}"
+>
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
-		<Avatar name="{user.surname} {user.name}" classes="h-10 w-10" />
+		<div class="relative">
+			<Avatar name="{user.surname} {user.name}" classes="h-10 w-10" />
+			{#if showProgress && isCompleted}
+				<CheckCircle2
+					class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
+				/>
+			{/if}
+		</div>
 		<div class="flex flex-col">
 			<p class="truncate font-bold">{user.surname} {user.name}</p>
 			<p class="truncate text-sm text-gray-500">{user.username}</p>
 		</div>
 	</div>
-	<div class="flex gap-2">
-		{#if isUsersView}
+
+	{#if showProgress && progressPercentage !== undefined}
+		<div class="flex items-center space-x-4">
+			<div class="w-24 text-right">
+				<Progress
+					value={progressPercentage}
+					max={100}
+					height="h-2"
+					meterBg={isCompleted ? 'bg-green-500' : 'bg-primary-500'}
+				/>
+				<span class="text-surface-500-400 text-xs">{progressPercentage}%</span>
+			</div>
+		</div>
+	{:else}
+		<div class="flex gap-2">
+			{#if isUsersView}
+				<a href={`/users/${user.uuid}/edit-form`} class="btn preset-outlined-surface-500">
+					{$_('common.edit')}
+				</a>
+				<button
+					type="button"
+					class="btn preset-outlined-error-500 text-error-500"
+					onclick={(e) => {
+						e.preventDefault();
+						showUserPasswordResetDialog = true;
+					}}
+				>
+					{$_('common.reset.password')}
+				</button>
+			{/if}
 			<button
 				type="button"
-				class="btn preset-outlined-surface-500"
-				onclick={() => goto(`/users/${user.uuid}/edit-form`)}
-			>
-				{$_('common.edit')}
-			</button>
-			<button
-				type="button"
-				class="btn preset-outlined-error-500 text-error-500"
+				class="btn preset-filled-error-500"
 				onclick={(e) => {
 					e.preventDefault();
-					showUserPasswordResetDialog = true;
+					showDeleteDialog = true;
 				}}
 			>
-				{$_('common.reset.password')}
+				{#if !isUsersView}
+					{$_('common.remove')}
+				{/if}
+				{#if isUsersView}
+					{$_('common.delete')}
+				{/if}
 			</button>
-		{/if}
-		<button
-			type="button"
-			class="btn preset-filled-error-500"
-			onclick={(e) => {
-				e.preventDefault();
-				showDeleteDialog = true;
-			}}
-		>
-			{#if !isUsersView}
-				{$_('common.remove')}
-			{/if}
-			{#if isUsersView}
-				{$_('common.delete')}
-			{/if}
-		</button>
-	</div>
+		</div>
+	{/if}
 </div>
 
 <ConfirmDialog

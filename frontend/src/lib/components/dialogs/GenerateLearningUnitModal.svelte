@@ -23,13 +23,11 @@
 	});
 
 	let {
-		isLoading,
+		// isLoading,
 		onConfirm,
 		onCancel,
 		isOpen = $bindable()
 	}: GenerateLearningUnitModalProps = $props();
-
-	console.log(isLoading); //only added for turning off eslint warning for unused variable. Variable will be used in the future.
 </script>
 
 <Modal
@@ -53,7 +51,7 @@
 
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
+					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
 								file={{ uuid: file.uuid, name: file.label }}

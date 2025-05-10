@@ -72,9 +72,6 @@
 			api(fetch)
 				.req(markLearningKitOpened, { learningKitId: $learningKitQuery.data.uuid })
 				.parse()
-				.then(() => {
-					console.log('Learning kit marked as opened successfully');
-				})
 				.catch((err) => {
 					console.error('Failed to mark learning kit as opened:', err);
 					toaster.create({

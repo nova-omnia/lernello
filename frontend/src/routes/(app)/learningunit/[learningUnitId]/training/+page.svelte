@@ -19,9 +19,6 @@
 			api(fetch)
 				.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
 				.parse()
-				.then(() => {
-					console.log('Learning unit marked as opened successfully');
-				})
 				.catch((err) => {
 					console.error('Failed to mark learning kit as opened:', err);
 					toaster.create({

@@ -1,5 +1,14 @@
 package ch.nova_omnia.lernello.service;
 
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
@@ -7,14 +16,6 @@ import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
@@ -79,5 +80,9 @@ public class LearningKitService {
     private boolean isParticipant(UUID id) {
         User user = userRepository.findByUuid(id);
         return user.getRole() == Role.TRAINEE;
+    }
+
+    public void reorderLearningUnits(LearningKit learningKit, String[] learningUnitIds) {
+    //todo
     }
 }

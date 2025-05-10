@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import { AlignLeft, GripVertical, Loader, CheckCircle2 } from 'lucide-svelte'; // Added CheckCircle2
 	import { Progress } from '@skeletonlabs/skeleton-svelte';
+	import { dragHandle } from 'svelte-dnd-action';
 	import { INSTRUCTOR_ROLE, type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { getLearningUnitProgress } from '$lib/api/collections/progress';
@@ -51,9 +52,12 @@
 </script>
 
 <div class="flex items-center">
-	{#if role === INSTRUCTOR_ROLE}
-		<GripVertical size={28} class="text-surface-300-700" />
-	{/if}
+	<div use:dragHandle aria-label={`drag-handle for ${learningUnit.name}`}>
+		{#if role === INSTRUCTOR_ROLE}
+			<GripVertical size={28} class="text-surface-300-700" />
+		{/if}
+	</div>
+
 	<a
 		aria-disabled={isLoading}
 		class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4

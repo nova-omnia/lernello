@@ -36,7 +36,6 @@
 					return;
 				}
 
-				// Create an array of promises for fetching progress
 				const progressPromises = initialKits.map(async (kitRes) => {
 					try {
 						const progressData = await api(fetch)
@@ -66,12 +65,11 @@
 						} as KitWithProgress;
 					} catch (e) {
 						console.error(`Failed to load progress for kit ${kitRes.name}:`, e);
-						// Return kit with undefined stats on error for this specific kit
 						return {
 							...kitRes,
 							participantProgress: [],
-							averageProgress: 0, // Or undefined to show placeholder
-							completionRate: 0 // Or undefined
+							averageProgress: 0,
+							completionRate: 0
 						} as KitWithProgress;
 					}
 				});

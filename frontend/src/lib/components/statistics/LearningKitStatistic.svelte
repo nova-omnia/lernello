@@ -81,9 +81,9 @@
 		return [];
 	});
 
-	const averageProgress = $kitQuery.data?.averageProgress ?? 0;
+	const averageProgress = $derived($kitQuery.data?.averageProgress ?? 0);
 
-	const completionRate = $kitQuery.data?.completionRate ?? 0;
+	const completionRate = $derived($kitQuery.data?.completionRate ?? 0);
 
 	function toggleSort(field: SortField) {
 		if (sortField === field) {

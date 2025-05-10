@@ -9,11 +9,11 @@
 	import { _ } from 'svelte-i18n';
 
 	interface Props {
-		fetchKits: () => Promise<LearningKitRes[]>;
+		kits: LearningKitRes[];
 		maxKitsToShow?: number;
 	}
 
-	const { fetchKits, maxKitsToShow = 5 }: Props = $props();
+	const { kits, maxKitsToShow = 5 }: Props = $props();
 
 	let kitsWithFullStats = $state<KitWithProgress[]>([]);
 	let isLoading = $state(true);
@@ -28,7 +28,7 @@
 			let tempKitsWithStats: KitWithProgress[] = [];
 
 			try {
-				const initialKits = await fetchKits();
+				const initialKits = kits;
 				initialKitCount = initialKits.length;
 
 				if (initialKitCount === 0) {

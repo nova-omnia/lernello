@@ -3,7 +3,6 @@
 	import { _ } from 'svelte-i18n';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { resetUserPasswordAPI } from '$lib/api/collections/user';
@@ -106,13 +105,9 @@
 	{:else}
 		<div class="flex gap-2">
 			{#if isUsersView}
-				<button
-					type="button"
-					class="btn preset-outlined-surface-500"
-					onclick={() => goto(`/users/${user.uuid}/edit-form`)}
-				>
+				<a href={`/users/${user.uuid}/edit-form`} class="btn preset-outlined-surface-500">
 					{$_('common.edit')}
-				</button>
+				</a>
 				<button
 					type="button"
 					class="btn preset-outlined-error-500 text-error-500"

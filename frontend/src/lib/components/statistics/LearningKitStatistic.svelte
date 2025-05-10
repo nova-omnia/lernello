@@ -81,27 +81,9 @@
 		return [];
 	});
 
-	const averageProgress = $derived.by(() => {
-		if ($progressQuery.isSuccess && $progressQuery.data) {
-			const progresses = $progressQuery.data;
-			if (progresses.length > 0) {
-				const totalProgress = progresses.reduce((sum, pVal) => sum + pVal.progressPercentage, 0);
-				return Math.round(totalProgress / progresses.length);
-			}
-		}
-		return 0;
-	});
+	const averageProgress = $kitQuery.data?.averageProgress ?? 0;
 
-	const completionRate = $derived.by(() => {
-		if ($progressQuery.isSuccess && $progressQuery.data) {
-			const progresses = $progressQuery.data;
-			if (progresses.length > 0) {
-				const completedCount = progresses.filter((pVal) => pVal.isCompleted).length;
-				return Math.round((completedCount / progresses.length) * 100);
-			}
-		}
-		return 0;
-	});
+	const completionRate = $kitQuery.data?.completionRate ?? 0;
 
 	function toggleSort(field: SortField) {
 		if (sortField === field) {

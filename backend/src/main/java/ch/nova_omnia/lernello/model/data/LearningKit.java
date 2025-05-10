@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.constraints.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -24,9 +25,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -90,4 +88,14 @@ public class LearningKit {
     @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy("name ASC")
     private List<File> files = new ArrayList<>();
+
+    @Column(name = "averageProgress", nullable = false)
+    @Min(0)
+    @Max(100)
+    private int averageProgress = 0;
+
+    @Column(name = "completionRate", nullable = false)
+    @Min(0)
+    @Max(100)
+    private int completionRate = 0;
 }

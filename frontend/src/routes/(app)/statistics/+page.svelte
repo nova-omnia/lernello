@@ -13,13 +13,8 @@
 	if (data.role !== INSTRUCTOR_ROLE) {
 		goto('/dashboard');
 	}
-
-	async function fetchAllKits(): Promise<LearningKitRes[]> {
-		const allKits = await api(fetch).req(getLearningKits, null, { size: 100, page: 0 }).parse();
-		return allKits.content;
-	}
 </script>
 
 <PageContainer title={$_('statistics.overview.title')}>
-	<LearningKitsStatisticsOverview fetchKits={fetchAllKits} />
+	<LearningKitsStatisticsOverview maxKitsToShow={100} />
 </PageContainer>

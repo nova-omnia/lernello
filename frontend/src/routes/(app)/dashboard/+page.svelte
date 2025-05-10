@@ -11,43 +11,14 @@
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import LearningKitsStatisticsOverview from '$lib/components/statistics/LearningKitStatisticsOverview.svelte';
-	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
+	import { type LearningKitPage } from '$lib/schemas/response/LearningKitRes';
 
 	const { data } = $props();
 
-	const kitsQuery = createQuery({
+	const kitsQuery = createQuery<LearningKitPage>({
 		queryKey: ['latest-learning-kits-list'],
 		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
 	});
-
-	// Query for all kits, using prefetched data for stats overview
-	const allKitsForStatsQuery = createQuery({
-		queryKey: ['all-instructor-kits-for-dashboard-stats'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 100, page: 0 }).parse(),
-		enabled: data.role === INSTRUCTOR_ROLE
-	});
-
-	async function fetchTop5KitsForDashboard(): Promise<LearningKitRes[]> {
-		if (data.role !== INSTRUCTOR_ROLE || !$allKitsForStatsQuery.isSuccess) {
-			return [];
-		}
-		const allKits = $allKitsForStatsQuery.data?.content ?? [];
-		if (!allKits.length) return [];
-
-		const kitsWithDeadline = allKits.filter((k) => k.deadlineDate);
-		const kitsWithoutDeadline = allKits.filter((k) => !k.deadlineDate);
-
-		// Sort kits with deadline by deadlineDate ASC (closest first)
-		kitsWithDeadline.sort((a, b) => {
-			if (!a.deadlineDate) return 1;
-			if (!b.deadlineDate) return -1;
-			return new Date(a.deadlineDate).getTime() - new Date(b.deadlineDate).getTime();
-		});
-
-		// Kits without deadline are already sorted by createdAt DESC (newest first) by the API default
-		const sortedKits = [...kitsWithDeadline, ...kitsWithoutDeadline];
-		return sortedKits.slice(0, 5);
-	}
 </script>
 
 <PageContainer title={$_('dashboard.title')}>
@@ -88,13 +59,12 @@
 					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}
 			</div>
-
-			{#if data.role === INSTRUCTOR_ROLE}
+			{#if data.userInfo.role === INSTRUCTOR_ROLE}
 				<a href="/statistics" class="preset-typo-subtitle-navigation flex w-fit items-center">
-					{#if $allKitsForStatsQuery.isSuccess}
+					{#if $kitsQuery.isSuccess}
 						{$_('dashboard.allStatistics', {
 							values: {
-								total: $allKitsForStatsQuery.data.totalElements
+								total: $kitsQuery.data.totalElements
 							}
 						})}
 					{:else}
@@ -109,7 +79,7 @@
 				{:else if $kitsQuery.status === 'error'}
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
-					<LearningKitsStatisticsOverview fetchKits={fetchTop5KitsForDashboard} />
+					<LearningKitsStatisticsOverview maxKitsToShow={5} />
 				{/if}
 			{/if}
 		</div>

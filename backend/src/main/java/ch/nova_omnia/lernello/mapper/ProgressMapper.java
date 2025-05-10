@@ -14,6 +14,7 @@ import org.mapstruct.ReportingPolicy;
 public interface ProgressMapper {
 
     @Mapping(source = "learningKit.uuid", target = "learningKitId")
+    @Mapping(source = "user.uuid", target = "userId")
     @Mapping(source = "opened", target = "isOpened")
     @Mapping(source = "completed", target = "isCompleted")
     LearningKitProgressResDTO toLearningKitProgressResDTO(LearningKitProgress learningKitProgress);

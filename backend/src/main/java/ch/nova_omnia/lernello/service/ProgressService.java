@@ -197,6 +197,21 @@ public class ProgressService {
         });
     }
 
+    @Transactional
+    public List<LearningKitProgress> getLearningKitProgressForAllParticipants(UUID learningKitId) {
+        LearningKit learningKit = learningKitRepository.findById(learningKitId)
+            .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
+
+        List<User> participants = learningKit.getParticipants();
+        List<LearningKitProgress> allProgresses = new ArrayList<>();
+
+        for (User participant : participants) {
+            LearningKitProgress progress = getOrCreateLearningKitProgress(participant, learningKit);
+            allProgresses.add(progress);
+        }
+        return allProgresses;
+    }
+
     public LearningUnitProgress getLearningUnitProgress(UUID learningUnitId, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         Optional<LearningUnitProgress> optProgress = learningUnitProgressRepository.findByUser_UuidAndLearningUnit_Uuid(user.getUuid(), learningUnitId);

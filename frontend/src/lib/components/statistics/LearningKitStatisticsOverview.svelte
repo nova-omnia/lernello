@@ -17,7 +17,13 @@
 	const { kits, maxKitsToShow = 5 }: Props = $props();
 
 	const kitsStatisticsQuery = createQuery<KitWithProgress[]>({
-		queryKey: ['kits-statistics-overview', kits.map((k) => k.uuid).sort().join(',')],
+		queryKey: [
+			'kits-statistics-overview',
+			kits
+				.map((k) => k.uuid)
+				.sort()
+				.join(',')
+		],
 		queryFn: async () => {
 			if (!kits || kits.length === 0) {
 				return [];
@@ -28,8 +34,8 @@
 			for (const kitRes of kits) {
 				try {
 					const progressData = await api(fetch)
-							.req(getLearningKitProgressForAllParticipants, null, kitRes.uuid)
-							.parse();
+						.req(getLearningKitProgressForAllParticipants, null, kitRes.uuid)
+						.parse();
 
 					let totalProgress = 0;
 					let completedCount = 0;

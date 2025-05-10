@@ -37,17 +37,13 @@
 		isCompleted: boolean;
 	}
 
-	let participantsWithProgress = $derived<ParticipantWithProgress[]>([]);
-	let averageProgress = $derived(0);
-	let completionRate = $derived(0);
-
 	type SortField = 'name' | 'progress';
 	type SortDirection = 'asc' | 'desc';
 
 	let sortField: SortField = $state('name');
 	let sortDirection: SortDirection = $state('asc');
 
-	$effect(() => {
+	let participantsWithProgress = $derived.by(() => {
 		if ($kitQuery.isSuccess && $kitQuery.data && $progressQuery.isSuccess && $progressQuery.data) {
 			const kit = $kitQuery.data;
 			const progresses = $progressQuery.data;
@@ -80,23 +76,31 @@
 						: b.progressPercentage - a.progressPercentage;
 				});
 			}
-			participantsWithProgress = sortedParticipants;
+			return sortedParticipants;
+		}
+		return [];
+	});
 
+	const averageProgress = $derived.by(() => {
+		if ($progressQuery.isSuccess && $progressQuery.data) {
+			const progresses = $progressQuery.data;
 			if (progresses.length > 0) {
 				const totalProgress = progresses.reduce((sum, pVal) => sum + pVal.progressPercentage, 0);
-				averageProgress = Math.round(totalProgress / progresses.length);
-
-				const completedCount = progresses.filter((pVal) => pVal.isCompleted).length;
-				completionRate = Math.round((completedCount / progresses.length) * 100);
-			} else {
-				averageProgress = 0;
-				completionRate = 0;
+				return Math.round(totalProgress / progresses.length);
 			}
-		} else {
-			participantsWithProgress = [];
-			averageProgress = 0;
-			completionRate = 0;
 		}
+		return 0;
+	});
+
+	const completionRate = $derived.by(() => {
+		if ($progressQuery.isSuccess && $progressQuery.data) {
+			const progresses = $progressQuery.data;
+			if (progresses.length > 0) {
+				const completedCount = progresses.filter((pVal) => pVal.isCompleted).length;
+				return Math.round((completedCount / progresses.length) * 100);
+			}
+		}
+		return 0;
 	});
 
 	function toggleSort(field: SortField) {

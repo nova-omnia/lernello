@@ -16,7 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -85,5 +87,15 @@ public class ProgressRestController {
         @AuthenticationPrincipal UserDetails userDetails) {
         LearningUnitProgress progress = progressService.getLearningUnitProgress(learningUnitId, userDetails);
         return progressMapper.toLearningUnitProgressDTO(progress);
+    }
+
+    @GetMapping("/learning-kit/{learningKitId}/participants-progress")
+    @PreAuthorize("hasAuthority('SCOPE_kits:read')")
+    public @Valid List<LearningKitProgressResDTO> getLearningKitProgressForAllParticipants(
+        @PathVariable UUID learningKitId) {
+        List<LearningKitProgress> progresses = progressService.getLearningKitProgressForAllParticipants(learningKitId);
+        return progresses.stream()
+            .map(progressMapper::toLearningKitProgressResDTO)
+            .collect(Collectors.toList());
     }
 }

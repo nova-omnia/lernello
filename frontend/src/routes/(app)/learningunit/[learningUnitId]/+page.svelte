@@ -75,8 +75,8 @@
 			class:opacity-50={dataLoading}
 			class:cursor-not-allowed={dataLoading}
 		>
-			<BlockEditor learningUnitId={data.learningUnitId} role={data.role} />
-			{#if data.role === INSTRUCTOR_ROLE}
+			<BlockEditor learningUnitId={data.learningUnitId} role={data.userInfo.role} />
+			{#if data.userInfo.role === INSTRUCTOR_ROLE}
 				<BlockReorder />
 			{/if}
 		</div>

@@ -1,12 +1,10 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.Role;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
+import java.security.SecureRandom;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,15 +12,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.UUID;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.RefreshToken;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.RefreshTokenRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final LearningKitRepository learningKitRepository;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -30,6 +34,22 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    private void generateUserTokens(User user) {
+        user.setToken(jwtUtil.generateToken(user.getUuid()));
+        UUID jitUuid = UUID.randomUUID();
+        String refreshToken = jwtUtil.generateRefreshToken(jitUuid);
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setJti(jitUuid);
+        refreshTokenEntity.setUser(user);
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        user.setRefreshToken(refreshToken);
+        ZonedDateTime expirationTime = ZonedDateTime.now().plus(jwtUtil.getExpirationTime());
+        user.setExpires(expirationTime);
+        ZonedDateTime refreshExpirationTime = ZonedDateTime.now().plus(jwtUtil.getRefreshExpirationTime());
+        user.setRefreshExpires(refreshExpirationTime);
     }
 
     public User findByUuid(UUID uuid) {
@@ -51,15 +71,31 @@ public class UserService {
     }
 
     public User authenticate(String username, String password) {
+        // login using username and password
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password)
+                new UsernamePasswordAuthenticationToken(username, password)
         );
         authentication.getPrincipal();
 
         User user = this.findByUsername(username);
-        user.setToken(jwtUtil.generateToken(user.getUsername()));
-        ZonedDateTime expirationTime = ZonedDateTime.now().plus(jwtUtil.getExpirationTime());
-        user.setExpires(expirationTime);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+        generateUserTokens(user);
+        return user;
+    }
+
+    public User refreshToken(String refreshToken) {
+        String tokenSubject = jwtUtil.validateJwtToken(refreshToken);
+        UUID jti = UUID.fromString(tokenSubject);
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findByJti(jti).orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+        User user = refreshTokenEntity.getUser();
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid refresh token");
+        }
+        generateUserTokens(user);
+        refreshTokenRepository.delete(refreshTokenEntity);
         return user;
     }
 

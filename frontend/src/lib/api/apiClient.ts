@@ -2,10 +2,9 @@ import type { z } from 'zod';
 import type { AllowedMethod, Endpoint } from './createEndpoint';
 import { ApiError, isApiErrorResponse } from './apiError';
 import { browser } from '$app/environment';
-import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
+import { apiClientAuthMiddleware } from './apiClientAuthMiddleware';
 
-// TODO handle different environments
 export const BASE_URL = PUBLIC_API_BASE_URL;
 
 function buildRequestInit({
@@ -78,17 +77,21 @@ export function api(fetchFn: typeof fetch) {
 				: undefined
 		});
 
+		let fetchFnWithMiddleware = fetchFn;
+
 		if (browser) {
-			const token = localStorage.getItem('lernello_auth_token');
-			if (token) {
-				const parsedToken = LoggedInUserSchema.parse(JSON.parse(token));
-				init.headers = {
-					...init.headers,
-					Authorization: `Bearer ${parsedToken.token}`
-				};
-			}
+			fetchFnWithMiddleware = async (...args) => {
+				const parsedToken = await apiClientAuthMiddleware();
+				if (parsedToken) {
+					init.headers = {
+						...init.headers,
+						Authorization: `Bearer ${parsedToken.token}`
+					};
+				}
+				return fetchFn(...args);
+			};
 		}
-		const response = fetchFn(url, init);
+		const response = fetchFnWithMiddleware(url, init);
 
 		return {
 			response,

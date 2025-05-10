@@ -39,9 +39,6 @@
 				api(fetchFn)
 					.req(markTheoryBlockViewed, { blockId: block.uuid })
 					.parse()
-					.then(() => {
-						console.log(`Theory block ${block.name} marked as viewed.`);
-					})
 					.catch((err) => {
 						console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
 						toaster.create({

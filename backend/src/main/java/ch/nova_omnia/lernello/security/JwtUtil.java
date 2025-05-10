@@ -3,6 +3,7 @@ package ch.nova_omnia.lernello.security;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -27,6 +28,8 @@ public class JwtUtil {
     private SecretKey key;
     @Value("${jwt.expiration}")
     private int jwtExpirationMs;
+    @Value("${jwt.refreshToken.expiration}")
+    private int jwtRefreshExpirationMs;
 
     /**
      * Initializes the key for the JWT operations.
@@ -46,35 +49,38 @@ public class JwtUtil {
     }
 
     /**
+     * Returns the expiration time of the refresh token.
+     *
+     * @return The expiration time.
+     */
+    public Duration getRefreshExpirationTime() {
+        return Duration.ofMillis(jwtRefreshExpirationMs);
+    }
+
+    /**
      * Generates a JWT token for a user.
      *
      * @param username The username of the user.
      * @return The generated token.
      */
-    public String generateToken(String username) {
-        return Jwts.builder().setSubject(username).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(key, SignatureAlgorithm.HS256).compact();
+    public String generateToken(UUID uuid) {
+        return Jwts.builder().setSubject(uuid.toString()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
-    /**
-     * Extracts the username from a JWT token.
-     *
-     * @param token The token to extract the username from.
-     * @return The username.
-     */
-    public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    public String generateRefreshToken(UUID jitUuid) {
+        return Jwts.builder().setSubject(jitUuid.toString()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + jwtRefreshExpirationMs)).signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
     /**
      * Validates a JWT token.
      *
      * @param token The token to validate.
-     * @return Whether the token is valid.
+     * @return The subject of the token if valid, null otherwise.
      */
-    public boolean validateJwtToken(String token) {
+    public String validateJwtToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return claims.getSubject();
         } catch (SecurityException e) {
             //TODO add logging here
         } catch (MalformedJwtException e) {
@@ -86,6 +92,6 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             //TODO add logging here
         }
-        return false;
+        return null;
     }
 }

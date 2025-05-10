@@ -1,5 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 
+import type { LoggedInUserNoRefresh } from '$lib/schemas/response/LoggedInUser';
 import type { UserInfo } from '$lib/schemas/response/UserInfo';
 
 // for information about these interfaces
@@ -9,6 +10,7 @@ declare global {
 		interface Locals {
 			isLoggedIn?: boolean;
 			userInfo?: UserInfo;
+			recoveredToken?: LoggedInUserNoRefresh;
 		}
 		// interface PageData {}
 		// interface PageState {}

@@ -23,13 +23,11 @@
 	});
 
 	let {
-		isLoading,
+		// isLoading,
 		onConfirm,
 		onCancel,
 		isOpen = $bindable()
 	}: GenerateLearningUnitModalProps = $props();
-
-	console.log(isLoading); //only added for turning off eslint warning for unused variable. Variable will be used in the future.
 </script>
 
 <Modal

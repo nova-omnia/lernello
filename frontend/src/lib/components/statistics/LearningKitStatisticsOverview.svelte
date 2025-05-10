@@ -7,6 +7,7 @@
 	import PlaceholderLearningKit from '$lib/components/learningkit/PlaceholderLearningKit.svelte';
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import { _ } from 'svelte-i18n';
+	import { createQuery } from '@tanstack/svelte-query';
 
 	interface Props {
 		kits: LearningKitRes[];
@@ -15,93 +16,72 @@
 
 	const { kits, maxKitsToShow = 5 }: Props = $props();
 
-	let kitsWithFullStats = $state<KitWithProgress[]>([]);
-	let isLoading = $state(true);
-	let isError = $state(false);
-	let initialKitCount = $state(0);
+	const kitsStatisticsQuery = createQuery<KitWithProgress[]>({
+		queryKey: ['kits-statistics-overview', kits.map((k) => k.uuid).sort().join(',')],
+		queryFn: async () => {
+			if (!kits || kits.length === 0) {
+				return [];
+			}
 
-	$effect(() => {
-		async function loadStatistics() {
-			isLoading = true;
-			isError = false;
-			kitsWithFullStats = [];
-			let tempKitsWithStats: KitWithProgress[] = [];
+			const processedKits: KitWithProgress[] = [];
 
-			try {
-				const initialKits = kits;
-				initialKitCount = initialKits.length;
-
-				if (initialKitCount === 0) {
-					isLoading = false;
-					return;
-				}
-
-				const progressPromises = initialKits.map(async (kitRes) => {
-					try {
-						const progressData = await api(fetch)
+			for (const kitRes of kits) {
+				try {
+					const progressData = await api(fetch)
 							.req(getLearningKitProgressForAllParticipants, null, kitRes.uuid)
 							.parse();
 
-						let totalProgress = 0;
-						let completedCount = 0;
-						let avgProgress = 0;
-						let compRate = 0;
+					let totalProgress = 0;
+					let completedCount = 0;
+					let avgProgress = 0;
+					let compRate = 0;
 
-						if (progressData && progressData.length > 0) {
-							progressData.forEach((p) => {
-								totalProgress += p.progressPercentage;
-								if (p.isCompleted) {
-									completedCount++;
-								}
-							});
-							avgProgress = totalProgress / progressData.length;
-							compRate = (completedCount / progressData.length) * 100;
-						}
-						return {
-							...kitRes,
-							participantProgress: progressData || [],
-							averageProgress: avgProgress,
-							completionRate: compRate
-						} as KitWithProgress;
-					} catch (e) {
-						console.error(`Failed to load progress for kit ${kitRes.name}:`, e);
-						return {
-							...kitRes,
-							participantProgress: [],
-							averageProgress: 0,
-							completionRate: 0
-						} as KitWithProgress;
+					if (progressData && progressData.length > 0) {
+						progressData.forEach((p) => {
+							totalProgress += p.progressPercentage;
+							if (p.isCompleted) {
+								completedCount++;
+							}
+						});
+						avgProgress = totalProgress / progressData.length;
+						compRate = (completedCount / progressData.length) * 100;
 					}
-				});
-
-				tempKitsWithStats = await Promise.all(progressPromises);
-				kitsWithFullStats = tempKitsWithStats;
-			} catch (e) {
-				console.error('Failed to fetch initial kits or their statistics:', e);
-				isError = true;
-			} finally {
-				isLoading = false;
+					processedKits.push({
+						...kitRes,
+						participantProgress: progressData || [],
+						averageProgress: avgProgress,
+						completionRate: compRate
+					} as KitWithProgress);
+				} catch (e) {
+					console.error(`Failed to load progress for kit ${kitRes.name}:`, e);
+					processedKits.push({
+						...kitRes,
+						participantProgress: [],
+						averageProgress: 0,
+						completionRate: 0
+					} as KitWithProgress);
+				}
 			}
+			return processedKits;
 		}
-		loadStatistics();
 	});
 </script>
 
-{#if isLoading}
+{#if $kitsStatisticsQuery.isLoading}
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		{#each Array(initialKitCount || maxKitsToShow)}
+		{#each Array(kits.length || maxKitsToShow)}
 			<PlaceholderLearningKit />
 		{/each}
 	</div>
-{:else if isError}
+{:else if $kitsStatisticsQuery.isError}
 	<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
-{:else if kitsWithFullStats.length === 0}
+{:else if !$kitsStatisticsQuery.data || $kitsStatisticsQuery.data.length === 0}
 	<div class="text-center">
 		<p>{$_('statistics.instructor.noKits')}</p>
 	</div>
 {:else}
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		{#each kitsWithFullStats as kit (kit.uuid)}
+		{#each $kitsStatisticsQuery.data as kit (kit.uuid)}
 			<LearningKitStatisticCard {kit} />
 		{/each}
 	</div>

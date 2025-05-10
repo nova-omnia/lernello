@@ -9,8 +9,4 @@ export const load = handleApiError(async () => {
 	if (role !== INSTRUCTOR_ROLE) {
 		redirect(307, '/dashboard');
 	}
-
-	return {
-		role
-	};
 });

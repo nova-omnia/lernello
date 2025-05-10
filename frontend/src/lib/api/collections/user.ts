@@ -1,4 +1,4 @@
-import { PasswordStatusSchema } from '$lib/schemas/response/PasswordStatus';
+import { GenericSuccessSchema } from '$lib/schemas/response/GenericSuccess';
 import { ParticipantUserSchema } from '$lib/schemas/response/ParticipantUser';
 import { createEndpoint } from '../createEndpoint';
 import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
@@ -16,7 +16,7 @@ export const changePassword = createEndpoint({
 	method: 'POST',
 	getPath: () => `${REQUEST_MAPPING}/password`,
 	response: {
-		schema: PasswordStatusSchema,
+		schema: GenericSuccessSchema,
 		defaultValidate: true
 	},
 	payload: {

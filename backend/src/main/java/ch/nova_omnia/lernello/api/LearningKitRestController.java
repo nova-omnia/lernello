@@ -27,6 +27,7 @@ import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.Role;
@@ -113,8 +114,8 @@ public class LearningKitRestController {
 
     @PatchMapping("/{id}/reorder/learning-units/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public ResponseEntity<String> reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+    public @Valid GenericSuccessDTO reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
         learningUnitService.updateLearningUnitPosition(id, updateLearningUnitOrderDTO);
-        return ResponseEntity.ok("Learning units reordered successfully");
+        return new GenericSuccessDTO(true);
     }
 }

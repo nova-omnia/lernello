@@ -63,11 +63,12 @@ public class LearningUnitRestController {
     @PostMapping("/")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO createLearningUnit(@Valid @RequestBody CreateLearningUnitDTO createLearningUnitDTO) {
+        UUID learningKitId = createLearningUnitDTO.learningKitId();
 
         LearningKit learningKit = learningKitRepository.findById(createLearningUnitDTO.learningKitId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO, learningKit);
-        LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit);
+        LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit,learningKitId);
         return learningUnitMapper.toDTO(learningUnit);
     }
 

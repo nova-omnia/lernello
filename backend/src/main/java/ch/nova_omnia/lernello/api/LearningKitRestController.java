@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException
-;
+import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
 import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
 import ch.nova_omnia.lernello.mapper.LearningKitMapper;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.Role;
@@ -113,8 +114,8 @@ public class LearningKitRestController {
 
     @PatchMapping("/{id}/reorder/learning-units/")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public Void reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+    public @Valid GenericSuccessDTO reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
         learningUnitService.updateLearningUnitPosition(id, updateLearningUnitOrderDTO);
-        return null;
+        return new GenericSuccessDTO(true);
     }
 }

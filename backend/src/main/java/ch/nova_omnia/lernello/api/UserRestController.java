@@ -1,23 +1,8 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateUserDTO;
-import ch.nova_omnia.lernello.dto.request.user.UpdateUserDTO;
-import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
-import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
-import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
-import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
-import ch.nova_omnia.lernello.dto.response.user.UserResDTO;
-import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
-import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
-import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
-import ch.nova_omnia.lernello.mapper.user.UserMapper;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.service.EmailService;
-import ch.nova_omnia.lernello.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,8 +16,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
+import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateUserDTO;
+import ch.nova_omnia.lernello.dto.request.user.UpdateUserDTO;
+import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
+import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
+import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
+import ch.nova_omnia.lernello.dto.response.user.UserResDTO;
+import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
+import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
+import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
+import ch.nova_omnia.lernello.mapper.user.UserMapper;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.service.EmailService;
+import ch.nova_omnia.lernello.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -48,11 +49,11 @@ public class UserRestController {
 
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
-    public @Valid PasswordStatusDTO changePassword(
+    public @Valid GenericSuccessDTO changePassword(
         @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         boolean status = userService.changePassword(userDetails.getUsername(), data.newPassword());
-        return new PasswordStatusDTO(status);
+        return new GenericSuccessDTO(status);
     }
 
     @GetMapping("/trainees")

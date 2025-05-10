@@ -91,7 +91,21 @@
 
 <div>
 	<FileUpload
-		accept=".pdf,.jpg,.jpeg,.png,.mp3,.mp4"
+		accept={[
+			'application/pdf',
+			'image/png',
+			'image/jpeg',
+			'image/jpg',
+			'image/gif',
+			'image/webp',
+			'video/mp4',
+			'video/x-matroska',
+			'audio/wav',
+			'video/x-msvideo',
+			'audio/aiff',
+			'audio/mp4',
+			'image/tiff'
+		]}
 		onFileReject={(details) => {
 			details.files.forEach((file) => {
 				file.errors.forEach((error) => {

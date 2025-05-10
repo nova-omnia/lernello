@@ -23,7 +23,7 @@
 	}
 </script>
 
-{#if data.role === INSTRUCTOR_ROLE}
+{#if data.userInfo.role === INSTRUCTOR_ROLE}
 	<PageContainer>
 		<div class="flex flex-col gap-8">
 			<div class="flex-col">

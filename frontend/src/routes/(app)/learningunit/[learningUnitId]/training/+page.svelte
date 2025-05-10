@@ -15,13 +15,10 @@
 	blockActionState.setBlocks(data.learningUnit.blocks);
 
 	$effect.pre(() => {
-		if (data && data.role === TRAINEE_ROLE && data.learningUnitId) {
+		if (data && data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
 			api(fetch)
 				.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
 				.parse()
-				.then(() => {
-					console.log('Learning unit marked as opened successfully');
-				})
 				.catch((err) => {
 					console.error('Failed to mark learning kit as opened:', err);
 					toaster.create({

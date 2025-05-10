@@ -3,7 +3,10 @@
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { deleteLearningUnit, generateLearningUnit } from '$lib/api/collections/learningUnit';
+	import { updateLearningUnitsOrder } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
+	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 	import LearningUnitItem from '$lib/components/learningkit/displays/LearningUnitItem.svelte';
 	import { Plus } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
@@ -22,6 +25,40 @@
 	}
 
 	const { learningKitId, learningUnits, role }: LearningUnitsProps = $props();
+
+	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, id: unit.uuid })));
+	let currentlyDraggingId: string | null = null;
+	type LearningUnitWithId = { name: string; description?: string; uuid: string; id: string };
+
+	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitWithId>>) {
+		learningUnitsSnapshot = e.detail.items;
+		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
+			currentlyDraggingId = e.detail.info.id;
+		}
+	}
+
+	function handleSortOnFinalize(e: CustomEvent<DndEvent<LearningUnitWithId>>) {
+		if (!currentlyDraggingId) {
+			throw new Error('No currently dragging ID');
+		}
+		const newIdx = e.detail.items.findIndex((unit) => unit.id === currentlyDraggingId);
+		const oldIdx = learningUnits.findIndex((unit) => unit.uuid === currentlyDraggingId);
+
+		if (newIdx === oldIdx) return;
+		learningUnitsSnapshot = e.detail.items;
+		$updateLearningUnitOrderMutation.mutate({
+			learningUnitUuidsInOrder: learningUnitsSnapshot.map((unit) => unit.uuid)
+		});
+	}
+
+	const updateLearningUnitOrderMutation = createMutation({
+		mutationFn: (newOrder: { learningUnitUuidsInOrder: string[] }) => {
+			return api(fetch).req(updateLearningUnitsOrder, newOrder, learningKitId).parse();
+		},
+		onSuccess: () => {
+			invalidate(['learning-kit', learningKitId]);
+		}
+	});
 
 	const deleteLearningUnitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
@@ -65,22 +102,34 @@
 			</a>
 		{/if}
 	</div>
-	<div class="grid gap-1">
-		{#each learningUnits ?? [] as learningUnit (learningUnit.uuid)}
-			<LearningUnitItem
-				isLoading={$generateLearningUnitMutation.isPending}
-				{learningUnit}
-				onDeleteLearningUnit={() => {
-					$deleteLearningUnitMutation.mutate(learningUnit.uuid);
-				}}
-				onGenerateLearningUnit={(files) => {
-					$generateLearningUnitMutation.mutate({
-						id: learningUnit.uuid,
-						files
-					});
-				}}
-				{role}
-			/>
+	<div
+		class="grid gap-1"
+		use:dragHandleZone={{
+			items: learningUnitsSnapshot,
+			flipDurationMs: 200,
+			dropFromOthersDisabled: true,
+			dropTargetStyle: { outline: '1px dashed oklch(45.77% 0.07 211.76deg)', borderRadius: '.5rem' }
+		}}
+		onconsider={handleSortOnConsider}
+		onfinalize={handleSortOnFinalize}
+	>
+		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}
+			<div class="block" animate:flip={{ duration: 200 }}>
+				<LearningUnitItem
+					isLoading={$generateLearningUnitMutation.isPending}
+					{learningUnit}
+					onDeleteLearningUnit={() => {
+						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
+					}}
+					onGenerateLearningUnit={(files) => {
+						$generateLearningUnitMutation.mutate({
+							id: learningUnit.uuid,
+							files
+						});
+					}}
+					{role}
+				/>
+			</div>
 		{/each}
 	</div>
 </div>

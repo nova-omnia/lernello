@@ -23,6 +23,7 @@ import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
@@ -32,6 +33,7 @@ import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
 import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
+    private final LearningKitRepository learningKitRepository;
     private final BlockRepository blockRepository;
     private final LearningUnitProgressRepository learningUnitProgressRepository;
     private final AIBlockService aiBlockService;
@@ -48,7 +51,9 @@ public class LearningUnitService {
     private Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
     @Transactional
-    public LearningUnit createLearningUnit(LearningUnit learningUnit) {
+    public LearningUnit createLearningUnit(LearningUnit learningUnit, UUID learningKitId) {
+        LearningKit learningKit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new RuntimeException("LearningKit not found with ID: " + learningKitId));
+        learningUnit.setPosition(learningKit.getLearningUnits().size());
         return learningUnitRepository.save(learningUnit);
     }
 
@@ -65,9 +70,6 @@ public class LearningUnitService {
         List<UUID> learningUnitIds = updateLearningUnitOrderDTO.learningUnitUuidsInOrder();
         List<LearningUnit> learningUnits = learningUnitRepository.findLearningUnitAsc(learningKitId);
 
-        if (learningUnits.size() != learningUnitIds.size()) {
-            throw new IllegalArgumentException("Mismatch between provided IDs and existing learning units.");
-        }
         for (int i = 0; i < learningUnitIds.size(); i++) {
             UUID expectedId = learningUnitIds.get(i);
             LearningUnit learningUnit = learningUnits.stream().filter(lu -> lu.getUuid().equals(expectedId)).findFirst().orElseThrow(() -> new RuntimeException("Learning Unit not found: " + expectedId));

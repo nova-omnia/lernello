@@ -21,6 +21,7 @@
 	import type { UpdateLearningKit } from '$lib/schemas/request/UpdateLearningKit'; // Import the role constant
 	import { markLearningKitOpened } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
 
 	const learningKitId = page.params.learningKitId;
 	const invalidate = useQueryInvalidation();
@@ -106,7 +107,13 @@
 				<div class="flex-col">
 					<div class="flex w-full justify-between gap-4">
 						<div>
-							<h1 class="preset-typo-headline">
+							<h1 class="preset-typo-headline flex items-center gap-2">
+								{#if $learningKitQuery.data?.published !== undefined}
+									<PublishedStatusIndicator
+										published={$learningKitQuery.data.published}
+										size="h-4 w-4"
+									/>
+								{/if}
 								{$_('learningKit.title', { values: { name: $learningKitQuery.data?.name } })}
 							</h1>
 							{#if $learningKitQuery.data?.deadlineDate}

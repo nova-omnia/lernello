@@ -9,6 +9,7 @@
 	import { ProgressRing, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
+	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -16,9 +17,10 @@
 		title: string;
 		uuid: string;
 		role: RoleType;
+		published: boolean;
 	}
 
-	const { title, uuid, role }: LearningKitProps = $props();
+	const { title, uuid, role, published }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
 
 	const deleteKitMutation = createMutation({
@@ -74,6 +76,9 @@
 		href="/learningkit/{uuid}?tab=learningUnits"
 	>
 		{#if role === INSTRUCTOR_ROLE}
+			<div class="absolute top-2 left-2">
+				<PublishedStatusIndicator {published} />
+			</div>
 			<button
 				class="absolute top-0 right-0 z-10 flex gap-2 p-2"
 				onclick={(e) => {

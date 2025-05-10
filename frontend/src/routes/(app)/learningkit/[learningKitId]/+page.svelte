@@ -64,7 +64,11 @@
 	});
 
 	$effect.pre(() => {
-		if ($learningKitQuery.data && data.role === TRAINEE_ROLE && $learningKitQuery.data.uuid) {
+		if (
+			$learningKitQuery.data &&
+			data.userInfo.role === TRAINEE_ROLE &&
+			$learningKitQuery.data.uuid
+		) {
 			api(fetch)
 				.req(markLearningKitOpened, { learningKitId: $learningKitQuery.data.uuid })
 				.parse()
@@ -100,7 +104,7 @@
 	<ErrorIllustration>{$_('learningKit.error.loadSingle')}</ErrorIllustration>
 {:else}
 	<PageContainer>
-		{#if data.role === INSTRUCTOR_ROLE}
+		{#if data.userInfo.role === INSTRUCTOR_ROLE}
 			<div class="flex flex-col gap-8">
 				<div class="flex-col">
 					<div class="flex w-full justify-between gap-4">
@@ -150,14 +154,17 @@
 						<p class="w-2xl wrap-break-word">{$learningKitQuery.data.description}</p>
 					{/if}
 				</div>
-				<LearningKitTabs learningKit={$learningKitQuery.data} tab={data.tab} role={data.role}
+				<LearningKitTabs
+					learningKit={$learningKitQuery.data}
+					tab={data.tab}
+					role={data.userInfo.role}
 				></LearningKitTabs>
 			</div>
-		{:else if data.role === TRAINEE_ROLE}
+		{:else if data.userInfo.role === TRAINEE_ROLE}
 			<LearningUnitsTab
 				learningKitId={$learningKitQuery.data.uuid}
 				learningUnits={$learningKitQuery.data.learningUnits ?? []}
-				role={data.role}
+				role={data.userInfo.role}
 			></LearningUnitsTab>
 		{/if}
 	</PageContainer>

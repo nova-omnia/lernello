@@ -11,4 +11,8 @@ export const load = async ({ url }) => {
 		changePw.searchParams.set('redirectTo', redirectTo);
 		redirect(303, changePw.toString());
 	}
+
+	return {
+		userInfo
+	};
 };

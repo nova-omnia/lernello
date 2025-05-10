@@ -41,7 +41,7 @@
 	});
 </script>
 
-{#if data.role === INSTRUCTOR_ROLE}
+{#if data.userInfo.role === INSTRUCTOR_ROLE}
 	<div class="flex w-full flex-col gap-8 p-4">
 		<div class="flex w-full justify-between gap-4">
 			<div>

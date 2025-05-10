@@ -46,7 +46,12 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data.content as kit (kit.uuid)}
-						<LearningKitItem title={kit.name} uuid={kit.uuid} role={data.userInfo.role} />
+						<LearningKitItem
+							title={kit.name}
+							uuid={kit.uuid}
+							role={data.userInfo.role}
+							published={kit.published}
+						/>
 					{/each}
 					{#if data.userInfo.role === INSTRUCTOR_ROLE}
 						<AddLearningKit title={$_('learningKit.create')} />

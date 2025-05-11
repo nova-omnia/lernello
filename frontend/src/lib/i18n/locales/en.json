@@ -178,6 +178,7 @@
 	"statistics.learningKit.title": "Learning Kit Statistics",
 	"statistics.kitOverview.title": "Learning Kit Overview",
 	"statistics.instructor.noKits": "No Learning Kit Statistics available",
+	"statistics.participants.none": "No participants available",
 	"statistics.instructor.noKits.description": "You have not published any Learning Kits yet. Publish a Learning Kit to get started.",
 	"statistics.participants": "Participants",
 	"statistics.participants.title": "Participants Overview",

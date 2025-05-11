@@ -57,4 +57,4 @@
 	});
 </script>
 
-<TextEditor content={block.translatedContents.find(content => content.language == language)?.content ?? block.content} onUpdate={onUpdateHandler} {role} />
+<TextEditor content={lastContent} onUpdate={onUpdateHandler} {role} />

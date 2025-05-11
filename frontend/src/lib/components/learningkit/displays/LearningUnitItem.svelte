@@ -2,15 +2,13 @@
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import GenerateLearningUnitModal from '$lib/components/dialogs/GenerateLearningUnitModal.svelte';
 	import { _ } from 'svelte-i18n';
-	import { AlignLeft, GripVertical, Loader, CheckCircle2 } from 'lucide-svelte'; // Added CheckCircle2
+	import { AlignLeft, GripVertical, Loader, CheckCircle2 } from 'lucide-svelte';
 	import { Progress } from '@skeletonlabs/skeleton-svelte';
 	import { dragHandle } from 'svelte-dnd-action';
 	import { INSTRUCTOR_ROLE, type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { getLearningUnitProgress } from '$lib/api/collections/progress';
 	import { api } from '$lib/api/apiClient';
-	import Select from '$lib/components/select/Select.svelte';
-	import { setSelectedLanguage, getSelectedLanguage } from '$lib/states/selectedLanguage';
 
 	interface LearningUnitProps {
 		learningUnit: {
@@ -37,15 +35,6 @@
 		queryFn: () => api(fetch).req(getLearningUnitProgress, null, learningUnit.uuid).parse(),
 		enabled: role === TRAINEE_ROLE
 	});
-
-	const languageOptions = $derived([
-		{ value: 'ENGLISH', label: $_('common.english') },
-		{ value: 'GERMAN', label: $_('common.german') },
-		{ value: 'FRENCH', label: $_('common.french') },
-		{ value: 'ITALIAN', label: $_('common.italian') }
-	]);
-
-	let selectedLanguage = $state(getSelectedLanguage());
 
 	let showDeleteDialog = $state(false);
 	let showGenerationDialog = $state(false);
@@ -105,25 +94,6 @@
 
 		{#if role === INSTRUCTOR_ROLE}
 			<div class="flex gap-2">
-				<div
-					class="min-w-[120px]"
-					role="presentation"
-					tabindex="-1"
-					onclick={(event) => {
-						event.preventDefault();
-						event.stopPropagation();
-					}}
-				>
-					<Select
-						options={languageOptions}
-						selected={selectedLanguage}
-						onSelect={(value) => {
-							selectedLanguage = value;
-							setSelectedLanguage(value);
-						}}
-					/>
-				</div>
-
 				<button
 					type="button"
 					onclick={(e) => {

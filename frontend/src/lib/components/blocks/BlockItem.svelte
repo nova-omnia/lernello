@@ -14,19 +14,17 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
-	import { getSelectedLanguage } from '$lib/states/selectedLanguage';
 
 
 	interface BlockItemProps {
 		block: BlockRes;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockItemProps = $props();
+	const { block, role, language }: BlockItemProps = $props();
 
 	let isConfirmDialogOpen: boolean = $state(false);
-
-	const language = getSelectedLanguage();
 
 	function removeBlock() {
 		queueBlockAction({

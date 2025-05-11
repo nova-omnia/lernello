@@ -17,7 +17,7 @@
 
 	let timer: ReturnType<typeof setTimeout> | null = null;
 	let dataLoading = $state(false);
-
+	
 	$effect(() => {
 		const { remove } = addBlockActionListener(() => {
 			if (blockActionState.queue.length === 0) {

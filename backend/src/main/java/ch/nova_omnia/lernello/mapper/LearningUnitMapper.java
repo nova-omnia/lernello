@@ -13,17 +13,17 @@ import org.mapstruct.ReportingPolicy;
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
-import ch.nova_omnia.lernello.dto.response.block.LocalizedBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.TranslatedBlockResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
-import ch.nova_omnia.lernello.model.data.block.LocalizedBlock;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LearningUnitMapper {
@@ -44,23 +44,23 @@ public interface LearningUnitMapper {
 
         if (block instanceof MultipleChoiceBlock) {
             return new MultipleChoiceBlockResDTO(
-                    MULTIPLE_CHOICE, block.getUuid(), block.getName(), block.getPosition(), ((MultipleChoiceBlock) block).getQuestion(), ((MultipleChoiceBlock) block).getPossibleAnswers(), ((MultipleChoiceBlock) block).getCorrectAnswers(), mapLocalizedBlocks(block.getLocalizedContents())
+                    MULTIPLE_CHOICE, block.getUuid(), block.getName(), block.getPosition(), ((MultipleChoiceBlock) block).getQuestion(), ((MultipleChoiceBlock) block).getPossibleAnswers(), ((MultipleChoiceBlock) block).getCorrectAnswers(), mapLocalizedBlocks(block.getTranslatedContents())
             );
         } else if (block instanceof QuestionBlock) {
             return new QuestionBlockResDTO(
-                    QUESTION, block.getUuid(), block.getName(), block.getPosition(), ((QuestionBlock) block).getQuestion(), ((QuestionBlock) block).getExpectedAnswer(), mapLocalizedBlocks(block.getLocalizedContents())
+                    QUESTION, block.getUuid(), block.getName(), block.getPosition(), ((QuestionBlock) block).getQuestion(), ((QuestionBlock) block).getExpectedAnswer(), mapLocalizedBlocks(block.getTranslatedContents())
             );
         } else if (block instanceof TheoryBlock) {
             return new TheoryBlockResDTO(
-                    THEORY, block.getUuid(), block.getName(), block.getPosition(), ((TheoryBlock) block).getContent(), mapLocalizedBlocks(block.getLocalizedContents())
+                    THEORY, block.getUuid(), block.getName(), block.getPosition(), ((TheoryBlock) block).getContent(), mapLocalizedBlocks(block.getTranslatedContents())
             );
         }
         throw new IllegalArgumentException("Unknown block type: " + block.getClass().getName());
     }
 
-    default List<LocalizedBlockResDTO> mapLocalizedBlocks(List<LocalizedBlock> blocks) {
-        return blocks.stream().map(b -> new LocalizedBlockResDTO(
-                b.getId(), b.getLanguageCode(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
+    default List<TranslatedBlockResDTO> mapLocalizedBlocks(List<TranslatedBlock> blocks) {
+        return blocks.stream().map(b -> new TranslatedBlockResDTO(
+                b.getId(), b.getLanguage(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
         )).toList();
     }
 }

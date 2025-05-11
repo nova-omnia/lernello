@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class LocalizedBlock {
+public class TranslatedBlock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,13 +27,15 @@ public class LocalizedBlock {
     private Block block;
 
     @Column(nullable = false, length = 5)
-    private String languageCode;
+    private BlockLanguage Language;
 
     @Lob
     private String content;
 
+    @Lob
     private String question;
 
+    @Lob
     private String expectedAnswer;
 
     @ElementCollection

@@ -55,7 +55,7 @@ public abstract class Block {
     private LearningUnit learningUnit;
 
     @OneToMany(mappedBy = "block", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LocalizedBlock> localizedContents = new ArrayList<>();
+    private List<TranslatedBlock> translatedContents = new ArrayList<>();
 
     protected Block(BlockType type, String name, int position, LearningUnit learningUnit) {
         this.type = type;

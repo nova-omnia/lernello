@@ -14,9 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockLanguage;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
-import ch.nova_omnia.lernello.model.data.block.LocalizedBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
@@ -33,7 +34,6 @@ public class AIBlockService {
     private final AIClient aiClient;
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
-    private static final List<String> TARGET_LANGUAGES = List.of("de", "fr", "it");
 
     public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
         TheoryBlock block = new TheoryBlock();
@@ -48,7 +48,7 @@ public class AIBlockService {
         // Paralleluebersetzungen
         generateTranslationsParallel(block, content);
         System.out.println("Generated TheoryBlock: " + block.getContent());
-        System.out.println("Generated LocalizedBlock: " + block.getLocalizedContents());
+        System.out.println("Generated LocalizedBlock: " + block.getTranslatedContents());
         return block;
     }
 
@@ -87,15 +87,15 @@ public class AIBlockService {
 
     private void generateTranslationsParallel(Block block, String content) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        for (String lang : TARGET_LANGUAGES) {
+        for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
                 String prompt = String.format("Translate the following text to %s:\n\n%s", lang, content);
                 String translated = aiClient.sendPrompt(prompt);
-                LocalizedBlock lb = new LocalizedBlock();
+                TranslatedBlock lb = new TranslatedBlock();
                 lb.setBlock(block);
-                lb.setLanguageCode(lang);
+                lb.setLanguage(lang);
                 lb.setContent(translated);
-                block.getLocalizedContents().add(lb);
+                block.getTranslatedContents().add(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -103,14 +103,14 @@ public class AIBlockService {
 
     private void generateTranslationsParallel(QuestionBlock block) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        for (String lang : TARGET_LANGUAGES) {
+        for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
-                LocalizedBlock lb = new LocalizedBlock();
+                TranslatedBlock lb = new TranslatedBlock();
                 lb.setBlock(block);
-                lb.setLanguageCode(lang);
+                lb.setLanguage(lang);
                 lb.setQuestion(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getQuestion()));
                 lb.setExpectedAnswer(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getExpectedAnswer()));
-                block.getLocalizedContents().add(lb);
+                block.getTranslatedContents().add(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -118,17 +118,17 @@ public class AIBlockService {
 
     private void generateTranslationsParallel(MultipleChoiceBlock block) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        for (String lang : TARGET_LANGUAGES) {
+        for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
-                LocalizedBlock lb = new LocalizedBlock();
+                TranslatedBlock lb = new TranslatedBlock();
                 lb.setBlock(block);
-                lb.setLanguageCode(lang);
+                lb.setLanguage(lang);
                 lb.setQuestion(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getQuestion()));
                 lb.setPossibleAnswers(block.getPossibleAnswers().stream()
                     .map(ans -> aiClient.sendPrompt("Translate to " + lang + ":\n" + ans)).toList());
                 lb.setCorrectAnswers(block.getCorrectAnswers().stream()
                     .map(ans -> aiClient.sendPrompt("Translate to " + lang + ":\n" + ans)).toList());
-                block.getLocalizedContents().add(lb);
+                block.getTranslatedContents().add(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();

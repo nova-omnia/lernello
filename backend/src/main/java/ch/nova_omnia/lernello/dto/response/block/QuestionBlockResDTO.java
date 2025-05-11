@@ -18,7 +18,7 @@ public record QuestionBlockResDTO(
                                   @Min(0) int position,
                                   @NotBlank String question,
                                   @NotBlank String expectedAnswer,
-                                  @NotNull List<LocalizedBlockResDTO> localizedContents
+                                  @NotNull List<TranslatedBlockResDTO> localizedContents
 ) implements BlockResDTO {
     public QuestionBlockResDTO {
         type = QUESTION;

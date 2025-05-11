@@ -12,6 +12,7 @@
 	type BlockWithId = BlockRes & { id: string };
 
 	let currentlyDraggingId: string | null = null;
+
 	function handleSortOnConsider(e: CustomEvent<DndEvent<BlockWithId>>) {
 		blocksSnapshot = e.detail.items;
 		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
@@ -46,7 +47,8 @@
 		use:dragHandleZone={{
 			items: blocksSnapshot,
 			flipDurationMs: 200,
-			dropFromOthersDisabled: true
+			dropFromOthersDisabled: true,
+			dropTargetStyle: { outline: '1px dashed oklch(45.77% 0.07 211.76deg)', borderRadius: '.5rem' }
 		}}
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}

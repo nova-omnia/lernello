@@ -36,7 +36,7 @@ public interface LearningUnitMapper {
         List<BlockResDTO> sortedBlocks = learningUnit.getBlocks().stream().sorted(Comparator.comparingInt(Block::getPosition)).map(this::mapBlockToResDTO).toList();
 
         return new LearningUnitResDTO(
-                learningUnit.getUuid(), learningUnit.getName(), sortedBlocks
+                learningUnit.getUuid(), learningUnit.getName(), sortedBlocks, learningUnit.getPosition()
         );
     }
 

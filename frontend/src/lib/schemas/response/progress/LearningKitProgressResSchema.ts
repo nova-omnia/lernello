@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const LearningKitProgressResSchema = z.object({
 	learningKitId: z.string().uuid(),
+	userId: z.string().uuid(),
 	isOpened: z.boolean(),
 	isCompleted: z.boolean(),
 	firstOpenedAt: z.string().datetime({ offset: true }).nullable(),

@@ -1,22 +1,13 @@
 package ch.nova_omnia.lernello.api;
 
-import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
-import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.service.CustomUserDetailsService;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import ch.nova_omnia.lernello.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
+import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.service.CustomUserDetailsService;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import ch.nova_omnia.lernello.service.LearningUnitService;
+import ch.nova_omnia.lernello.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/learning-kits")
@@ -39,6 +45,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LearningKitRestController {
     private final LearningKitService learningKitService;
+    private final LearningUnitService learningUnitService;
     private final LearningKitMapper learningKitMapper;
     private final CustomUserDetailsService customUserDetailsService;
     private final UserService userService;
@@ -98,11 +105,17 @@ public class LearningKitRestController {
     @PostMapping("/trainee/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid UUID addTrainee(
-        @PathVariable UUID id,
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
+                                  @PathVariable UUID id, @RequestBody @Valid CreateParticipantDTO traineeDetails
     ) {
-        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
+        User trainee = userService.createUser(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname(), Role.TRAINEE);
         learningKitService.saveTraineeInKit(id, trainee);
         return id;
+    }
+
+    @PatchMapping("/{id}/reorder/learning-units/")
+    @PreAuthorize("hasAuthority('SCOPE_kits:write')")
+    public @Valid GenericSuccessDTO reorderLearningUnits(@PathVariable UUID id, @Valid @RequestBody UpdateLearningUnitOrderDTO updateLearningUnitOrderDTO) {
+        learningUnitService.updateLearningUnitPosition(id, updateLearningUnitOrderDTO);
+        return new GenericSuccessDTO(true);
     }
 }

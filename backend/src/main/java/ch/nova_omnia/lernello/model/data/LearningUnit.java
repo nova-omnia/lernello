@@ -14,7 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -30,6 +32,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class LearningUnit {
+
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,11 +50,17 @@ public class LearningUnit {
     @Size(min = 3, max = 40)
     private String name;
 
+    @Min(0)
+    @Column(name = "position", nullable = false)
+    private int position;
+
     @OneToMany(mappedBy = "learningUnit", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Block> blocks = new ArrayList<>();
 
     public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;
         this.learningKit = learningKit;
     }
+
 }

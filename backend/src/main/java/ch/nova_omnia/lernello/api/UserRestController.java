@@ -18,14 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateUserDTO;
+import ch.nova_omnia.lernello.dto.request.user.UpdateUserDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
 import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
-import ch.nova_omnia.lernello.dto.response.user.PasswordStatusDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
+import ch.nova_omnia.lernello.dto.response.user.UserResDTO;
 import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
+import ch.nova_omnia.lernello.mapper.user.UserMapper;
 import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.service.EmailService;
 import ch.nova_omnia.lernello.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,20 +44,28 @@ public class UserRestController {
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
     private final ParticipantUserMapper participantUserMapper;
+    private final UserMapper userMapper;
+    private final EmailService emailService;
 
     @PostMapping("/password")
     @PreAuthorize("hasAuthority('SCOPE_password:write')")
-    public @Valid PasswordStatusDTO changePassword(
+    public @Valid GenericSuccessDTO changePassword(
         @RequestBody @Valid ChangePasswordDataDTO data, @AuthenticationPrincipal UserDetails userDetails
     ) {
         boolean status = userService.changePassword(userDetails.getUsername(), data.newPassword());
-        return new PasswordStatusDTO(status);
+        return new GenericSuccessDTO(status);
     }
 
     @GetMapping("/trainees")
     @PreAuthorize("hasAuthority('SCOPE_user:read')")
     public List<@Valid ParticipantUserDTO> getAllTrainees() {
         return userService.findAllTrainees().stream().map(participantUserMapper::toDTO).toList();
+    }
+
+    @GetMapping("/instructors")
+    @PreAuthorize("hasAuthority('SCOPE_user:read')")
+    public List<@Valid ParticipantUserDTO> getAllInstructors() {
+        return userService.findAllInstructors().stream().map(participantUserMapper::toDTO).toList();
     }
 
     @GetMapping("/info")
@@ -64,21 +77,45 @@ public class UserRestController {
         return userInfoMapper.toDTO(user);
     }
 
-    @PostMapping("/trainee")
-    @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public @Valid ParticipantUserDTO addTrainee(
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
-    ) {
-        User trainee = userService.addTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
-        return participantUserMapper.toDTO(trainee);
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_user:read')")
+    public @Valid UserResDTO getUser(@PathVariable UUID id) {
+        User user = userService.findByUuid(id);
+        return userMapper.toDTO(user);
     }
 
-    @DeleteMapping("/trainee/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public void deleteTrainee(
+    public @Valid UserResDTO editUser(@PathVariable UUID id, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
+        User user = userMapper.toEntity(updateUserDTO);
+        User updatedUser = userService.update(id, user);
+        return userMapper.toDTO(updatedUser);
+    }
+
+    @PostMapping("/")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public @Valid UserResDTO createUser(
+        @RequestBody @Valid CreateUserDTO userDTO
+    ) {
+        User user = userService.createUser(userDTO.username(), userDTO.name(), userDTO.surname(), userDTO.role());
+        return userMapper.toDTO(user);
+    }
+
+    @PatchMapping("/reset/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public @Valid UUID resetUserPassword(@PathVariable UUID id) {
+        User user = userService.findByUuid(id);
+        emailService.sendNewLoginData(user);
+        return id;
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_user:write')")
+    public UUID deleteUser(
         @PathVariable UUID id
     ) {
-        userService.deleteTrainee(id);
+        userService.deleteUser(id);
+        return id;
     }
 
     @PostMapping("/locale")

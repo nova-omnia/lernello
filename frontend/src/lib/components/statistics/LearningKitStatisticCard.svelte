@@ -14,7 +14,7 @@
 	const { learningKitId }: LearningKitStatisticCardProps = $props();
 
 	const kitQuery = createQuery<LearningKitRes>({
-		queryKey: ['learning-kit-stats-detail', learningKitId],
+		queryKey: ['learning-kit', learningKitId],
 		queryFn: () => api(fetch).req(getLearningKitById, null, learningKitId).parse()
 	});
 </script>

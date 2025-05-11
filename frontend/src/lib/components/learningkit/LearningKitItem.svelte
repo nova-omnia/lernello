@@ -39,7 +39,7 @@
 		enabled: role === TRAINEE_ROLE
 	});
 
-		const languageOptions = $derived([
+	const languageOptions = $derived([
 		{ value: 'ENGLISH', label: $_('common.english') },
 		{ value: 'GERMAN', label: $_('common.german') },
 		{ value: 'FRENCH', label: $_('common.french') },

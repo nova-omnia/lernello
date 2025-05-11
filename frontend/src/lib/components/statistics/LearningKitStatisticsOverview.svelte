@@ -14,9 +14,11 @@
 	const { maxKitsToShow = 5 }: Props = $props();
 
 	const kitsQuery = createQuery<LearningKitPage>({
-		queryKey: ['latest-learning-kits-list', maxKitsToShow],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: maxKitsToShow, page: 0 }).parse()
+		queryKey: ['latest-learning-kits-list', null],
+		queryFn: () => api(fetch).req(getLearningKits, null, {}).parse()
 	});
+
+	let publishedKits = $derived($kitsQuery.data?.content?.filter((kit) => kit.published) ?? []);
 </script>
 
 {#if $kitsQuery.isLoading}
@@ -27,13 +29,13 @@
 	</div>
 {:else if $kitsQuery.isError}
 	<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
-{:else if !$kitsQuery.data?.content || $kitsQuery.data.content.length === 0}
+{:else if !$kitsQuery.data?.content || publishedKits.length === 0}
 	<div class="text-center">
 		<p>{$_('statistics.instructor.noKits')}</p>
 	</div>
 {:else}
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		{#each $kitsQuery.data.content as kit (kit.uuid)}
+		{#each publishedKits.slice(0, maxKitsToShow) as kit (kit.uuid)}
 			<LearningKitStatisticCard learningKitId={kit.uuid} />
 		{/each}
 	</div>

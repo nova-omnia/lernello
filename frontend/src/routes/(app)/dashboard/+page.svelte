@@ -17,8 +17,10 @@
 
 	const kitsQuery = createQuery<LearningKitPage>({
 		queryKey: ['latest-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
+		queryFn: () => api(fetch).req(getLearningKits, null, { size: 100, page: 0 }).parse()
 	});
+
+	let publishedKits = $derived($kitsQuery.data?.content?.filter((kit) => kit.published) ?? []);
 </script>
 
 <PageContainer title={$_('dashboard.title')}>
@@ -46,7 +48,7 @@
 				{:else if $kitsQuery.status === 'error'}
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
-					{#each $kitsQuery.data.content as kit (kit.uuid)}
+					{#each $kitsQuery.data.content.slice(0, 5) as kit (kit.uuid)}
 						<LearningKitItem
 							title={kit.name}
 							uuid={kit.uuid}
@@ -64,7 +66,7 @@
 					{#if $kitsQuery.isSuccess}
 						{$_('dashboard.allStatistics', {
 							values: {
-								total: $kitsQuery.data.totalElements
+								total: publishedKits.length
 							}
 						})}
 					{:else}

@@ -1,44 +1,79 @@
 <script lang="ts">
 	import { Progress } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
-	import type { KitWithProgress } from '$lib/types/statistics';
+	import type { LearningKitRes } from '$lib/schemas/response/LearningKitRes';
+	import { createQuery } from '@tanstack/svelte-query';
+	import { api } from '$lib/api/apiClient';
+	import { getLearningKitById } from '$lib/api/collections/learningKit';
+	import { SquareArrowOutUpRight } from 'lucide-svelte';
 
-	interface Props {
-		kit: KitWithProgress;
+	interface LearningKitStatisticCardProps {
+		learningKitId: string;
 	}
 
-	const { kit }: Props = $props();
+	const { learningKitId }: LearningKitStatisticCardProps = $props();
+
+	const kitQuery = createQuery<LearningKitRes>({
+		queryKey: ['learning-kit', learningKitId],
+		queryFn: () => api(fetch).req(getLearningKitById, null, learningKitId).parse()
+	});
 </script>
 
 <a
-	href={`/statistics/${kit.uuid}`}
+	href={`/statistics/${learningKitId}`}
 	class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 block p-4"
 >
-	<h3 class="preset-typo-heading mb-2 truncate">{kit.name}</h3>
-	<p class="text-surface-500-400 text-sm">
-		{$_('statistics.numberOfParticipants', { values: { count: kit.participants.length } })}
-	</p>
+	<h3 class="mb-2 truncate font-bold">{$kitQuery.data?.name}</h3>
+	<div class="flex items-center justify-between">
+		<p class="text-xs font-semibold">
+			{$_('statistics.numberOfParticipants')}:
+		</p>
+		<p class="text-xs">
+			{$kitQuery.data?.participants?.length != null
+				? `${$kitQuery.data?.participants?.length}`
+				: $_('statistics.overview.noData')}
+		</p>
+	</div>
+	<div class="my-2">
+		<div class="flex items-center justify-between">
+			<p class="text-xs font-semibold">
+				{$_('statistics.averageProgress')}:
+			</p>
+			<p class="text-xs">
+				{$kitQuery.data?.averageProgress != null
+					? `${$kitQuery.data?.averageProgress}%`
+					: $_('statistics.overview.noData')}
+			</p>
+		</div>
+		<Progress
+			value={$kitQuery.data?.averageProgress ?? 0}
+			max={100}
+			meterBg="bg-primary-500"
+			height="h-2"
+		/>
+	</div>
 
-	{#if kit.averageProgress !== undefined && kit.completionRate !== undefined}
-		<div class="my-2">
-			<p class="text-xs">
-				{$_('statistics.averageProgress')}: {kit.averageProgress.toFixed(0)}%
+	<div class="my-2">
+		<div class="flex items-center justify-between">
+			<p class="text-xs font-semibold">
+				{$_('statistics.completionRate')}:
 			</p>
-			<Progress value={kit.averageProgress} max={100} meterBg="bg-primary-500" height="h-2" />
-		</div>
-		<div class="my-2">
 			<p class="text-xs">
-				{$_('statistics.completionRate')}: {kit.completionRate.toFixed(0)}%
+				{$kitQuery.data?.completionRate != null
+					? `${$kitQuery.data?.completionRate}%`
+					: $_('statistics.overview.noData')}
 			</p>
-			<Progress value={kit.completionRate} max={100} meterBg="bg-success-500" height="h-2" />
 		</div>
-	{:else if kit.participantProgress === undefined}
-		<div class="my-2 space-y-1">
-			<div class="placeholder h-2 w-3/4 animate-pulse"></div>
-			<div class="placeholder h-2 w-full animate-pulse"></div>
-			<div class="placeholder mt-2 h-2 w-1/2 animate-pulse"></div>
-			<div class="placeholder h-2 w-full animate-pulse"></div>
-		</div>
-	{/if}
-	<p class="text-surface-400-500 mt-2 text-xs">{$_('statistics.clickForDetails')}</p>
+		<Progress
+			value={$kitQuery.data?.completionRate ?? 0}
+			max={100}
+			meterBg="bg-success-500"
+			height="h-2"
+		/>
+	</div>
+
+	<p class="text-surface-700 mt-2 text-right text-xs">
+		{$_('statistics.clickForDetails')}
+		<SquareArrowOutUpRight size={12} class="inline-block align-middle" />
+	</p>
 </a>

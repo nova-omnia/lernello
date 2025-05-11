@@ -10,6 +10,8 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
 	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
+	import { setSelectedLanguage, getSelectedLanguage } from '$lib/states/selectedLanguage';
+	import Select from '$lib/components/select/Select.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -36,6 +38,15 @@
 		queryFn: () => api(fetch).req(getLearningKitProgress, null, uuid).parse(),
 		enabled: role === TRAINEE_ROLE
 	});
+
+		const languageOptions = $derived([
+		{ value: 'ENGLISH', label: $_('common.english') },
+		{ value: 'GERMAN', label: $_('common.german') },
+		{ value: 'FRENCH', label: $_('common.french') },
+		{ value: 'ITALIAN', label: $_('common.italian') }
+	]);
+
+	let selectedLanguage = $state(getSelectedLanguage());
 
 	function handleConfirmDelete() {
 		if (!uuid) return;
@@ -72,15 +83,15 @@
 	<div></div>
 {:else}
 	<a
-		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis {cardCompletedClass}"
+		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 overflow-ellipsis border p-4 text-center {cardCompletedClass}"
 		href="/learningkit/{uuid}?tab=learningUnits"
 	>
 		{#if role === INSTRUCTOR_ROLE}
-			<div class="absolute top-2 left-2">
+			<div class="absolute left-2 top-2">
 				<PublishedStatusIndicator {published} />
 			</div>
 			<button
-				class="absolute top-0 right-0 z-10 flex gap-2 p-2"
+				class="absolute right-0 top-0 z-10 flex gap-2 p-2"
 				onclick={(e) => {
 					e.preventDefault();
 					showDeleteDialog = true;
@@ -91,7 +102,7 @@
 		{/if}
 		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data}
 			{#if isCompleted}
-				<div class="absolute top-2 left-2">
+				<div class="absolute left-2 top-2">
 					<CheckCircle2 class="h-6 w-6 text-green-500" />
 				</div>
 			{/if}
@@ -105,6 +116,24 @@
 			</div>
 		{/if}
 		<p class="w-48 truncate">{title}</p>
+		<div
+			class="absolute bottom-2 mt-2 min-w-[130px]"
+			role="presentation"
+			tabindex="-1"
+			onclick={(event) => {
+				event.preventDefault();
+				event.stopPropagation();
+			}}
+		>
+			<Select
+				options={languageOptions}
+				selected={selectedLanguage}
+				onSelect={(value) => {
+					selectedLanguage = value;
+					setSelectedLanguage(value);
+				}}
+			/>
+		</div>
 	</a>
 {/if}
 

@@ -9,6 +9,8 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { getLearningUnitProgress } from '$lib/api/collections/progress';
 	import { api } from '$lib/api/apiClient';
+	import Select from '$lib/components/select/Select.svelte';
+	import { setSelectedLanguage, getSelectedLanguage } from '$lib/states/selectedLanguage';
 
 	interface LearningUnitProps {
 		learningUnit: {
@@ -35,6 +37,15 @@
 		queryFn: () => api(fetch).req(getLearningUnitProgress, null, learningUnit.uuid).parse(),
 		enabled: role === TRAINEE_ROLE
 	});
+
+	const languageOptions = $derived([
+		{ value: 'ENGLISH', label: $_('common.english') },
+		{ value: 'GERMAN', label: $_('common.german') },
+		{ value: 'FRENCH', label: $_('common.french') },
+		{ value: 'ITALIAN', label: $_('common.italian') }
+	]);
+
+	let selectedLanguage = $state(getSelectedLanguage());
 
 	let showDeleteDialog = $state(false);
 	let showGenerationDialog = $state(false);
@@ -70,7 +81,7 @@
 				<AlignLeft size={32} />
 				{#if role === TRAINEE_ROLE && isCompleted}
 					<CheckCircle2
-						class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
+						class="bg-surface-100-900 absolute -right-1 -top-1 h-4 w-4 rounded-full text-green-500"
 					/>
 				{/if}
 			</div>
@@ -94,6 +105,25 @@
 
 		{#if role === INSTRUCTOR_ROLE}
 			<div class="flex gap-2">
+				<div
+					class="min-w-[120px]"
+					role="presentation"
+					tabindex="-1"
+					onclick={(event) => {
+						event.preventDefault();
+						event.stopPropagation();
+					}}
+				>
+					<Select
+						options={languageOptions}
+						selected={selectedLanguage}
+						onSelect={(value) => {
+							selectedLanguage = value;
+							setSelectedLanguage(value);
+						}}
+					/>
+				</div>
+
 				<button
 					type="button"
 					onclick={(e) => {

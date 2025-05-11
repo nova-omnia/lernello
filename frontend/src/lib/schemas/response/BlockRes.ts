@@ -17,9 +17,9 @@ const BaseBlockResSchema = z.object({
 	position: z.number().min(0)
 });
 
-export const LocalizedBlockResSchema = z.object({
+export const TranslatedBlockResSchema = z.object({
 	id: z.string().uuid(),
-	languageCode: z.string().min(2).max(5),
+	language: z.enum(['GERMAN', 'FRENCH', 'ITALIAN']),
 	content: z.string().nullable(),
 	question: z.string().nullable(),
 	expectedAnswer: z.string().nullable(),
@@ -30,7 +30,7 @@ export const LocalizedBlockResSchema = z.object({
 export const TheoryBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(THEORY_BLOCK_TYPE),
 	content: z.string(),
-	localizedContents: z.array(LocalizedBlockResSchema)
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
@@ -38,14 +38,14 @@ export const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
 	question: z.string(),
 	possibleAnswers: z.array(z.string()),
 	correctAnswers: z.array(z.string()),
-	localizedContents: z.array(LocalizedBlockResSchema)
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const QuestionBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(QUESTION_BLOCK_TYPE),
 	question: z.string(),
 	expectedAnswer: z.string(),
-	localizedContents: z.array(LocalizedBlockResSchema)
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const BlockResSchema = z.discriminatedUnion('type', [

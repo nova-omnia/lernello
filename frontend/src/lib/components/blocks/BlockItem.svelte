@@ -14,6 +14,8 @@
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
+	import { getSelectedLanguage } from '$lib/states/selectedLanguage';
+
 
 	interface BlockItemProps {
 		block: BlockRes;
@@ -23,6 +25,8 @@
 	const { block, role }: BlockItemProps = $props();
 
 	let isConfirmDialogOpen: boolean = $state(false);
+
+	const language = getSelectedLanguage();
 
 	function removeBlock() {
 		queueBlockAction({
@@ -39,17 +43,17 @@
 	<BlockIconHeader {block} {role} />
 
 	{#if block.type === THEORY_BLOCK_TYPE}
-		<TheoryBlockComponent {block} {role} />
+		<TheoryBlockComponent {block} {role} {language} />
 	{:else if block.type === QUESTION_BLOCK_TYPE}
-		<QuestionBlockComponent {block} {role} />
+		<QuestionBlockComponent {block} {role} {language} />
 	{:else if block.type === MULTIPLE_CHOICE_BLOCK_TYPE}
-		<MultipleChoiceBlockComponent {block} {role} />
+		<MultipleChoiceBlockComponent {block} {role} {language} />
 	{/if}
 
 	{#if role === 'INSTRUCTOR'}
 		<button
 			type="button"
-			class="btn preset-filled-error-500 absolute -top-2 -right-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+			class="btn preset-filled-error-500 absolute -right-2 -top-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 			onclick={() => (isConfirmDialogOpen = true)}
 		>
 			<X class="h-4 w-4" />

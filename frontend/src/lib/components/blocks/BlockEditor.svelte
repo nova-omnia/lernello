@@ -9,7 +9,7 @@
 		learningUnitId: string;
 		role: RoleType;
 	}
-
+	const language = 'ENGLISH'; // Assuming English is the default language for this example
 	const { learningUnitId, role }: BlockEditorProps = $props();
 </script>
 
@@ -20,7 +20,7 @@
 		<BlockSelectPopover index={-1} {learningUnitId} />
 		{#each blockActionState.blocks as block, index (block.uuid)}
 			<div animate:flip={{ duration: 200 }} class="space-y-2">
-				<BlockItem {block} {role} />
+				<BlockItem {block} {role} {language}/>
 				<BlockSelectPopover {index} {learningUnitId} />
 			</div>
 		{/each}

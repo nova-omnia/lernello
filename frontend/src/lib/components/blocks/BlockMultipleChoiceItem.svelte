@@ -17,18 +17,28 @@
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockMultipleChoiceItemProps = $props();
+	const { block, role, language }: BlockMultipleChoiceItemProps = $props();
 
 	type Answer = { value: string; isCorrect: boolean };
 
-	let currentQuestion = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question);
+	let currentQuestion = $derived(
+		block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question
+	);
 	let currentAnswers = $derived<Answer[]>(
-		(block.localizedContents.find(content => content.languageCode == get(locale))?.possibleAnswers ?? block.possibleAnswers).map(
+		(
+			block.translatedContents.find((content) => content.language == language)
+				?.possibleAnswers ?? block.possibleAnswers
+		).map(
 			(answer): Answer => ({
 				value: answer,
-				isCorrect: (block.localizedContents.find(content => content.languageCode == get(locale))?.correctAnswers ?? block.correctAnswers).includes(answer)
+				isCorrect: (
+					block.translatedContents.find((content) => content.language == language)
+						?.correctAnswers ?? block.correctAnswers
+				).includes(answer)
 			})
 		)
 	);
@@ -38,9 +48,15 @@
 		const newCorrectAnswers = currentAnswers
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
-		let localQuestion = block.localizedContents.find(content => content.languageCode == get(locale))?.question ?? block.question;
-		let localPossibleAnswers = block.localizedContents.find(content => content.languageCode == get(locale))?.possibleAnswers ?? block.possibleAnswers;
-		let localCorrectAnswers = block.localizedContents.find(content => content.languageCode == get(locale))?.correctAnswers ?? block.correctAnswers;
+		let localQuestion =
+			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question;
+		let localPossibleAnswers =
+			block.translatedContents.find((content) => content.language == language)
+				?.possibleAnswers ?? block.possibleAnswers;
+		let localCorrectAnswers =
+			block.translatedContents.find((content) => content.language == language)?.correctAnswers ??
+			block.correctAnswers;
 		if (
 			currentQuestion !== localQuestion ||
 			JSON.stringify(newPossibleAnswers) !== JSON.stringify(localPossibleAnswers) ||

@@ -15,10 +15,11 @@
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockTheoryItemProps = $props();
-	let lastContent = $derived(block.localizedContents.find(content => content.languageCode == get(locale))?.content ?? block.content);
+	const { block, role, language }: BlockTheoryItemProps = $props();
+	let lastContent = $derived(block.translatedContents.find(content => content.language == language)?.content ?? block.content);
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
@@ -57,4 +58,4 @@
 	});
 </script>
 
-<TextEditor content={block.localizedContents.find(content => content.languageCode == get(locale))?.content ?? block.content} onUpdate={onUpdateHandler} {role} />
+<TextEditor content={block.translatedContents.find(content => content.language == language)?.content ?? block.content} onUpdate={onUpdateHandler} {role} />

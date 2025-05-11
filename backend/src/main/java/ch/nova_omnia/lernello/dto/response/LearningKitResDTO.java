@@ -18,6 +18,8 @@ public record LearningKitResDTO(
                                 boolean published,
                                 String context,
                                 List<ParticipantUserDTO> participants,
-                                List<FileResDTO> files
+                                List<FileResDTO> files,
+                                @NotNull int averageProgress,
+                                @NotNull int completionRate
 ) {
 }

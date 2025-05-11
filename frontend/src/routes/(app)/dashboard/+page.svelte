@@ -10,13 +10,17 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
+	import LearningKitsStatisticsOverview from '$lib/components/statistics/LearningKitStatisticsOverview.svelte';
+	import { type LearningKitPage } from '$lib/schemas/response/LearningKitRes';
 
 	const { data } = $props();
 
-	const kitsQuery = createQuery({
+	const kitsQuery = createQuery<LearningKitPage>({
 		queryKey: ['latest-learning-kits-list'],
-		queryFn: () => api(fetch).req(getLearningKits, null, { size: 5, page: 0 }).parse()
+		queryFn: () => api(fetch).req(getLearningKits, null, { size: 100, page: 0 }).parse()
 	});
+
+	let publishedKits = $derived($kitsQuery.data?.content?.filter((kit) => kit.published) ?? []);
 </script>
 
 <PageContainer title={$_('dashboard.title')}>
@@ -27,7 +31,6 @@
 					<h2>
 						{$_('dashboard.allLearningKits', {
 							values: {
-								count: $kitsQuery.data.numberOfElements,
 								total: $kitsQuery.data.totalElements
 							}
 						})}
@@ -45,7 +48,7 @@
 				{:else if $kitsQuery.status === 'error'}
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
-					{#each $kitsQuery.data.content as kit (kit.uuid)}
+					{#each $kitsQuery.data.content.slice(0, 5) as kit (kit.uuid)}
 						<LearningKitItem
 							title={kit.name}
 							uuid={kit.uuid}
@@ -53,11 +56,34 @@
 							published={kit.published}
 						/>
 					{/each}
-					{#if data.userInfo.role === INSTRUCTOR_ROLE}
-						<AddLearningKit title={$_('learningKit.create')} />
-					{/if}
+				{/if}
+				{#if data.userInfo.role === INSTRUCTOR_ROLE}
+					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}
 			</div>
+			{#if data.userInfo.role === INSTRUCTOR_ROLE}
+				<a href="/statistics" class="preset-typo-subtitle-navigation flex w-fit items-center">
+					{#if $kitsQuery.isSuccess}
+						{$_('dashboard.allStatistics', {
+							values: {
+								total: publishedKits.length
+							}
+						})}
+					{:else}
+						{$_('dashboard.allStatistics', { values: { count: NaN } })}
+					{/if}
+					<ChevronRight size={24} />
+				</a>
+				{#if $kitsQuery.status === 'pending'}
+					{#each Array(3)}
+						<PlaceholderLearningKit />
+					{/each}
+				{:else if $kitsQuery.status === 'error'}
+					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
+				{:else}
+					<LearningKitsStatisticsOverview maxKitsToShow={5} />
+				{/if}
+			{/if}
 		</div>
 	</div>
 </PageContainer>

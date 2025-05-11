@@ -10,8 +10,6 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
 	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
-	import { setSelectedLanguage, getSelectedLanguage } from '$lib/states/selectedLanguage';
-	import Select from '$lib/components/select/Select.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -38,15 +36,6 @@
 		queryFn: () => api(fetch).req(getLearningKitProgress, null, uuid).parse(),
 		enabled: role === TRAINEE_ROLE
 	});
-
-	const languageOptions = $derived([
-		{ value: 'ENGLISH', label: $_('common.english') },
-		{ value: 'GERMAN', label: $_('common.german') },
-		{ value: 'FRENCH', label: $_('common.french') },
-		{ value: 'ITALIAN', label: $_('common.italian') }
-	]);
-
-	let selectedLanguage = $state(getSelectedLanguage());
 
 	function handleConfirmDelete() {
 		if (!uuid) return;
@@ -116,24 +105,6 @@
 			</div>
 		{/if}
 		<p class="w-48 truncate">{title}</p>
-		<div
-			class="absolute bottom-2 mt-2 min-w-[130px]"
-			role="presentation"
-			tabindex="-1"
-			onclick={(event) => {
-				event.preventDefault();
-				event.stopPropagation();
-			}}
-		>
-			<Select
-				options={languageOptions}
-				selected={selectedLanguage}
-				onSelect={(value) => {
-					selectedLanguage = value;
-					setSelectedLanguage(value);
-				}}
-			/>
-		</div>
 	</a>
 {/if}
 

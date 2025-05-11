@@ -9,8 +9,7 @@
 	import { api } from '$lib/api/apiClient.js';
 	import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { _, locale } from 'svelte-i18n';
-	import { get } from 'svelte/store';
+	import { _ } from 'svelte-i18n';
 
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;

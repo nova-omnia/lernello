@@ -18,7 +18,7 @@ public record TheoryBlockResDTO(
                                 @Size(min = 3, max = 40) @NotBlank String name,
                                 @Min(0) int position,
                                 @NotBlank String content,
-                                @NotNull List<TranslatedBlockResDTO> localizedContents
+                                @NotNull List<TranslatedBlockResDTO> translatedContents
 ) implements BlockResDTO {
     public TheoryBlockResDTO {
         type = THEORY;

@@ -48,7 +48,7 @@ public class AIBlockService {
         // Paralleluebersetzungen
         generateTranslationsParallel(block, content);
         System.out.println("Generated TheoryBlock: " + block.getContent());
-        System.out.println("Generated LocalizedBlock: " + block.getTranslatedContents());
+        System.out.println("Generated TranslatedBlock: " + block.getTranslatedContents());
         return block;
     }
 

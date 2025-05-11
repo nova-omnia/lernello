@@ -44,21 +44,21 @@ public interface LearningUnitMapper {
 
         if (block instanceof MultipleChoiceBlock) {
             return new MultipleChoiceBlockResDTO(
-                    MULTIPLE_CHOICE, block.getUuid(), block.getName(), block.getPosition(), ((MultipleChoiceBlock) block).getQuestion(), ((MultipleChoiceBlock) block).getPossibleAnswers(), ((MultipleChoiceBlock) block).getCorrectAnswers(), mapLocalizedBlocks(block.getTranslatedContents())
+                    MULTIPLE_CHOICE, block.getUuid(), block.getName(), block.getPosition(), ((MultipleChoiceBlock) block).getQuestion(), ((MultipleChoiceBlock) block).getPossibleAnswers(), ((MultipleChoiceBlock) block).getCorrectAnswers(), mapTranslatedBlocks(block.getTranslatedContents())
             );
         } else if (block instanceof QuestionBlock) {
             return new QuestionBlockResDTO(
-                    QUESTION, block.getUuid(), block.getName(), block.getPosition(), ((QuestionBlock) block).getQuestion(), ((QuestionBlock) block).getExpectedAnswer(), mapLocalizedBlocks(block.getTranslatedContents())
+                    QUESTION, block.getUuid(), block.getName(), block.getPosition(), ((QuestionBlock) block).getQuestion(), ((QuestionBlock) block).getExpectedAnswer(), mapTranslatedBlocks(block.getTranslatedContents())
             );
         } else if (block instanceof TheoryBlock) {
             return new TheoryBlockResDTO(
-                    THEORY, block.getUuid(), block.getName(), block.getPosition(), ((TheoryBlock) block).getContent(), mapLocalizedBlocks(block.getTranslatedContents())
+                    THEORY, block.getUuid(), block.getName(), block.getPosition(), ((TheoryBlock) block).getContent(), mapTranslatedBlocks(block.getTranslatedContents())
             );
         }
         throw new IllegalArgumentException("Unknown block type: " + block.getClass().getName());
     }
 
-    default List<TranslatedBlockResDTO> mapLocalizedBlocks(List<TranslatedBlock> blocks) {
+    default List<TranslatedBlockResDTO> mapTranslatedBlocks(List<TranslatedBlock> blocks) {
         return blocks.stream().map(b -> new TranslatedBlockResDTO(
                 b.getId(), b.getLanguage(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
         )).toList();

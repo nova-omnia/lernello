@@ -1,13 +1,15 @@
 package ch.nova_omnia.lernello.api;
 
+import java.util.List;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.model.data.progress.LearningKitProgress;
+import ch.nova_omnia.lernello.repository.LearningKitProgressRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,6 +50,7 @@ public class LearningKitRestController {
     private final LearningUnitService learningUnitService;
     private final LearningKitMapper learningKitMapper;
     private final CustomUserDetailsService customUserDetailsService;
+    private final LearningKitProgressRepository learningKitProgressRepository;
     private final UserService userService;
 
     @PostMapping("/")
@@ -61,6 +64,10 @@ public class LearningKitRestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public UUID deleteLearningKit(@PathVariable UUID id) {
+        List<LearningKitProgress> progressesToDelete = learningKitProgressRepository.findAllByLearningKit_Uuid(id);
+        if (!progressesToDelete.isEmpty()) {
+            learningKitProgressRepository.deleteAll(progressesToDelete);
+        }
         learningKitService.deleteById(id);
         return id;
     }

@@ -114,7 +114,7 @@
 {:else if $kitQuery.data && $progressQuery.data}
 	<div class="space-y-6">
 		<section class="card p-6">
-			<h2 class="preset-typo-heading mb-4">{$_('statistics.kitOverview.title')}</h2>
+			<h2 class="preset-typo-subtitle mb-4">{$_('statistics.kitOverview.title')}</h2>
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<div class="bg-surface-100-800 flex items-center space-x-4 rounded-lg p-4">
 					<div class="bg-primary-500 rounded-full p-3 text-white">
@@ -141,7 +141,7 @@
 
 		<section class="card p-6">
 			<div class="mb-4 flex items-center justify-between">
-				<h2 class="preset-typo-heading">{$_('statistics.participants.title')}</h2>
+				<h2 class="preset-typo-subtitle">{$_('statistics.participants.title')}</h2>
 				<div class="flex space-x-2">
 					<button class="btn preset-tonal-surface btn-sm" onclick={() => toggleSort('name')}>
 						<span>{$_('common.name')}</span>

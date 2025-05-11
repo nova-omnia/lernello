@@ -179,7 +179,7 @@
 	"statistics.kitOverview.title": "Learning Kit Overview",
 	"statistics.participants": "Participants",
 	"statistics.participants.title": "Participants Overview",
-	"statistics.numberOfParticipants": "Number of Participants: {count}",
+	"statistics.numberOfParticipants": "Number of Participants",
 	"statistics.averageProgress": "Average Progress",
 	"statistics.completionRate": "Completion Rate",
 	"statistics.clickForDetails": "Click for details",

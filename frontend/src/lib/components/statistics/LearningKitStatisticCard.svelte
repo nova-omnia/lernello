@@ -5,6 +5,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKitById } from '$lib/api/collections/learningKit';
+	import { SquareArrowOutUpRight } from 'lucide-svelte';
 
 	interface LearningKitStatisticCardProps {
 		learningKitId: string;
@@ -22,20 +23,28 @@
 	href={`/statistics/${learningKitId}`}
 	class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 block p-4"
 >
-	<h3 class="preset-typo-heading mb-2 truncate">{$kitQuery.data?.name}</h3>
-	<p class="text-surface-500-400 text-sm">
-		{$_('statistics.numberOfParticipants', {
-			values: { count: $kitQuery.data?.participants?.length ?? 0 }
-		})}
-	</p>
-
-	<div class="my-2">
+	<h3 class="mb-2 truncate font-bold">{$kitQuery.data?.name}</h3>
+	<div class="flex items-center justify-between">
+		<p class="text-xs font-semibold">
+			{$_('statistics.numberOfParticipants')}:
+		</p>
 		<p class="text-xs">
-			{$_('statistics.averageProgress')}:
-			{$kitQuery.data?.averageProgress != null
-				? `${$kitQuery.data?.averageProgress}%`
+			{$kitQuery.data?.participants?.length != null
+				? `${$kitQuery.data?.participants?.length}`
 				: $_('statistics.overview.noData')}
 		</p>
+	</div>
+	<div class="my-2">
+		<div class="flex items-center justify-between">
+			<p class="text-xs font-semibold">
+				{$_('statistics.averageProgress')}:
+			</p>
+			<p class="text-xs">
+				{$kitQuery.data?.averageProgress != null
+					? `${$kitQuery.data?.averageProgress}%`
+					: $_('statistics.overview.noData')}
+			</p>
+		</div>
 		<Progress
 			value={$kitQuery.data?.averageProgress ?? 0}
 			max={100}
@@ -45,12 +54,16 @@
 	</div>
 
 	<div class="my-2">
-		<p class="text-xs">
-			{$_('statistics.completionRate')}:
-			{$kitQuery.data?.completionRate != null
-				? `${$kitQuery.data?.completionRate}%`
-				: $_('statistics.overview.noData')}
-		</p>
+		<div class="flex items-center justify-between">
+			<p class="text-xs font-semibold">
+				{$_('statistics.completionRate')}:
+			</p>
+			<p class="text-xs">
+				{$kitQuery.data?.completionRate != null
+					? `${$kitQuery.data?.completionRate}%`
+					: $_('statistics.overview.noData')}
+			</p>
+		</div>
 		<Progress
 			value={$kitQuery.data?.completionRate ?? 0}
 			max={100}
@@ -59,5 +72,8 @@
 		/>
 	</div>
 
-	<p class="text-surface-400-500 mt-2 text-xs">{$_('statistics.clickForDetails')}</p>
+	<p class="text-surface-700 mt-2 text-right text-xs">
+		{$_('statistics.clickForDetails')}
+		<SquareArrowOutUpRight size={12} class="inline-block align-middle" />
+	</p>
 </a>

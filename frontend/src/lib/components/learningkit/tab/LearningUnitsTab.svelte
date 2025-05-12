@@ -26,7 +26,7 @@
 
 	initializeInstructorDnd();
 
-	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, uuid: unit.uuid })));
+	let learningUnitsSnapshot = $derived(learningUnits);
 	let currentlyDraggingId: string | null = null;
 
 	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitRes>>) {

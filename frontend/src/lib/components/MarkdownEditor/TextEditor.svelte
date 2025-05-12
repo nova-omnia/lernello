@@ -98,7 +98,6 @@
 			})()}
 			<div
 				class="prose dark:prose-invert max-w-none text-red-600 dark:text-red-400"
-				style="min-height: 300px;"
 			>
 				{$_('error.description', { values: { status: 'Preview Generation' } })}
 				<pre class="mt-2 text-xs">{error.message}</pre>

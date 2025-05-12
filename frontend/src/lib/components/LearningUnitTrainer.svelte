@@ -30,7 +30,7 @@
 <div
 	class="preset-filled-surface-50-950 border-surface-100-900 m-0 space-y-4 overflow-y-auto border-r p-4"
 >
-<div
+	<div
 		class="min-w-[120px]"
 		role="presentation"
 		tabindex="-1"
@@ -50,7 +50,7 @@
 	<div class="space-y-2">
 		{#each blockActionState.blocks as block (block.uuid)}
 			<div class="space-y-2">
-				<BlockItem {block} {role} language = {selectedLanguage}/>
+				<BlockItem {block} {role} language={selectedLanguage} />
 			</div>
 		{/each}
 	</div>

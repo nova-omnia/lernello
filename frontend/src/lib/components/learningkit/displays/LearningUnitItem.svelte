@@ -133,7 +133,7 @@
 				<label class="label">
 					<input
 						onclick={(e) => e.preventDefault()}
-						class="input -m-1 p-1 font-medium hover:preset-filled-surface-300-700"
+						class="input hover:preset-filled-surface-300-700 -m-1 p-1 font-medium"
 						type="text"
 						placeholder={$_('learningUnit.name')}
 						bind:value={name}

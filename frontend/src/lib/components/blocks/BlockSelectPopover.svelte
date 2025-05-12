@@ -70,7 +70,7 @@
 				name: 'Theory',
 				position: insertIndex,
 				learningUnitId: learningUnitId,
-				content: 'placeholder'
+				content: ''
 			}
 		};
 		const parsedAction = AddBlockActionSchema.parse(actionData);

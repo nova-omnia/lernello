@@ -103,3 +103,17 @@ export const getLearningUnitProgress = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const getLearningKitProgressForAllParticipants = createEndpoint({
+	method: 'GET',
+	getPath: (learningKitId: string) =>
+		`${REQUEST_MAPPING}/learning-kit/${learningKitId}/participants-progress`,
+	response: {
+		schema: z.array(LearningKitProgressResSchema),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});

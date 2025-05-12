@@ -18,7 +18,9 @@ export const LearningKitResSchema = z.object({
 	published: z.boolean(),
 	context: z.string().nullable(),
 	participants: z.array(ParticipantUserSchema),
-	files: z.array(FileResSchema).nullable()
+	files: z.array(FileResSchema).nullable(),
+	averageProgress: z.number(),
+	completionRate: z.number()
 });
 export type LearningKitRes = z.infer<typeof LearningKitResSchema>;
 export const LearningKitPageSchema = PageMetaSchema.extend({

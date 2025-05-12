@@ -25,13 +25,10 @@
 
 {#snippet sidebarItemStyle(label: string)}
 	<span
-		class:visible={sidebarState.isExpanded}
 		class:ml-3={sidebarState.isExpanded}
 		class:w-max={sidebarState.isExpanded}
 		class:opacity-100={sidebarState.isExpanded}
-		class:invisible={!sidebarState.isExpanded}
-		class:w-0={!sidebarState.isExpanded}
-		class:opacity-0={!sidebarState.isExpanded}
+		class:hidden={!sidebarState.isExpanded}
 	>
 		{label}
 	</span>

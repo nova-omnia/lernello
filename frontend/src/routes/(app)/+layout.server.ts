@@ -14,6 +14,6 @@ export const load = async ({ url }) => {
 	}
 
 	return {
-		role: userInfo?.role ?? TRAINEE_ROLE
+		userInfo
 	};
 };

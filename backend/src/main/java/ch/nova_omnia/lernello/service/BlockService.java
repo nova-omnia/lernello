@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
@@ -36,8 +38,7 @@ public class BlockService {
     public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
         actions = filterCorrelatedActions(actions);
 
-        LearningUnit learningUnit = learningUnitRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with ID: " + id));
+        LearningUnit learningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with ID: " + id));
         temporaryKeyMap.clear();
 
         for (BlockActionDTO action : actions) {
@@ -74,13 +75,13 @@ public class BlockService {
 
         block = switch (createBlockDTO) {
             case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
-                theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
+                    theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
             );
             case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
-                multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
+                    multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
             );
             case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
-                questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
+                    questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
             );
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
         };
@@ -155,22 +156,37 @@ public class BlockService {
         if (updateAction.content() != null) {
             if (block instanceof TheoryBlock theoryBlock) {
                 theoryBlock.setContent(updateAction.content());
+            } else if (block instanceof TranslatedBlock translatedBlock && block.getType().equals(BlockType.THEORY)) {
+                translatedBlock.setContent(updateAction.content());
             } else {
                 throw new IllegalArgumentException("Content updates only supported for theory blocks");
             }
         }
 
         if (updateAction.question() != null) {
-            if (block instanceof QuestionBlock questionBlock) {
+            if (block instanceof QuestionBlock || block instanceof TranslatedBlock) {
+                QuestionBlock questionBlock = (QuestionBlock) block;
                 questionBlock.setQuestion(updateAction.question());
                 questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
-            } else if (block instanceof MultipleChoiceBlock mcBlock) {
+            } else if (block instanceof MultipleChoiceBlock || block instanceof TranslatedBlock) {
+                MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
                 mcBlock.setQuestion(updateAction.question());
                 mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
                 mcBlock.setCorrectAnswers(updateAction.correctAnswers());
-
+            } else if (block instanceof TranslatedBlock translated) {
+                if (translated.getType() == BlockType.QUESTION) {
+                    translated.setQuestion(updateAction.question());
+                    translated.setExpectedAnswer(updateAction.expectedAnswer());
+                } else if (translated.getType() == BlockType.MULTIPLE_CHOICE) {
+                    translated.setQuestion(updateAction.question());
+                    translated.setPossibleAnswers(updateAction.possibleAnswers());
+                    translated.setCorrectAnswers(updateAction.correctAnswers());
+                } else {
+                    throw new IllegalArgumentException("TranslatedBlock has unsupported type for question update: " + translated.getType());
+                }
             }
         }
+
 
         if (updateAction.data() != null) {
             switch (updateAction.data()) {

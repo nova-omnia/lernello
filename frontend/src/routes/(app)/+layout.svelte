@@ -22,6 +22,7 @@
 			role: RoleType;
 		};
 	}>();
+	
 
 	const queryClient = useQueryClient();
 
@@ -32,7 +33,7 @@
 </script>
 
 <div class="flex h-full">
-	<Sidebar role={data.role} />
+	<Sidebar role={data.userInfo.role} />
 	<div class="flex flex-1 flex-col">
 		<Topbar />
 		<main class="relative min-h-0 flex-1 overflow-auto p-4">

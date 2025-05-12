@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.service.BlockService;
 import ch.nova_omnia.lernello.dto.request.block.update.RenameLearningUnitDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +40,7 @@ public class LearningUnitRestController {
     private final LearningUnitService learningUnitService;
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
+    private final BlockService blockService;
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
@@ -63,7 +65,7 @@ public class LearningUnitRestController {
     @PostMapping("/{id}/apply-block-actions")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid Map<String, UUID> applyBlockActions(@PathVariable UUID id, @RequestBody List<BlockActionDTO> actionQueue) {
-        Map<String, UUID> temporaryKeyMap = learningUnitService.applyBlockActions(id, actionQueue);
+        Map<String, UUID> temporaryKeyMap = blockService.applyBlockActions(id, actionQueue);
         return temporaryKeyMapper.toDTO(temporaryKeyMap).temporaryKeyMap();
     }
 

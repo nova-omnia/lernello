@@ -1,59 +1,93 @@
 <script lang="ts">
-	import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
-	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
-	import type { BlockRes } from '$lib/schemas/response/BlockRes';
-	import { THEORY_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
-	import { type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
-	import { createDebounced } from '$lib/utils/createDebounced';
-	import { browser } from '$app/environment';
-	import { api } from '$lib/api/apiClient.js';
-	import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
-	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { _ } from 'svelte-i18n';
+    import TextEditor from '$lib/components/MarkdownEditor/TextEditor.svelte';
+    import { queueBlockAction } from '$lib/states/blockActionState.svelte';
+    import type { BlockRes } from '$lib/schemas/response/BlockRes';
+    import { THEORY_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
+    import { type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
+    import { createDebounced } from '$lib/utils/createDebounced';
+    import { browser } from '$app/environment';
+    import { api } from '$lib/api/apiClient.js';
+    import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
+    import { toaster } from '$lib/states/toasterState.svelte.js';
+    import { _ } from 'svelte-i18n';
+    import { onMount } from 'svelte';
 
-	interface BlockTheoryItemProps {
-		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
-		role: RoleType;
-	}
+    interface BlockTheoryItemProps {
+        block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
+        role: RoleType;
+    }
 
-	const { block, role }: BlockTheoryItemProps = $props();
-	let lastContent = $derived(block.content);
+    const { block, role }: BlockTheoryItemProps = $props();
+    let lastContent = $derived(block.content);
+    let element: HTMLDivElement | undefined = $state();
+    let viewed = $state(false); // Prevent multiple API calls
+    let viewTimeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
-	const onUpdateHandler = createDebounced((newContent: string) => {
-		if (newContent !== lastContent) {
-			queueBlockAction({
-				type: 'UPDATE_BLOCK',
-				blockId: block.uuid,
-				content: newContent
-			});
-			lastContent = newContent;
-		}
-	}, 500);
+    const onUpdateHandler = createDebounced((newContent: string) => {
+        if (newContent !== lastContent) {
+            queueBlockAction({
+                type: 'UPDATE_BLOCK',
+                blockId: block.uuid,
+                content: newContent
+            });
+            lastContent = newContent;
+        }
+    }, 500);
 
-	$effect(() => {
-		if (browser && role === TRAINEE_ROLE && block.uuid) {
-			const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
-			if (!fetchFn) return;
+    onMount(() => {
+        if (!browser || role !== TRAINEE_ROLE || !element) return;
 
-			const timerId = setTimeout(() => {
-				api(fetchFn)
-					.req(markTheoryBlockViewed, { blockId: block.uuid })
-					.parse()
-					.catch((err) => {
-						console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
-						toaster.create({
-							title: $_('common.error.title'),
-							description: $_('error.description', { values: { status: 'unknown' } }),
-							type: 'error'
-						});
-					});
-			}, 1000);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !viewed) {
+                        // Clear any existing timeout if element re-enters view quickly
+                        if (viewTimeoutId) {
+                            clearTimeout(viewTimeoutId);
+                        }
+                        viewTimeoutId = setTimeout(() => {
+                            if (viewed) return; // Check again in case it was marked viewed by another means
 
-			return () => {
-				clearTimeout(timerId);
-			};
-		}
-	});
+                            viewed = true; // Mark as viewed to prevent re-triggering
+                            const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
+                            if (!fetchFn) return;
+
+                            api(fetchFn)
+                                .req(markTheoryBlockViewed, { blockId: block.uuid })
+                                .parse()
+                                .catch((err) => {
+                                    console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
+                                    toaster.create({
+                                        title: $_('common.error.title'),
+                                        description: $_('error.description', { values: { status: 'unknown' } }),
+                                        type: 'error'
+                                    });
+                                    viewed = false;
+                                });
+                            observer.unobserve(entry.target);
+                        }, 1000);
+                    } else {
+                        if (viewTimeoutId) {
+                            clearTimeout(viewTimeoutId);
+                            viewTimeoutId = undefined;
+                        }
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        observer.observe(element);
+
+        return () => {
+            if (viewTimeoutId) {
+                clearTimeout(viewTimeoutId);
+            }
+            observer.disconnect();
+        };
+    });
 </script>
 
-<TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />
+<div bind:this={element}>
+    <TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />
+</div>

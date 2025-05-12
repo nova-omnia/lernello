@@ -21,7 +21,7 @@
 		<div use:dragHandle aria-label={`drag-handle for ${block.name}`}>
 			<GripVertical class="text-surface-400-600 h-6 w-6" />
 		</div>
-		<BlockIconHeader {block} role={TRAINEE_ROLE} {language}/>
+		<BlockIconHeader {block} role={TRAINEE_ROLE} {language} />
 	</div>
 {:else if role === TRAINEE_ROLE}
 	<button
@@ -33,6 +33,6 @@
 			}
 		}}
 	>
-		<BlockIconHeader {block} role={TRAINEE_ROLE} {language}/>
+		<BlockIconHeader {block} role={TRAINEE_ROLE} {language} />
 	</button>
 {/if}

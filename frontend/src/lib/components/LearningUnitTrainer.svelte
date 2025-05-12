@@ -41,23 +41,23 @@
 	<div
 		class="preset-filled-surface-50-950 border-surface-100-900 m-0 space-y-4 overflow-y-auto border-r p-4"
 	>
-	<div
-		class="min-w-[120px]"
-		role="presentation"
-		tabindex="-1"
-		onclick={(event) => {
-			event.preventDefault();
-			event.stopPropagation();
-		}}
-	>
-		<Select
-			options={languageOptions}
-			selected={selectedLanguage}
-			onSelect={(value) => {
-				selectedLanguage = value;
+		<div
+			class="min-w-[120px]"
+			role="presentation"
+			tabindex="-1"
+			onclick={(event) => {
+				event.preventDefault();
+				event.stopPropagation();
 			}}
-		/>
-	</div>
+		>
+			<Select
+				options={languageOptions}
+				selected={selectedLanguage}
+				onSelect={(value) => {
+					selectedLanguage = value;
+				}}
+			/>
+		</div>
 		{#if blockActionState.blocks.length === 0}
 			<p>{$_('learningUnit.noBlocks')}</p>
 		{:else}

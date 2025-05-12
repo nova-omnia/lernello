@@ -114,7 +114,7 @@
 	};
 
 	const previewContent = async (): Promise<string> => {
-		const parsed = await marked.parse(content);
+		const parsed = await marked.parse(content, { breaks: true });
 		return DOMPurify.sanitize(parsed);
 	};
 

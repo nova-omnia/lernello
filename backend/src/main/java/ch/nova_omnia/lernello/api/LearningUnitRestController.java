@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.service.BlockService;
+import ch.nova_omnia.lernello.dto.request.block.update.RenameLearningUnitDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +53,13 @@ public class LearningUnitRestController {
     public UUID deleteLearningUnit(@PathVariable UUID id) {
         learningUnitService.deleteById(id);
         return id;
+    }
+
+    @PostMapping("/{id}/rename")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
+    public @Valid LearningUnitResDTO renameLearningUnit(@Valid @RequestBody RenameLearningUnitDTO renameLearningUnitDTO, @PathVariable UUID id) {
+        LearningUnit learningUnit = learningUnitService.renameLearningUnit(id, renameLearningUnitDTO.name());
+        return learningUnitMapper.toDTO(learningUnit);
     }
 
     @PostMapping("/{id}/apply-block-actions")

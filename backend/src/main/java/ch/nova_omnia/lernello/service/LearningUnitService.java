@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,16 @@ public class LearningUnitService {
 
             learningUnitRepository.updatePosition(i, learningUnit.getUuid());
         }
+    }
+
+    @Transactional
+    public LearningUnit renameLearningUnit(UUID id, String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException("New name cannot be null or blank");
+        }
+        LearningUnit learningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new RuntimeException("Learning Unit not found with ID: " + id));
+        learningUnit.setName(newName);
+        return learningUnitRepository.save(learningUnit);
     }
 
     @Transactional

@@ -5,6 +5,8 @@
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 
+	let { language } = $props();
+
 	let blocksSnapshot = $derived(
 		blockActionState.blocks.map((block) => ({ ...block, id: block.uuid }))
 	);
@@ -55,7 +57,7 @@
 	>
 		{#each blocksSnapshot as block (block.id)}
 			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} />
+				<BlockReorderItem {block} {language}/>
 			</div>
 		{/each}
 	</div>

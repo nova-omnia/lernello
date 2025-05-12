@@ -19,6 +19,7 @@ const BaseBlockResSchema = z.object({
 
 export const TranslatedBlockResSchema = z.object({
 	id: z.string().uuid(),
+	name: z.string(),
 	language: z.enum(['GERMAN', 'FRENCH', 'ITALIAN']),
 	content: z.string().nullable(),
 	question: z.string().nullable(),

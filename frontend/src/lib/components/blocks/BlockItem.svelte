@@ -38,7 +38,7 @@
 <div
 	class="card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 group relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} {role} />
+	<BlockIconHeader {block} {role} {language}/>
 
 	{#if block.type === THEORY_BLOCK_TYPE}
 		<TheoryBlockComponent {block} {role} {language} />

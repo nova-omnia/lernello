@@ -11,9 +11,10 @@
 	interface BlockEditorProps {
 		learningUnitId: string;
 		role: RoleType;
+		onLanguageSelect: (language: string) => string;
 	}
 
-	const { learningUnitId, role }: BlockEditorProps = $props();
+	const { learningUnitId, role, onLanguageSelect }: BlockEditorProps = $props();
 
 	const languageOptions = $derived([
 		{ value: 'ENGLISH', label: $_('common.english') },
@@ -49,6 +50,7 @@
 			selected={selectedLanguage}
 			onSelect={(value) => {
 				selectedLanguage = value;
+				onLanguageSelect(selectedLanguage);
 			}}
 		/>
 	</div>

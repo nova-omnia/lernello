@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class TheoryBlock extends Block {
 
     @Lob
-    @NotBlank
     @Column(name = "content", nullable = true)
     private String content;
 

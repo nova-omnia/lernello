@@ -60,7 +60,7 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					name: action.data.name,
 					uuid: action.blockId,
 					position: action.data.position || 0,
-					content: action.data.content || 'placeholder',
+					content: action.data.content || '',
 					translatedContents: []
 				};
 			} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
@@ -162,7 +162,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 					type: action.data.type,
 					name: action.data.name,
 					position: action.data.position,
-					content: action.data.content || 'placeholder'
+					content: action.data.content || ''
 				}
 			};
 		} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {

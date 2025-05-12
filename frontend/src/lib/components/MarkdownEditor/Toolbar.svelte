@@ -25,7 +25,6 @@
 <div class="flex h-6 items-center space-x-2">
 	<button
 		type="button"
-
 		onclick={() => insertSyntax('### {{selection}}', 'heading')}
 		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.heading')}

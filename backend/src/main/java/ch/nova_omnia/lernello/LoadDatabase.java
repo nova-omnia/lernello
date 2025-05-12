@@ -6,6 +6,7 @@ import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
+import ch.nova_omnia.lernello.service.BlockService;
 import ch.nova_omnia.lernello.service.LearningKitService;
 import ch.nova_omnia.lernello.service.LearningUnitService;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class LoadDatabase {
     CommandLineRunner initDatabase(FolderRepository folderRepository, UserRepository userRepository,
                                    LearningKitRepository learningKitRepository, LearningUnitRepository learningUnitRepository,
                                    FileRepository fileRepository, LearningKitService learningKitService,
-                                   LearningUnitService learningUnitService) {
+                                   LearningUnitService learningUnitService, BlockService blockService) {
 
         Folder bungo = new Folder("Bungo Baggins");
         Folder bilbo = new Folder("Bilbo Baggins");
@@ -84,7 +85,7 @@ public class LoadDatabase {
             log.info("Preloading learning unit");
             learningUnitRepository.save(learningUnit);
             log.info("Preloaded learning unit with id: " + learningUnit.getUuid());
-            learningUnitService.applyBlockActions(learningUnit.getUuid(), actions);
+            blockService.applyBlockActions(learningUnit.getUuid(), actions);
             log.info("Preloaded folder with id: " + bungo.getUuid());
             log.info("Preloaded folder with id: " + bilbo.getUuid());
             log.info("Preloaded user with id: " + frodo.getUuid());

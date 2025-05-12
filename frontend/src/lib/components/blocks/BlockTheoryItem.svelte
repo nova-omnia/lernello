@@ -59,10 +59,10 @@
 							if (!fetchFn) return;
 
 							api(fetchFn)
-								.req(markTheoryBlockViewed, { blockId: block.uuid })
+								.req(markTheoryBlockViewed, { blockId })
 								.parse()
 								.catch((err) => {
-									console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
+									console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
 									toaster.create({
 										title: $_('common.error.title'),
 										description: $_('error.description', { values: { status: 'unknown' } }),
@@ -96,9 +96,9 @@
 
 <div bind:this={element}>
 	<TextEditor
-	content={block.translatedContents.find((content) => content.language == language)?.content ??
-		block.content}
-	onUpdate={onUpdateHandler}
-	{role}
-/>
+		content={block.translatedContents.find((content) => content.language == language)?.content ??
+			block.content}
+		onUpdate={onUpdateHandler}
+		{role}
+	/>
 </div>

@@ -7,16 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.RemoveBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.ReorderBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.UpdateBlockNameActionDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
@@ -76,6 +71,16 @@ public class LearningUnitService {
 
             learningUnitRepository.updatePosition(i, learningUnit.getUuid());
         }
+    }
+
+    @Transactional
+    public LearningUnit renameLearningUnit(UUID id, String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException("New name cannot be null or blank");
+        }
+        LearningUnit learningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new RuntimeException("Learning Unit not found with ID: " + id));
+        learningUnit.setName(newName);
+        return learningUnitRepository.save(learningUnit);
     }
 
     @Transactional

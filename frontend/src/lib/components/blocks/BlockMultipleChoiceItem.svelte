@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { Plus, Check, X, Trash } from 'lucide-svelte';
-	import { _, locale } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
 	import { type RoleType } from '$lib/schemas/response/UserInfo';
@@ -12,7 +12,6 @@
 	import { checkMultipleChoiceAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import { api } from '$lib/api/apiClient';
-	import { get } from 'svelte/store';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { _, locale } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import { Check, X } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, QUESTION_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
@@ -11,7 +11,6 @@
 	import { api } from '$lib/api/apiClient';
 	import { checkQuestionAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
-	import { get } from 'svelte/store';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;

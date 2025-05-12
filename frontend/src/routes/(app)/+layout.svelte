@@ -22,7 +22,6 @@
 			role: RoleType;
 		};
 	}>();
-	
 
 	const queryClient = useQueryClient();
 

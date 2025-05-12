@@ -4,14 +4,15 @@
 	import { flip } from 'svelte/animate';
 	import BlockSelectPopover from './BlockSelectPopover.svelte';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import Select from '../select/Select.svelte';
+	import { get } from 'svelte/store';
 
 	interface BlockEditorProps {
 		learningUnitId: string;
 		role: RoleType;
 	}
-	let selectedLanguage: string = $state('ENGLISH');
+
 	const { learningUnitId, role }: BlockEditorProps = $props();
 
 	const languageOptions = $derived([
@@ -20,33 +21,42 @@
 		{ value: 'FRENCH', label: $_('common.french') },
 		{ value: 'ITALIAN', label: $_('common.italian') }
 	]);
+
+	const localeToLanguageValue: Record<string, string> = {
+		'en': 'ENGLISH',
+		'de': 'GERMAN',
+		'fr': 'FRENCH',
+		'it': 'ITALIAN'
+	};
+
+	let selectedLanguage: string = $state(localeToLanguageValue[get(locale) ?? 'en']);
 </script>
 
 <div
 	class="preset-filled-surface-50-950 border-surface-100-900 m-0 space-y-4 overflow-y-auto border-r p-4"
 >
-<div
-					class="min-w-[120px]"
-					role="presentation"
-					tabindex="-1"
-					onclick={(event) => {
-						event.preventDefault();
-						event.stopPropagation();
-					}}
-				>
-					<Select
-						options={languageOptions}
-						selected={selectedLanguage}
-						onSelect={(value) => {
-							selectedLanguage = value;
-						}}
-					/>
-				</div>
+	<div
+		class="min-w-[120px]"
+		role="presentation"
+		tabindex="-1"
+		onclick={(event) => {
+			event.preventDefault();
+			event.stopPropagation();
+		}}
+	>
+		<Select
+			options={languageOptions}
+			selected={selectedLanguage}
+			onSelect={(value) => {
+				selectedLanguage = value;
+			}}
+		/>
+	</div>
 	<div class="space-y-2">
 		<BlockSelectPopover index={-1} {learningUnitId} />
 		{#each blockActionState.blocks as block, index (block.uuid)}
 			<div animate:flip={{ duration: 200 }} class="space-y-2">
-				<BlockItem {block} {role} language = {selectedLanguage}/>
+				<BlockItem {block} {role} language={selectedLanguage} />
 				<BlockSelectPopover {index} {learningUnitId} />
 			</div>
 		{/each}

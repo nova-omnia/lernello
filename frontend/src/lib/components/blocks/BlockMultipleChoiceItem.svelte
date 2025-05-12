@@ -43,6 +43,8 @@
 		)
 	);
 
+	let blockId: string = $derived(block.translatedContents.find(content => content.language == language)?.id ?? block.uuid);
+
 	const onUpdateHandler = createDebounced(() => {
 		const newPossibleAnswers = currentAnswers.map((a: Answer) => a.value);
 		const newCorrectAnswers = currentAnswers
@@ -64,7 +66,7 @@
 		) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
-				blockId: block.uuid,
+				blockId,
 				question: currentQuestion,
 				possibleAnswers: newPossibleAnswers,
 				correctAnswers: newCorrectAnswers
@@ -134,7 +136,7 @@
 	function handleSubmit() {
 		if (selectedAnswers.length > 0) {
 			const answersToSubmit = selectedAnswers.map((index) => currentAnswers[index].value);
-			$checkAnswerMutation.mutate({ blockId: block.uuid, answers: answersToSubmit });
+			$checkAnswerMutation.mutate({ blockId, answers: answersToSubmit });
 		}
 	}
 </script>

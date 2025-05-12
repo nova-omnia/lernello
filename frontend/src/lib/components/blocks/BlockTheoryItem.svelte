@@ -19,12 +19,13 @@
 
 	const { block, role, language }: BlockTheoryItemProps = $props();
 	let lastContent = $derived(block.translatedContents.find(content => content.language == language)?.content ?? block.content);
+	let blockId: string = $derived(block.translatedContents.find(content => content.language == language)?.id ?? block.uuid);
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
-				blockId: block.uuid,
+				blockId,
 				content: newContent
 			});
 			lastContent = newContent;
@@ -32,16 +33,16 @@
 	}, 500);
 
 	$effect(() => {
-		if (browser && role === TRAINEE_ROLE && block.uuid) {
+		if (browser && role === TRAINEE_ROLE && blockId) {
 			const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
 			if (!fetchFn) return;
 
 			const timerId = setTimeout(() => {
 				api(fetchFn)
-					.req(markTheoryBlockViewed, { blockId: block.uuid })
+					.req(markTheoryBlockViewed, { blockId })
 					.parse()
 					.catch((err) => {
-						console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
+						console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
 						toaster.create({
 							title: $_('common.error.title'),
 							description: $_('error.description', { values: { status: 'unknown' } }),
@@ -57,4 +58,4 @@
 	});
 </script>
 
-<TextEditor content={lastContent} onUpdate={onUpdateHandler} {role} />
+<TextEditor content={block.translatedContents.find(content => content.language == language)?.content ?? block.content} onUpdate={onUpdateHandler} {role} />

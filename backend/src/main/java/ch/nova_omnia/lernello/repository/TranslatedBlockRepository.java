@@ -10,4 +10,6 @@ import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 
 public interface TranslatedBlockRepository extends JpaRepository<TranslatedBlock, UUID> {
     List<TranslatedBlock> findByOriginalBlock(Block originalBlock);
+
+    List<TranslatedBlock> findByOriginalBlockIn(List<Block> blocks);
 }

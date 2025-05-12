@@ -36,7 +36,7 @@
 		</div>
 		<div class="flex justify-end space-x-2">
 			<button
-				class="btn preset-filled-error-500"
+				class="btn preset-tonal-surface"
 				disabled={isLoading}
 				onclick={() => {
 					onCancel();

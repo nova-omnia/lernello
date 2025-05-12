@@ -7,7 +7,7 @@
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
 	import type { Snippet } from 'svelte';
 
-	export function goBack() {
+	function goBack() {
 		if (history.length > 1) {
 			history.back();
 		} else {

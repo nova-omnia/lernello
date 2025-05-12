@@ -95,7 +95,7 @@
 			</label>
 		</div>
 		<div class="flex justify-end gap-2">
-			<a class="btn preset-filled-error-500" href="/learningkit/{learningKitId}"
+			<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}"
 				>{$_('common.cancel')}</a
 			>
 			<button class="btn preset-filled-primary-500">{$_('learningKit.update')}</button>

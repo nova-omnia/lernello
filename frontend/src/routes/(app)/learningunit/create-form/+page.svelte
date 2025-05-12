@@ -47,7 +47,7 @@
 		</div>
 		<div class="flex justify-end gap-2">
 			<a
-				class="btn preset-filled-error-500"
+				class="btn preset-outlined-surface-500"
 				href="/learningkit/{$form.learningKitId}?tab=learningUnits"
 			>
 				{$_('common.cancel')}

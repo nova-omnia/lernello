@@ -76,7 +76,7 @@
 			<button
 				disabled={isLoading}
 				type="button"
-				class="btn preset-filled-error-500"
+				class="btn preset-tonal-surface"
 				onclick={onCancel}
 			>
 				{$_('common.cancel')}

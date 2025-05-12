@@ -123,7 +123,7 @@
 		{...interactions.getReferenceProps()}
 		class="btn text-gray-400"
 	>
-		<PlusCircle class="h-5 w-5" />
+		<PlusCircle size={24} />
 	</button>
 	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<!-- Floating Element -->

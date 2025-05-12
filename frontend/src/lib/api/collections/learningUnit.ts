@@ -4,6 +4,7 @@ import { BlockActionSchema } from '$lib/schemas/request/block/BlockAction';
 import { createEndpoint } from '../createEndpoint';
 import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUnit';
 import { GenerateAILearningUnitSchema } from '$lib/schemas/request/GenerateAILearningUnit';
+import { RenameLearningUnitSchema } from '$lib/schemas/request/RenameLearningUnit';
 
 const REQUEST_MAPPING = '/api/learning-unit';
 
@@ -19,6 +20,20 @@ export const getLearningUnitById = createEndpoint({
 		defaultValidate: false
 	}
 });
+
+export const renameLearningUnit = createEndpoint({
+	method: 'POST',
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/rename`,
+	response: {
+		schema: LearningUnitResSchema,
+		defaultValidate: true
+	},
+	payload: {
+		schema: RenameLearningUnitSchema,
+		defaultValidate: false
+	}
+});
+
 export const deleteLearningUnit = createEndpoint({
 	method: 'DELETE',
 	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,

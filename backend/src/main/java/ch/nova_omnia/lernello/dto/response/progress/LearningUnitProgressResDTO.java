@@ -5,8 +5,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
-public record LearningUnitProgressDTO(
+public record LearningUnitProgressResDTO(
     @NotNull
     String learningUnitId,
     @NotNull
@@ -19,6 +20,8 @@ public record LearningUnitProgressDTO(
     @NotNull
     @Min(0)
     @Max(100)
-    int progressPercentage
+    int progressPercentage,
+    @NotNull
+    List<BlockProgressResDTO> userBlockProgresses
 ) {
 }

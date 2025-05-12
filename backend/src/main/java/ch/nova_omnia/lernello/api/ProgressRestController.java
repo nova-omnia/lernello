@@ -37,7 +37,7 @@ public class ProgressRestController {
 
     @PostMapping("/learning-unit/opened")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public @Valid LearningUnitProgressDTO markLearningUnitOpened(
+    public @Valid LearningUnitProgressResDTO markLearningUnitOpened(
                                                                  @RequestBody @Valid LearningUnitOpenedDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         LearningUnitProgress unitProgress = progressService.markLearningUnitOpened(dto, userDetails);
         return progressMapper.toLearningUnitProgressDTO(unitProgress);
@@ -75,7 +75,7 @@ public class ProgressRestController {
 
     @GetMapping("/learning-unit/{learningUnitId}")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
-    public @Valid LearningUnitProgressDTO getLearningUnitProgress(
+    public @Valid LearningUnitProgressResDTO getLearningUnitProgress(
                                                                   @PathVariable UUID learningUnitId, @AuthenticationPrincipal UserDetails userDetails) {
         LearningUnitProgress progress = progressService.getLearningUnitProgress(learningUnitId, userDetails);
         return progressMapper.toLearningUnitProgressDTO(progress);

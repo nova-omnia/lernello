@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record TheoryBlockViewedResDTO (
     @NotNull
-    String blockId
+    String blockId,
+    @NotNull
+    Boolean isViewed
 ) {
 }

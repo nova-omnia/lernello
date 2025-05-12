@@ -9,9 +9,11 @@
 	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import type { CheckMultipleChoiceAnswer } from '$lib/schemas/request/progress/CheckMultipleChoiceAnswerSchema';
+	import type { MultipleChoiceBlockProgressRes } from '$lib/schemas/response/progress/BlockProgressResSchema';
 	import { checkMultipleChoiceAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import { api } from '$lib/api/apiClient';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
@@ -20,6 +22,39 @@
 	}
 
 	const { block, role, language }: BlockMultipleChoiceItemProps = $props();
+
+	let progress = $derived(
+		learningUnitProgressState.getBlockProgress(block.uuid) as
+			| MultipleChoiceBlockProgressRes
+			| undefined
+	);
+
+	$effect(() => {
+		if (role === 'TRAINEE' && progress) {
+			if (progress.lastAnswers && currentAnswers) {
+				const initialSelectedAnswers: number[] = [];
+				currentAnswers.forEach((answer, index) => {
+					if (progress?.lastAnswers?.includes(answer.value)) {
+						initialSelectedAnswers.push(index);
+					}
+				});
+				selectedAnswers = initialSelectedAnswers;
+			}
+
+			if (progress.lastAnswers && progress.lastAnswers.length > 0) {
+				isSubmitted = true;
+				submissionCorrect = progress.isCorrect ?? null;
+			} else {
+				isSubmitted = false;
+				submissionCorrect = null;
+				selectedAnswers = [];
+			}
+		} else if (role === 'TRAINEE' && !progress) {
+			selectedAnswers = [];
+			isSubmitted = false;
+			submissionCorrect = null;
+		}
+	});
 
 	type Answer = { value: string; isCorrect: boolean };
 

@@ -3,6 +3,7 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningUnitTrainingContainer from '$lib/components/LearningUnitTrainer.svelte';
 	import { blockActionState } from '$lib/states/blockActionState.svelte.js';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 	import { TRAINEE_ROLE } from '$lib/schemas/response/UserInfo.js';
 	import { api } from '$lib/api/apiClient.js';
 	import { markLearningUnitOpened } from '$lib/api/collections/progress.js';
@@ -19,8 +20,11 @@
 			api(fetch)
 				.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
 				.parse()
+				.then((progressData) => {
+					learningUnitProgressState.setProgress(progressData);
+				})
 				.catch((err) => {
-					console.error('Failed to mark learning kit as opened:', err);
+					console.error('Failed to mark learning unit as opened or fetch progress:', err);
 					toaster.create({
 						title: $_('learningUnit.error.markOpened'),
 						description: $_('error.description', { values: { status: 'unknown' } }),
@@ -28,6 +32,11 @@
 					});
 				});
 		}
+
+		return () => {
+			// Clear progress when the component is unmounted or data.learningUnitId changes
+			learningUnitProgressState.clearProgress();
+		};
 	});
 </script>
 

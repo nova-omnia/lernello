@@ -3,6 +3,7 @@
 	import BlockItem from '$lib/components/blocks/BlockItem.svelte';
 	import type { RoleType } from '$lib/schemas/response/UserInfo.js';
 	import BlockOverviewItem from '$lib/components/blocks/BlockOverviewItem.svelte';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 	import Select from './select/Select.svelte';
 	import { _, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
@@ -76,6 +77,7 @@
 					{role}
 					scrollToBlock={() => scrollToBlock(block.uuid)}
 					language={selectedLanguage}
+					progress={learningUnitProgressState.getBlockProgress(block.uuid)}
 				/>
 			{/each}
 		</div>

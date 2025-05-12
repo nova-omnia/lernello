@@ -27,7 +27,7 @@
 		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
 	);
 	let element: HTMLDivElement | undefined = $state();
-	let viewed = $state(false); // Prevent multiple API calls
+	let viewed = $state(false);
 	let viewTimeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	const onUpdateHandler = createDebounced((newContent: string) => {

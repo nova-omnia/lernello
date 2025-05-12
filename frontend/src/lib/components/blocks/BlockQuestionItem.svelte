@@ -11,6 +11,8 @@
 	import { api } from '$lib/api/apiClient';
 	import { checkQuestionAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
+	import type { QuestionBlockProgressRes } from '$lib/schemas/response/progress/BlockProgressResSchema';
 
 	interface BlockQuestionItemProps {
 		block: Extract<BlockRes, { type: typeof QUESTION_BLOCK_TYPE }>;
@@ -19,6 +21,33 @@
 	}
 
 	const { block, role, language }: BlockQuestionItemProps = $props();
+
+	let progress = $derived(
+		learningUnitProgressState.getBlockProgress(block.uuid) as QuestionBlockProgressRes | undefined
+	);
+
+	$effect(() => {
+		if (role === 'TRAINEE' && progress) {
+			if (progress.lastAnswer !== undefined && progress.lastAnswer !== null) {
+				traineeAnswer = progress.lastAnswer;
+				if (progress.lastAnswer.trim() !== '') {
+					isSubmitted = true;
+					isCorrect = progress.isCorrect ?? null;
+				} else {
+					isSubmitted = false;
+					isCorrect = null;
+				}
+			} else {
+				traineeAnswer = '';
+				isSubmitted = false;
+				isCorrect = null;
+			}
+		} else if (role === 'TRAINEE' && !progress) {
+			traineeAnswer = '';
+			isSubmitted = false;
+			isCorrect = null;
+		}
+	});
 
 	let currentQuestion = $derived(
 		block.translatedContents.find((content) => content.language == language)?.question ??

@@ -111,6 +111,11 @@ public class ProgressService {
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
 
+        if (blockProgress instanceof MultipleChoiceBlockProgress mcProgress) {
+            mcProgress.setIsCorrect(isCorrect);
+            mcProgress.setLastAnswers(new ArrayList<>(dto.answers()));
+        }
+
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
         if (unitProgress.getLearningKitProgress() != null) {
@@ -147,6 +152,11 @@ public class ProgressService {
         }
 
         boolean isCorrect = dto.answer().equalsIgnoreCase(qBlock.getExpectedAnswer());
+
+        if (blockProgress instanceof QuestionBlockProgress qProgress) {
+            qProgress.setIsCorrect(isCorrect);
+            qProgress.setLastAnswer(dto.answer());
+        }
 
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
@@ -188,7 +198,7 @@ public class ProgressService {
         BlockProgress blockProgress = getOrCreateBlockProgress(user, theoryBlock, unitProgress);
 
         if (blockProgress instanceof TheoryBlockProgress theoryBlockProgress) {
-            theoryBlockProgress.setViewed(true);
+            theoryBlockProgress.setIsViewed(true);
         }
 
         blockProgressRepository.save(blockProgress);
@@ -361,7 +371,7 @@ public class ProgressService {
                 return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
             }
             case TheoryBlockProgress theoryBlockProgress -> {
-                return theoryBlockProgress.isViewed();
+                return theoryBlockProgress.getIsViewed();
             }
             default -> {
             }

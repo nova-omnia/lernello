@@ -64,7 +64,7 @@
 									viewed = false;
 								});
 							observer.unobserve(entry.target);
-						}, 1000);
+						}, 3000);
 					} else {
 						if (viewTimeoutId) {
 							clearTimeout(viewTimeoutId);

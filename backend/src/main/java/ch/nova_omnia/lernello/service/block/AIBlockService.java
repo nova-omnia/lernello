@@ -45,8 +45,10 @@ public class AIBlockService {
         JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock");
         String content = jsonNode.get("content").asText();
         block.setContent(content);
-
-        generateTranslationsParallel(block, content);
+        block.setName("Generated");
+        block.setType(BlockType.THEORY);
+        TheoryBlock saved = blockRepository.saveAndFlush(block);
+        generateTranslationsParallel(saved, content);
         return block;
     }
 
@@ -61,8 +63,11 @@ public class AIBlockService {
         mcBlock.setQuestion(generated.getQuestion());
         mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
         mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
+        mcBlock.setName("Generated");
+        mcBlock.setType(BlockType.MULTIPLE_CHOICE);
 
-        generateTranslationsParallel(mcBlock);
+        MultipleChoiceBlock saved = blockRepository.saveAndFlush(mcBlock);
+        generateTranslationsParallel(saved);
         return mcBlock;
     }
 
@@ -76,8 +81,11 @@ public class AIBlockService {
         QuestionBlock generated = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock");
         questionBlock.setQuestion(generated.getQuestion());
         questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
+        questionBlock.setName("Generated");
+        questionBlock.setType(BlockType.QUESTION);
 
-        generateTranslationsParallel(questionBlock);
+        QuestionBlock saved = blockRepository.saveAndFlush(questionBlock);
+        generateTranslationsParallel(saved);
         return questionBlock;
     }
 

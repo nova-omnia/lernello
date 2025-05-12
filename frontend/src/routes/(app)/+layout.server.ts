@@ -1,6 +1,5 @@
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
-import { TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 
 export const load = async ({ url }) => {
 	requireLogin();

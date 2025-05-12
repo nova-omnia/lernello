@@ -120,9 +120,11 @@
 		<div use:dragHandle aria-label={`drag-handle for ${learningUnit.name}`}>
 			<GripVertical size={28} class="text-surface-300-700" />
 		</div>
-		<div
-			class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4
+		<a
+			aria-disabled={isLoading}
+			class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4
 		{isLoading ? 'pointer-events-none cursor-not-allowed opacity-50' : ''}"
+			href={`/learningunit/${learningUnit.uuid}`}
 		>
 			<div class="flex w-full max-w-sm items-center gap-4">
 				<div class="relative">
@@ -130,9 +132,10 @@
 				</div>
 				<label class="label">
 					<input
+						onclick={(e) => e.preventDefault()}
 						class="input -m-1 p-1 font-medium"
 						type="text"
-						placeholder={$_('block.name')}
+						placeholder={$_('learningUnit.name')}
 						bind:value={name}
 						onblur={handleInputBlur}
 						onkeydown={handleInputKeydown}
@@ -142,13 +145,6 @@
 
 			{#if role === INSTRUCTOR_ROLE}
 				<div class="flex gap-2">
-					<a
-						type="button"
-						class="btn preset-filled-primary-500"
-						href={`/learningunit/${learningUnit.uuid}`}
-					>
-						{$_('common.edit')}
-					</a>
 					<button
 						type="button"
 						onclick={(e) => {
@@ -176,7 +172,7 @@
 					{/if}
 				</div>
 			{/if}
-		</div>
+		</a>
 	{:else if role === TRAINEE_ROLE}
 		<a
 			aria-disabled={isLoading}

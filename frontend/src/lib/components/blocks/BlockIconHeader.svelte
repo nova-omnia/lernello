@@ -17,10 +17,13 @@
 	interface BlockIconHeaderProps {
 		block: BlockRes;
 		role: RoleType;
+		language: string;
 	}
-	const { block, role }: BlockIconHeaderProps = $props();
-
-	let name = $derived(block.name);
+	const { block, role, language }: BlockIconHeaderProps = $props();
+	const blockName = $derived(
+		block.translatedContents.find((content) => content.language === language)?.name ?? block.name
+	);
+	let name = $derived(blockName);
 
 	let blockTypeTerm = $derived.by(() => {
 		switch (block.type) {
@@ -44,7 +47,7 @@
 			});
 			return;
 		}
-		if (newName !== block.name) {
+		if (newName !== blockName) {
 			queueBlockAction({
 				type: ActionType.Enum.UPDATE_BLOCK_NAME,
 				blockId: block.uuid,

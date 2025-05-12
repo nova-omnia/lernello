@@ -1,4 +1,4 @@
-package ch.nova_omnia.lernello.service;
+package ch.nova_omnia.lernello.service.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockLanguage;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.aiClient.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -40,7 +43,12 @@ public class AIBlockService {
         String aiResponse = aiClient.sendPrompt(prompt);
 
         JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock");
-        block.setContent(jsonNode.get("content").asText());
+        String content = jsonNode.get("content").asText();
+        block.setContent(content);
+        block.setName("Generated");
+        block.setType(BlockType.THEORY);
+        TheoryBlock saved = blockRepository.saveAndFlush(block);
+        generateTranslationsParallel(saved, content);
         return block;
     }
 
@@ -55,6 +63,11 @@ public class AIBlockService {
         mcBlock.setQuestion(generated.getQuestion());
         mcBlock.setPossibleAnswers(generated.getPossibleAnswers());
         mcBlock.setCorrectAnswers(generated.getCorrectAnswers());
+        mcBlock.setName("Generated");
+        mcBlock.setType(BlockType.MULTIPLE_CHOICE);
+
+        MultipleChoiceBlock saved = blockRepository.saveAndFlush(mcBlock);
+        generateTranslationsParallel(saved);
         return mcBlock;
     }
 
@@ -68,9 +81,74 @@ public class AIBlockService {
         QuestionBlock generated = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock");
         questionBlock.setQuestion(generated.getQuestion());
         questionBlock.setExpectedAnswer(generated.getExpectedAnswer());
+        questionBlock.setName("Generated");
+        questionBlock.setType(BlockType.QUESTION);
+
+        QuestionBlock saved = blockRepository.saveAndFlush(questionBlock);
+        generateTranslationsParallel(saved);
         return questionBlock;
     }
 
+    private void generateTranslationsParallel(Block block, String content) {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        for (BlockLanguage lang : BlockLanguage.values()) {
+            futures.add(CompletableFuture.runAsync(() -> {
+                String prompt = AIPromptTemplate.TRANSLATION.format(lang.name(), content);
+                String translated = aiClient.sendPrompt(prompt);
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setContent(translated);
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
+            }, executor));
+        }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+    }
+
+    private void generateTranslationsParallel(QuestionBlock block) {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        for (BlockLanguage lang : BlockLanguage.values()) {
+            futures.add(CompletableFuture.runAsync(() -> {
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                translatedBlock.setExpectedAnswer(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getExpectedAnswer())));
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
+            }, executor));
+        }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+    }
+
+    private void generateTranslationsParallel(MultipleChoiceBlock block) {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        for (BlockLanguage lang : BlockLanguage.values()) {
+            futures.add(CompletableFuture.runAsync(() -> {
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                translatedBlock.setPossibleAnswers(block.getPossibleAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                translatedBlock.setCorrectAnswers(block.getCorrectAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
+            }, executor));
+        }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+    }
+
+    @Transactional
     public List<Block> generateBlocksAI(List<UUID> fileIds) {
         List<Block> blocks = new ArrayList<>();
         ConcurrentHashMap<String, List<Block>> topicBlocksMap = new ConcurrentHashMap<>();
@@ -92,9 +170,7 @@ public class AIBlockService {
         fileIds.parallelStream().forEach(fileId -> {
             String context = fileService.extractTextFromFile(fileId);
             String prompt = AIPromptTemplate.TOPIC_EXTRACTION.format(context);
-
             String aiResponse = aiClient.sendPrompt(prompt);
-
             JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
             generateBlocksFromTopics(jsonNode, topicBlocksMap);
         });
@@ -102,79 +178,71 @@ public class AIBlockService {
 
     private void generateBlocksFromTopics(JsonNode jsonNode, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-
         jsonNode.fields().forEachRemaining(entry -> {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 String topicTitle = entry.getKey();
                 String topicContent = entry.getValue().asText();
 
                 topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
-                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle));
+                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle), topicTitle);
             }, executor);
-
             futures.add(future);
         });
-        
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
-    private void createBlocksForTopic(String content, List<Block> topicBlocks) {
-        if (content == null || content.isBlank()) {
-            System.err.println("Content is null or empty. Cannot generate blocks.");
-            return;
-        }
+    private void createBlocksForTopic(String content, List<Block> topicBlocks, String blockName) {
+        if (content == null || content.isBlank()) return;
 
         try {
             List<CompletableFuture<Block>> futures = new ArrayList<>();
-
-            futures.add(CompletableFuture.supplyAsync(() -> createAndSaveBlock(generateTheoryBlockFromTopic(content), "Theory Block", BlockType.THEORY), executor));
+            futures.add(CompletableFuture.supplyAsync(() -> generateTheoryBlockFromTopic(content, blockName), executor));
             futures.add(CompletableFuture.supplyAsync(() -> {
                 if (Math.random() < 0.5) {
-                    return createAndSaveBlock(generateQuestionBlockAIFromTopic(content), "Question Block", BlockType.QUESTION);
+                    return generateQuestionBlockAIFromTopic(content, blockName);
                 } else {
-                    return createAndSaveBlock(generateMultipleChoiceBlockAIFromTopic(content), "Multiple Choice Block", BlockType.MULTIPLE_CHOICE);
+                    return generateMultipleChoiceBlockAIFromTopic(content, blockName);
                 }
             }, executor));
-
             List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();
-
             topicBlocks.addAll(blocks);
-
         } catch (Exception e) {
             System.err.println("Failed to generate blocks for topic: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    private Block createAndSaveBlock(Block block, String name, BlockType type) {
-        block.setName(name);
-        block.setType(type);
-        return blockRepository.save(block);
-    }
-
-    private TheoryBlock generateTheoryBlockFromTopic(String topic) {
+    private TheoryBlock generateTheoryBlockFromTopic(String topic, String topicName) {
         TheoryBlock block = new TheoryBlock();
         String prompt = AIPromptTemplate.THEORY_BLOCK.format("", topic);
         String aiResponse = aiClient.sendPrompt(prompt);
-
-        JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock for topic: ");
+        JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock for topic");
         block.setContent(jsonNode.get("content").asText());
+        block.setName(topicName);
+        block.setType(BlockType.THEORY);
+        TheoryBlock saved = blockRepository.saveAndFlush(block);
+        generateTranslationsParallel(saved, saved.getContent());
         return block;
     }
 
-    private QuestionBlock generateQuestionBlockAIFromTopic(String topic) {
+    private QuestionBlock generateQuestionBlockAIFromTopic(String topic, String topicName) {
         String prompt = AIPromptTemplate.QUESTION_BLOCK.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
-
-        QuestionBlock questionBlock = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock from topic: ");
+        QuestionBlock questionBlock = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock from topic");
+        questionBlock.setName(topicName);
+        questionBlock.setType(BlockType.QUESTION);
+        QuestionBlock saved = blockRepository.saveAndFlush(questionBlock);
+        generateTranslationsParallel(saved);
         return questionBlock;
     }
 
-    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic) {
+    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic, String topicName) {
         String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
-
-        MultipleChoiceBlock mcBlock = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock from topic: ");
+        MultipleChoiceBlock mcBlock = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock from topic");
+        mcBlock.setName(topicName);
+        mcBlock.setType(BlockType.MULTIPLE_CHOICE);
+        MultipleChoiceBlock saved = blockRepository.saveAndFlush(mcBlock);
+        generateTranslationsParallel(saved);
         return mcBlock;
     }
 

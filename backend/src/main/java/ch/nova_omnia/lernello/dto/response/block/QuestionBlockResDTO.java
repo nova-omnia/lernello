@@ -2,6 +2,7 @@ package ch.nova_omnia.lernello.dto.response.block;
 
 import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 
+import java.util.List;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.model.data.block.BlockType;
@@ -16,7 +17,8 @@ public record QuestionBlockResDTO(
                                   @Size(min = 3, max = 40) @NotBlank String name,
                                   @Min(0) int position,
                                   @NotBlank String question,
-                                  @NotBlank String expectedAnswer
+                                  @NotBlank String expectedAnswer,
+                                  @NotNull List<TranslatedBlockResDTO> translatedContents
 ) implements BlockResDTO {
     public QuestionBlockResDTO {
         type = QUESTION;

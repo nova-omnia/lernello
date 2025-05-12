@@ -5,9 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 public record CheckQuestionAnswerDTO(
-    @NotNull
-    String blockId,
-    @NotNull
-    String answer
+                                     @NotNull UUID blockId,
+                                     @NotNull String answer
 ) {
 }

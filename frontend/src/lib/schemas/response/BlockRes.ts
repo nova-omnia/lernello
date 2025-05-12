@@ -17,22 +17,36 @@ const BaseBlockResSchema = z.object({
 	position: z.number().min(0)
 });
 
+export const TranslatedBlockResSchema = z.object({
+	id: z.string().uuid(),
+	name: z.string(),
+	language: z.enum(['GERMAN', 'FRENCH', 'ITALIAN']),
+	content: z.string().nullable(),
+	question: z.string().nullable(),
+	expectedAnswer: z.string().nullable(),
+	possibleAnswers: z.array(z.string()).nullable(),
+	correctAnswers: z.array(z.string()).nullable()
+});
+
 export const TheoryBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(THEORY_BLOCK_TYPE),
-	content: z.string()
+	content: z.string(),
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const MultipleChoiceBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(MULTIPLE_CHOICE_BLOCK_TYPE),
 	question: z.string(),
 	possibleAnswers: z.array(z.string()),
-	correctAnswers: z.array(z.string())
+	correctAnswers: z.array(z.string()),
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const QuestionBlockResSchema = BaseBlockResSchema.extend({
 	type: z.literal(QUESTION_BLOCK_TYPE),
 	question: z.string(),
-	expectedAnswer: z.string()
+	expectedAnswer: z.string(),
+	translatedContents: z.array(TranslatedBlockResSchema)
 });
 
 export const BlockResSchema = z.discriminatedUnion('type', [

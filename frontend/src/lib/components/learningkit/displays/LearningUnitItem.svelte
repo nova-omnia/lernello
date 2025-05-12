@@ -171,10 +171,10 @@
 					>
 						{$_('common.delete')}
 					</button>
+					{#if isLoading}
+						<Loader class="ml-4 animate-spin" size={24} />
+					{/if}
 				</div>
-			{/if}
-			{#if isLoading}
-				<Loader class="ml-4 animate-spin" size={24} />
 			{/if}
 		</div>
 	{:else if role === TRAINEE_ROLE}

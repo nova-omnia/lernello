@@ -7,8 +7,9 @@
 	import { addBlockActionListener, blockActionState } from '$lib/states/blockActionState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo.js';
+	import { get } from 'svelte/store';
 
 	let { data } = $props();
 
@@ -17,6 +18,14 @@
 
 	let timer: ReturnType<typeof setTimeout> | null = null;
 	let dataLoading = $state(false);
+
+	const localeToLanguageValue: Record<string, string> = {
+		en: 'ENGLISH',
+		de: 'GERMAN',
+		fr: 'FRENCH',
+		it: 'ITALIAN'
+	};
+	let language = $state(localeToLanguageValue[get(locale) ?? 'en']);
 
 	$effect(() => {
 		const { remove } = addBlockActionListener(() => {
@@ -75,9 +84,13 @@
 			class:opacity-50={dataLoading}
 			class:cursor-not-allowed={dataLoading}
 		>
-			<BlockEditor learningUnitId={data.learningUnitId} role={data.userInfo.role} />
+			<BlockEditor
+				learningUnitId={data.learningUnitId}
+				role={data.userInfo.role}
+				onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
+			/>
 			{#if data.userInfo.role === INSTRUCTOR_ROLE}
-				<BlockReorder />
+				<BlockReorder {language} />
 			{/if}
 		</div>
 	</div>

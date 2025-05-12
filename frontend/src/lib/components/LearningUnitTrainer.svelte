@@ -71,7 +71,7 @@
 	{#if blockActionState.blocks.length > 0}
 		<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
 			{#each blockActionState.blocks as block (block.uuid)}
-				<BlockOverviewItem {block} {role} scrollToBlock={() => scrollToBlock(block.uuid)} />
+				<BlockOverviewItem {block} {role} scrollToBlock={() => scrollToBlock(block.uuid)} language={selectedLanguage}/>
 			{/each}
 		</div>
 	{/if}

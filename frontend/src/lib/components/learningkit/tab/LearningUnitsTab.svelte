@@ -116,7 +116,7 @@
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
 					isLoading={$generateLearningUnitMutation.isPending &&
-						$generateLearningUnitMutation.variables.id === learningUnit.id}
+						$generateLearningUnitMutation.variables.id === learningUnit.uuid}
 					{learningUnit}
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);

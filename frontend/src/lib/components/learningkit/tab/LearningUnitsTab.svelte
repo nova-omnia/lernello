@@ -71,6 +71,7 @@
 		onMutate: () => {
 			toaster.create({
 				title: $_('learningUnit.generate.isGenerating'),
+				description: $_('learningUnit.generate.isGeneratingDescription'),
 				type: 'info'
 			});
 		},
@@ -80,7 +81,16 @@
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
 				title: $_('learningUnit.generate.generated'),
+				description: $_('learningUnit.generate.generatedDescription'),
 				type: 'info'
+			});
+		},
+		onError: (error, variables, context) => {
+			console.error('Error generating learning unit:', error, variables, context);
+			toaster.create({
+				title: $_('learningUnit.generate.error'),
+				description: $_('learningUnit.generate.errorDescription'),
+				type: 'error'
 			});
 		}
 	});

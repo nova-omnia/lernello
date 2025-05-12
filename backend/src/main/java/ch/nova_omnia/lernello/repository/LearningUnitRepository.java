@@ -14,22 +14,20 @@ import ch.nova_omnia.lernello.model.data.LearningUnit;
 public interface LearningUnitRepository extends JpaRepository<LearningUnit, UUID> {
     /**
      * Find all learning units belonging to a learning kit, ordered by position
-     * 
+     *
      * @param learningKitId The ID of the learning kit
      * @return List of learning units in position order
      */
-    @Query("SELECT lu FROM LearningUnit lu WHERE lu.learningKit.id = :learningKitId ORDER BY lu.position ASC")
+    @Query("SELECT lu FROM LearningUnit lu WHERE lu.learningKit.uuid = :learningKitId ORDER BY lu.position ASC")
     List<LearningUnit> findLearningUnitAsc(UUID learningKitId);
 
-    
-    
     /**
      * Update the position of a specific learning unit
-     * 
+     *
      * @param position The new position
      * @param learningUnitId  The Learning Unit ID
      */
     @Modifying
-    @Query("UPDATE LearningUnit lu SET lu.position = :position WHERE lu.id = :learningUnitId")
+    @Query("UPDATE LearningUnit lu SET lu.position = :position WHERE lu.uuid = :learningUnitId")
     void updatePosition(int position, UUID learningUnitId);
 }

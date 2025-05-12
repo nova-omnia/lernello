@@ -10,7 +10,8 @@ export const ActionType = z.enum([
 	'REORDER_BLOCK',
 	'REMOVE_BLOCK',
 	'UPDATE_BLOCK',
-	'UPDATE_BLOCK_NAME'
+	'UPDATE_BLOCK_NAME',
+	'UPDATE_LEARNING_UNIT_NAME'
 ]);
 
 const BaseBlockActionSchema = z.object({
@@ -50,12 +51,19 @@ export const UpdateBlockNameActionSchema = BaseBlockActionSchema.extend({
 	newName: z.string().min(3).max(40)
 });
 
+export const UpdateLearningUnitNameActionSchema = z.object({
+	type: z.literal(ActionType.Enum.UPDATE_LEARNING_UNIT_NAME),
+	learningUnitId: z.string().uuid(),
+	newName: z.string().min(3).max(40)
+});
+
 export const BlockActionSchema = z.discriminatedUnion('type', [
 	AddBlockActionSchema,
 	ReorderBlockActionSchema,
 	RemoveBlockActionSchema,
 	UpdateBlockActionSchema,
-	UpdateBlockNameActionSchema
+	UpdateBlockNameActionSchema,
+	UpdateLearningUnitNameActionSchema
 ]);
 
 type AddBlockActionNoId = Omit<z.infer<typeof AddBlockActionSchema>, 'blockId'>;
@@ -66,3 +74,5 @@ export type AddBlockAction = z.infer<typeof AddBlockActionSchema>;
 export type ReorderBlockAction = z.infer<typeof ReorderBlockActionSchema>;
 export type RemoveBlockAction = z.infer<typeof RemoveBlockActionSchema>;
 export type UpdateBlockAction = z.infer<typeof UpdateBlockActionSchema>;
+export type UpdateBlockNameAction = z.infer<typeof UpdateBlockNameActionSchema>;
+export type UpdateLearningUnitNameAction = z.infer<typeof UpdateLearningUnitNameActionSchema>;

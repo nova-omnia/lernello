@@ -11,37 +11,36 @@
 	import { Plus } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import type { LearningUnitRes } from '$lib/schemas/response/LearningUnitRes';
+	import { initializeInstructorDnd } from '$lib/states/dndService';
 
 	const invalidate = useQueryInvalidation();
 
 	interface LearningUnitsProps {
 		learningKitId: string;
-		learningUnits: {
-			name: string;
-			description?: string;
-			uuid: string;
-		}[];
+		learningUnits: LearningUnitRes[];
 		role: RoleType;
 	}
 
 	const { learningKitId, learningUnits, role }: LearningUnitsProps = $props();
 
-	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, id: unit.uuid })));
-	let currentlyDraggingId: string | null = null;
-	type LearningUnitWithId = { name: string; description?: string; uuid: string; id: string };
+	initializeInstructorDnd();
 
-	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitWithId>>) {
+	let learningUnitsSnapshot = $derived(learningUnits);
+	let currentlyDraggingId: string | null = null;
+
+	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitRes>>) {
 		learningUnitsSnapshot = e.detail.items;
 		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
 			currentlyDraggingId = e.detail.info.id;
 		}
 	}
 
-	function handleSortOnFinalize(e: CustomEvent<DndEvent<LearningUnitWithId>>) {
+	function handleSortOnFinalize(e: CustomEvent<DndEvent<LearningUnitRes>>) {
 		if (!currentlyDraggingId) {
 			throw new Error('No currently dragging ID');
 		}
-		const newIdx = e.detail.items.findIndex((unit) => unit.id === currentlyDraggingId);
+		const newIdx = e.detail.items.findIndex((unit) => unit.uuid === currentlyDraggingId);
 		const oldIdx = learningUnits.findIndex((unit) => unit.uuid === currentlyDraggingId);
 
 		if (newIdx === oldIdx) return;
@@ -123,7 +122,7 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		{#each learningUnitsSnapshot as learningUnit (learningUnit.id)}
+		{#each learningUnitsSnapshot as learningUnit (learningUnit.uuid)}
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
 					isLoading={$generateLearningUnitMutation.isPending}
@@ -138,6 +137,7 @@
 						});
 					}}
 					{role}
+					invalidateLearningKitQuery={() => invalidate(['learning-kit', learningKitId])}
 				/>
 			</div>
 		{/each}

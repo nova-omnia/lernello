@@ -49,21 +49,21 @@
 					{/if}
 				</label>
 
-				<label class="label">
-					<span class="label-text">{$_('common.name')} *</span>
-					<input
-						type="text"
-						class="input preset-filled-surface-100-900"
-						name="name"
-						placeholder={$_('common.name')}
-						aria-invalid={$errors.name ? 'true' : undefined}
-						bind:value={$form.name}
-						{...$constraints.name}
-					/>
-					{#if $errors.name}
-						<p class="text-error-500">{$errors.name}</p>
-					{/if}
-				</label>
+			<label class="label">
+				<span class="label-text">{$_('common.firstname')} *</span>
+				<input
+					type="text"
+					class="input preset-filled-surface-100-900"
+					name="name"
+					placeholder={$_('common.firstname')}
+					aria-invalid={$errors.name ? 'true' : undefined}
+					bind:value={$form.name}
+					{...$constraints.name}
+				/>
+				{#if $errors.name}
+					<p class="text-error-500">{$errors.name}</p>
+				{/if}
+			</label>
 
 				<label class="label">
 					<span class="label-text">{$_('common.surname')} *</span>

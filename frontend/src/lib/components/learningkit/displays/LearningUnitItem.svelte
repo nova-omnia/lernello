@@ -85,6 +85,7 @@
 					type: 'success'
 				});
 			} catch (error) {
+				console.error('Error:', error);
 				toaster.create({
 					title: $_('common.error.title'),
 					description: $_('learningUnit.rename.error'),

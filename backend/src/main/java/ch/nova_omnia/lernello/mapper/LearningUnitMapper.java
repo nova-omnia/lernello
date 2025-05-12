@@ -38,26 +38,26 @@ public class LearningUnitMapper {
     public BlockResDTO mapBlockToResDTO(Block block) {
         List<TranslatedBlockResDTO> translations = translatedBlockRepository.findByOriginalBlock(block).stream().map(this::toTranslatedDto).toList();
 
-        if (block instanceof MultipleChoiceBlock mc) {
+        if (block instanceof MultipleChoiceBlock multipleChoiceBlock) {
             return new MultipleChoiceBlockResDTO(
-                    MULTIPLE_CHOICE, mc.getUuid(), mc.getName(), mc.getPosition(), mc.getQuestion(), mc.getPossibleAnswers(), mc.getCorrectAnswers(), translations
+                    MULTIPLE_CHOICE, multipleChoiceBlock.getUuid(), multipleChoiceBlock.getName(), multipleChoiceBlock.getPosition(), multipleChoiceBlock.getQuestion(), multipleChoiceBlock.getPossibleAnswers(), multipleChoiceBlock.getCorrectAnswers(), translations
             );
-        } else if (block instanceof QuestionBlock q) {
+        } else if (block instanceof QuestionBlock questionBlock) {
             return new QuestionBlockResDTO(
-                    QUESTION, q.getUuid(), q.getName(), q.getPosition(), q.getQuestion(), q.getExpectedAnswer(), translations
+                    QUESTION, questionBlock.getUuid(), questionBlock.getName(), questionBlock.getPosition(), questionBlock.getQuestion(), questionBlock.getExpectedAnswer(), translations
             );
-        } else if (block instanceof TheoryBlock t) {
+        } else if (block instanceof TheoryBlock theoryBlock) {
             return new TheoryBlockResDTO(
-                    THEORY, t.getUuid(), t.getName(), t.getPosition(), t.getContent(), translations
+                    THEORY, theoryBlock.getUuid(), theoryBlock.getName(), theoryBlock.getPosition(), theoryBlock.getContent(), translations
             );
         }
 
         throw new IllegalArgumentException("Unknown block type: " + block.getClass().getName());
     }
 
-    public TranslatedBlockResDTO toTranslatedDto(TranslatedBlock b) {
+    public TranslatedBlockResDTO toTranslatedDto(TranslatedBlock translatedBlock) {
         return new TranslatedBlockResDTO(
-                b.getUuid(), b.getLanguage(), b.getName(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
+                translatedBlock.getUuid(), translatedBlock.getLanguage(), translatedBlock.getName(), translatedBlock.getContent(), translatedBlock.getQuestion(), translatedBlock.getExpectedAnswer(), translatedBlock.getPossibleAnswers(), translatedBlock.getCorrectAnswers()
         );
     }
 

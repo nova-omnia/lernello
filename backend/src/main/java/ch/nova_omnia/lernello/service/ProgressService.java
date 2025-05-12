@@ -122,7 +122,7 @@ public class ProgressService {
     @Transactional
     public QuestionAnswerValidationResDTO checkQuestionAnswer(CheckQuestionAnswerDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(UUID.fromString(dto.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+        Block block = blockRepository.findById(dto.blockId()).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         QuestionBlock qBlock;
         if (!(block instanceof QuestionBlock)) {
@@ -318,11 +318,11 @@ public class ProgressService {
 
         User user = kitProgress.getUser();
 
-        for (LearningUnit lu : learningUnitsInKit) {
-            totalBlocksInKit += lu.getBlocks().size();
-            LearningUnitProgress lup = getOrCreateLearningUnitProgress(user, lu, kitProgress);
+        for (LearningUnit learningUnit : learningUnitsInKit) {
+            totalBlocksInKit += learningUnit.getBlocks().size();
+            LearningUnitProgress learningUnitProgress = getOrCreateLearningUnitProgress(user, learningUnit, kitProgress);
 
-            List<BlockProgress> blockProgressesInLup = blockProgressRepository.findByLearningUnitProgress_Uuid(lup.getUuid());
+            List<BlockProgress> blockProgressesInLup = blockProgressRepository.findByLearningUnitProgress_Uuid(learningUnitProgress.getUuid());
 
             totalCompletedBlocksInKit += blockProgressesInLup.stream().filter(this::isBlockProgressConsideredComplete).count();
         }
@@ -344,10 +344,10 @@ public class ProgressService {
         learningKitProgressRepository.save(kitProgress);
     }
 
-    private boolean isBlockProgressConsideredComplete(BlockProgress bp) {
-        Block actualBlockEntity = bp.getBlock();
+    private boolean isBlockProgressConsideredComplete(BlockProgress blockProgress) {
+        Block actualBlockEntity = blockProgress.getBlock();
 
-        switch (bp) {
+        switch (blockProgress) {
             case MultipleChoiceBlockProgress mcProgress when actualBlockEntity instanceof MultipleChoiceBlock mcBlockDefinition -> {
                 List<String> lastAnswers = mcProgress.getLastAnswers();
                 List<String> correctAnswers = mcBlockDefinition.getCorrectAnswers();

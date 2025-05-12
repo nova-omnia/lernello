@@ -95,15 +95,15 @@ public class AIBlockService {
             futures.add(CompletableFuture.runAsync(() -> {
                 String prompt = AIPromptTemplate.TRANSLATION.format(lang.name(), content);
                 String translated = aiClient.sendPrompt(prompt);
-                TranslatedBlock lb = new TranslatedBlock();
-                lb.setLanguage(lang);
-                lb.setContent(translated);
-                lb.setOriginalBlock(block);
-                lb.setLearningUnit(block.getLearningUnit());
-                lb.setPosition(block.getPosition());
-                lb.setType(block.getType());
-                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
-                blockRepository.save(lb);
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setContent(translated);
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -113,16 +113,16 @@ public class AIBlockService {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
-                TranslatedBlock lb = new TranslatedBlock();
-                lb.setLanguage(lang);
-                lb.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
-                lb.setExpectedAnswer(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getExpectedAnswer())));
-                lb.setOriginalBlock(block);
-                lb.setLearningUnit(block.getLearningUnit());
-                lb.setPosition(block.getPosition());
-                lb.setType(block.getType());
-                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
-                blockRepository.save(lb);
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                translatedBlock.setExpectedAnswer(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getExpectedAnswer())));
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -132,17 +132,17 @@ public class AIBlockService {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
-                TranslatedBlock lb = new TranslatedBlock();
-                lb.setLanguage(lang);
-                lb.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
-                lb.setPossibleAnswers(block.getPossibleAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
-                lb.setCorrectAnswers(block.getCorrectAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
-                lb.setOriginalBlock(block);
-                lb.setLearningUnit(block.getLearningUnit());
-                lb.setPosition(block.getPosition());
-                lb.setType(block.getType());
-                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
-                blockRepository.save(lb);
+                TranslatedBlock translatedBlock = new TranslatedBlock();
+                translatedBlock.setLanguage(lang);
+                translatedBlock.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                translatedBlock.setPossibleAnswers(block.getPossibleAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                translatedBlock.setCorrectAnswers(block.getCorrectAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                translatedBlock.setOriginalBlock(block);
+                translatedBlock.setLearningUnit(block.getLearningUnit());
+                translatedBlock.setPosition(block.getPosition());
+                translatedBlock.setType(block.getType());
+                translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(translatedBlock);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();

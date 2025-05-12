@@ -6,7 +6,7 @@ export const CreateTheoryBlockSchema = z.object({
 	type: z.literal(BlockType.Enum.THEORY),
 	name: z.string().min(3).max(40),
 	position: z.number().min(0),
-	content: z.string().min(1).nullable().optional()
+	content: z.string().nullable().optional()
 });
 
 export const CreateMultipleChoiceBlockSchema = z.object({

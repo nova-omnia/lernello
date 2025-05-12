@@ -18,8 +18,13 @@
 	}
 
 	const { block, role, language }: BlockTheoryItemProps = $props();
-	let lastContent = $derived(block.translatedContents.find(content => content.language == language)?.content ?? block.content);
-	let blockId: string = $derived(block.translatedContents.find(content => content.language == language)?.id ?? block.uuid);
+	let lastContent = $derived(
+		block.translatedContents.find((content) => content.language == language)?.content ??
+			block.content
+	);
+	let blockId: string = $derived(
+		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+	);
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
@@ -58,4 +63,9 @@
 	});
 </script>
 
-<TextEditor content={block.translatedContents.find(content => content.language == language)?.content ?? block.content} onUpdate={onUpdateHandler} {role} />
+<TextEditor
+	content={block.translatedContents.find((content) => content.language == language)?.content ??
+		block.content}
+	onUpdate={onUpdateHandler}
+	{role}
+/>

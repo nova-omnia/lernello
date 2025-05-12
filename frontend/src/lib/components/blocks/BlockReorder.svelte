@@ -57,7 +57,7 @@
 	>
 		{#each blocksSnapshot as block (block.id)}
 			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} {language}/>
+				<BlockReorderItem {block} {language} />
 			</div>
 		{/each}
 	</div>

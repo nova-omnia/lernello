@@ -21,18 +21,30 @@
 
 	const { block, role, language }: BlockQuestionItemProps = $props();
 
-	let currentQuestion = $derived(block.translatedContents.find(content => content.language == language)?.question ?? block.question);
-	let currentExpectedAnswer = $derived(block.translatedContents.find(content => content.language == language)?.expectedAnswer ?? block.expectedAnswer);
+	let currentQuestion = $derived(
+		block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question
+	);
+	let currentExpectedAnswer = $derived(
+		block.translatedContents.find((content) => content.language == language)?.expectedAnswer ??
+			block.expectedAnswer
+	);
 
 	let traineeAnswer = $state('');
 	let isSubmitted = $state(false);
 	let isCorrect = $state<boolean | null>(null);
 
-	let blockId: string = $derived(block.translatedContents.find(content => content.language == language)?.id ?? block.uuid);
+	let blockId: string = $derived(
+		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+	);
 
 	const onUpdateHandler = createDebounced(() => {
-		let localBlockQuestion = block.translatedContents.find(content => content.language == language)?.question ?? block.question;
-		let localExpectedAnswer = block.translatedContents.find(content => content.language == language)?.expectedAnswer ?? block.expectedAnswer;
+		let localBlockQuestion =
+			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question;
+		let localExpectedAnswer =
+			block.translatedContents.find((content) => content.language == language)?.expectedAnswer ??
+			block.expectedAnswer;
 		if (currentQuestion !== localBlockQuestion || currentExpectedAnswer !== localExpectedAnswer) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',

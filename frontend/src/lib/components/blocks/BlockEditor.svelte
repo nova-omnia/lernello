@@ -24,10 +24,10 @@
 	]);
 
 	const localeToLanguageValue: Record<string, string> = {
-		'en': 'ENGLISH',
-		'de': 'GERMAN',
-		'fr': 'FRENCH',
-		'it': 'ITALIAN'
+		en: 'ENGLISH',
+		de: 'GERMAN',
+		fr: 'FRENCH',
+		it: 'ITALIAN'
 	};
 
 	let selectedLanguage: string = $state(localeToLanguageValue[get(locale) ?? 'en']);

@@ -30,8 +30,8 @@
 	);
 	let currentAnswers = $derived<Answer[]>(
 		(
-			block.translatedContents.find((content) => content.language == language)
-				?.possibleAnswers ?? block.possibleAnswers
+			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.possibleAnswers
 		).map(
 			(answer): Answer => ({
 				value: answer,
@@ -43,7 +43,9 @@
 		)
 	);
 
-	let blockId: string = $derived(block.translatedContents.find(content => content.language == language)?.id ?? block.uuid);
+	let blockId: string = $derived(
+		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+	);
 
 	const onUpdateHandler = createDebounced(() => {
 		const newPossibleAnswers = currentAnswers.map((a: Answer) => a.value);
@@ -54,8 +56,8 @@
 			block.translatedContents.find((content) => content.language == language)?.question ??
 			block.question;
 		let localPossibleAnswers =
-			block.translatedContents.find((content) => content.language == language)
-				?.possibleAnswers ?? block.possibleAnswers;
+			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.possibleAnswers;
 		let localCorrectAnswers =
 			block.translatedContents.find((content) => content.language == language)?.correctAnswers ??
 			block.correctAnswers;

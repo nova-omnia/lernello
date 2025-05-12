@@ -15,7 +15,6 @@
 	import { _ } from 'svelte-i18n';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
 
-
 	interface BlockItemProps {
 		block: BlockRes;
 		role: RoleType;
@@ -38,7 +37,7 @@
 <div
 	class="card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 group relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} {role} {language}/>
+	<BlockIconHeader {block} {role} {language} />
 
 	{#if block.type === THEORY_BLOCK_TYPE}
 		<TheoryBlockComponent {block} {role} {language} />
@@ -51,7 +50,7 @@
 	{#if role === 'INSTRUCTOR'}
 		<button
 			type="button"
-			class="btn preset-filled-error-500 absolute -right-2 -top-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+			class="btn preset-filled-error-500 absolute -top-2 -right-2 size-8 rounded-full p-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 			onclick={() => (isConfirmDialogOpen = true)}
 		>
 			<X class="h-4 w-4" />

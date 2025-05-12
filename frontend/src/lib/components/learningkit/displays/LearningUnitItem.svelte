@@ -70,7 +70,7 @@
 				<AlignLeft size={32} />
 				{#if role === TRAINEE_ROLE && isCompleted}
 					<CheckCircle2
-						class="bg-surface-100-900 absolute -right-1 -top-1 h-4 w-4 rounded-full text-green-500"
+						class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
 					/>
 				{/if}
 			</div>

@@ -20,13 +20,13 @@
 	let dataLoading = $state(false);
 
 	const localeToLanguageValue: Record<string, string> = {
-		'en': 'ENGLISH',
-		'de': 'GERMAN',
-		'fr': 'FRENCH',
-		'it': 'ITALIAN'
+		en: 'ENGLISH',
+		de: 'GERMAN',
+		fr: 'FRENCH',
+		it: 'ITALIAN'
 	};
 	let language = $state(localeToLanguageValue[get(locale) ?? 'en']);
-	
+
 	$effect(() => {
 		const { remove } = addBlockActionListener(() => {
 			if (blockActionState.queue.length === 0) {
@@ -84,9 +84,13 @@
 			class:opacity-50={dataLoading}
 			class:cursor-not-allowed={dataLoading}
 		>
-			<BlockEditor learningUnitId={data.learningUnitId} role={data.userInfo.role} onLanguageSelect={(selectedLanguage: string) => language = selectedLanguage}/>
+			<BlockEditor
+				learningUnitId={data.learningUnitId}
+				role={data.userInfo.role}
+				onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
+			/>
 			{#if data.userInfo.role === INSTRUCTOR_ROLE}
-				<BlockReorder {language}/>
+				<BlockReorder {language} />
 			{/if}
 		</div>
 	</div>

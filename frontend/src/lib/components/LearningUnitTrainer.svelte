@@ -8,7 +8,6 @@
 	}
 	const { role }: LearningUnitTrainingContainerProps = $props();
 	const language = 'ENGLISH'; // Assuming English is the default language for this example
-
 </script>
 
 <div

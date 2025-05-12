@@ -72,15 +72,15 @@
 	<div></div>
 {:else}
 	<a
-		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 overflow-ellipsis border p-4 text-center {cardCompletedClass}"
+		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis {cardCompletedClass}"
 		href="/learningkit/{uuid}?tab=learningUnits"
 	>
 		{#if role === INSTRUCTOR_ROLE}
-			<div class="absolute left-2 top-2">
+			<div class="absolute top-2 left-2">
 				<PublishedStatusIndicator {published} />
 			</div>
 			<button
-				class="absolute right-0 top-0 z-10 flex gap-2 p-2"
+				class="absolute top-0 right-0 z-10 flex gap-2 p-2"
 				onclick={(e) => {
 					e.preventDefault();
 					showDeleteDialog = true;
@@ -91,7 +91,7 @@
 		{/if}
 		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data}
 			{#if isCompleted}
-				<div class="absolute left-2 top-2">
+				<div class="absolute top-2 left-2">
 					<CheckCircle2 class="h-6 w-6 text-green-500" />
 				</div>
 			{/if}

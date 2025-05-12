@@ -20,7 +20,9 @@
 		language: string;
 	}
 	const { block, role, language }: BlockIconHeaderProps = $props();
-	const blockName = $derived(block.translatedContents.find(content => content.language === language)?.name ?? block.name);
+	const blockName = $derived(
+		block.translatedContents.find((content) => content.language === language)?.name ?? block.name
+	);
 	let name = $derived(blockName);
 
 	let blockTypeTerm = $derived.by(() => {

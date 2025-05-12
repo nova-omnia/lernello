@@ -212,3 +212,28 @@
 		{/if}
 	{/if}
 </div>
+
+<ConfirmDialog
+	isOpen={showDeleteDialog}
+	title={$_('blocks.delete_title')}
+	message={$_('blocks.delete_message')}
+	confirmText={$_('common.delete')}
+	cancelText={$_('common.cancel')}
+	danger={true}
+	onConfirm={deleteLearningUnitHandler}
+	onCancel={() => {
+		showDeleteDialog = false;
+	}}
+/>
+
+<GenerateLearningUnitModal
+	bind:isOpen={showGenerationDialog}
+	isLoading={false}
+	onConfirm={(files) => {
+		onGenerateLearningUnit(files);
+		showGenerationDialog = false;
+	}}
+	onCancel={() => {
+		showGenerationDialog = false;
+	}}
+/>

@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import BlockReorderItem from '$lib/components/blocks/BlockReorderItem.svelte';
+	import BlockReorderItem from '$lib/components/blocks/BlockOverviewItem.svelte';
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { initializeInstructorDnd } from '$lib/states/dndService';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
 	initializeInstructorDnd();
 
@@ -53,7 +54,7 @@
 	>
 		{#each blocksSnapshot as block (block.uuid)}
 			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} />
+				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} />
 			</div>
 		{/each}
 	</div>

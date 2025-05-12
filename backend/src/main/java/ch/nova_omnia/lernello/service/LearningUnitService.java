@@ -26,7 +26,9 @@ import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
@@ -224,20 +226,34 @@ public class LearningUnitService {
         if (updateAction.content() != null) {
             if (block instanceof TheoryBlock theoryBlock) {
                 theoryBlock.setContent(updateAction.content());
+            } else if (block instanceof TranslatedBlock translatedBlock && block.getType().equals(BlockType.THEORY)) {
+                translatedBlock.setContent(updateAction.content());
             } else {
                 throw new IllegalArgumentException("Content updates only supported for theory blocks");
             }
         }
 
         if (updateAction.question() != null) {
-            if (block instanceof QuestionBlock questionBlock) {
+            if (block instanceof QuestionBlock || block instanceof TranslatedBlock) {
+                QuestionBlock questionBlock = (QuestionBlock) block;
                 questionBlock.setQuestion(updateAction.question());
                 questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
-            } else if (block instanceof MultipleChoiceBlock mcBlock) {
+            } else if (block instanceof MultipleChoiceBlock || block instanceof TranslatedBlock) {
+                MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
                 mcBlock.setQuestion(updateAction.question());
                 mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
                 mcBlock.setCorrectAnswers(updateAction.correctAnswers());
-
+            } else if (block instanceof TranslatedBlock translated) {
+                if (translated.getType() == BlockType.QUESTION) {
+                    translated.setQuestion(updateAction.question());
+                    translated.setExpectedAnswer(updateAction.expectedAnswer());
+                } else if (translated.getType() == BlockType.MULTIPLE_CHOICE) {
+                    translated.setQuestion(updateAction.question());
+                    translated.setPossibleAnswers(updateAction.possibleAnswers());
+                    translated.setCorrectAnswers(updateAction.correctAnswers());
+                } else {
+                    throw new IllegalArgumentException("TranslatedBlock has unsupported type for question update: " + translated.getType());
+                }
             }
         }
 

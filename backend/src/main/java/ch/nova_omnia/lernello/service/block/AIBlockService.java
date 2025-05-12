@@ -23,6 +23,7 @@ import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.service.aiClient.AIClient;
 import ch.nova_omnia.lernello.service.file.FileService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -45,16 +46,12 @@ public class AIBlockService {
         String content = jsonNode.get("content").asText();
         block.setContent(content);
 
-        // Paralleluebersetzungen
         generateTranslationsParallel(block, content);
-        System.out.println("Generated TheoryBlock: " + block.getContent());
-        System.out.println("Generated TranslatedBlock: " + block.getTranslatedContents());
         return block;
     }
 
     public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId) {
-        TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId)
-            .orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
+        TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         MultipleChoiceBlock mcBlock = new MultipleChoiceBlock();
 
         String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(theoryBlock.getContent());
@@ -70,8 +67,7 @@ public class AIBlockService {
     }
 
     public QuestionBlock generateQuestionBlockAI(UUID theoryBlockId) {
-        TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId)
-            .orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
+        TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         QuestionBlock questionBlock = new QuestionBlock();
 
         String prompt = AIPromptTemplate.QUESTION_BLOCK.format(theoryBlock.getContent());
@@ -89,13 +85,17 @@ public class AIBlockService {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
-                String prompt = String.format("Translate the following text to %s:\n\n%s", lang, content);
+                String prompt = AIPromptTemplate.TRANSLATION.format(lang.name(), content);
                 String translated = aiClient.sendPrompt(prompt);
                 TranslatedBlock lb = new TranslatedBlock();
-                lb.setBlock(block);
                 lb.setLanguage(lang);
                 lb.setContent(translated);
-                block.getTranslatedContents().add(lb);
+                lb.setOriginalBlock(block);
+                lb.setLearningUnit(block.getLearningUnit());
+                lb.setPosition(block.getPosition());
+                lb.setType(block.getType());
+                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -106,11 +106,15 @@ public class AIBlockService {
         for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
                 TranslatedBlock lb = new TranslatedBlock();
-                lb.setBlock(block);
                 lb.setLanguage(lang);
-                lb.setQuestion(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getQuestion()));
-                lb.setExpectedAnswer(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getExpectedAnswer()));
-                block.getTranslatedContents().add(lb);
+                lb.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                lb.setExpectedAnswer(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getExpectedAnswer())));
+                lb.setOriginalBlock(block);
+                lb.setLearningUnit(block.getLearningUnit());
+                lb.setPosition(block.getPosition());
+                lb.setType(block.getType());
+                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -121,19 +125,22 @@ public class AIBlockService {
         for (BlockLanguage lang : BlockLanguage.values()) {
             futures.add(CompletableFuture.runAsync(() -> {
                 TranslatedBlock lb = new TranslatedBlock();
-                lb.setBlock(block);
                 lb.setLanguage(lang);
-                lb.setQuestion(aiClient.sendPrompt("Translate to " + lang + ":\n" + block.getQuestion()));
-                lb.setPossibleAnswers(block.getPossibleAnswers().stream()
-                    .map(ans -> aiClient.sendPrompt("Translate to " + lang + ":\n" + ans)).toList());
-                lb.setCorrectAnswers(block.getCorrectAnswers().stream()
-                    .map(ans -> aiClient.sendPrompt("Translate to " + lang + ":\n" + ans)).toList());
-                block.getTranslatedContents().add(lb);
+                lb.setQuestion(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getQuestion())));
+                lb.setPossibleAnswers(block.getPossibleAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                lb.setCorrectAnswers(block.getCorrectAnswers().stream().map(ans -> aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), ans))).toList());
+                lb.setOriginalBlock(block);
+                lb.setLearningUnit(block.getLearningUnit());
+                lb.setPosition(block.getPosition());
+                lb.setType(block.getType());
+                lb.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
+                blockRepository.save(lb);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
+    @Transactional
     public List<Block> generateBlocksAI(List<UUID> fileIds) {
         List<Block> blocks = new ArrayList<>();
         ConcurrentHashMap<String, List<Block>> topicBlocksMap = new ConcurrentHashMap<>();
@@ -169,24 +176,24 @@ public class AIBlockService {
                 String topicContent = entry.getValue().asText();
 
                 topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
-                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle));
+                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle), topicTitle);
             }, executor);
             futures.add(future);
         });
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
-    private void createBlocksForTopic(String content, List<Block> topicBlocks) {
+    private void createBlocksForTopic(String content, List<Block> topicBlocks, String blockName) {
         if (content == null || content.isBlank()) return;
 
         try {
             List<CompletableFuture<Block>> futures = new ArrayList<>();
-            futures.add(CompletableFuture.supplyAsync(() -> createAndSaveBlock(generateTheoryBlockFromTopic(content), "Theory Block", BlockType.THEORY), executor));
+            futures.add(CompletableFuture.supplyAsync(() -> generateTheoryBlockFromTopic(content, blockName), executor));
             futures.add(CompletableFuture.supplyAsync(() -> {
                 if (Math.random() < 0.5) {
-                    return createAndSaveBlock(generateQuestionBlockAIFromTopic(content), "Question Block", BlockType.QUESTION);
+                    return generateQuestionBlockAIFromTopic(content, blockName);
                 } else {
-                    return createAndSaveBlock(generateMultipleChoiceBlockAIFromTopic(content), "Multiple Choice Block", BlockType.MULTIPLE_CHOICE);
+                    return generateMultipleChoiceBlockAIFromTopic(content, blockName);
                 }
             }, executor));
             List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();
@@ -196,35 +203,38 @@ public class AIBlockService {
         }
     }
 
-    private Block createAndSaveBlock(Block block, String name, BlockType type) {
-        block.setName(name);
-        block.setType(type);
-        return blockRepository.save(block);
-    }
-
-    private TheoryBlock generateTheoryBlockFromTopic(String topic) {
+    private TheoryBlock generateTheoryBlockFromTopic(String topic, String topicName) {
         TheoryBlock block = new TheoryBlock();
         String prompt = AIPromptTemplate.THEORY_BLOCK.format("", topic);
         String aiResponse = aiClient.sendPrompt(prompt);
         JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock for topic");
         block.setContent(jsonNode.get("content").asText());
-        generateTranslationsParallel(block, block.getContent());
+        block.setName(topicName);
+        block.setType(BlockType.THEORY);
+        TheoryBlock saved = blockRepository.saveAndFlush(block);
+        generateTranslationsParallel(saved, saved.getContent());
         return block;
     }
 
-    private QuestionBlock generateQuestionBlockAIFromTopic(String topic) {
+    private QuestionBlock generateQuestionBlockAIFromTopic(String topic, String topicName) {
         String prompt = AIPromptTemplate.QUESTION_BLOCK.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
         QuestionBlock questionBlock = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock from topic");
-        generateTranslationsParallel(questionBlock);
+        questionBlock.setName(topicName);
+        questionBlock.setType(BlockType.QUESTION);
+        QuestionBlock saved = blockRepository.saveAndFlush(questionBlock);
+        generateTranslationsParallel(saved);
         return questionBlock;
     }
 
-    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic) {
+    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic, String topicName) {
         String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(topic);
         String aiResponse = aiClient.sendPrompt(prompt);
         MultipleChoiceBlock mcBlock = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock from topic");
-        generateTranslationsParallel(mcBlock);
+        mcBlock.setName(topicName);
+        mcBlock.setType(BlockType.MULTIPLE_CHOICE);
+        MultipleChoiceBlock saved = blockRepository.saveAndFlush(mcBlock);
+        generateTranslationsParallel(saved);
         return mcBlock;
     }
 

@@ -1,33 +1,26 @@
 package ch.nova_omnia.lernello.model.data.block;
 
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@DiscriminatorValue("TRANSLATED")
 @NoArgsConstructor
-public class TranslatedBlock {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @ManyToOne(optional = false)
-    private Block block;
-
-    @Column(nullable = false, length = 5)
-    private BlockLanguage Language;
+public class TranslatedBlock extends Block {
+    @Column(length = 5)
+    private BlockLanguage language;
 
     @Lob
     private String content;
@@ -36,6 +29,7 @@ public class TranslatedBlock {
     private String question;
 
     @Lob
+    @Column(name = "expected_answer")
     private String expectedAnswer;
 
     @ElementCollection
@@ -43,4 +37,8 @@ public class TranslatedBlock {
 
     @ElementCollection
     private List<String> correctAnswers;
+
+    @ManyToOne()
+    @JoinColumn(name = "original_block_id")
+    private Block originalBlock;
 }

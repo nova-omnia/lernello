@@ -1,11 +1,8 @@
 package ch.nova_omnia.lernello.model.data.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import ch.nova_omnia.lernello.model.data.LearningUnit;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +12,6 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -53,9 +49,6 @@ public abstract class Block {
     @ManyToOne
     @JoinColumn(name = "learning_unit_id")
     private LearningUnit learningUnit;
-
-    @OneToMany(mappedBy = "block", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TranslatedBlock> translatedContents = new ArrayList<>();
 
     protected Block(BlockType type, String name, int position, LearningUnit learningUnit) {
         this.type = type;

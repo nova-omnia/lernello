@@ -68,7 +68,7 @@ public class LearningUnitRestController {
         LearningKit learningKit = learningKitRepository.findById(createLearningUnitDTO.learningKitId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LearningUnit newLearningUnit = learningUnitMapper.toEntity(createLearningUnitDTO, learningKit);
-        LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit,learningKitId);
+        LearningUnit learningUnit = learningUnitService.createLearningUnit(newLearningUnit, learningKitId);
         return learningUnitMapper.toDTO(learningUnit);
     }
 

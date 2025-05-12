@@ -24,5 +24,17 @@ export const learningUnitProgressState = {
 	},
 	clearProgress() {
 		currentProgress = null;
+	},
+	updateBlockProgress(blockId: string, progress: BlockProgressRes) {
+		if (currentProgress) {
+			const blockProgress = currentProgress.userBlockProgresses?.find(
+				(bp) => bp.blockId === blockId
+			);
+			if (blockProgress) {
+				Object.assign(blockProgress, progress);
+			} else {
+				currentProgress.userBlockProgresses?.push(progress);
+			}
+		}
 	}
 };

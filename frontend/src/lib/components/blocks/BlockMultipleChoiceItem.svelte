@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
-	import { Plus, Check, X, Trash } from 'lucide-svelte';
+	import { Plus, Check, X, Trash, RotateCcw } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
@@ -146,6 +146,12 @@
 		onSuccess: (data) => {
 			submissionCorrect = data.isCorrect;
 			isSubmitted = true;
+			const blockProgress = learningUnitProgressState.getBlockProgress(block.uuid);
+			learningUnitProgressState.updateBlockProgress(block.uuid, {
+				...blockProgress,
+				lastAnswers: selectedAnswers.map((index) => currentAnswers[index].value),
+				isCorrect: data.isCorrect
+			} as MultipleChoiceBlockProgressRes);
 		},
 		onError: (error) => {
 			console.error('Error checking multiple choice answer:', error);
@@ -236,41 +242,61 @@
 	{#snippet preview()}
 		<div class="space-y-4">
 			<div class="flex items-start justify-between gap-4">
-				<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
+				<!-- Title and Reset Button (if submitted) -->
+				<div class="flex items-center gap-2">
+					<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
+					{#if isSubmitted}
+						<button
+							type="button"
+							onclick={() => {
+								selectedAnswers = [];
+								isSubmitted = false;
+								submissionCorrect = null;
+							}}
+							class="btn bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+							title={$_('common.reset')}
+						>
+							<RotateCcw size={16} />
+						</button>
+					{/if}
+				</div>
 
-				{#if !isSubmitted}
-					<button
-						type="button"
-						onclick={handleSubmit}
-						disabled={selectedAnswers.length === 0 || $checkAnswerMutation.isPending}
-						class="btn preset-filled whitespace-nowrap"
-						title={$_('common.submit')}
-					>
-						{#if $checkAnswerMutation.isPending}
-							{$_('common.submitting')}...
-						{:else}
-							{$_('common.submit')}
-						{/if}
-					</button>
-				{:else}
-					<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
-						{#if submissionCorrect === true}
-							<span class="font-medium text-green-600 dark:text-green-400">
-								<Check class="mr-1 inline-block h-4 w-4" />
-								{$_('block.correctAnswer')}
-							</span>
-						{:else if submissionCorrect === false}
-							<span class="font-medium text-red-600 dark:text-red-400">
-								<X class="mr-1 inline-block h-4 w-4" />
-								{$_('block.incorrectAnswer')}
-							</span>
-						{:else}
-							<span class="font-medium text-gray-600 dark:text-gray-400">
-								{$_('block.feedbackUnavailable')}
-							</span>
-						{/if}
-					</div>
-				{/if}
+				<!-- Submit Button (if not submitted) OR Feedback (if submitted) -->
+				<div>
+					{#if !isSubmitted}
+						<button
+							type="button"
+							onclick={handleSubmit}
+							disabled={selectedAnswers.length === 0 || $checkAnswerMutation.isPending}
+							class="btn preset-filled whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50"
+							title={$_('common.submit')}
+						>
+							{#if $checkAnswerMutation.isPending}
+								{$_('common.submitting')}...
+							{:else}
+								{$_('common.submit')}
+							{/if}
+						</button>
+					{:else if isSubmitted}
+						<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
+							{#if submissionCorrect === true}
+								<span class="font-medium text-green-600 dark:text-green-400">
+									<Check class="mr-1 inline-block h-4 w-4" />
+									{$_('block.correctAnswer')}
+								</span>
+							{:else if submissionCorrect === false}
+								<span class="font-medium text-red-600 dark:text-red-400">
+									<X class="mr-1 inline-block h-4 w-4" />
+									{$_('block.incorrectAnswer')}
+								</span>
+							{:else}
+								<span class="font-medium text-gray-600 dark:text-gray-400">
+									{$_('block.feedbackUnavailable')}
+								</span>
+							{/if}
+						</div>
+					{/if}
+				</div>
 			</div>
 
 			<div class="space-y-2">

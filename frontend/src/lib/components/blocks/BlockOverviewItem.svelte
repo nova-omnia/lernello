@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dragHandle } from 'svelte-dnd-action';
-	import { GripVertical, CheckCircle, XCircle, Eye } from 'lucide-svelte';
+	import { GripVertical, CheckCircle, XCircle, Eye, SquareMinus } from 'lucide-svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import { INSTRUCTOR_ROLE, type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
@@ -23,7 +23,8 @@
 	const statusIconMap = {
 		VIEWED: Eye,
 		CORRECT: CheckCircle,
-		FALSE: XCircle
+		FALSE: XCircle,
+		ELSE: SquareMinus
 	};
 
 	let StatusIconComponent = $derived.by(() => {
@@ -60,7 +61,7 @@
 				}
 			}
 		}
-		return null;
+		return statusIconMap['ELSE'];
 	});
 </script>
 

@@ -42,6 +42,7 @@
 	"common.descriptionPlaceholder": "Description...",
 	"common.edit": "Edit",
 	"common.email": "Email",
+	"common.reset": "Reset",
 	"common.error.title": "Error",
 	"common.warning.title": "Warning",
 	"common.files": "Files",

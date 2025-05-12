@@ -24,11 +24,7 @@
 
 	const { learningKitId, learningUnits, role }: LearningUnitsProps = $props();
 
-	let isDndKeyOverridden = false;
-
-	if (role === INSTRUCTOR_ROLE && !isDndKeyOverridden) {
-		initializeInstructorDnd();
-	}
+	initializeInstructorDnd();
 
 	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, uuid: unit.uuid })));
 	let currentlyDraggingId: string | null = null;

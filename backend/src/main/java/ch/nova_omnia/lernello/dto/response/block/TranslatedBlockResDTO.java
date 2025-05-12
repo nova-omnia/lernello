@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 public record TranslatedBlockResDTO(
                                    @NotNull UUID id,
                                    @NotBlank BlockLanguage language,
+                                   String name,
                                    String content,
                                    String question,
                                    String expectedAnswer,

@@ -62,6 +62,7 @@ public enum AIPromptTemplate {
             - Avoid corrupted or non-printable characters such as 'Ã', '´┐¢', 'â', etc.
             - Replace or omit any characters that cannot be represented in clean UTF-8 text.
             - Respond with clean, readable English only.
+            - The content must be written in **English**, even if the input is in a different language.
             - IMPORTANT: Respond only with pure JSON
             - IMPORTANT: Ensure that the topic title is not longer than 20 characters.
             - The format must match exactly the following structure:

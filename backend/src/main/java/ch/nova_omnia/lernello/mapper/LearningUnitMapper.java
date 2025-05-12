@@ -57,7 +57,7 @@ public class LearningUnitMapper {
 
     public TranslatedBlockResDTO toTranslatedDto(TranslatedBlock b) {
         return new TranslatedBlockResDTO(
-                b.getUuid(), b.getLanguage(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
+                b.getUuid(), b.getLanguage(), b.getName(), b.getContent(), b.getQuestion(), b.getExpectedAnswer(), b.getPossibleAnswers(), b.getCorrectAnswers()
         );
     }
 

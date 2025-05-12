@@ -21,7 +21,8 @@
 		en: 'ENGLISH',
 		de: 'GERMAN',
 		fr: 'FRENCH',
-		it: 'ITALIAN'
+		it: 'ITALIAN',
+		'de-CH': 'GERMAN'
 	};
 
 	let selectedLanguage: string = $state(localeToLanguageValue[get(locale) ?? 'en']);

@@ -5,18 +5,14 @@
 	import { deleteLearningUnit, generateLearningUnit } from '$lib/api/collections/learningUnit';
 	import { updateLearningUnitsOrder } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
-	import {
-		type DndEvent,
-		dragHandleZone,
-		TRIGGERS,
-		overrideItemIdKeyNameBeforeInitialisingDndZones
-	} from 'svelte-dnd-action';
+	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import LearningUnitItem from '$lib/components/learningkit/displays/LearningUnitItem.svelte';
 	import { Plus } from 'lucide-svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import type { LearningUnitRes } from '$lib/schemas/response/LearningUnitRes';
+	import { initializeInstructorDnd } from '$lib/states/dndService';
 
 	const invalidate = useQueryInvalidation();
 
@@ -28,8 +24,10 @@
 
 	const { learningKitId, learningUnits, role }: LearningUnitsProps = $props();
 
-	if (role == INSTRUCTOR_ROLE) {
-		overrideItemIdKeyNameBeforeInitialisingDndZones('uuid');
+	let isDndKeyOverridden = false;
+
+	if (role === INSTRUCTOR_ROLE && !isDndKeyOverridden) {
+		initializeInstructorDnd();
 	}
 
 	let learningUnitsSnapshot = $derived(learningUnits.map((unit) => ({ ...unit, uuid: unit.uuid })));
@@ -133,6 +131,7 @@
 						});
 					}}
 					{role}
+					invalidateLearningKitQuery={() => invalidate(['learning-kit', learningKitId])}
 				/>
 			</div>
 		{/each}

@@ -20,6 +20,7 @@
 		onGenerateLearningUnit: (files: string[]) => void;
 		role: RoleType;
 		isLoading: boolean;
+		invalidateLearningKitQuery: () => void;
 	}
 
 	const {
@@ -27,7 +28,8 @@
 		onDeleteLearningUnit,
 		onGenerateLearningUnit,
 		role,
-		isLoading
+		isLoading,
+		invalidateLearningKitQuery
 	}: LearningUnitProps = $props();
 
 	let name = $derived(learningUnit.name);
@@ -84,6 +86,7 @@
 					description: $_('learningUnit.rename.success'),
 					type: 'success'
 				});
+				invalidateLearningKitQuery();
 			} catch (error) {
 				console.error('Error:', error);
 				toaster.create({

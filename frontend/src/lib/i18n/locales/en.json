@@ -160,6 +160,7 @@
 	"learningUnit.error.markOpened": "Failed to mark Learning Unit as opened",
 	"learningUnit.generate.isGenerating": "Generating Learning Unit with Ai",
 	"learningUnit.generate.generated": "Learning Unit successfully generated with Ai",
+	"learningUnit.name": "Learning Unit",
 	"login.signIn": "Sign in",
 	"login.title": "Sign in",
 	"markdownEditor.placeholder": "Write your markdown here...",

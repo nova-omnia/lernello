@@ -63,7 +63,7 @@
 							{@render figure(option.label)}
 						</span>
 						<span class="w-5 flex-shrink-0 text-right">
-							{#if option.label === selected}
+							{#if option.value === selected}
 								<Check size={16} class="text-primary-900-100" />
 							{/if}
 						</span>

@@ -148,7 +148,7 @@
 			<button
 				type="button"
 				onclick={addAnswerField}
-				class="btn preset-tonal-surface hover:"
+				class="btn preset-tonal-surface"
 				title={$_('block.multipleChoiceBlocks.addButton')}
 			>
 				<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />

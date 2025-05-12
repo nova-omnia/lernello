@@ -72,10 +72,10 @@
 	};
 </script>
 
-<div class="flex justify-between">
+<div class="flex w-full justify-between">
 	<div class="flex items-center gap-2">
 		<BlockIcon iconType={block.type} />
-		<div class="flex items-baseline gap-2">
+		<div class="flex items-baseline gap-2 text-nowrap">
 			{#if role === INSTRUCTOR_ROLE}
 				<label class="label">
 					<input

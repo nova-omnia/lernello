@@ -4,6 +4,8 @@
 	import { _ } from 'svelte-i18n';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { ChevronLeft } from 'lucide-svelte';
+	import type { RoleType } from '$lib/schemas/response/UserInfo';
+	import type { Snippet } from 'svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 
 	function goBack() {
@@ -14,7 +16,12 @@
 		}
 	}
 
-	let { children } = $props();
+	const { children, data } = $props<{
+		children: Snippet;
+		data: {
+			role: RoleType;
+		};
+	}>();
 
 	const queryClient = useQueryClient();
 
@@ -25,7 +32,7 @@
 </script>
 
 <div class="flex h-full">
-	<Sidebar />
+	<Sidebar role={data.role} />
 	<div class="flex flex-1 flex-col">
 		<Topbar />
 		<main class="relative min-h-0 flex-1 overflow-auto p-4">

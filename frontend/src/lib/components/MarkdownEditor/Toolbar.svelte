@@ -26,7 +26,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('### {{selection}}', 'heading')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.heading')}
 	>
 		<Heading class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -42,7 +42,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('*{{selection}}*', 'inline')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.italic')}
 	>
 		<Italic class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -50,7 +50,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('__{{selection}}__', 'inline')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.underline')}
 	>
 		<Underline class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -88,7 +88,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('- {{selection}}', 'list')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.list')}
 	>
 		<List class="h-5 w-5 text-gray-600 dark:text-gray-300" />
@@ -96,7 +96,7 @@
 	<button
 		type="button"
 		onclick={() => insertSyntax('1. {{selection}}', 'list')}
-		class="btn preset-tonal-surface hover:"
+		class="btn preset-tonal-surface"
 		title={$_('textEditor.toolbar.orderedList')}
 	>
 		<ListOrdered class="h-5 w-5 text-gray-600 dark:text-gray-300" />

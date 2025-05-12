@@ -22,6 +22,9 @@
 	let lastSavedContent = $state(initialContent);
 	let editorRef: HTMLTextAreaElement | undefined = $state();
 
+	let pageScrollY = $derived(0);
+	let editorScrollTop = $derived(0);
+
 	$effect(() => {
 		if (onUpdate && content !== lastSavedContent) {
 			onUpdate(content);
@@ -33,6 +36,25 @@
 		content = initialContent;
 		lastSavedContent = initialContent;
 	});
+
+	const saveScrollPositions = () => {
+		if (editorRef) {
+			editorScrollTop = editorRef.scrollTop;
+		}
+		pageScrollY = window.scrollY;
+	};
+
+	const restoreScrollPositionsAndFocus = (newSelectionStart: number, newSelectionEnd: number) => {
+		setTimeout(() => {
+			if (editorRef) {
+				window.scrollTo(window.scrollX, pageScrollY);
+
+				editorRef.scrollTop = editorScrollTop;
+				editorRef.focus();
+				editorRef.setSelectionRange(newSelectionStart, newSelectionEnd);
+			}
+		}, 0);
+	};
 
 	const insertSyntax = (
 		syntaxString: string,
@@ -48,6 +70,8 @@
 			return;
 		}
 
+		saveScrollPositions(); // <-- Save scroll positions BEFORE content change
+
 		const { selectionStart, selectionEnd } = textarea;
 		const result = handleMarkdownSyntaxInsertion(
 			content,
@@ -59,12 +83,7 @@
 
 		if (result) {
 			content = result.newContent;
-			setTimeout(() => {
-				if (editorRef) {
-					editorRef.focus();
-					editorRef.setSelectionRange(result.newSelectionStart, result.newSelectionEnd);
-				}
-			}, 0);
+			restoreScrollPositionsAndFocus(result.newSelectionStart, result.newSelectionEnd);
 		} else {
 			toaster.create({
 				title: $_('common.error.title'),
@@ -79,24 +98,17 @@
 			const textarea = editorRef;
 			if (!textarea) return;
 
+			saveScrollPositions();
+
 			const { selectionStart, selectionEnd } = textarea;
-			const result = handleEnterKeyForListsAndBlockquotes(
-				content,
-				selectionStart,
-				selectionEnd
-			);
+			const result = handleEnterKeyForListsAndBlockquotes(content, selectionStart, selectionEnd);
 
 			if (result) {
 				if (result.preventDefault) {
 					event.preventDefault();
 				}
 				content = result.newContent;
-				setTimeout(() => {
-					if (editorRef) {
-						editorRef.focus();
-						editorRef.setSelectionRange(result.newSelectionStart, result.newSelectionEnd);
-					}
-				}, 0);
+				restoreScrollPositionsAndFocus(result.newSelectionStart, result.newSelectionEnd);
 			}
 		}
 	};
@@ -128,7 +140,7 @@
 			bind:this={editorRef}
 			bind:value={content}
 			onkeydown={handleKeyDown}
-			class="focus:border-primary-500 dark:focus:border-primary-500 block h-[300px] min-h-[300px] w-full resize-none rounded-md border border-gray-300 bg-transparent p-2.5 text-gray-900 focus:ring-0 focus:outline-none dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+			class="textarea focus:border-primary-500 dark:focus:border-primary-500 block h-[300px] min-h-[300px] w-full resize-none rounded-md border border-gray-300 bg-transparent p-2.5 text-gray-900 focus:ring-0 focus:outline-none dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
 			placeholder={$_('markdownEditor.placeholder')}
 		></textarea>
 	{/snippet}

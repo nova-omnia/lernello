@@ -12,8 +12,7 @@
 		useRole
 	} from '@skeletonlabs/floating-ui-svelte';
 	import { _ } from 'svelte-i18n';
-	import { PlusCircle } from 'lucide-svelte';
-	import { fade } from 'svelte/transition';
+	import { BookOpen, FileText, ListChecks, PlusCircle } from 'lucide-svelte';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { BlockType } from '$lib/schemas/request/block/CreateBlock';
 	import { ActionType } from '$lib/schemas/request/block/BlockAction';
@@ -56,9 +55,7 @@
 		document.dispatchEvent(
 			new KeyboardEvent('keydown', {
 				key: 'Escape',
-				code: 'Escape',
-				keyCode: 27,
-				which: 27
+				code: 'Escape'
 			})
 		);
 	};
@@ -126,7 +123,7 @@
 		{...interactions.getReferenceProps()}
 		class="btn text-gray-400"
 	>
-		<PlusCircle class="h-4 w-4" />
+		<PlusCircle size={24} />
 	</button>
 	<hr class="hr border-t-2 border-dashed border-gray-400" />
 	<!-- Floating Element -->
@@ -136,43 +133,47 @@
 			style={floating.floatingStyles}
 			{...interactions.getFloatingProps()}
 			class="floating"
-			transition:fade={{ duration: 200 }}
 		>
 			<div
-				class="preset-filled-surface-100-900 card border-surface-200-800 space-y-2 border-[1px] p-2 shadow-lg"
+				class="preset-filled-surface-100-900 card border-surface-200-800 border text-nowrap"
 				role="button"
 				tabindex="0"
 				onkeydown={simulateEscKeyPress}
 				onclick={simulateEscKeyPress}
 				{...interactions.getFloatingProps()}
 			>
-				<button
-					type="button"
-					class="btn preset-filled-primary-500 block w-full"
-					onclick={() => {
-						addTheoryBlock();
-					}}
-				>
-					{$_('block.theoryBlock')}
-				</button>
-				<button
-					type="button"
-					class="btn preset-filled-primary-500 block w-full"
-					onclick={() => {
-						addMultipleChoiceBlock();
-					}}
-				>
-					{$_('block.multipleChoiceQuiz')}
-				</button>
-				<button
-					type="button"
-					class="btn preset-filled-primary-500 block w-full"
-					onclick={() => {
-						addQuestionBlock();
-					}}
-				>
-					{$_('block.questionBlock')}
-				</button>
+				<nav class="btn-group">
+					<button
+						type="button"
+						class="btn preset-filled-primary-500"
+						onclick={() => {
+							addTheoryBlock();
+						}}
+					>
+						<BookOpen />
+						{$_('block.theoryBlock')}
+					</button>
+					<button
+						type="button"
+						class="btn preset-filled-primary-500"
+						onclick={() => {
+							addMultipleChoiceBlock();
+						}}
+					>
+						<ListChecks />
+						{$_('block.multipleChoiceQuiz')}
+					</button>
+					<button
+						type="button"
+						class="btn preset-filled-primary-500"
+						onclick={() => {
+							addQuestionBlock();
+						}}
+					>
+						<FileText />
+						{$_('block.questionBlock')}
+					</button>
+				</nav>
 			</div>
 			<FloatingArrow bind:ref={elemArrow} context={floating.context} fill="#575969" />
 		</div>

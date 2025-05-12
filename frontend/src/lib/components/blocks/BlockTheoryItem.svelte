@@ -10,6 +10,7 @@
 	import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { _ } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
@@ -25,6 +26,9 @@
 	let blockId: string = $derived(
 		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
 	);
+	let element: HTMLDivElement | undefined = $state();
+	let viewed = $state(false); // Prevent multiple API calls
+	let viewTimeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
 		if (newContent !== lastContent) {
@@ -37,35 +41,64 @@
 		}
 	}, 500);
 
-	$effect(() => {
-		if (browser && role === TRAINEE_ROLE && blockId) {
-			const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
-			if (!fetchFn) return;
+	onMount(() => {
+		if (!browser || role !== TRAINEE_ROLE || !element) return;
 
-			const timerId = setTimeout(() => {
-				api(fetchFn)
-					.req(markTheoryBlockViewed, { blockId })
-					.parse()
-					.catch((err) => {
-						console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
-						toaster.create({
-							title: $_('common.error.title'),
-							description: $_('error.description', { values: { status: 'unknown' } }),
-							type: 'error'
-						});
-					});
-			}, 1000);
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting && !viewed) {
+						if (viewTimeoutId) {
+							clearTimeout(viewTimeoutId);
+						}
+						viewTimeoutId = setTimeout(() => {
+							if (viewed) return;
 
-			return () => {
-				clearTimeout(timerId);
-			};
-		}
+							viewed = true;
+							const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
+							if (!fetchFn) return;
+
+							api(fetchFn)
+								.req(markTheoryBlockViewed, { blockId: block.uuid })
+								.parse()
+								.catch((err) => {
+									console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
+									toaster.create({
+										title: $_('common.error.title'),
+										description: $_('error.description', { values: { status: 'unknown' } }),
+										type: 'error'
+									});
+									viewed = false;
+								});
+							observer.unobserve(entry.target);
+						}, 3000);
+					} else {
+						if (viewTimeoutId) {
+							clearTimeout(viewTimeoutId);
+							viewTimeoutId = undefined;
+						}
+					}
+				});
+			},
+			{ threshold: 0.5 }
+		);
+
+		observer.observe(element);
+
+		return () => {
+			if (viewTimeoutId) {
+				clearTimeout(viewTimeoutId);
+			}
+			observer.disconnect();
+		};
 	});
 </script>
 
-<TextEditor
+<div bind:this={element}>
+	<TextEditor
 	content={block.translatedContents.find((content) => content.language == language)?.content ??
 		block.content}
 	onUpdate={onUpdateHandler}
 	{role}
 />
+</div>

@@ -18,7 +18,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.apache.pdfbox:pdfbox:2.0.29")
+    implementation("org.apache.pdfbox:pdfbox:2.0.34") {
+        exclude(group = "commons-logging", module = "commons-logging")
+    }
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -38,7 +40,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.mockito")
-}
+    }   
 }
 
 dependencyManagement {

@@ -189,6 +189,7 @@
 	"statistics.detailsFor": "Detailed Statistics for {name}",
 	"statistics.loadingDetails": "Loading details...",
 	"statistics.error.loadList": "Failed to load Statistics of Learning Kits",
+	"textEditor.error.syntaxError": "Syntax error in markdown",
 	"textEditor.toolbar.heading": "Heading",
 	"textEditor.toolbar.bold": "Bold",
 	"textEditor.toolbar.italic": "Italic",

@@ -6,6 +6,10 @@
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
+	import {
+		handleMarkdownSyntaxInsertion,
+		handleEnterKeyForListsAndBlockquotes
+	} from './markdownEditorLogic';
 
 	interface TextEditorProps {
 		content: string;
@@ -30,26 +34,71 @@
 		lastSavedContent = initialContent;
 	});
 
-	const insertSyntax = (syntax: string) => {
+	const insertSyntax = (
+		syntaxString: string,
+		type: 'heading' | 'codeblock' | 'list' | 'blockquote' | 'inline'
+	) => {
 		const textarea = editorRef;
 		if (!textarea) {
-			console.warn('Textarea reference not available for insertSyntax');
+			toaster.create({
+				title: $_('common.error.title'),
+				description: $_('textEditor.error.editorNotAvailable'),
+				type: 'error'
+			});
 			return;
 		}
-		const start = textarea.selectionStart;
-		const end = textarea.selectionEnd;
-		const selectedText = content.substring(start, end);
 
-		content =
-			content.substring(0, start) +
-			syntax.replace('{{selection}}', selectedText) +
-			content.substring(end);
+		const { selectionStart, selectionEnd } = textarea;
+		const result = handleMarkdownSyntaxInsertion(
+			content,
+			selectionStart,
+			selectionEnd,
+			syntaxString,
+			type
+		);
 
-		const newCursorPos = start + syntax.indexOf('{{selection}}') + selectedText.length;
-		setTimeout(() => {
-			textarea.setSelectionRange(newCursorPos, newCursorPos);
-			textarea.focus();
-		}, 0);
+		if (result) {
+			content = result.newContent;
+			setTimeout(() => {
+				if (editorRef) {
+					editorRef.focus();
+					editorRef.setSelectionRange(result.newSelectionStart, result.newSelectionEnd);
+				}
+			}, 0);
+		} else {
+			toaster.create({
+				title: $_('common.error.title'),
+				description: $_('textEditor.error.syntaxError'),
+				type: 'error'
+			});
+		}
+	};
+
+	const handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === 'Enter') {
+			const textarea = editorRef;
+			if (!textarea) return;
+
+			const { selectionStart, selectionEnd } = textarea;
+			const result = handleEnterKeyForListsAndBlockquotes(
+				content,
+				selectionStart,
+				selectionEnd
+			);
+
+			if (result) {
+				if (result.preventDefault) {
+					event.preventDefault();
+				}
+				content = result.newContent;
+				setTimeout(() => {
+					if (editorRef) {
+						editorRef.focus();
+						editorRef.setSelectionRange(result.newSelectionStart, result.newSelectionEnd);
+					}
+				}, 0);
+			}
+		}
 	};
 
 	const previewContent = async (): Promise<string> => {
@@ -78,6 +127,7 @@
 		<textarea
 			bind:this={editorRef}
 			bind:value={content}
+			onkeydown={handleKeyDown}
 			class="focus:border-primary-500 dark:focus:border-primary-500 block h-[300px] min-h-[300px] w-full resize-none rounded-md border border-gray-300 bg-transparent p-2.5 text-gray-900 focus:ring-0 focus:outline-none dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
 			placeholder={$_('markdownEditor.placeholder')}
 		></textarea>
@@ -96,9 +146,7 @@
 				throwError(error.message);
 				return '';
 			})()}
-			<div
-				class="prose dark:prose-invert max-w-none text-red-600 dark:text-red-400"
-			>
+			<div class="prose dark:prose-invert max-w-none text-red-600 dark:text-red-400">
 				{$_('error.description', { values: { status: 'Preview Generation' } })}
 				<pre class="mt-2 text-xs">{error.message}</pre>
 			</div>

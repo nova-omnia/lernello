@@ -14,7 +14,10 @@
 	import { _ } from 'svelte-i18n';
 
 	interface ToolbarProps {
-		insertSyntax: (syntax: string) => void;
+		insertSyntax: (
+			syntax: string,
+			type: 'heading' | 'codeblock' | 'list' | 'blockquote' | 'inline'
+		) => void;
 	}
 	const { insertSyntax }: ToolbarProps = $props();
 </script>
@@ -22,7 +25,7 @@
 <div class="flex h-6 items-center space-x-2">
 	<button
 		type="button"
-		onclick={() => insertSyntax('### {{selection}}')}
+		onclick={() => insertSyntax('### {{selection}}', 'heading')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.heading')}
 	>
@@ -30,7 +33,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('**{{selection}}**')}
+		onclick={() => insertSyntax('**{{selection}}**', 'inline')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.bold')}
 	>
@@ -38,7 +41,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('*{{selection}}*')}
+		onclick={() => insertSyntax('*{{selection}}*', 'inline')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.italic')}
 	>
@@ -46,7 +49,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('__{{selection}}__')}
+		onclick={() => insertSyntax('__{{selection}}__', 'inline')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.underline')}
 	>
@@ -54,7 +57,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('~~{{selection}}~~')}
+		onclick={() => insertSyntax('~~{{selection}}~~', 'inline')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.strikethrough')}
 	>
@@ -65,7 +68,7 @@
 
 	<button
 		type="button"
-		onclick={() => insertSyntax('[{{selection}}](url)')}
+		onclick={() => insertSyntax('[{{selection}}](url)', 'inline')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.link')}
 	>
@@ -73,7 +76,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('```\n{{selection}}\n```')}
+		onclick={() => insertSyntax('```\n{{selection}}\n```', 'codeblock')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.codeBlock')}
 	>
@@ -84,7 +87,7 @@
 
 	<button
 		type="button"
-		onclick={() => insertSyntax('- {{selection}}')}
+		onclick={() => insertSyntax('- {{selection}}', 'list')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.list')}
 	>
@@ -92,7 +95,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('1. {{selection}}')}
+		onclick={() => insertSyntax('1. {{selection}}', 'list')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.orderedList')}
 	>
@@ -100,7 +103,7 @@
 	</button>
 	<button
 		type="button"
-		onclick={() => insertSyntax('> {{selection}}')}
+		onclick={() => insertSyntax('> {{selection}}', 'blockquote')}
 		class="btn preset-tonal-surface hover:"
 		title={$_('textEditor.toolbar.quote')}
 	>

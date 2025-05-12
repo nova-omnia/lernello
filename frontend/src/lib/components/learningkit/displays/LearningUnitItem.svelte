@@ -121,7 +121,7 @@
 			<GripVertical size={28} class="text-surface-300-700" />
 		</div>
 		<div
-			class="card preset-filled-surface-100-900 hover:preset-filled-surface-200-800 flex w-full items-center justify-between p-4
+			class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4
 		{isLoading ? 'pointer-events-none cursor-not-allowed opacity-50' : ''}"
 		>
 			<div class="flex w-full max-w-sm items-center gap-4">

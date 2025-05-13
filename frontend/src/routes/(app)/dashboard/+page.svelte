@@ -24,7 +24,7 @@
 </script>
 
 <PageContainer title={$_('dashboard.title')}>
-	<div class="container flex space-y-4">
+	<div class="container flex flex-col gap-8">
 		<div class="container flex-col space-y-2">
 			<a href="/learningkits" class="preset-typo-subtitle-navigation flex w-fit items-center">
 				{#if $kitsQuery.status === 'success'}
@@ -61,6 +61,8 @@
 					<AddLearningKit title={$_('learningKit.create')} />
 				{/if}
 			</div>
+		</div>
+		<div class="container flex-col space-y-2">
 			{#if data.userInfo.role === INSTRUCTOR_ROLE}
 				<a href="/statistics" class="preset-typo-subtitle-navigation flex w-fit items-center">
 					{#if $kitsQuery.isSuccess}

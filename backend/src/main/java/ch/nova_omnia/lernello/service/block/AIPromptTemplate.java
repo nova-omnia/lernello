@@ -92,6 +92,26 @@ public enum AIPromptTemplate {
 
             Content:
             %s
+            """),
+
+    CHECK_ANSWER("""
+            You are an AI tutor verifying a student's answer.
+
+            Compare the user's answer to the expected correct answer.
+            Consider the following:
+            - The meaning must match, but the exact words or language may differ.
+            - The user's answer may be in a different language (e.g., German, French), but if the meaning is equivalent to the expected English answer, it should be accepted as correct.
+            - Allow for synonyms and alternate phrasing, but not for incorrect concepts.
+
+            Expected answer:
+            %s
+
+            User's answer:
+            %s
+
+            IMPORTANT:
+            - Respond strictly with either true or false as **plain text only** (without quotes, without explanation).
+            - Respond with true only if the user's answer is semantically correct, regardless of language or phrasing.
             """);
 
     private final String template;

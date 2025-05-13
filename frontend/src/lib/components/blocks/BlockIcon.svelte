@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { BlockResType } from '$lib/schemas/response/BlockRes';
-	import { BookOpen, FileText, CircleHelp, ListChecks, type IconProps } from 'lucide-svelte';
+	import { BookOpen, FileQuestion, CircleHelp, ListChecks, type IconProps } from 'lucide-svelte';
 
 	interface BlockIconProps extends IconProps {
 		iconType: BlockResType;
@@ -12,7 +12,7 @@
 	const iconMap = {
 		THEORY: BookOpen,
 		MULTIPLE_CHOICE: ListChecks,
-		QUESTION: FileText,
+		QUESTION: FileQuestion,
 		help: CircleHelp
 	};
 	const IconComponent = iconMap[iconType] || iconMap['help'];

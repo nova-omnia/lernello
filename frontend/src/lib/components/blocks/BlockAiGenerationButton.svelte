@@ -92,6 +92,7 @@
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId) => {
 			$generateMultipleChoiceMutation.mutate({
+				blockId: block.uuid,
 				theoryBlockId: selectedBlockId
 			});
 		}}
@@ -108,7 +109,8 @@
 		onConfirm={(topic, files) => {
 			$generateTheoryMutation.mutate({
 				topic,
-				files
+				files,
+				blockId: block.uuid
 			});
 		}}
 	/>
@@ -118,6 +120,7 @@
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId: string) => {
 			$generateQuestionMutation.mutate({
+				blockId: block.uuid,
 				theoryBlockId: selectedBlockId
 			});
 		}}

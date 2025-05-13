@@ -22,7 +22,6 @@ public class MultipleChoiceBlockProgress extends ScorableBlockProgress {
     @ElementCollection
     @CollectionTable(name = "multiple_choice_last_answers", joinColumns = @JoinColumn(name = "block_id"))
     @Column(name = "last_answer", nullable = true)
-    @NotEmpty
     private List<String> lastAnswers = new ArrayList<>();
 
     public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers, Boolean isCorrect, Integer scoreReached) {

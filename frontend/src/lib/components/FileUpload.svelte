@@ -92,19 +92,20 @@
 <div>
 	<FileUpload
 		accept={[
-			'application/pdf',
-			'image/png',
-			'image/jpeg',
-			'image/jpg',
-			'image/gif',
-			'image/webp',
-			'video/mp4',
-			'video/x-matroska',
-			'audio/wav',
-			'video/x-msvideo',
-			'audio/aiff',
-			'audio/mp4',
-			'image/tiff'
+			'application/pdf'
+			// TODO:the AI cant handle other files than pdf yet, therefor commented out
+			// 'image/png',
+			// 'image/jpeg',
+			// 'image/jpg',
+			// 'image/gif',
+			// 'image/webp',
+			// 'video/mp4',
+			// 'video/x-matroska',
+			// 'audio/wav',
+			// 'video/x-msvideo',
+			// 'audio/aiff',
+			// 'audio/mp4',
+			// 'image/tiff'
 		]}
 		onFileReject={(details) => {
 			details.files.forEach((file) => {
@@ -131,10 +132,12 @@
 		}}
 		maxFiles={1024 * 1024 * 10}
 	>
-		<button class="btn preset-outlined-surface-500">
-			<UploadIcon size={24} />
-			{$_('addNewFile')}
-		</button>
+		<div class="flex h-10 gap-8">
+			<button class="btn preset-filled-primary-500 h-full">
+				<UploadIcon size={24} />
+				{$_('addNewFile')}
+			</button>
+		</div>
 	</FileUpload>
 </div>
 

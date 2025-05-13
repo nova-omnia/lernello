@@ -93,7 +93,8 @@
 	<FileUpload
 		accept={[
 			'application/pdf'
-			// 'image/png',        the AI cant handle other files than pdf yet, therefor commented out
+			// TODO:the AI cant handle other files than pdf yet, therefor commented out
+			// 'image/png',        
 			// 'image/jpeg',
 			// 'image/jpg',
 			// 'image/gif',

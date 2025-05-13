@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import {
-		type BlockRes,
-		MULTIPLE_CHOICE_BLOCK_TYPE,
-		QUESTION_BLOCK_TYPE,
-		THEORY_BLOCK_TYPE
-	} from '$lib/schemas/response/BlockRes';
+	import { type BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIcon from './BlockIcon.svelte';
 	import { INSTRUCTOR_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import BlockAiGenerationButton from '$lib/components/blocks/BlockAiGenerationButton.svelte';
@@ -24,19 +19,6 @@
 		block.translatedContents.find((content) => content.language === language)?.name ?? block.name
 	);
 	let name = $derived(blockName);
-
-	let blockTypeTerm = $derived.by(() => {
-		switch (block.type) {
-			case THEORY_BLOCK_TYPE:
-				return 'block.theoryBlock';
-			case MULTIPLE_CHOICE_BLOCK_TYPE:
-				return 'block.multipleChoiceQuiz';
-			case QUESTION_BLOCK_TYPE:
-				return 'block.questionBlock';
-			default:
-				return 'Unknown Block';
-		}
-	});
 
 	const onUpdateHandler = createDebounced((newName: string) => {
 		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {

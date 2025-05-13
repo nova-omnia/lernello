@@ -71,9 +71,4 @@
 			height="h-2"
 		/>
 	</div>
-
-	<p class="text-surface-700 mt-2 text-right text-xs">
-		{$_('statistics.clickForDetails')}
-		<SquareArrowOutUpRight size={12} class="inline-block align-middle" />
-	</p>
 </a>

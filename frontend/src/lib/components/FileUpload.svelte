@@ -94,7 +94,7 @@
 		accept={[
 			'application/pdf'
 			// TODO:the AI cant handle other files than pdf yet, therefor commented out
-			// 'image/png',        
+			// 'image/png',
 			// 'image/jpeg',
 			// 'image/jpg',
 			// 'image/gif',

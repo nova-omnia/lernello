@@ -5,7 +5,6 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKitById } from '$lib/api/collections/learningKit';
-	import { SquareArrowOutUpRight } from 'lucide-svelte';
 
 	interface LearningKitStatisticCardProps {
 		learningKitId: string;

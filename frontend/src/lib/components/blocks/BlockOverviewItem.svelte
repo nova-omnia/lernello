@@ -11,7 +11,7 @@
 		scrollToBlock?: () => void;
 		language: string;
 	}
-	
+
 	const { block, role, scrollToBlock, language }: BlockReorderItemProps = $props();
 </script>
 

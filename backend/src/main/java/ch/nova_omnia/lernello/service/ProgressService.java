@@ -19,6 +19,7 @@ import ch.nova_omnia.lernello.model.data.progress.block.scorable.QuestionBlockPr
 import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.*;
+import ch.nova_omnia.lernello.service.block.AIBlockService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,7 @@ public class ProgressService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
     private final UserService userService;
+    private final AIBlockService aiBlockService;
 
     @Transactional
     public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
@@ -146,7 +148,7 @@ public class ProgressService {
             mcProgress.setLastAnswer(dto.answer());
         }
 
-        boolean isCorrect = dto.answer().equalsIgnoreCase(qBlock.getExpectedAnswer());
+        boolean isCorrect = aiBlockService.checkQuestionAnswerWithAI(dto.answer(), qBlock.getExpectedAnswer());
 
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);

@@ -75,7 +75,7 @@
 		placeholder={placeHolder()}
 		bind:value={searchValue}
 		bind:this={inputRef}
-		onfocus={() => (open = true)}
+		onclick={() => (open = true)}
 		class="input card preset-filled-surface-50-950 border-surface-300-700 w-fill py-3"
 	/>
 

@@ -7,6 +7,8 @@
 	import { initializeInstructorDnd } from '$lib/states/dndService';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
+	let { language } = $props();
+
 	initializeInstructorDnd();
 
 	let blocksSnapshot = $derived(blockActionState.blocks);
@@ -40,7 +42,7 @@
 	}
 </script>
 
-<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4" style="margin-top: 34px;">
+<div class="preset-filled-surface-50-950 mt-5 space-y-4 overflow-y-auto p-3">
 	<div
 		class="space-y-2 rounded-lg"
 		use:dragHandleZone={{
@@ -54,7 +56,7 @@
 	>
 		{#each blocksSnapshot as block (block.uuid)}
 			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} />
+				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} {language} />
 			</div>
 		{/each}
 	</div>

@@ -19,11 +19,11 @@
 		}
 	};
 
-	const localeNames = new Map<string, string>([
-		['en', 'English'],
-		['de', 'Deutsch'],
-		['fr', 'Français'],
-		['it', 'Italiano']
+	$: localeNames = new Map<string, string>([
+		['en', $_('common.english')],
+		['de', $_('common.german')],
+		['fr', $_('common.french')],
+		['it', $_('common.italian')]
 	]);
 </script>
 

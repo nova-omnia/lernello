@@ -16,20 +16,34 @@
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockMultipleChoiceItemProps = $props();
+	const { block, role, language }: BlockMultipleChoiceItemProps = $props();
 
 	type Answer = { value: string; isCorrect: boolean };
 
-	let currentQuestion = $derived(block.question);
+	let currentQuestion = $derived(
+		block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question
+	);
 	let currentAnswers = $derived<Answer[]>(
-		block.possibleAnswers.map(
+		(
+			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.possibleAnswers
+		).map(
 			(answer): Answer => ({
 				value: answer,
-				isCorrect: block.correctAnswers.includes(answer)
+				isCorrect: (
+					block.translatedContents.find((content) => content.language == language)
+						?.correctAnswers ?? block.correctAnswers
+				).includes(answer)
 			})
 		)
+	);
+
+	let blockId: string = $derived(
+		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
 	);
 
 	const onUpdateHandler = createDebounced(() => {
@@ -37,14 +51,23 @@
 		const newCorrectAnswers = currentAnswers
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
+		let localQuestion =
+			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.question;
+		let localPossibleAnswers =
+			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.possibleAnswers;
+		let localCorrectAnswers =
+			block.translatedContents.find((content) => content.language == language)?.correctAnswers ??
+			block.correctAnswers;
 		if (
-			currentQuestion !== block.question ||
-			JSON.stringify(newPossibleAnswers) !== JSON.stringify(block.possibleAnswers) ||
-			JSON.stringify(newCorrectAnswers) !== JSON.stringify(block.correctAnswers)
+			currentQuestion !== localQuestion ||
+			JSON.stringify(newPossibleAnswers) !== JSON.stringify(localPossibleAnswers) ||
+			JSON.stringify(newCorrectAnswers) !== JSON.stringify(localCorrectAnswers)
 		) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
-				blockId: block.uuid,
+				blockId,
 				question: currentQuestion,
 				possibleAnswers: newPossibleAnswers,
 				correctAnswers: newCorrectAnswers
@@ -114,7 +137,7 @@
 	function handleSubmit() {
 		if (selectedAnswers.length > 0) {
 			const answersToSubmit = selectedAnswers.map((index) => currentAnswers[index].value);
-			$checkAnswerMutation.mutate({ blockId: block.uuid, answers: answersToSubmit });
+			$checkAnswerMutation.mutate({ blockId, answers: answersToSubmit });
 		}
 	}
 </script>
@@ -125,7 +148,7 @@
 			<button
 				type="button"
 				onclick={addAnswerField}
-				class="btn preset-tonal-surface hover:"
+				class="btn preset-tonal-surface"
 				title={$_('block.multipleChoiceBlocks.addButton')}
 			>
 				<Plus class="h-5 w-5 text-gray-600 dark:text-gray-300" />

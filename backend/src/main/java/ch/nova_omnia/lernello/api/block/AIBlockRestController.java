@@ -13,10 +13,10 @@ import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 import ch.nova_omnia.lernello.mapper.block.BlockMapper;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
-import ch.nova_omnia.lernello.service.AIBlockService;
+import ch.nova_omnia.lernello.service.block.AIBlockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

@@ -60,7 +60,8 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					name: action.data.name,
 					uuid: action.blockId,
 					position: action.data.position || 0,
-					content: action.data.content || ''
+					content: action.data.content || '',
+					translatedContents: []
 				};
 			} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
 				newBlock = {
@@ -70,7 +71,8 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					position: action.data.position || 0,
 					question: action.data.question || 'placeholder question',
 					possibleAnswers: action.data.possibleAnswers || [],
-					correctAnswers: action.data.correctAnswers || []
+					correctAnswers: action.data.correctAnswers || [],
+					translatedContents: []
 				};
 			} else if (action.data.type === BlockType.Enum.QUESTION) {
 				newBlock = {
@@ -79,7 +81,8 @@ function applyBlockAction(action: BlockAction, blocks: BlockRes[]): BlockRes[] {
 					uuid: action.blockId,
 					position: action.data.position || 0,
 					question: action.data.question || 'placeholder question',
-					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
+					expectedAnswer: action.data.expectedAnswer || 'placeholder answer',
+					translatedContents: []
 				};
 			} else {
 				throw new Error('Unsupported block type.');

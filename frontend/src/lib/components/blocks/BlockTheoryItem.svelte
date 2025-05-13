@@ -15,10 +15,17 @@
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockTheoryItemProps = $props();
-	let lastContent = $derived(block.content);
+	const { block, role, language }: BlockTheoryItemProps = $props();
+	let lastContent = $derived(
+		block.translatedContents.find((content) => content.language == language)?.content ??
+			block.content
+	);
+	let blockId: string = $derived(
+		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+	);
 	let element: HTMLDivElement | undefined = $state();
 	let viewed = $state(false); // Prevent multiple API calls
 	let viewTimeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -27,7 +34,7 @@
 		if (newContent !== lastContent) {
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
-				blockId: block.uuid,
+				blockId,
 				content: newContent
 			});
 			lastContent = newContent;
@@ -52,10 +59,10 @@
 							if (!fetchFn) return;
 
 							api(fetchFn)
-								.req(markTheoryBlockViewed, { blockId: block.uuid })
+								.req(markTheoryBlockViewed, { blockId })
 								.parse()
 								.catch((err) => {
-									console.error(`Failed to mark theory block ${block.uuid} as viewed:`, err);
+									console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
 									toaster.create({
 										title: $_('common.error.title'),
 										description: $_('error.description', { values: { status: 'unknown' } }),
@@ -73,7 +80,7 @@
 					}
 				});
 			},
-			{ threshold: 0.5 }
+			{ threshold: 0.2 }
 		);
 
 		observer.observe(element);
@@ -88,5 +95,10 @@
 </script>
 
 <div bind:this={element}>
-	<TextEditor content={block.content} onUpdate={onUpdateHandler} {role} />
+	<TextEditor
+		content={block.translatedContents.find((content) => content.language == language)?.content ??
+			block.content}
+		onUpdate={onUpdateHandler}
+		{role}
+	/>
 </div>

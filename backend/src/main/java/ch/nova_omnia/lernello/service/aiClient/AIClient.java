@@ -51,11 +51,6 @@ public class AIClient {
         if (trimmed.toLowerCase().startsWith("json")) {
             trimmed = trimmed.substring(4).trim();
         }
-
-        if (!trimmed.startsWith("{") || !trimmed.endsWith("}")) {
-            throw new RuntimeException("Invalid AI response: not pure JSON: " + trimmed);
-        }
-
         return trimmed;
     }
 }

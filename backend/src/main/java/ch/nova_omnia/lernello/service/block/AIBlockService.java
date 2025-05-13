@@ -87,6 +87,15 @@ public class AIBlockService {
         return questionBlock;
     }
 
+    public boolean checkQuestionAnswerWithAI(String userAnswer, String expectedAnswer) {
+        String prompt = AIPromptTemplate.CHECK_ANSWER.format(expectedAnswer, userAnswer);
+        String result = aiClient.sendPrompt(prompt);
+
+        boolean isCorrect = Boolean.parseBoolean(result.trim().toLowerCase());
+
+        return isCorrect;
+    }
+
     private void generateTranslationsParallel(Block block, String content) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {
@@ -100,8 +109,6 @@ public class AIBlockService {
                 translatedBlock.setLearningUnit(block.getLearningUnit());
                 translatedBlock.setPosition(block.getPosition());
                 translatedBlock.setType(block.getType());
-                System.out.println("Block type: " + block.getType());
-                System.out.println("Translated block type: " + translatedBlock.getType());
                 translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
                 blockRepository.save(translatedBlock);
                 blockRepository.saveAndFlush(block);

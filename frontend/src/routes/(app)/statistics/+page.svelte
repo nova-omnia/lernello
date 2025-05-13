@@ -10,6 +10,10 @@
 
 {#if data.userInfo.role === INSTRUCTOR_ROLE}
 	<PageContainer title={$_('statistics.overview.title')}>
+		<div class="flex w-full justify-between">
+			<p>{$_('statistics.instructor.noKits.description')}</p>
+		</div>
+
 		<LearningKitsStatisticsOverview maxKitsToShow={100} />
 	</PageContainer>
 {:else}

@@ -45,7 +45,7 @@
 	<div class="flex w-full flex-col gap-8 p-4">
 		<div class="flex w-full justify-between gap-4">
 			<div>
-				<h1 class="preset-typo-headline">{$_('common.files')}</h1>
+				<h1 class="preset-typo-headline mb-4">{$_('common.files')}</h1>
 				<p>{$_('learningKit.context.description')}</p>
 			</div>
 			<FileUpload onFileUploaded={() => invalidate(['learning-kit'])} />

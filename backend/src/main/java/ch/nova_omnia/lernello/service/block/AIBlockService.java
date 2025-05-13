@@ -109,8 +109,6 @@ public class AIBlockService {
                 translatedBlock.setLearningUnit(block.getLearningUnit());
                 translatedBlock.setPosition(block.getPosition());
                 translatedBlock.setType(block.getType());
-                System.out.println("Block type: " + block.getType());
-                System.out.println("Translated block type: " + translatedBlock.getType());
                 translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
                 blockRepository.save(translatedBlock);
                 blockRepository.saveAndFlush(block);

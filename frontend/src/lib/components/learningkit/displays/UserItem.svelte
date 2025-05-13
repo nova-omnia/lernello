@@ -38,7 +38,7 @@
 			toaster.create({
 				title: $_('common.loading'),
 				description: $_('files.upload.uploading.description'),
-				type: 'info'
+				type: 'loading'
 			});
 		},
 		onSuccess: () => {

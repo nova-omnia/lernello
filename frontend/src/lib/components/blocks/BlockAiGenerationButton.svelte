@@ -56,7 +56,7 @@
 			toaster.create({
 				title: $_('multipleChoiceBlock.loading.title'),
 				description: $_('multipleChoiceBlock.loading.description'),
-				type: 'info'
+				type: 'loading'
 			});
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
@@ -90,7 +90,7 @@
 			toaster.create({
 				title: $_('questionBlock.loading.title'),
 				description: $_('questionBlock.loading.description'),
-				type: 'info'
+				type: 'loading'
 			});
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
@@ -123,7 +123,7 @@
 			toaster.create({
 				title: $_('theoryBlock.loading.title'),
 				description: $_('theoryBlock.loading.description'),
-				type: 'info'
+				type: 'loading'
 			});
 		},
 		mutationFn: (payload: GenerateAITheoryBlock) =>

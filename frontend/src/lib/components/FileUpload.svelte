@@ -42,7 +42,7 @@
 			toaster.create({
 				title: $_('files.upload.uploading'),
 				description: $_('files.upload.uploading.description'),
-				type: 'info'
+				type: 'loading'
 			});
 		}
 	});
@@ -119,7 +119,7 @@
 					toaster.create({
 						title: $_('files.upload.reject.title'),
 						description: $_('files.upload.reject.description', { values: { reason: error } }),
-						type: 'info'
+						type: 'error'
 					});
 				});
 			});

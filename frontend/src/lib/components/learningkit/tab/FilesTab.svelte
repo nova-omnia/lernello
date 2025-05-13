@@ -10,6 +10,7 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
+	import { toaster } from '$lib/states/toasterState.svelte.js';
 
 	const invalidate = useQueryInvalidation();
 
@@ -28,10 +29,30 @@
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
+		onMutate() {
+			toaster.create({
+				title: $_('learningKit.form.update.loading.title'),
+				description: $_('learningKit.form.update.loading.description'),
+				type: 'loading'
+			});
+		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningKit.form.update.success.title'),
+				description: $_('learningKit.form.update.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error:', error);
+			toaster.create({
+				title: $_('learningKit.form.update.error.title'),
+				description: $_('learningKit.form.update.error.description'),
+				type: 'error'
+			});
 		}
 	});
 </script>

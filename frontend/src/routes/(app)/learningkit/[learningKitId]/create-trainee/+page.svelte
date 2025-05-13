@@ -17,12 +17,26 @@
 		onResult() {
 			invalidate(['learning-kit', learningKitId]);
 			invalidate(['trainees-list']);
+			toaster.create({
+				title: $_('trainee.form.create.success.title'),
+				description: $_('trainee.form.create.success.description'),
+				type: 'success'
+			});
+		},
+		onUpdate() {
+			toaster.create({
+				title: $_('trainee.form.create.loading.title'),
+				description: $_('trainee.form.create.loading.description'),
+				type: 'loading'
+			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				title: $_('trainee.form.create.error.title'),
+				description: $_('trainee.form.create.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}
@@ -49,21 +63,21 @@
 					{/if}
 				</label>
 
-			<label class="label">
-				<span class="label-text">{$_('common.firstname')} *</span>
-				<input
-					type="text"
-					class="input preset-filled-surface-100-900"
-					name="name"
-					placeholder={$_('common.firstname')}
-					aria-invalid={$errors.name ? 'true' : undefined}
-					bind:value={$form.name}
-					{...$constraints.name}
-				/>
-				{#if $errors.name}
-					<p class="text-error-500">{$errors.name}</p>
-				{/if}
-			</label>
+				<label class="label">
+					<span class="label-text">{$_('common.firstname')} *</span>
+					<input
+						type="text"
+						class="input preset-filled-surface-100-900"
+						name="name"
+						placeholder={$_('common.firstname')}
+						aria-invalid={$errors.name ? 'true' : undefined}
+						bind:value={$form.name}
+						{...$constraints.name}
+					/>
+					{#if $errors.name}
+						<p class="text-error-500">{$errors.name}</p>
+					{/if}
+				</label>
 
 				<label class="label">
 					<span class="label-text">{$_('common.surname')} *</span>

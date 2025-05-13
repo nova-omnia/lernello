@@ -14,13 +14,26 @@
 		onResult(event) {
 			if (event.result.type === 'redirect') {
 				invalidate(['learning-kit', $form.learningKitId]);
+				toaster.create({
+					title: $_('learningUnit.form.create.success.title'),
+					description: $_('learningUnit.form.create.success.description'),
+					type: 'success'
+				});
 			}
+		},
+		onUpdate() {
+			toaster.create({
+				title: $_('learningUnit.form.create.loading.title'),
+				description: $_('learningUnit.form.create.loading.description')
+			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				title: $_('learningUnit.form.create.error.title'),
+				description: $_('learningUnit.form.create.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}

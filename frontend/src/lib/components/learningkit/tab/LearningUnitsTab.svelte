@@ -51,18 +51,58 @@
 	}
 
 	const updateLearningUnitOrderMutation = createMutation({
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningUnit.reorder.isReordering'),
+				description: $_('learningUnit.reorder.isReorderingDescription'),
+				type: 'loading'
+			});
+		},
 		mutationFn: (newOrder: { learningUnitUuidsInOrder: string[] }) => {
 			return api(fetch).req(updateLearningUnitsOrder, newOrder, learningKitId).parse();
 		},
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningUnit.reorder.success'),
+				description: $_('learningUnit.reorder.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error reordering learning units:', error);
+			toaster.create({
+				title: $_('learningUnit.reorder.error'),
+				description: $_('learningUnit.reorder.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
 	const deleteLearningUnitMutation = createMutation({
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningUnit.delete.isDeleting'),
+				description: $_('learningUnit.delete.isDeletingDescription'),
+				type: 'loading'
+			});
+		},
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningUnit.delete.success'),
+				description: $_('learningUnit.delete.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error deleting learning unit:', error);
+			toaster.create({
+				title: $_('learningUnit.delete.error'),
+				description: $_('learningUnit.delete.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
@@ -71,7 +111,7 @@
 			toaster.create({
 				title: $_('learningUnit.generate.isGenerating'),
 				description: $_('learningUnit.generate.isGeneratingDescription'),
-				type: 'info'
+				type: 'loading'
 			});
 		},
 		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
@@ -81,7 +121,7 @@
 			toaster.create({
 				title: $_('learningUnit.generate.generated'),
 				description: $_('learningUnit.generate.generatedDescription'),
-				type: 'info'
+				type: 'success'
 			});
 		},
 		onError: (error, variables, context) => {

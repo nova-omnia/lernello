@@ -34,22 +34,87 @@
 	});
 	const deleteLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningKit.delete.loading.title'),
+				description: $_('learningKit.delete.loading.description'),
+				type: 'loading'
+			});
+		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			goto('/dashboard');
+			toaster.create({
+				title: $_('learningKit.delete.success.title'),
+				description: $_('learningKit.delete.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to delete learning kit:', error);
+			toaster.create({
+				title: $_('learningKit.delete.error.title'),
+				description: $_('learningKit.delete.error.description'),
+				type: 'error'
+			});
 		}
 	});
 	const publishLearningKitMutation = createMutation({
-		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse()
-	});
-	const updateLearningKitMutation = createMutation({
-		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
-			api(fetch).req(updateLearningKit, data, id).parse(),
+		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse(),
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningKit.publish.loading.title'),
+				description: $_('learningKit.publish.loading.description'),
+				type: 'loading'
+			});
+		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningKit.publish.success.title'),
+				description: $_('learningKit.publish.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to publish learning kit:', error);
+			toaster.create({
+				title: $_('learningKit.publish.error.title'),
+				description: $_('learningKit.publish.error.description'),
+				type: 'error'
+			});
+		}
+	});
+	const updateLearningKitMutation = createMutation({
+		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
+			api(fetch).req(updateLearningKit, data, id).parse(),
+		onMutate: () => {
+			toaster.create({
+				title: $_('learningKit.update.loading.title'),
+				description: $_('learningKit.update.loading.description'),
+				type: 'loading'
+			});
+		},
+		onSuccess: () => {
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
+			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningKit.update.success.title'),
+				description: $_('learningKit.update.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to update learning kit:', error);
+			toaster.create({
+				title: $_('learningKit.update.error.title'),
+				description: $_('learningKit.update.error.description'),
+				type: 'error'
+			});
 		}
 	});
 
@@ -175,8 +240,10 @@
 
 	<ConfirmDialog
 		isOpen={showDeleteDialog}
-		title="Confirm Deletion"
-		message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
+		title={$_('learningKit.delete.confirmationTitle')}
+		message={$_('learningKit.delete.confirmationMessage', {
+			values: { name: $learningKitQuery.data.name }
+		})}
 		confirmText="Delete"
 		danger={true}
 		onConfirm={() => {

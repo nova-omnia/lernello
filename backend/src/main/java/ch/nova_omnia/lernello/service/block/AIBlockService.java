@@ -36,8 +36,8 @@ public class AIBlockService {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-    public TheoryBlock generateTheoryBlockAI(List<UUID> fileIds, String topic) {
-        TheoryBlock block = new TheoryBlock();
+    public TheoryBlock generateTheoryBlockAI(UUID blockId, List<UUID> fileIds, String topic) {
+        TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
         String context = fileService.extractTextFromFiles(fileIds);
         String prompt = AIPromptTemplate.THEORY_BLOCK.format(context, topic);
         String aiResponse = aiClient.sendPrompt(prompt);
@@ -47,14 +47,14 @@ public class AIBlockService {
         block.setContent(content);
         block.setName("Generated");
         block.setType(BlockType.THEORY);
-        TheoryBlock saved = blockRepository.saveAndFlush(block);
-        generateTranslationsParallel(saved, content);
+
+        generateTranslationsParallel(block, content);
         return block;
     }
 
-    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID theoryBlockId) {
+    public MultipleChoiceBlock generateMultipleChoiceBlockAI(UUID blockId, UUID theoryBlockId) {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
-        MultipleChoiceBlock mcBlock = new MultipleChoiceBlock();
+        MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
 
         String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
@@ -66,14 +66,13 @@ public class AIBlockService {
         mcBlock.setName("Generated");
         mcBlock.setType(BlockType.MULTIPLE_CHOICE);
 
-        MultipleChoiceBlock saved = blockRepository.saveAndFlush(mcBlock);
-        generateTranslationsParallel(saved);
+        generateTranslationsParallel(mcBlock);
         return mcBlock;
     }
 
-    public QuestionBlock generateQuestionBlockAI(UUID theoryBlockId) {
+    public QuestionBlock generateQuestionBlockAI(UUID blockId, UUID theoryBlockId) {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
-        QuestionBlock questionBlock = new QuestionBlock();
+        QuestionBlock questionBlock = (QuestionBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
 
         String prompt = AIPromptTemplate.QUESTION_BLOCK.format(theoryBlock.getContent());
         String aiResponse = aiClient.sendPrompt(prompt);
@@ -84,8 +83,7 @@ public class AIBlockService {
         questionBlock.setName("Generated");
         questionBlock.setType(BlockType.QUESTION);
 
-        QuestionBlock saved = blockRepository.saveAndFlush(questionBlock);
-        generateTranslationsParallel(saved);
+        generateTranslationsParallel(questionBlock);
         return questionBlock;
     }
 
@@ -102,8 +100,11 @@ public class AIBlockService {
                 translatedBlock.setLearningUnit(block.getLearningUnit());
                 translatedBlock.setPosition(block.getPosition());
                 translatedBlock.setType(block.getType());
+                System.out.println("Block type: " + block.getType());
+                System.out.println("Translated block type: " + translatedBlock.getType());
                 translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
                 blockRepository.save(translatedBlock);
+                blockRepository.saveAndFlush(block);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -123,6 +124,7 @@ public class AIBlockService {
                 translatedBlock.setType(block.getType());
                 translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
                 blockRepository.save(translatedBlock);
+                blockRepository.saveAndFlush(block);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -143,6 +145,7 @@ public class AIBlockService {
                 translatedBlock.setType(block.getType());
                 translatedBlock.setName(aiClient.sendPrompt(AIPromptTemplate.TRANSLATION.format(lang.name(), block.getName())));
                 blockRepository.save(translatedBlock);
+                blockRepository.saveAndFlush(block);
             }, executor));
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();

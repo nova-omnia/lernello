@@ -1,10 +1,10 @@
 package ch.nova_omnia.lernello.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +12,14 @@ import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
+import ch.nova_omnia.lernello.repository.TranslatedBlockRepository;
+import ch.nova_omnia.lernello.service.block.AIBlockService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,6 +28,8 @@ public class LearningUnitService {
     private final LearningUnitRepository learningUnitRepository;
     private final LearningKitRepository learningKitRepository;
     private final LearningUnitProgressRepository learningUnitProgressRepository;
+    private final TranslatedBlockRepository translatedBlockRepository;
+    private final BlockRepository blockRepository;
     private final AIBlockService aiBlockService;
 
     @Transactional
@@ -75,7 +81,12 @@ public class LearningUnitService {
     public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
 
+        List<Block> oldBlocks = new ArrayList<>(learningUnit.getBlocks());
+        List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlockIn(oldBlocks);
+        translatedBlockRepository.deleteAll(translations);
+
         learningUnit.getBlocks().clear();
+        blockRepository.deleteAll(oldBlocks);
 
         List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
 

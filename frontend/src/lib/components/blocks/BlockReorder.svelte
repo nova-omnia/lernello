@@ -7,6 +7,8 @@
 	import { initializeInstructorDnd } from '$lib/states/dndService';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
+	let { language } = $props();
+
 	initializeInstructorDnd();
 
 	let blocksSnapshot = $derived(blockActionState.blocks);
@@ -54,7 +56,7 @@
 	>
 		{#each blocksSnapshot as block (block.uuid)}
 			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} />
+				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} {language} />
 			</div>
 		{/each}
 	</div>

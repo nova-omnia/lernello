@@ -9,7 +9,6 @@ import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.service.ProgressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,8 +30,7 @@ public class ProgressRestController {
     @PostMapping("/learning-kit/opened")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public LearningKitProgressResDTO markLearningKitOpened(
-        @RequestBody @Valid LearningKitOpened dto,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                           @RequestBody @Valid LearningKitOpened dto, @AuthenticationPrincipal UserDetails userDetails) {
         LearningKitProgress progress = progressService.markLearningKitOpened(dto, userDetails);
         return progressMapper.toLearningKitProgressResDTO(progress);
     }
@@ -40,8 +38,7 @@ public class ProgressRestController {
     @PostMapping("/learning-unit/opened")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid LearningUnitProgressDTO markLearningUnitOpened(
-        @RequestBody @Valid LearningUnitOpenedDTO dto,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                 @RequestBody @Valid LearningUnitOpenedDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         LearningUnitProgress unitProgress = progressService.markLearningUnitOpened(dto, userDetails);
         return progressMapper.toLearningUnitProgressDTO(unitProgress);
     }
@@ -49,24 +46,21 @@ public class ProgressRestController {
     @PostMapping("/block/multiple-choice/check")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid MultipleChoiceAnswerValidationResDTO checkMultipleChoiceAnswer(
-        @RequestBody @Valid CheckMultipleChoiceAnswerDTO dto,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                                 @RequestBody @Valid CheckMultipleChoiceAnswerDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         return progressService.checkMultipleChoiceAnswer(dto, userDetails);
     }
 
     @PostMapping("/block/question/check")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid QuestionAnswerValidationResDTO checkQuestionAnswer(
-        @RequestBody @Valid CheckQuestionAnswerDTO dto,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                     @RequestBody @Valid CheckQuestionAnswerDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         return progressService.checkQuestionAnswer(dto, userDetails);
     }
 
     @PostMapping("/block/theory/viewed")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid TheoryBlockViewedResDTO markTheoryBlockViewed(
-        @RequestBody @Valid TheoryBlockViewedDTO dto,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                @RequestBody @Valid TheoryBlockViewedDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         TheoryBlockProgress theoryBlockProgress = progressService.markTheoryBlockViewed(dto, userDetails);
         return progressMapper.toTheoryBlockViewedResDTO(theoryBlockProgress);
     }
@@ -74,8 +68,7 @@ public class ProgressRestController {
     @GetMapping("/learning-kit/{learningKitId}")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid LearningKitProgressResDTO getLearningKitProgress(
-        @PathVariable UUID learningKitId,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                   @PathVariable UUID learningKitId, @AuthenticationPrincipal UserDetails userDetails) {
         LearningKitProgress progress = progressService.getLearningKitProgress(learningKitId, userDetails);
         return progressMapper.toLearningKitProgressResDTO(progress);
     }
@@ -83,8 +76,7 @@ public class ProgressRestController {
     @GetMapping("/learning-unit/{learningUnitId}")
     @PreAuthorize("hasAuthority('SCOPE_progress:read')")
     public @Valid LearningUnitProgressDTO getLearningUnitProgress(
-        @PathVariable UUID learningUnitId,
-        @AuthenticationPrincipal UserDetails userDetails) {
+                                                                  @PathVariable UUID learningUnitId, @AuthenticationPrincipal UserDetails userDetails) {
         LearningUnitProgress progress = progressService.getLearningUnitProgress(learningUnitId, userDetails);
         return progressMapper.toLearningUnitProgressDTO(progress);
     }
@@ -92,10 +84,8 @@ public class ProgressRestController {
     @GetMapping("/learning-kit/{learningKitId}/participants-progress")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid List<LearningKitProgressResDTO> getLearningKitProgressForAllParticipants(
-        @PathVariable UUID learningKitId) {
+                                                                                           @PathVariable UUID learningKitId) {
         List<LearningKitProgress> progresses = progressService.getLearningKitProgressForAllParticipants(learningKitId);
-        return progresses.stream()
-            .map(progressMapper::toLearningKitProgressResDTO)
-            .collect(Collectors.toList());
+        return progresses.stream().map(progressMapper::toLearningKitProgressResDTO).collect(Collectors.toList());
     }
 }

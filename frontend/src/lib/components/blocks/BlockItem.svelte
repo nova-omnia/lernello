@@ -18,9 +18,10 @@
 	interface BlockItemProps {
 		block: BlockRes;
 		role: RoleType;
+		language: string;
 	}
 
-	const { block, role }: BlockItemProps = $props();
+	const { block, role, language }: BlockItemProps = $props();
 
 	let isConfirmDialogOpen: boolean = $state(false);
 
@@ -36,14 +37,14 @@
 <div
 	class="card bg-surface-100 dark:bg-surface-900 border-surface-200 dark:border-surface-800 group relative space-y-5 border p-4 shadow transition-all duration-200 hover:shadow-lg"
 >
-	<BlockIconHeader {block} {role} />
+	<BlockIconHeader {block} {role} {language} />
 
 	{#if block.type === THEORY_BLOCK_TYPE}
-		<TheoryBlockComponent {block} {role} />
+		<TheoryBlockComponent {block} {role} {language} />
 	{:else if block.type === QUESTION_BLOCK_TYPE}
-		<QuestionBlockComponent {block} {role} />
+		<QuestionBlockComponent {block} {role} {language} />
 	{:else if block.type === MULTIPLE_CHOICE_BLOCK_TYPE}
-		<MultipleChoiceBlockComponent {block} {role} />
+		<MultipleChoiceBlockComponent {block} {role} {language} />
 	{/if}
 
 	{#if role === 'INSTRUCTOR'}

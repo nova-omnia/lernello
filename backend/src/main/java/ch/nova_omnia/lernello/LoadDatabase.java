@@ -1,14 +1,9 @@
 package ch.nova_omnia.lernello;
 
+import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
+
 import java.util.List;
 
-import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
-import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType;
-import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
-import ch.nova_omnia.lernello.service.BlockService;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import ch.nova_omnia.lernello.service.LearningUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -16,6 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import ch.nova_omnia.lernello.dto.request.block.blockActions.AddBlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
+import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionType;
+import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.Folder;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -26,9 +25,10 @@ import ch.nova_omnia.lernello.repository.FolderRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.service.BlockService;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import ch.nova_omnia.lernello.service.LearningUnitService;
 import lombok.RequiredArgsConstructor;
-
-import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,6 +53,7 @@ public class LoadDatabase {
         User max = new User("max.sebastian@bluewin.ch", "Max", "Sebastian", encoder.encode("password"), null, Role.TRAINEE);
         User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, Role.TRAINEE);
         User leon = new User("brodbeckleon@gmail.com", "Leon", "Brodbeck", encoder.encode("password"), null, Role.TRAINEE);
+        leon.setChangedPassword(true);
         User pascal = new User("pascal.Dorta@gmx.ch", "Pascal", "Dorta", encoder.encode("password"), null, Role.TRAINEE);
         User anja = new User("anja.wigger@bluewin.ch", "Anja", "Wigger", encoder.encode("password"), null, Role.TRAINEE);
         User fabian = new User("fabian_balo@gmail.com", "Fabian", "Balo", encoder.encode("password"), null, Role.TRAINEE);

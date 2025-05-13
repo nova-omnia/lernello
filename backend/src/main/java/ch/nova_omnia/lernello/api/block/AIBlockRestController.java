@@ -32,14 +32,14 @@ public class AIBlockRestController {
     @PostMapping("/multiple-choice")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public MultipleChoiceBlockResDTO generateMultipleChoice(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
-        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.theoryBlockId());
+        MultipleChoiceBlock block = aiBlockService.generateMultipleChoiceBlockAI(dto.blockId(), dto.theoryBlockId());
         return blockMapper.toMultipleChoiceBlockResDTO(block);
     }
 
     @PostMapping("/theory")
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
     public TheoryBlockResDTO generateTheory(@Valid @RequestBody AIGeneratedTheoryBlockRequest dto) {
-        TheoryBlock theoryBlock = aiBlockService.generateTheoryBlockAI(dto.files(), dto.topic());
+        TheoryBlock theoryBlock = aiBlockService.generateTheoryBlockAI(dto.blockId(), dto.files(), dto.topic());
         return blockMapper.toTheoryBlockResDTO(theoryBlock);
     }
 
@@ -48,7 +48,7 @@ public class AIBlockRestController {
     @PreAuthorize("hasAuthority('SCOPE_blocks:write')")
 
     public QuestionBlockResDTO generateQuestion(@Valid @RequestBody AIGeneratedQuestionBlockRequest dto) {
-        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.theoryBlockId());
+        QuestionBlock block = aiBlockService.generateQuestionBlockAI(dto.blockId(), dto.theoryBlockId());
         return blockMapper.toQuestionBlockResDTO(block);
     }
 }

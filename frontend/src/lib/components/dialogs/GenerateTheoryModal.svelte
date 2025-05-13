@@ -65,6 +65,7 @@
 								onRemoveFile={() => {
 									selectedFiles = selectedFiles.filter((f) => f.uuid !== file.uuid);
 								}}
+								isForModal={true}
 							/>
 						{/each}
 					</div>

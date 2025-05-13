@@ -87,6 +87,15 @@ public class AIBlockService {
         return questionBlock;
     }
 
+    public boolean checkQuestionAnswerWithAI(String userAnswer, String expectedAnswer) {
+        String prompt = AIPromptTemplate.CHECK_ANSWER.format(expectedAnswer, userAnswer);
+        String result = aiClient.sendPrompt(prompt);
+
+        boolean isCorrect = Boolean.parseBoolean(result.trim().toLowerCase());
+
+        return isCorrect;
+    }
+
     private void generateTranslationsParallel(Block block, String content) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {

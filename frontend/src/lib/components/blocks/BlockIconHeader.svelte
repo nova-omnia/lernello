@@ -92,7 +92,6 @@
 					{name}
 				</h3>
 			{/if}
-			<span class="text-sm text-gray-500">({$_(blockTypeTerm)})</span>
 		</div>
 	</div>
 

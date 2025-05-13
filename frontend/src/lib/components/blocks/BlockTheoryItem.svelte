@@ -63,7 +63,6 @@
 								...blockProgress,
 								isViewed: viewed
 							} as TheoryBlockProgressRes);
-
 							const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
 							if (!fetchFn) return;
 

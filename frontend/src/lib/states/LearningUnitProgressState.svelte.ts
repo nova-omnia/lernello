@@ -1,9 +1,9 @@
 import type { LearningUnitProgressRes } from '$lib/schemas/response/progress/LearningUnitProgressResSchema';
 import type { BlockProgressRes } from '$lib/schemas/response/progress/BlockProgressResSchema';
 
-let currentProgress = $state<LearningUnitProgressRes | null>(null);
+let currentProgress = $derived<LearningUnitProgressRes | null>(null);
 const blockProgressMap = $derived.by(() => {
-	const map = new Map<string, BlockProgressRes>();
+	const map = $derived(new Map<string, BlockProgressRes>());
 	if (currentProgress?.userBlockProgresses) {
 		for (const bp of currentProgress.userBlockProgresses) {
 			map.set(bp.blockId, bp);

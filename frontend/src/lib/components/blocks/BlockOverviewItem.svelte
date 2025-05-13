@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dragHandle } from 'svelte-dnd-action';
-	import { GripVertical, CheckCircle, XCircle, Eye, SquareMinus } from 'lucide-svelte';
+	import { GripVertical, SquareMinus, SquareCheckBig, SquareX, View } from 'lucide-svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import { INSTRUCTOR_ROLE, type RoleType, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
@@ -21,9 +21,9 @@
 	const { block, role, scrollToBlock, progress, language }: BlockReorderItemProps = $props();
 
 	const statusIconMap = {
-		VIEWED: Eye,
-		CORRECT: CheckCircle,
-		FALSE: XCircle,
+		VIEWED: View,
+		CORRECT: SquareCheckBig,
+		FALSE: SquareX,
 		ELSE: SquareMinus
 	};
 
@@ -33,35 +33,37 @@
 				if (progress.blockType === 'MULTIPLE_CHOICE') {
 					const multipleChoiceProgress = progress as MultipleChoiceBlockProgressRes;
 					if (multipleChoiceProgress.isCorrect) {
-						return statusIconMap['CORRECT'];
+						return statusIconMap.CORRECT;
 					} else if (multipleChoiceProgress.isCorrect === false) {
-						return statusIconMap['FALSE'];
+						return statusIconMap.FALSE;
 					}
 				} else if (progress.blockType === 'QUESTION') {
 					const questionProgress = progress as QuestionBlockProgressRes;
 					if (questionProgress.isCorrect) {
-						return statusIconMap['CORRECT'];
+						return statusIconMap.CORRECT;
 					} else if (questionProgress.isCorrect === false) {
-						return statusIconMap['FALSE'];
+						return statusIconMap.FALSE;
 					}
 				} else if (progress.blockType === 'THEORY') {
 					const theoryProgress = progress as TheoryBlockProgressRes;
 					if (theoryProgress.isViewed) {
-						return statusIconMap['VIEWED'];
-					}
-				}
-			} else if (role === INSTRUCTOR_ROLE) {
-				if (progress.blockType === 'MULTIPLE_CHOICE' || progress.blockType === 'QUESTION') {
-					const questionProgress = progress as QuestionBlockProgressRes;
-					if (questionProgress.isCorrect) {
-						return statusIconMap['CORRECT'];
-					} else if (questionProgress.isCorrect === false) {
-						return statusIconMap['FALSE'];
+						return statusIconMap.VIEWED;
 					}
 				}
 			}
 		}
-		return statusIconMap['ELSE'];
+		return statusIconMap.ELSE;
+	});
+
+	const statusColorClass = $derived.by(() => {
+		const currentIcon = StatusIconComponent;
+		if (currentIcon === statusIconMap.FALSE) {
+			return 'badge preset-filled-error-500';
+		} else if (currentIcon === statusIconMap.VIEWED || currentIcon === statusIconMap.CORRECT) {
+			return 'badge preset-filled-success-500';
+		} else {
+			return 'badge bg-surface-300-700';
+		}
 	});
 </script>
 
@@ -85,6 +87,8 @@
 		}}
 	>
 		<BlockIconHeader {block} role={TRAINEE_ROLE} {language} />
-		<StatusIconComponent class="text-surface-400-600 h-6 w-6" />
+		<span class={statusColorClass}>
+			<StatusIconComponent class="text-surface-100-900 h-6 w-6" />
+		</span>
 	</button>
 {/if}

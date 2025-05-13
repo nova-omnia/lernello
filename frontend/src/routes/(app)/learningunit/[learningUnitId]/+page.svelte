@@ -90,7 +90,7 @@
 				onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
 			/>
 			{#if data.userInfo.role === INSTRUCTOR_ROLE}
-				<BlockReorder {language} />
+				<BlockReorder {language} role={data.userInfo.role} />
 			{/if}
 		</div>
 	</div>

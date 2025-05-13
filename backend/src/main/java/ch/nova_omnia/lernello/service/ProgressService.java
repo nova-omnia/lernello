@@ -61,10 +61,8 @@ public class ProgressService {
     @Transactional
     public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        updateLearningUnitProgressPercentage(
-            getOrCreateLearningUnitProgress(user, learningUnitRepository.findById(dto.learningUnitId())
-                .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId())), null));
-        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId()).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
+        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId())
+            .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
 
         LearningKit learningKit = learningUnit.getLearningKit();
         if (learningKit == null) {
@@ -84,9 +82,8 @@ public class ProgressService {
         unitProgress.setLastOpenedAt(ZonedDateTime.now());
 
         updateLearningUnitProgressPercentage(unitProgress);
-        if (unitProgress.getLearningKitProgress() != null) {
-            updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
-        }
+        updateLearningKitProgressPercentage(kitProgress);
+
         return unitProgress;
     }
 

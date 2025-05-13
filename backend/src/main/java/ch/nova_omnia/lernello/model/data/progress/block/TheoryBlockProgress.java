@@ -24,7 +24,7 @@ public class TheoryBlockProgress extends BlockProgress {
         super(user, block, unitProgress);
     }
 
-    public TheoryBlockProgress(User user, TheoryBlock block, boolean isViewed, LearningUnitProgress unitProgress) {
+    public TheoryBlockProgress(User user, TheoryBlock block, Boolean isViewed, LearningUnitProgress unitProgress) {
         super(user, block, unitProgress);
         this.isViewed = isViewed;
     }

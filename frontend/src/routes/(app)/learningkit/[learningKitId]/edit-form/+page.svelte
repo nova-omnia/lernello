@@ -19,12 +19,26 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				title: $_('learningKit.form.update.success.title'),
+				description: $_('learningKit.form.update.success.description'),
+				type: 'success'
+			});
+		},
+		onUpdate() {
+			toaster.create({
+				title: $_('learningKit.form.update.loading.title'),
+				description: $_('learningKit.form.update.loading.description'),
+				type: 'loading'
+			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				title: $_('learningKit.form.update.error.title'),
+				description: $_('learningKit.form.update.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}

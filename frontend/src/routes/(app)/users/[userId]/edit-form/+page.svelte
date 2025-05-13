@@ -19,16 +19,24 @@
 			// TODO does not invalidate
 			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.success.title'),
-				description: $_('user.form.edit.success'),
+				title: $_('user.form.edit.success.title'),
+				description: $_('user.form.edit.success.description'),
 				type: 'success'
+			});
+		},
+		onUpdate() {
+			toaster.create({
+				title: $_('user.form.edit.loading.title'),
+				description: $_('user.form.edit.loading.description')
 			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				title: $_('user.form.edit.error.title'),
+				description: $_('user.form.edit.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}

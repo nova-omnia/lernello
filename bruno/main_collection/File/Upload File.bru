@@ -1,0 +1,15 @@
+meta {
+  name: Upload File
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/files/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/Users/michaljohnson/Downloads/BSY - FILES - I - FS25.pdf)
+}

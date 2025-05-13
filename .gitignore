@@ -1,4 +1,21 @@
 .env
 
-# Macos
+# Compiled output / build
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Log file
+*.log
+*.log.*
+hs_err_pid*
+
+# System files
 .DS_Store
+Thumbs.db
+
+# Aider
+.aider*
+
+# Personal Zellij Layout
+dev-layout.kdl

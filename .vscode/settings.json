@@ -1,0 +1,20 @@
+{
+  "cSpell.words": [
+    "assertj",
+    "DTOs",
+    "learningkits",
+    "learningunit",
+    "learningunits",
+    "lernello",
+    "omnia",
+    "skeletonlabs"
+  ],
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "[java]": {
+    "editor.detectIndentation": false
+  },
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.saveActions.organizeImports": true,
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
+}

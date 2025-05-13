@@ -1,7 +1,4 @@
 HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -33,5 +30,12 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
+# Database files
+*.db
+
+# Local configuration
+application-local.properties
+
+
+# Ignore backend file storage
+data/files

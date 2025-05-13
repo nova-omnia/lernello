@@ -1,7 +1,7 @@
 name: Lint
 
 env:
-  NODE_VERSION: '22.14.0'
+  NODE_VERSION: "22.14.0"
 
 on:
   pull_request:
@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Copy .env.example
+        working-directory: frontend
+        run: cp .env.example .env
+
       - name: Install dependencies
         working-directory: frontend
         run: npm install
@@ -28,3 +32,7 @@ jobs:
       - name: Frontend Lint & Prettier check
         working-directory: frontend
         run: npm run lint
+
+      - name: Frontend Check
+        working-directory: frontend
+        run: npm run check

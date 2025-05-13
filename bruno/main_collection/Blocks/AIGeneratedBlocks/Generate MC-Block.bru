@@ -1,0 +1,19 @@
+meta {
+  name: Generate Multiple Choice Block
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/ai-block/multiple-choice
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "theoryBlockIUuid": "11111111-2222-3333-4444-555555555555",
+    "learningUnitId": "123e4567-e89b-12d3-a456-426614174000",
+    "multipleChoiceBlockUuid": "66666666-7777-8888-9999-000000000000"
+  }
+}

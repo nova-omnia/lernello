@@ -1,0 +1,29 @@
+meta {
+  name: Create MC-Block
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/learning-unit/{{id}}/apply-block-actions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+    {
+      "type": "ADD_BLOCK",
+      "index": 1,
+      "blockId": "mc-temp-id-001",
+      "data": {
+        "type": "MULTIPLE_CHOICE",
+        "name": "MC Block Title",
+        "position": 1,
+        "question": "What is 2 + 2?",
+        "possibleAnswers": ["3", "4", "5", "22"],
+        "correctAnswers": ["4"]
+      }
+    }
+  ]
+}

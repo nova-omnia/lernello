@@ -1,0 +1,20 @@
+meta {
+  name: Generate Theory Block
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/ai-block/generate
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fileIds": ["example-file-id-1", "example-file-id-2"],
+    "topic": "Introduction to AI",
+    "position": 0,
+    "learningUnitId": "123e4567-e89b-12d3-a456-426614174000"
+  }
+}

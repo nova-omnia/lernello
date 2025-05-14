@@ -242,7 +242,6 @@
 	{#snippet preview()}
 		<div class="space-y-4">
 			<div class="flex items-start justify-between gap-4">
-				<!-- Title and Reset Button (if submitted) -->
 				<div class="flex items-center gap-2">
 					<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
 					{#if isSubmitted}
@@ -261,7 +260,6 @@
 					{/if}
 				</div>
 
-				<!-- Submit Button (if not submitted) OR Feedback (if submitted) -->
 				<div>
 					{#if !isSubmitted}
 						<button

@@ -18,6 +18,7 @@
 		progress?: BlockProgressRes;
 		language: string;
 	}
+
 	const { block, role, scrollToBlock, progress, language }: BlockReorderItemProps = $props();
 
 	const statusIconMap = {

@@ -11,15 +11,14 @@
 	let { data } = $props();
 	const invalidate = useQueryInvalidation();
 	const { form, errors, constraints, enhance } = superForm(data.form, {
-		onResult(event) {
-			if (event.result.type === 'redirect') {
-				invalidate(['learning-kit', $form.learningKitId]);
-				toaster.create({
-					title: $_('learningUnit.form.create.success.title'),
-					description: $_('learningUnit.form.create.success.description'),
-					type: 'success'
-				});
-			}
+		onResult() {
+			invalidate(['learning-kit', $form.learningKitId]);
+			toaster.create({
+				title: $_('learningUnit.form.create.success.title'),
+				description: $_('learningUnit.form.create.success.description'),
+				type: 'success'
+			});
+			history.back();
 		},
 		onUpdate() {
 			toaster.create({

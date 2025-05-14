@@ -4,19 +4,27 @@ import static ch.nova_omnia.lernello.model.data.block.BlockType.MULTIPLE_CHOICE;
 import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 import static ch.nova_omnia.lernello.model.data.block.BlockType.THEORY;
 
-import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
-import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
-import ch.nova_omnia.lernello.dto.response.block.*;
-import ch.nova_omnia.lernello.model.data.block.*;
-import ch.nova_omnia.lernello.model.data.block.scorable.*;
-import ch.nova_omnia.lernello.repository.TranslatedBlockRepository;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.LearningUnit;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.Comparator;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
+import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
+import ch.nova_omnia.lernello.dto.response.block.BlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
+import ch.nova_omnia.lernello.dto.response.block.TranslatedBlockResDTO;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
+import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
+import ch.nova_omnia.lernello.repository.TranslatedBlockRepository;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +36,8 @@ public class LearningUnitMapper {
     }
 
     public LearningUnitResDTO toDTO(LearningUnit learningUnit) {
-        List<BlockResDTO> sortedBlocks = learningUnit.getBlocks().stream().sorted(Comparator.comparingInt(Block::getPosition)).map(this::mapBlockToResDTO).toList();
+        List<BlockResDTO> sortedBlocks = learningUnit.getBlocks().stream().filter(block -> !(block instanceof TranslatedBlock)) // TranslatedBlock herausfiltern
+                .sorted(Comparator.comparingInt(Block::getPosition)).map(this::mapBlockToResDTO).toList();
 
         return new LearningUnitResDTO(
                 learningUnit.getUuid(), learningUnit.getName(), sortedBlocks, learningUnit.getPosition()

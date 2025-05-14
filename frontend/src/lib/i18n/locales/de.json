@@ -77,7 +77,7 @@
 	"common.warning.title": "Warnung",
 	"createTrainee": "Teilnehmer erstellen",
 	"createUser": "Benutzer erstellen",
-	"dashboard.allLearningKits": "Lernkits ({count} / {total})",
+	"dashboard.allLearningKits": "Lernkits ({total})",
 	"dashboard.allStatistics": "Statistiken ({total})",
 	"dashboard.createKit": "Neues Kit erstellen",
 	"dashboard.title": "Dashboard",

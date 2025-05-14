@@ -7,7 +7,7 @@
 	import { initializeInstructorDnd } from '$lib/states/dndService';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
-	let { language } = $props();
+	let { language, role } = $props();
 
 	initializeInstructorDnd();
 
@@ -54,10 +54,12 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		{#each blocksSnapshot as block (block.uuid)}
-			<div class="block" animate:flip={{ duration: 200 }}>
-				<BlockReorderItem {block} role={INSTRUCTOR_ROLE} {language} />
-			</div>
-		{/each}
+		{#if role === INSTRUCTOR_ROLE}
+			{#each blocksSnapshot as block (block.uuid)}
+				<div class="block" animate:flip={{ duration: 200 }}>
+					<BlockReorderItem {block} role={INSTRUCTOR_ROLE} {language} />
+				</div>
+			{/each}
+		{/if}
 	</div>
 </div>

@@ -5,8 +5,8 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import { _ } from 'svelte-i18n';
 	import { dev } from '$app/environment';
-	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { error } from '@sveltejs/kit';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
 	let { data } = $props();
 

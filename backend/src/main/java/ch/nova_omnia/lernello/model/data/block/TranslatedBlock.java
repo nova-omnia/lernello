@@ -19,7 +19,7 @@ import lombok.Setter;
 @DiscriminatorValue("TRANSLATED")
 @NoArgsConstructor
 public class TranslatedBlock extends Block {
-    @Column(length = 5)
+    @Column(length = 30)
     private BlockLanguage language;
 
     @Lob

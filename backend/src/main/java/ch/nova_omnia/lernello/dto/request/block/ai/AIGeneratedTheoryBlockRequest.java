@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record AIGeneratedTheoryBlockRequest(
                                             String topic,
-                                            @NotNull List<UUID> files
+                                            @NotNull List<UUID> files,
+                                            @NotNull UUID blockId
 ) {
 }

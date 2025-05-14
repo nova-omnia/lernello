@@ -19,6 +19,7 @@ import ch.nova_omnia.lernello.model.data.progress.block.scorable.QuestionBlockPr
 import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.*;
+import ch.nova_omnia.lernello.service.block.AIBlockService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,11 +39,15 @@ public class ProgressService {
     private final LearningUnitRepository learningUnitRepository;
     private final BlockRepository blockRepository;
     private final UserService userService;
+    private final AIBlockService aiBlockService;
 
     @Transactional
     public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningKit learningKit = learningKitRepository.findById(UUID.fromString(dto.learningKitId())).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
+        updateLearningKitProgressPercentage(
+            getOrCreateLearningKitProgress(user, learningKitRepository.findById(dto.learningKitId())
+                .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()))));
+        LearningKit learningKit = learningKitRepository.findById(dto.learningKitId()).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
 
         LearningKitProgress progress = getOrCreateLearningKitProgress(user, learningKit);
         if (!progress.isOpened()) {
@@ -56,7 +61,8 @@ public class ProgressService {
     @Transactional
     public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningUnit learningUnit = learningUnitRepository.findById(UUID.fromString(dto.learningUnitId())).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
+        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId())
+            .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
 
         LearningKit learningKit = learningUnit.getLearningKit();
         if (learningKit == null) {
@@ -76,16 +82,15 @@ public class ProgressService {
         unitProgress.setLastOpenedAt(ZonedDateTime.now());
 
         updateLearningUnitProgressPercentage(unitProgress);
-        if (unitProgress.getLearningKitProgress() != null) {
-            updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
-        }
+        updateLearningKitProgressPercentage(kitProgress);
+
         return unitProgress;
     }
 
     @Transactional
     public MultipleChoiceAnswerValidationResDTO checkMultipleChoiceAnswer(CheckMultipleChoiceAnswerDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(UUID.fromString(dto.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+        Block block = blockRepository.findById(dto.blockId()).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         MultipleChoiceBlock mcBlock;
         if (!(block instanceof MultipleChoiceBlock)) {
@@ -110,6 +115,11 @@ public class ProgressService {
         }
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
+
+        if (blockProgress instanceof MultipleChoiceBlockProgress mcProgress) {
+            mcProgress.setIsCorrect(isCorrect);
+            mcProgress.setLastAnswers(new ArrayList<>(dto.answers()));
+        }
 
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
@@ -146,7 +156,12 @@ public class ProgressService {
             mcProgress.setLastAnswer(dto.answer());
         }
 
-        boolean isCorrect = dto.answer().equalsIgnoreCase(qBlock.getExpectedAnswer());
+        boolean isCorrect = aiBlockService.checkQuestionAnswerWithAI(dto.answer(), qBlock.getExpectedAnswer());
+
+        if (blockProgress instanceof QuestionBlockProgress qProgress) {
+            qProgress.setIsCorrect(isCorrect);
+            qProgress.setLastAnswer(dto.answer());
+        }
 
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
@@ -159,7 +174,7 @@ public class ProgressService {
     @Transactional
     public TheoryBlockProgress markTheoryBlockViewed(TheoryBlockViewedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(UUID.fromString(dto.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+        Block block = blockRepository.findById(dto.blockId()).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         TheoryBlock theoryBlock;
         if (!(block instanceof TheoryBlock)) {
@@ -188,7 +203,7 @@ public class ProgressService {
         BlockProgress blockProgress = getOrCreateBlockProgress(user, theoryBlock, unitProgress);
 
         if (blockProgress instanceof TheoryBlockProgress theoryBlockProgress) {
-            theoryBlockProgress.setViewed(true);
+            theoryBlockProgress.setIsViewed(true);
         }
 
         blockProgressRepository.save(blockProgress);
@@ -240,16 +255,33 @@ public class ProgressService {
 
     private LearningKitProgress getOrCreateLearningKitProgress(User user, LearningKit learningKit) {
         return learningKitProgressRepository.findByUser_UuidAndLearningKit_Uuid(user.getUuid(), learningKit.getUuid()).orElseGet(() -> {
-            LearningKitProgress newProgress = new LearningKitProgress(user, learningKit);
-            return learningKitProgressRepository.save(newProgress);
+            LearningKitProgress newKitProgress = new LearningKitProgress(user, learningKit);
+            LearningKitProgress savedKitProgress = learningKitProgressRepository.save(newKitProgress);
+
+            for (LearningUnit learningUnit : learningKit.getLearningUnits()) {
+                getOrCreateLearningUnitProgress(user, learningUnit, savedKitProgress);
+            }
+            return savedKitProgress;
         });
     }
 
     private LearningUnitProgress getOrCreateLearningUnitProgress(User user, LearningUnit learningUnit, LearningKitProgress kitProgress) {
         return learningUnitProgressRepository.findByUser_UuidAndLearningUnit_Uuid(user.getUuid(), learningUnit.getUuid()).orElseGet(() -> {
             LearningUnitProgress newProgress = new LearningUnitProgress(user, learningUnit);
-            kitProgress.addLearningUnitProgress(newProgress);
-            return learningUnitProgressRepository.save(newProgress);
+
+            if (kitProgress != null) {
+                newProgress.setLearningKitProgress(kitProgress);
+            }
+
+            LearningUnitProgress savedUnitProgress = learningUnitProgressRepository.save(newProgress);
+
+            for (Block block : learningUnit.getBlocks()) {
+                getOrCreateBlockProgress(user, block, savedUnitProgress);
+            }
+            if (kitProgress != null) {
+                kitProgress.addLearningUnitProgress(savedUnitProgress);
+            }
+            return savedUnitProgress;
         });
     }
 
@@ -361,7 +393,7 @@ public class ProgressService {
                 return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
             }
             case TheoryBlockProgress theoryBlockProgress -> {
-                return theoryBlockProgress.isViewed();
+                return theoryBlockProgress.getIsViewed();
             }
             default -> {
             }

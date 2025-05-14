@@ -6,8 +6,8 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/state';
 	import { dev } from '$app/environment';
-	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { error } from '@sveltejs/kit';
+	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 
 	const learningKitId = page.params.learningKitId;
 	let { data } = $props();

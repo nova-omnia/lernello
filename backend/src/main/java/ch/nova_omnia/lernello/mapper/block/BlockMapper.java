@@ -8,9 +8,9 @@ import ch.nova_omnia.lernello.dto.response.block.MultipleChoiceBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.QuestionBlockResDTO;
 import ch.nova_omnia.lernello.dto.response.block.TheoryBlockResDTO;
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
-import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BlockMapper {

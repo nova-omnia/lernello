@@ -22,20 +22,20 @@ public class MultipleChoiceBlockProgress extends ScorableBlockProgress {
     @ElementCollection
     @CollectionTable(name = "multiple_choice_last_answers", joinColumns = @JoinColumn(name = "block_id"))
     @Column(name = "last_answer", nullable = true)
-    @NotEmpty
     private List<String> lastAnswers = new ArrayList<>();
 
-    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers, Integer scoreReached) {
-        super(user, block, unitProgress, scoreReached);
+    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers, Boolean isCorrect, Integer scoreReached) {
+        super(user, block, unitProgress, scoreReached, isCorrect);
         this.lastAnswers = lastAnswers;
     }
 
-    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers) {
-        super(user, block, unitProgress);
+    public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress, List<String> lastAnswers, Boolean isCorrect) {
+        super(user, block, unitProgress, isCorrect);
         this.lastAnswers = lastAnswers;
     }
 
     public MultipleChoiceBlockProgress(User user, MultipleChoiceBlock block, LearningUnitProgress unitProgress) {
         super(user, block, unitProgress);
     }
+
 }

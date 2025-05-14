@@ -22,9 +22,18 @@ public abstract class ScorableBlockProgress extends BlockProgress {
     @Column(name = "score_reached", nullable = true)
     private Integer scoreReached;
 
-    public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress, Integer scoreReached) {
+    @Column(name = "is_correct", nullable = true)
+    private Boolean isCorrect;
+
+    public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress, Integer scoreReached, Boolean isCorrect) {
         super(user, block, learningUnitProgress);
         this.scoreReached = scoreReached;
+        this.isCorrect = isCorrect;
+    }
+
+    public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress, Boolean isCorrect) {
+        super(user, block, learningUnitProgress);
+        this.isCorrect = isCorrect;
     }
 
     public ScorableBlockProgress(User user, Block block, LearningUnitProgress learningUnitProgress) {

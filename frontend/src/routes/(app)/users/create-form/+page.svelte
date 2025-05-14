@@ -21,6 +21,7 @@
 				description: $_('user.form.create.success.description'),
 				type: 'success'
 			});
+			history.back();
 		},
 		onUpdate() {
 			toaster.create({

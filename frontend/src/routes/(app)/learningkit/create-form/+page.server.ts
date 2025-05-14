@@ -18,10 +18,8 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		// Save the learning kit without redirecting
 		await api(fetch).req(createLearningKit, form.data).parse();
 
-		// Return a success response
 		return { success: true };
 	})
 } satisfies Actions;

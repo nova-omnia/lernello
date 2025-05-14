@@ -1,7 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import { api } from '$lib/api/apiClient';
 import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
 import { createUser } from '$lib/api/collections/user';
@@ -20,6 +20,6 @@ export const actions = {
 
 		await api(fetch).req(createUser, form.data).parse();
 
-		redirect(303, `/users`);
+		return { success: true };
 	})
 } satisfies Actions;

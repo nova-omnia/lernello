@@ -6,7 +6,7 @@
 	import InstructorsOverviewTab from '$lib/components/users/InstructorsOverviewTab.svelte';
 	import { goto } from '$app/navigation';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
-	import { error } from '@sveltejs/kit';
+	import { error, redirect } from '@sveltejs/kit';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	const tabGroup = {
@@ -32,14 +32,13 @@
 						{$_('common.users')}
 					</h1>
 					<div class="flex h-10 gap-8">
-						<button
-							type="button"
-							class="btn preset-filled-primary-500 h-full"
-							onclick={() => goto(`/users/create-form`)}
+						<a
+							href="/users/create-form"
+							class="btn preset-filled-primary-500 h-full flex items-center gap-2"
 						>
 							<Plus size={24} />
 							{$_('user.create')}
-						</button>
+						</a>
 					</div>
 				</div>
 			</div>

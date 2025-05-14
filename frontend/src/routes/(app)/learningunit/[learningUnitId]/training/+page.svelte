@@ -8,6 +8,7 @@
 	import { api } from '$lib/api/apiClient.js';
 	import { markLearningUnitOpened } from '$lib/api/collections/progress.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
+	import { createQuery } from '@tanstack/svelte-query';
 
 	let { data } = $props();
 
@@ -17,24 +18,28 @@
 
 	$effect.pre(() => {
 		if (data && data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
-			api(fetch)
-				.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
-				.parse()
-				.then((progressData) => {
-					learningUnitProgressState.setProgress(progressData);
-				})
-				.catch((err) => {
-					console.error('Failed to mark learning unit as opened or fetch progress:', err);
-					toaster.create({
-						title: $_('learningUnit.error.markOpened'),
-						description: $_('error.description', { values: { status: 'unknown' } }),
-						type: 'error'
-					});
-				});
+			createQuery({
+				queryKey: ['kitOpened', data.learningUnitId],
+				queryFn: () =>
+					api(fetch)
+						.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
+						.parse()
+						.then((progressData) => {
+							learningUnitProgressState.setProgress(progressData);
+							return progressData;
+						})
+						.catch((err) => {
+							console.error('Failed to mark learning unit as opened or fetch progress:', err);
+							toaster.create({
+								title: $_('learningUnit.error.markOpened'),
+								description: $_('error.description', { values: { status: 'unknown' } }),
+								type: 'error'
+							});
+							throw err;
+						})
+			});
 		}
-
 		return () => {
-			// Clear progress when the component is unmounted or data.learningUnitId changes
 			learningUnitProgressState.clearProgress();
 		};
 	});

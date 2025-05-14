@@ -37,13 +37,6 @@
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});
-		},
-		onMutate: () => {
-			toaster.create({
-				title: $_('files.upload.uploading'),
-				description: $_('files.upload.uploading.description'),
-				type: 'loading'
-			});
 		}
 	});
 	let fileApi: FileUploadApi | null = $state(null);

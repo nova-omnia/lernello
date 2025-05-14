@@ -299,6 +299,7 @@
 	"trainees.error.loadList": "Failed to load trainees",
 	"trainees.overview.delete.success": "Trainee deleted successfully",
 	"user.create": "Create User",
+	"user.remove.success": "User removed successfully",
 	"user.form.create.error.description": "Failed to create user",
 	"user.form.create.error.title": "Creation Failed",
 	"user.form.create.loading.description": "Please wait while the user is being created...",

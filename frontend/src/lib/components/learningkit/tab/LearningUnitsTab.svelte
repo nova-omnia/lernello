@@ -80,13 +80,6 @@
 	});
 
 	const deleteLearningUnitMutation = createMutation({
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningUnit.delete.isDeleting'),
-				description: $_('learningUnit.delete.isDeletingDescription'),
-				type: 'loading'
-			});
-		},
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
@@ -107,13 +100,6 @@
 	});
 
 	const generateLearningUnitMutation = createMutation({
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningUnit.generate.isGenerating'),
-				description: $_('learningUnit.generate.isGeneratingDescription'),
-				type: 'loading'
-			});
-		},
 		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
 			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
 		onSuccess: () => {

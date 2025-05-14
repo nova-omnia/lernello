@@ -29,22 +29,10 @@
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
-		onMutate() {
-			toaster.create({
-				title: $_('learningKit.form.update.loading.title'),
-				description: $_('learningKit.form.update.loading.description'),
-				type: 'loading'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
-			toaster.create({
-				title: $_('learningKit.form.update.success.title'),
-				description: $_('learningKit.form.update.success.description'),
-				type: 'success'
-			});
 		},
 		onError: (error) => {
 			console.error('Error:', error);

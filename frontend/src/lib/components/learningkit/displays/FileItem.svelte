@@ -4,6 +4,7 @@
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { BASE_URL } from '$lib/api/apiClient';
+	import { toaster } from '$lib/states/toasterState.svelte.js';
 
 	interface FileItemProps {
 		file: FileRes;
@@ -19,6 +20,11 @@
 	function removeFile() {
 		onRemoveFile();
 		showDeleteDialog = false;
+		toaster.create({
+				title: $_('common.success.title'),
+				description: $_('files.delete.success'),
+				type: 'success'
+			});
 	}
 
 	function getStaticFileUrl(fileId: string) {

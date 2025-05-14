@@ -10,6 +10,7 @@
 	import { updateLearningKit } from '$lib/api/collections/learningKit';
 	import UserItem from '$lib/components/learningkit/displays/UserItem.svelte';
 	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -34,6 +35,24 @@
 			invalidate(['learning-kit', learningKitId]);
 		}
 	});
+	
+	function onRemove(traineeUuid: string) {
+		const updated = participants.filter((t) => t.uuid !== traineeUuid).map((t) => t.uuid);
+
+		$updateLearningKitMutation.mutate({
+			id: learningKitId,
+			data: {
+				participants: updated
+			}
+		});
+		
+		toaster.create({
+			title: $_('common.success.title'),
+			description: $_('user.remove.success'),
+			type: 'success'
+		});
+	}
+		
 </script>
 
 <div class="flex w-full flex-col gap-4 p-4">
@@ -74,16 +93,7 @@
 			{#each participants ?? [] as trainee (trainee.uuid)}
 				<UserItem
 					user={trainee}
-					onRemoveUser={() => {
-						const updated = participants.filter((t) => t.uuid !== trainee.uuid).map((t) => t.uuid);
-
-						$updateLearningKitMutation.mutate({
-							id: learningKitId,
-							data: {
-								participants: updated
-							}
-						});
-					}}
+					onRemoveUser={() => onRemove(trainee.uuid)}
 				/>
 			{/each}
 		</div>

@@ -144,7 +144,7 @@
 			</div>
 
 			{#if role === INSTRUCTOR_ROLE}
-				<div class="flex gap-2">
+				<div class="flex gap-2 items-center">
 					<button
 						type="button"
 						onclick={(e) => {

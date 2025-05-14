@@ -1,44 +1,40 @@
-<script>
+<script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningUnitTrainingContainer from '$lib/components/LearningUnitTrainer.svelte';
 	import { blockActionState } from '$lib/states/blockActionState.svelte.js';
 	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
-	import { TRAINEE_ROLE } from '$lib/schemas/response/UserInfo.js';
-	import { api } from '$lib/api/apiClient.js';
-	import { markLearningUnitOpened } from '$lib/api/collections/progress.js';
+	import { TRAINEE_ROLE, type UserInfo } from '$lib/schemas/response/UserInfo.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
-	import { createQuery } from '@tanstack/svelte-query';
+	import type { LearningUnitProgressRes } from '$lib/schemas/response/progress/LearningUnitProgressResSchema';
+	import type { LearningUnitRes } from '$lib/schemas/response/LearningUnitRes';
 
-	let { data } = $props();
+	interface PageDataFromServer {
+		learningUnitId: string;
+		learningUnit: LearningUnitRes;
+		initialLearningUnitProgress: LearningUnitProgressRes | null;
+		userInfo?: UserInfo | null;
+	}
+
+	let { data }: { data: PageDataFromServer } = $props();
 
 	const role = TRAINEE_ROLE; // the role is always TRAINEE_ROLE for this page
 
 	blockActionState.setBlocks(data.learningUnit.blocks);
 
-	$effect.pre(() => {
-		if (data && data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
-			createQuery({
-				queryKey: ['kitOpened', data.learningUnitId],
-				queryFn: () =>
-					api(fetch)
-						.req(markLearningUnitOpened, { learningUnitId: data.learningUnitId })
-						.parse()
-						.then((progressData) => {
-							learningUnitProgressState.setProgress(progressData);
-							return progressData;
-						})
-						.catch((err) => {
-							console.error('Failed to mark learning unit as opened or fetch progress:', err);
-							toaster.create({
-								title: $_('learningUnit.error.markOpened'),
-								description: $_('error.description', { values: { status: 'unknown' } }),
-								type: 'error'
-							});
-							throw err;
-						})
-			});
+	$effect(() => {
+		if (data.initialLearningUnitProgress) {
+			learningUnitProgressState.setProgress(data.initialLearningUnitProgress);
+		} else {
+			if (data.userInfo && data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
+				toaster.create({
+					title: $_('learningUnit.error.loadProgressTitle'),
+					description: $_('learningUnit.error.loadProgressDescription'),
+					type: 'error'
+				});
+			}
 		}
+
 		return () => {
 			learningUnitProgressState.clearProgress();
 		};

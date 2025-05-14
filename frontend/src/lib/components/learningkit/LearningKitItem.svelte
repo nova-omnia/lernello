@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Trash2, CheckCircle2 } from 'lucide-svelte'; // Added CheckCircle2
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, t } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { deleteLearningKit } from '$lib/api/collections/learningKit.js';
@@ -10,6 +10,7 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
 	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -27,6 +28,11 @@
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
+			toaster.create({
+				title: $_('learningKit.delete.success.title'),
+				description: $_('learningKit.delete.success.description'),
+				type: 'success'
+			});
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});

@@ -3,7 +3,7 @@
 	import {
 		Boxes,
 		ChartLine,
-		Folder,
+		Files,
 		type IconProps,
 		LayoutDashboard,
 		LogOut,
@@ -36,7 +36,7 @@
 
 {#snippet sidebarItem(label: string, href: string, Icon: typeof SvelteComponent<IconProps>)}
 	<a
-		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4 text-nowrap"
+		class="card hover:preset-filled-surface-50-950 flex w-full items-center text-nowrap p-4"
 		{href}
 		aria-label={label}
 	>
@@ -77,15 +77,16 @@
 		{/if}
 		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
 		{@render sidebarItem($_('learningKits.title'), '/learningkits', Boxes)}
+		
 		{#if role === INSTRUCTOR_ROLE}
+			{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 			{#if sidebarState.isExpanded}
 				<p class="preset-typo-caption w-full px-4 pt-8">{$_('sidebar.configuration')}</p>
 			{:else}
 				<p class="preset-typo-caption invisible w-full px-4 pt-8">_</p>
 			{/if}
 			{@render sidebarItem($_('sidebar.users'), '/users', Users)}
-			{@render sidebarItem($_('common.files'), '/files', Folder)}
-			{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
+			{@render sidebarItem($_('common.files'), '/files', Files)}
 		{/if}
 	</div>
 

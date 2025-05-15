@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import { BookText, ChartLine, Files, Users } from 'lucide-svelte';
+	import { Book, ChartLine, Files, Users } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import LearningUnitsTab from '$lib/components/learningkit/tab/LearningUnitsTab.svelte';
 	import TraineesTab from '$lib/components/learningkit/tab/TraineesTab.svelte';
@@ -37,7 +37,7 @@
 	{#snippet list()}
 		<Tabs.Control value={tabs.learningUnits}>
 			{#snippet lead()}
-				<BookText size={20} />
+				<Book size={20} />
 			{/snippet}
 			{$_('learningKit.learningUnits')}
 		</Tabs.Control>

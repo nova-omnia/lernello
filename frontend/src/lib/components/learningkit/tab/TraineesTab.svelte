@@ -35,7 +35,7 @@
 			invalidate(['learning-kit', learningKitId]);
 		}
 	});
-	
+
 	function onRemove(traineeUuid: string) {
 		const updated = participants.filter((t) => t.uuid !== traineeUuid).map((t) => t.uuid);
 
@@ -45,14 +45,13 @@
 				participants: updated
 			}
 		});
-		
+
 		toaster.create({
 			title: $_('common.success.title'),
 			description: $_('user.remove.success'),
 			type: 'success'
 		});
 	}
-		
 </script>
 
 <div class="flex w-full flex-col gap-4 p-4">
@@ -91,10 +90,7 @@
 		/>
 		<div class="flex flex-col gap-1">
 			{#each participants ?? [] as trainee (trainee.uuid)}
-				<UserItem
-					user={trainee}
-					onRemoveUser={() => onRemove(trainee.uuid)}
-				/>
+				<UserItem user={trainee} onRemoveUser={() => onRemove(trainee.uuid)} />
 			{/each}
 		</div>
 	</div>

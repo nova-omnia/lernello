@@ -34,7 +34,7 @@
 					<div class="flex h-10 gap-8">
 						<a
 							href="/users/create-form"
-							class="btn preset-filled-primary-500 h-full flex items-center gap-2"
+							class="btn preset-filled-primary-500 flex h-full items-center gap-2"
 						>
 							<Plus size={24} />
 							{$_('user.create')}

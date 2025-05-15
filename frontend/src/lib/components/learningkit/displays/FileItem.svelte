@@ -21,10 +21,10 @@
 		onRemoveFile();
 		showDeleteDialog = false;
 		toaster.create({
-				title: $_('common.success.title'),
-				description: $_('files.delete.success'),
-				type: 'success'
-			});
+			title: $_('common.success.title'),
+			description: $_('files.delete.success'),
+			type: 'success'
+		});
 	}
 
 	function getStaticFileUrl(fileId: string) {

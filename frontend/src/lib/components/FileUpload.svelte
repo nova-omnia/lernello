@@ -130,7 +130,7 @@
 		maxFiles={1024 * 1024 * 10}
 	>
 		<div class="flex h-10 gap-8">
-			<button class="btn preset-filled-primary-500 h-full">
+			<button class="btn preset-outlined-surface-500 h-fit">
 				<UploadIcon size={24} />
 				{$_('addNewFile')}
 			</button>

@@ -25,7 +25,7 @@
 	<h3 class="mb-2 truncate font-bold">{$kitQuery.data?.name}</h3>
 	<div class="flex items-center justify-between">
 		<p class="text-xs font-semibold">
-			{$_('statistics.numberOfParticipants')}:
+			{$_('statistics.numberOfTrainees')}:
 		</p>
 		<p class="text-xs">
 			{$kitQuery.data?.participants?.length != null

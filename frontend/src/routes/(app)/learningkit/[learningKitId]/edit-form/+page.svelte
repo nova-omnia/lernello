@@ -23,7 +23,6 @@
 				description: $_('learningKit.form.update.success.description'),
 				type: 'success'
 			});
-			history.back();
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
@@ -104,13 +103,10 @@
 				</label>
 			</div>
 			<div class="flex justify-end gap-2">
-				<button class="btn preset-outlined-surface-500"
-					type="button"
-					onclick={() => {
-						history.back();
-					}}
+				<a class="btn preset-outlined-surface-500"
+					href="/learningkit/{learningKitId}"
 					>{$_('common.cancel')}
-			</button>
+				</a>
 				<button class="btn preset-filled-primary-500">{$_('learningKit.update')}</button>
 			</div>
 			<SuperDebug data={$form} display={dev} />

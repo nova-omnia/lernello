@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import { Plus, User } from 'lucide-svelte';
+	import { UserPlus, User } from 'lucide-svelte';
 	import TraineesOverviewTab from '$lib/components/users/TraineesOverviewTab.svelte';
 	import InstructorsOverviewTab from '$lib/components/users/InstructorsOverviewTab.svelte';
 	import { goto } from '$app/navigation';
@@ -36,7 +36,7 @@
 							href="/users/create-form"
 							class="btn preset-filled-primary-500 flex h-full items-center gap-2"
 						>
-							<Plus size={24} />
+							<UserPlus size={24} />
 							{$_('user.create')}
 						</a>
 					</div>

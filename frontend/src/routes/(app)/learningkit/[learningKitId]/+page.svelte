@@ -165,6 +165,15 @@
 						<div class="flex h-10 gap-8">
 							<div class="mr-6 flex gap-2">
 								<button
+									class="btn preset-outlined-surface-500 h-full"
+									onclick={() =>
+										goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`, {
+											replaceState: true
+										})}
+								>
+									<Pencil size={20} />
+								</button>
+								<button
 									type="button"
 									class="btn preset-filled-primary-500 h-full"
 									onclick={() => {
@@ -174,12 +183,6 @@
 										? $_('learningKit.unpublish.text')
 										: $_('learningKit.publish.text')}
 								</button>
-								<a
-									class="btn preset-outlined-surface-500 h-full"
-									href ={`/learningkit/${$learningKitQuery.data.uuid}/edit-form`}
-								>
-									<Pencil size={20} />
-								</a>
 							</div>
 						</div>
 					</div>

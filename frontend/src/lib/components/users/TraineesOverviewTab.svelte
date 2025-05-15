@@ -34,7 +34,7 @@
 	});
 </script>
 
-<div class="flex w-full flex-col gap-4 p-4">
+<div class="flex w-full flex-col gap-4">
 	<div class="flex flex-col gap-1">
 		{#if $traineesQuery.status === 'pending'}
 			{#each Array(3)}

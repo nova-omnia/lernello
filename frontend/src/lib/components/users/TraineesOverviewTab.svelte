@@ -20,7 +20,6 @@
 		onSuccess: () => {
 			invalidate(['trainees-overview-list']);
 			toaster.create({
-				title: $_('common.success.title'),
 				description: $_('trainees.overview.delete.success'),
 				type: 'success'
 			});
@@ -28,7 +27,6 @@
 		onError: (error) => {
 			console.error('Error deleting trainee:', error);
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});

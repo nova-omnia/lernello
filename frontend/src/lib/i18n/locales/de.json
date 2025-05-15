@@ -168,7 +168,7 @@
 	"learningKit.publish.text": "Veröffentlichen",
 	"learningKit.publishStatus.published": "Veröffentlicht",
 	"learningKit.publishStatus.unpublished": "Unveröffentlicht",
-	"learningKit.title": "Lernkits: {name}",
+	"learningKit.title": "Lernkit: {name}",
 	"learningKit.trainees.description": "Die Teilnehmer, die Zugriff auf das Lernkit haben",
 	"learningKit.unpublish.confirmationText": "Möchtest du {name} unveröffentlichen und vor den Teilnehmern verbergen?",
 	"learningKit.unpublish.confirmationTitle": "Lernkit unveröffentlichen",

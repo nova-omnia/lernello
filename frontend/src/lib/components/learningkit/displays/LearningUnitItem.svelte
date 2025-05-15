@@ -56,7 +56,6 @@
 	const onUpdateHandler = createDebounced(async (newName: string) => {
 		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('learningUnit.newName.danger'),
 				type: 'warning'
 			});
@@ -68,7 +67,6 @@
 		if (newName.trim() === '') {
 			name = learningUnit.name;
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('learningUnit.newName.empty'),
 				type: 'warning'
 			});
@@ -82,7 +80,6 @@
 				learningUnit.name = updatedLearningUnit.name;
 				name = updatedLearningUnit.name;
 				toaster.create({
-					title: $_('common.success.title'),
 					description: $_('learningUnit.rename.success'),
 					type: 'success'
 				});
@@ -90,7 +87,6 @@
 			} catch (error) {
 				console.error('Error:', error);
 				toaster.create({
-					title: $_('common.error.title'),
 					description: $_('learningUnit.rename.error'),
 					type: 'error'
 				});

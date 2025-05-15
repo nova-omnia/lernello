@@ -53,7 +53,6 @@
 	const updateLearningUnitOrderMutation = createMutation({
 		onMutate: () => {
 			toaster.create({
-				title: $_('learningUnit.reorder.isReordering'),
 				description: $_('learningUnit.reorder.isReorderingDescription'),
 				type: 'loading'
 			});
@@ -64,7 +63,6 @@
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.reorder.success'),
 				description: $_('learningUnit.reorder.successDescription'),
 				type: 'success'
 			});
@@ -72,7 +70,6 @@
 		onError: (error) => {
 			console.error('Error reordering learning units:', error);
 			toaster.create({
-				title: $_('learningUnit.reorder.error'),
 				description: $_('learningUnit.reorder.errorDescription'),
 				type: 'error'
 			});
@@ -84,7 +81,6 @@
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.delete.success'),
 				description: $_('learningUnit.delete.successDescription'),
 				type: 'success'
 			});
@@ -92,7 +88,6 @@
 		onError: (error) => {
 			console.error('Error deleting learning unit:', error);
 			toaster.create({
-				title: $_('learningUnit.delete.error'),
 				description: $_('learningUnit.delete.errorDescription'),
 				type: 'error'
 			});
@@ -105,7 +100,6 @@
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.generate.generated'),
 				description: $_('learningUnit.generate.generatedDescription'),
 				type: 'success'
 			});
@@ -113,7 +107,6 @@
 		onError: (error, variables, context) => {
 			console.error('Error generating learning unit:', error, variables, context);
 			toaster.create({
-				title: $_('learningUnit.generate.error'),
 				description: $_('learningUnit.generate.errorDescription'),
 				type: 'error'
 			});

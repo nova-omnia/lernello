@@ -34,24 +34,15 @@
 
 	const resetUserPasswordMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(resetUserPasswordAPI, null, id).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('common.loading'),
-				description: $_('files.upload.uploading.description'),
-				type: 'loading'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.success'),
 				description: $_('users.overview.reset.loading'),
 				type: 'success'
 			});
 		},
 		onError: () => {
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('users.overview.reset.error'),
 				type: 'error'
 			});

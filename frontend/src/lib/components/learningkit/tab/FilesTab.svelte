@@ -37,7 +37,6 @@
 		onError: (error) => {
 			console.error('Error:', error);
 			toaster.create({
-				title: $_('learningKit.form.update.error.title'),
 				description: $_('learningKit.form.update.error.description'),
 				type: 'error'
 			});

@@ -14,7 +14,6 @@
 		onResult() {
 			invalidate(['learning-kit', $form.learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.form.create.success.title'),
 				description: $_('learningUnit.form.create.success.description'),
 				type: 'success'
 			});
@@ -23,7 +22,6 @@
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('learningUnit.form.create.error.title'),
 				description: $_('learningUnit.form.create.error.description', {
 					values: { status: error.result.status }
 				}),

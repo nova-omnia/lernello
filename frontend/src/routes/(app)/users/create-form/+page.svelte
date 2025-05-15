@@ -16,17 +16,11 @@
 			invalidate(['instructors-overview-list']);
 			invalidate(['trainees-overview-list']);
 			invalidate(['trainees-list']);
-			toaster.create({
-				title: $_('user.form.create.success.title'),
-				description: $_('user.form.create.success.description'),
-				type: 'success'
-			});
 			history.back();
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('user.form.create.error.title'),
 				description: $_('user.form.create.error.description', {
 					values: { status: error.result.status }
 				}),

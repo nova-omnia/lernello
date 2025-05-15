@@ -21,8 +21,7 @@
 		onRemoveFile();
 		showDeleteDialog = false;
 		toaster.create({
-			title: $_('common.success.title'),
-			description: $_('files.delete.success'),
+			description: $_('files.remove.success'),
 			type: 'success'
 		});
 	}

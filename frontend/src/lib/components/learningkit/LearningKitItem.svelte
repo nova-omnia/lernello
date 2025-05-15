@@ -29,7 +29,6 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			toaster.create({
-				title: $_('learningKit.delete.success.title'),
 				description: $_('learningKit.delete.success.description'),
 				type: 'success'
 			});

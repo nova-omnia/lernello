@@ -47,7 +47,6 @@
 		});
 
 		toaster.create({
-			title: $_('common.success.title'),
 			description: $_('user.remove.success'),
 			type: 'success'
 		});

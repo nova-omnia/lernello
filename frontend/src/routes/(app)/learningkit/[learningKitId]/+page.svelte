@@ -34,19 +34,11 @@
 	});
 	const deleteLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteLearningKit, null, id).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningKit.delete.loading.title'),
-				description: $_('learningKit.delete.loading.description'),
-				type: 'loading'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			goto('/dashboard');
 			toaster.create({
-				title: $_('learningKit.delete.success.title'),
 				description: $_('learningKit.delete.success.description'),
 				type: 'success'
 			});
@@ -54,7 +46,6 @@
 		onError: (error) => {
 			console.error('Failed to delete learning kit:', error);
 			toaster.create({
-				title: $_('learningKit.delete.error.title'),
 				description: $_('learningKit.delete.error.description'),
 				type: 'error'
 			});
@@ -68,7 +59,6 @@
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningKit.publish.success.title'),
 				description: $_('learningKit.publish.success.description'),
 				type: 'success'
 			});
@@ -76,7 +66,6 @@
 		onError: (error) => {
 			console.error('Failed to publish learning kit:', error);
 			toaster.create({
-				title: $_('learningKit.publish.error.title'),
 				description: $_('learningKit.publish.error.description'),
 				type: 'error'
 			});
@@ -91,7 +80,6 @@
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningKit.update.success.title'),
 				description: $_('learningKit.update.success.description'),
 				type: 'success'
 			});
@@ -99,7 +87,6 @@
 		onError: (error) => {
 			console.error('Failed to update learning kit:', error);
 			toaster.create({
-				title: $_('learningKit.update.error.title'),
 				description: $_('learningKit.update.error.description'),
 				type: 'error'
 			});
@@ -129,7 +116,6 @@
 				.catch((err) => {
 					console.error('Failed to mark learning kit as opened:', err);
 					toaster.create({
-						title: $_('learningKit.error.markOpened'),
 						description: $_('error.description', { values: { status: 'unknown' } }),
 						type: 'error'
 					});
@@ -177,7 +163,7 @@
 							{/if}
 						</div>
 						<div class="flex h-10 gap-8">
-							<div class="flex gap-2">
+							<div class="flex gap-2 mr-6">
 								<button
 									type="button"
 									class="btn preset-filled-primary-500 h-full"
@@ -196,15 +182,6 @@
 									<Pencil size={20} />
 								</button>
 							</div>
-							<button
-								onclick={() => {
-									showDeleteDialog = true;
-								}}
-								type="button"
-								class="btn preset-filled-error-500 h-full"
-							>
-								<Trash size={20} />
-							</button>
 						</div>
 					</div>
 					{#if $learningKitQuery.data?.description}

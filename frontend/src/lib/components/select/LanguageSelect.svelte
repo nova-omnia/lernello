@@ -12,7 +12,6 @@
 		} catch (error) {
 			console.error('Error:', error);
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});

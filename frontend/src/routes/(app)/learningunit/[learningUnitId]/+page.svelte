@@ -56,7 +56,6 @@
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
 					toaster.create({
-						title: 'Error',
 						description: `Failed to save learning unit. (${status})`,
 						type: 'error'
 					});

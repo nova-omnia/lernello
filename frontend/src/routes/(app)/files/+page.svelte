@@ -28,7 +28,6 @@
 		},
 		onError: () => {
 			toaster.create({
-				title: $_('common.error'),
 				description: $_('files.delete.error'),
 				type: 'error'
 			});

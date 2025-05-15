@@ -39,7 +39,6 @@
 				correctAnswers: data.correctAnswers
 			});
 			toaster.create({
-				title: $_('multipleChoiceBlock.success.title'),
 				description: $_('multipleChoiceBlock.success.description'),
 				type: 'success'
 			});
@@ -47,14 +46,12 @@
 		onError(error, variables, context) {
 			console.error('Error generating multiple choice block:', error, variables, context);
 			toaster.create({
-				title: $_('multipleChoiceBlock.error.title'),
 				description: $_('multipleChoiceBlock.error.description'),
 				type: 'error'
 			});
 		},
 		onMutate: () => {
 			toaster.create({
-				title: $_('multipleChoiceBlock.loading.title'),
 				description: $_('multipleChoiceBlock.loading.description'),
 				type: 'loading'
 			});
@@ -73,7 +70,6 @@
 				expectedAnswer: data.expectedAnswer
 			});
 			toaster.create({
-				title: $_('questionBlock.success.title'),
 				description: $_('questionBlock.success.description'),
 				type: 'success'
 			});
@@ -81,14 +77,12 @@
 		onError(error, variables, context) {
 			console.error('Error generating question block:', error, variables, context);
 			toaster.create({
-				title: $_('questionBlock.error.title'),
 				description: $_('questionBlock.error.description'),
 				type: 'error'
 			});
 		},
 		onMutate: () => {
 			toaster.create({
-				title: $_('questionBlock.loading.title'),
 				description: $_('questionBlock.loading.description'),
 				type: 'loading'
 			});
@@ -106,7 +100,6 @@
 				content: data.content
 			});
 			toaster.create({
-				title: $_('theoryBlock.success.title'),
 				description: $_('theoryBlock.success.description'),
 				type: 'success'
 			});
@@ -114,14 +107,12 @@
 		onError(error, variables, context) {
 			console.error('Error generating theory block:', error, variables, context);
 			toaster.create({
-				title: $_('theoryBlock.error.title'),
 				description: $_('theoryBlock.error.description'),
 				type: 'error'
 			});
 		},
 		onMutate: () => {
 			toaster.create({
-				title: $_('theoryBlock.loading.title'),
 				description: $_('theoryBlock.loading.description'),
 				type: 'loading'
 			});

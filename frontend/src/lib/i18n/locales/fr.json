@@ -168,7 +168,7 @@
 	"learningKit.publish.text": "Publier",
 	"learningKit.publishStatus.published": "Publié",
 	"learningKit.publishStatus.unpublished": "Non publié",
-	"learningKit.title": "Kits d'apprentissage : {name}",
+	"learningKit.title": "Kit d'apprentissage : {name}",
 	"learningKit.trainees.description": "Les participants ayant accès au kit d'apprentissage",
 	"learningKit.unpublish.confirmationText": "Voulez-vous annuler la publication de {name} et le masquer aux participants ?",
 	"learningKit.unpublish.confirmationTitle": "Annuler la publication du kit d'apprentissage",

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Avatar, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
-	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import type { TraineeUser } from '$lib/schemas/response/TraineeUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
@@ -11,7 +11,7 @@
 	import { CheckCircle2 } from 'lucide-svelte';
 
 	interface UserItemProps {
-		user: ParticipantUser;
+		user: TraineeUser;
 		isUsersView?: boolean;
 		onRemoveUser: () => void;
 		showProgress?: boolean;

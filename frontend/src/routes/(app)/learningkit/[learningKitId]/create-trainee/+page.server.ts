@@ -3,17 +3,17 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { fail, redirect } from '@sveltejs/kit';
 import { api } from '$lib/api/apiClient';
-import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
+import { CreateTraineeUserSchema } from '$lib/schemas/request/CreateTraineeUser';
 import { addTraineeInLearningKit } from '$lib/api/collections/learningKit';
 
 export const load = async () => {
-	const form = await superValidate(zod(CreateParticipantUserSchema));
+	const form = await superValidate(zod(CreateTraineeUserSchema));
 	return { form };
 };
 
 export const actions = {
 	create: handleApiError(async ({ request, fetch, params }) => {
-		const form = await superValidate(request, zod(CreateParticipantUserSchema));
+		const form = await superValidate(request, zod(CreateTraineeUserSchema));
 		if (!form.valid) {
 			return fail(400, { form });
 		}

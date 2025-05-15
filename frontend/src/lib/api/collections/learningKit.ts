@@ -3,7 +3,7 @@ import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit'
 import { LearningKitPageSchema, LearningKitResSchema } from '$lib/schemas/response/LearningKitRes';
 import { createEndpoint } from '../createEndpoint';
 import { z } from 'zod';
-import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
+import { CreateTraineeUserSchema } from '$lib/schemas/request/CreateTraineeUser';
 import { UpdateLearningUnitOrderSchema } from '$lib/schemas/request/UpdateLearningUnitOrder';
 import { GenericSuccessSchema } from '$lib/schemas/response/GenericSuccess';
 
@@ -82,7 +82,7 @@ export const addTraineeInLearningKit = createEndpoint({
 		defaultValidate: true
 	},
 	payload: {
-		schema: CreateParticipantUserSchema,
+		schema: CreateTraineeUserSchema,
 		defaultValidate: false
 	}
 });

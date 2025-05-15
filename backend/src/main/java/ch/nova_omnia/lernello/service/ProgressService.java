@@ -1,32 +1,46 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.dto.request.progress.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import ch.nova_omnia.lernello.dto.request.progress.CheckMultipleChoiceAnswerDTO;
+import ch.nova_omnia.lernello.dto.request.progress.CheckQuestionAnswerDTO;
+import ch.nova_omnia.lernello.dto.request.progress.LearningKitOpened;
+import ch.nova_omnia.lernello.dto.request.progress.LearningUnitOpenedDTO;
+import ch.nova_omnia.lernello.dto.request.progress.TheoryBlockViewedDTO;
 import ch.nova_omnia.lernello.dto.response.progress.MultipleChoiceAnswerValidationResDTO;
 import ch.nova_omnia.lernello.dto.response.progress.QuestionAnswerValidationResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
-import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningKitProgress;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
+import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.scorable.MultipleChoiceBlockProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.scorable.QuestionBlockProgress;
-import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.*;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
+import ch.nova_omnia.lernello.repository.BlockRepository;
+import ch.nova_omnia.lernello.repository.LearningKitProgressRepository;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.service.block.AIBlockService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import java.time.ZonedDateTime;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -230,14 +244,14 @@ public class ProgressService {
     }
 
     @Transactional
-    public List<LearningKitProgress> getLearningKitProgressForAllParticipants(UUID learningKitId) {
+    public List<LearningKitProgress> getLearningKitProgressForAllTrainees(UUID learningKitId) {
         LearningKit learningKit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
 
-        List<User> participants = learningKit.getParticipants();
+        List<User> trainees = learningKit.getTrainees();
         List<LearningKitProgress> allProgresses = new ArrayList<>();
 
-        for (User participant : participants) {
-            LearningKitProgress progress = getOrCreateLearningKitProgress(participant, learningKit);
+        for (User trainee : trainees) {
+            LearningKitProgress progress = getOrCreateLearningKitProgress(trainee, learningKit);
             allProgresses.add(progress);
         }
         return allProgresses;

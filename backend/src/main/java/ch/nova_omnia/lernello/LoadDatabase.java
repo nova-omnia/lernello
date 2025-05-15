@@ -80,7 +80,7 @@ public class LoadDatabase {
             userRepository.save(fabian);
             userRepository.save(dani);
             log.info("Preloading learning kit");
-            learningKit.setParticipants(List.of(max, bruno, leon, pascal, anja, fabian, dani));
+            learningKit.setTrainees(List.of(max, bruno, leon, pascal, anja, fabian, dani));
             learningKitRepository.save(learningKit);
             log.info("Preloaded learning kit with id: " + learningKit.getUuid());
             log.info("Preloading learning unit");

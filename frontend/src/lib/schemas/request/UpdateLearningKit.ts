@@ -7,7 +7,7 @@ export const UpdateLearningKitSchema = z.object({
 	deadlineDate: zodDateTimeString().nullable().optional(),
 	published: z.boolean().optional(),
 	context: z.string().max(200).nullable().optional(),
-	participants: z.array(z.string().uuid()).optional(),
+	trainees: z.array(z.string().uuid()).optional(),
 	files: z.array(z.string().uuid()).optional()
 });
 export type UpdateLearningKit = z.infer<typeof UpdateLearningKitSchema>;

@@ -1,12 +1,10 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.Role;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
+import java.security.SecureRandom;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,10 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.UUID;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -143,9 +144,9 @@ public class UserService {
     }
 
     private void removeUserAllLearningKits(User user) {
-        List<LearningKit> kitsWithUser = learningKitRepository.findAllByParticipantsContains(user);
+        List<LearningKit> kitsWithUser = learningKitRepository.findAllByTraineesContains(user);
         for (LearningKit kit : kitsWithUser) {
-            kit.getParticipants().remove(user);
+            kit.getTrainees().remove(user);
         }
         learningKitRepository.saveAll(kitsWithUser);
     }

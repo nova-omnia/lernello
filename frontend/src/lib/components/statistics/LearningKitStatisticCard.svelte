@@ -28,8 +28,8 @@
 			{$_('statistics.numberOfTrainees')}:
 		</p>
 		<p class="text-xs">
-			{$kitQuery.data?.participants?.length != null
-				? `${$kitQuery.data?.participants?.length}`
+			{$kitQuery.data?.trainees?.length != null
+				? `${$kitQuery.data?.trainees?.length}`
 				: $_('statistics.overview.noData')}
 		</p>
 	</div>

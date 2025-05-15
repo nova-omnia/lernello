@@ -51,12 +51,6 @@
 	}
 
 	const updateLearningUnitOrderMutation = createMutation({
-		onMutate: () => {
-			toaster.create({
-				description: $_('learningUnit.reorder.isReorderingDescription'),
-				type: 'loading'
-			});
-		},
 		mutationFn: (newOrder: { learningUnitUuidsInOrder: string[] }) => {
 			return api(fetch).req(updateLearningUnitsOrder, newOrder, learningKitId).parse();
 		},

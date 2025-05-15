@@ -60,15 +60,9 @@
 			});
 		}
 	});
+
 	const publishLearningKitMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningKit.publish.loading.title'),
-				description: $_('learningKit.publish.loading.description'),
-				type: 'loading'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
@@ -88,16 +82,10 @@
 			});
 		}
 	});
+	
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningKit.update.loading.title'),
-				description: $_('learningKit.update.loading.description'),
-				type: 'loading'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
@@ -278,10 +266,6 @@
 					data: { published: false }
 				});
 			} else {
-				$updateLearningKitMutation.mutate({
-					id: $learningKitQuery.data.uuid,
-					data: { published: true }
-				});
 				$publishLearningKitMutation.mutate(learningKitId);
 			}
 

@@ -22,6 +22,6 @@ export const actions = {
 
 		await api(fetch).req(createLearningUnit, form.data).parse();
 
-		return { success: true };
+		return { success: true, form };
 	})
 } satisfies Actions;

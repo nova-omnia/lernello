@@ -20,6 +20,6 @@ export const actions = {
 
 		await api(fetch).req(createLearningKit, form.data).parse();
 
-		return { success: true };
+		return { success: true, form };
 	})
 } satisfies Actions;

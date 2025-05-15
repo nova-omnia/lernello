@@ -28,7 +28,6 @@
 		} else {
 			if (data.userInfo && data.userInfo.role === TRAINEE_ROLE && data.learningUnitId) {
 				toaster.create({
-					title: $_('learningUnit.error.loadProgressTitle'),
 					description: $_('learningUnit.error.loadProgressDescription'),
 					type: 'error'
 				});

@@ -14,6 +14,7 @@
 	import type { GeneratedAIQuestionBlock } from '$lib/schemas/request/block/GeneratedAIQuestionBlock';
 	import type { GenerateAITheoryBlock } from '$lib/schemas/request/block/GenerateAITheoryBlock';
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
@@ -37,9 +38,23 @@
 				possibleAnswers: data.possibleAnswers,
 				correctAnswers: data.correctAnswers
 			});
+			toaster.create({
+				description: $_('multipleChoiceBlock.success.description'),
+				type: 'success'
+			});
 		},
 		onError(error, variables, context) {
 			console.error('Error generating multiple choice block:', error, variables, context);
+			toaster.create({
+				description: $_('multipleChoiceBlock.error.description'),
+				type: 'error'
+			});
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('multipleChoiceBlock.loading.description'),
+				type: 'loading'
+			});
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
 			api(fetch).req(generatedAIMultipleChoiceBlock, payload).parse()
@@ -54,6 +69,23 @@
 				question: data.question,
 				expectedAnswer: data.expectedAnswer
 			});
+			toaster.create({
+				description: $_('questionBlock.success.description'),
+				type: 'success'
+			});
+		},
+		onError(error, variables, context) {
+			console.error('Error generating question block:', error, variables, context);
+			toaster.create({
+				description: $_('questionBlock.error.description'),
+				type: 'error'
+			});
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('questionBlock.loading.description'),
+				type: 'loading'
+			});
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
 			api(fetch).req(generatedAIQuestionBlock, payload).parse()
@@ -66,6 +98,23 @@
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
 				content: data.content
+			});
+			toaster.create({
+				description: $_('theoryBlock.success.description'),
+				type: 'success'
+			});
+		},
+		onError(error, variables, context) {
+			console.error('Error generating theory block:', error, variables, context);
+			toaster.create({
+				description: $_('theoryBlock.error.description'),
+				type: 'error'
+			});
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('theoryBlock.loading.description'),
+				type: 'loading'
 			});
 		},
 		mutationFn: (payload: GenerateAITheoryBlock) =>

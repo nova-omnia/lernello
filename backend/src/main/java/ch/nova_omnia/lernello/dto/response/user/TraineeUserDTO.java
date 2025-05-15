@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
 
-public record ParticipantUserDTO(
+public record TraineeUserDTO(
                                  @NotNull UUID uuid,
                                  @NotNull String username,
                                  @NotNull String name,

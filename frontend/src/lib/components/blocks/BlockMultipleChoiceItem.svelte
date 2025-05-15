@@ -156,7 +156,6 @@
 		onError: (error) => {
 			console.error('Error checking multiple choice answer:', error);
 			toaster.create({
-				title: $_('block.error.checkAnswer'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});

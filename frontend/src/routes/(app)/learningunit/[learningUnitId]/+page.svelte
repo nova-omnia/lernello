@@ -56,7 +56,6 @@
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
 					toaster.create({
-						title: 'Error',
 						description: `Failed to save learning unit. (${status})`,
 						type: 'error'
 					});
@@ -76,7 +75,11 @@
 	});
 </script>
 
-<PageContainer title={$_('learningUnit.details')}>
+<PageContainer
+	title={$_('learningUnit.details', {
+		values: { name: data.learningUnit.name }
+	})}
+>
 	<div class="-m-4">
 		<div
 			class="grid h-full grid-cols-[75%_25%]"

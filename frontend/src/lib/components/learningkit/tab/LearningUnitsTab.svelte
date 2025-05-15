@@ -56,6 +56,17 @@
 		},
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningUnit.reorder.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error reordering learning units:', error);
+			toaster.create({
+				description: $_('learningUnit.reorder.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
@@ -63,23 +74,35 @@
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningUnit.delete.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error deleting learning unit:', error);
+			toaster.create({
+				description: $_('learningUnit.delete.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
 	const generateLearningUnitMutation = createMutation({
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningUnit.generate.isGenerating'),
-				type: 'info'
-			});
-		},
 		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
 			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.generate.generated'),
-				type: 'info'
+				description: $_('learningUnit.generate.generatedDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error, variables, context) => {
+			console.error('Error generating learning unit:', error, variables, context);
+			toaster.create({
+				description: $_('learningUnit.generate.errorDescription'),
+				type: 'error'
 			});
 		}
 	});

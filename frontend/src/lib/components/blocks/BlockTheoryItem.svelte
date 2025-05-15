@@ -72,7 +72,6 @@
 								.catch((err) => {
 									console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
 									toaster.create({
-										title: $_('common.error.title'),
 										description: $_('error.description', { values: { status: 'unknown' } }),
 										type: 'error'
 									});

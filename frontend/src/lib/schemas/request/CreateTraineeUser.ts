@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CreateParticipantUserSchema = z.object({
+export const CreateTraineeUserSchema = z.object({
 	username: z.string().email().nonempty(),
 	name: z
 		.string()
@@ -13,4 +13,4 @@ export const CreateParticipantUserSchema = z.object({
 		.max(40, { message: 'Name cannot exceed 40 characters' })
 		.nonempty()
 });
-export type CreateParticipantUser = z.infer<typeof CreateParticipantUserSchema>;
+export type CreateTraineeUser = z.infer<typeof CreateTraineeUserSchema>;

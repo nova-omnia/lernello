@@ -279,7 +279,7 @@ class CreateMultipleChoiceBlockDTO {
   + type() BlockType
   + question() String
 }
-class CreateParticipantDTO {
+class CreateTraineeDTO {
   - String username
   - String name
   - String surname
@@ -587,7 +587,7 @@ class LearningKit {
   - List~LearningUnit~ learningUnits
   - List~File~ files
   - int completionRate
-  - List~User~ participants
+  - List~User~ trainees
   - String context
   - String description
   - ZonedDateTime deadlineDate
@@ -597,7 +597,7 @@ class LearningKit {
   + hashCode() int
   + setUuid(UUID) void
   + setCompletionRate(int) void
-  + setParticipants(List~User~) void
+  + setTrainees(List~User~) void
   + setLearningUnits(List~LearningUnit~) void
   + getCompletionRate() int
   + setPublished(boolean) void
@@ -609,7 +609,7 @@ class LearningKit {
   + getUuid() UUID
   + getContext() String
   + setContext(String) void
-  + getParticipants() List~User~
+  + getTrainees() List~User~
   + setFiles(List~File~) void
   + setCreatedAt(LocalDateTime) void
   # canEqual(Object) boolean
@@ -637,11 +637,11 @@ class LearningKitMapperImpl {
   + toDTO(LearningKit) LearningKitResDTO
   + toEntity(CreateLearningKitDTO) LearningKit
   # fileListToFileResDTOList(List~File~) List~FileResDTO~
-  # userToParticipantUserDTO(User) ParticipantUserDTO
+  # userToTraineeUserDTO(User) TraineeUserDTO
   # fileToFileResDTO(File) FileResDTO
   + update(UpdateLearningKitDTO, LearningKit) void
   # learningUnitListToLearningUnitResDTOList(List~LearningUnit~) List~LearningUnitResDTO~
-  # userListToParticipantUserDTOList(List~User~) List~ParticipantUserDTO~
+  # userListToTraineeUserDTOList(List~User~) List~TraineeUserDTO~
 }
 class LearningKitOpened {
   - UUID learningKitId
@@ -712,9 +712,9 @@ class LearningKitProgressResDTO {
 class LearningKitRepository {
 <<Interface>>
   + findAllByFilesContains(File) List~LearningKit~
-  + findAllByParticipantsContains(User) List~LearningKit~
+  + findAllByTraineesContains(User) List~LearningKit~
   + findAllByOrderByCreatedAtDesc(Pageable) Page~LearningKit~
-  + findAllByParticipants_UuidAndPublishedTrue(UUID, Pageable) Page~LearningKit~
+  + findAllByTrainees_UuidAndPublishedTrue(UUID, Pageable) Page~LearningKit~
 }
 class LearningKitResDTO {
   - String description
@@ -726,7 +726,7 @@ class LearningKitResDTO {
   - String name
   - String context
   - int completionRate
-  - List~ParticipantUserDTO~ participants
+  - List~TraineeUserDTO~ trainees
   - List~FileResDTO~ files
   + name() String
   + deadlineDate() ZonedDateTime
@@ -738,7 +738,7 @@ class LearningKitResDTO {
   + uuid() UUID
   + published() boolean
   + completionRate() int
-  + participants() List~ParticipantUserDTO~
+  + trainees() List~TraineeUserDTO~
 }
 class LearningKitRestController {
   - LearningUnitService learningUnitService
@@ -751,10 +751,10 @@ class LearningKitRestController {
   + getList(UserDetails, Pageable) Page~LearningKitResDTO~
   + updateLearningKit(UpdateLearningKitDTO, UUID) LearningKitResDTO
   + getLearningKitById(UUID) LearningKitResDTO
-  + addTrainee(UUID, CreateParticipantDTO) UUID
+  + addTrainee(UUID, CreateTraineeDTO) UUID
   + createLearningKit(CreateLearningKitDTO) LearningKitResDTO
   + reorderLearningUnits(UUID, UpdateLearningUnitOrderDTO) GenericSuccessDTO
-  + removeParticipantFromKit(UUID, UUID) UUID
+  + removeTraineeFromKit(UUID, UUID) UUID
   + publishLearningKit(UUID) UUID
 }
 class LearningKitService {
@@ -765,11 +765,11 @@ class LearningKitService {
   - updateLearningKitAverageProgress(LearningKit) void
   + publishLearningKit(UUID) void
   + saveTraineeInKit(UUID, User) void
-  - isParticipant(UUID) boolean
+  - isTrainee(UUID) boolean
   + reorderLearningUnits(LearningKit, String[]) void
   - updateLearningKitCompletionRate(LearningKit) void
   + save(LearningKit) LearningKit
-  + removeParticipant(UUID, UUID) void
+  + removeTrainee(UUID, UUID) void
   + getList(Pageable, UUID) Page~LearningKit~
   + findById(UUID) Optional~LearningKit~
   + deleteById(UUID) void
@@ -1033,7 +1033,7 @@ class ParentFolderResDTO {
   + name() String
   + uuid() UUID
 }
-class ParticipantUserDTO {
+class TraineeUserDTO {
   - UUID uuid
   - String name
   - String username
@@ -1043,12 +1043,12 @@ class ParticipantUserDTO {
   + name() String
   + surname() String
 }
-class ParticipantUserMapper {
+class TraineeUserMapper {
 <<Interface>>
-  + toDTO(User) ParticipantUserDTO
+  + toDTO(User) TraineeUserDTO
 }
-class ParticipantUserMapperImpl {
-  + toDTO(User) ParticipantUserDTO
+class TraineeUserMapperImpl {
+  + toDTO(User) TraineeUserDTO
 }
 class ProbeResourceHttpRequestHandler {
   - detectMimeType(InputStream) String
@@ -1089,7 +1089,7 @@ class ProgressRestController {
   + checkQuestionAnswer(CheckQuestionAnswerDTO, UserDetails) QuestionAnswerValidationResDTO
   + checkMultipleChoiceAnswer(CheckMultipleChoiceAnswerDTO, UserDetails) MultipleChoiceAnswerValidationResDTO
   + getLearningUnitProgress(UUID, UserDetails) LearningUnitProgressResDTO
-  + getLearningKitProgressForAllParticipants(UUID) List~LearningKitProgressResDTO~
+  + getLearningKitProgressForAllTrainees(UUID) List~LearningKitProgressResDTO~
   + getLearningKitProgress(UUID, UserDetails) LearningKitProgressResDTO
 }
 class ProgressService {
@@ -1110,7 +1110,7 @@ class ProgressService {
   + markLearningUnitOpened(LearningUnitOpenedDTO, UserDetails) LearningUnitProgress
   + markLearningKitOpened(LearningKitOpened, UserDetails) LearningKitProgress
   + checkQuestionAnswer(CheckQuestionAnswerDTO, UserDetails) QuestionAnswerValidationResDTO
-  + getLearningKitProgressForAllParticipants(UUID) List~LearningKitProgress~
+  + getLearningKitProgressForAllTrainees(UUID) List~LearningKitProgress~
   + markTheoryBlockViewed(TheoryBlockViewedDTO, UserDetails) TheoryBlockProgress
   + getLearningKitProgress(UUID, UserDetails) LearningKitProgress
   - getOrCreateLearningKitProgress(User, LearningKit) LearningKitProgress
@@ -1372,7 +1372,7 @@ class UpdateBlockOrderDTO {
 class UpdateLearningKitDTO {
   - boolean published
   - List~UUID~ files
-  - List~UUID~ participants
+  - List~UUID~ trainees
   - JsonNullable~String~ description
   - String name
   - JsonNullable~ZonedDateTime~ deadlineDate
@@ -1383,7 +1383,7 @@ class UpdateLearningKitDTO {
   + name() String
   + deadlineDate() JsonNullable~ZonedDateTime~
   + published() boolean
-  + participants() List~UUID~
+  + trainees() List~UUID~
 }
 class UpdateLearningUnitOrderDTO {
   - List~UUID~ learningUnitUuidsInOrder
@@ -1553,17 +1553,17 @@ class UserRestController {
   - UserInfoMapper userInfoMapper
   - EmailService emailService
   - UserMapper userMapper
-  - ParticipantUserMapper participantUserMapper
+  - TraineeUserMapper traineeUserMapper
   + editUser(UUID, UpdateUserDTO) UserResDTO
   + createUser(CreateUserDTO) UserResDTO
   + resetUserPassword(UUID) UUID
   + setUserLocale(UserLocaleDTO, UserDetails) UserLocaleDTO
-  + getAllInstructors() List~ParticipantUserDTO~
+  + getAllInstructors() List~TraineeUserDTO~
   + getUserInfo(UserDetails) UserInfoDTO
   + changePassword(ChangePasswordDataDTO, UserDetails) GenericSuccessDTO
   + getUser(UUID) UserResDTO
-  + getAllTrainees() List~ParticipantUserDTO~
-  + editTrainee(CreateParticipantDTO) ParticipantUserDTO
+  + getAllTrainees() List~TraineeUserDTO~
+  + editTrainee(CreateTraineeDTO) TraineeUserDTO
   + deleteUser(UUID) UUID
 }
 class UserService {
@@ -1672,7 +1672,7 @@ JacksonConfigTests "1" *--> "mapper 1" EntityMapper
 JsonNullableMapperImpl  ..>  JsonNullableMapper 
 LearningKit "1" *--> "files *" File 
 LearningKit "1" *--> "learningUnits *" LearningUnit 
-LearningKit "1" *--> "participants *" User 
+LearningKit "1" *--> "trainees *" User 
 LearningKitMapperImpl  ..>  FileResDTO : «create»
 LearningKitMapperImpl "1" *--> "fileService 1" FileService 
 LearningKitMapperImpl "1" *--> "jsonNullableMapper 1" JsonNullableMapper 
@@ -1680,7 +1680,7 @@ LearningKitMapperImpl  ..>  LearningKit : «create»
 LearningKitMapperImpl  ..>  LearningKitMapper 
 LearningKitMapperImpl  ..>  LearningKitResDTO : «create»
 LearningKitMapperImpl "1" *--> "learningUnitMapper 1" LearningUnitMapper 
-LearningKitMapperImpl  ..>  ParticipantUserDTO : «create»
+LearningKitMapperImpl  ..>  TraineeUserDTO : «create»
 LearningKitMapperImpl "1" *--> "userService 1" UserService 
 LearningKitProgress "1" *--> "learningKit 1" LearningKit 
 LearningKitProgress "1" *--> "learningUnitProgresses *" LearningUnitProgress 
@@ -1723,8 +1723,8 @@ MultipleChoiceBlockProgressResDTO  ..>  BlockProgressResDTO
 MultipleChoiceBlockResDTO  ..>  BlockResDTO 
 ParentFolderMapperImpl  ..>  ParentFolderMapper 
 ParentFolderMapperImpl  ..>  ParentFolderResDTO : «create»
-ParticipantUserMapperImpl  ..>  ParticipantUserDTO : «create»
-ParticipantUserMapperImpl  ..>  ParticipantUserMapper 
+TraineeUserMapperImpl  ..>  TraineeUserDTO : «create»
+TraineeUserMapperImpl  ..>  TraineeUserMapper 
 ProgressMapperImpl  ..>  LearningKitProgressResDTO : «create»
 ProgressMapperImpl  ..>  LearningUnitProgressResDTO : «create»
 ProgressMapperImpl  ..>  MultipleChoiceBlockProgressResDTO : «create»
@@ -1775,7 +1775,7 @@ UserMapperImpl  ..>  User : «create»
 UserMapperImpl  ..>  UserMapper 
 UserMapperImpl  ..>  UserResDTO : «create»
 UserRestController "1" *--> "emailService 1" EmailService 
-UserRestController "1" *--> "participantUserMapper 1" ParticipantUserMapper 
+UserRestController "1" *--> "traineeUserMapper 1" TraineeUserMapper 
 UserRestController "1" *--> "userInfoMapper 1" UserInfoMapper 
 UserRestController "1" *--> "userLocaleMapper 1" UserLocaleMapper 
 UserRestController "1" *--> "userMapper 1" UserMapper 

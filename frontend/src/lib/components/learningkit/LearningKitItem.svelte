@@ -10,6 +10,7 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
 	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -27,6 +28,10 @@
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
+			toaster.create({
+				description: $_('learningKit.delete.success.description'),
+				type: 'success'
+			});
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});

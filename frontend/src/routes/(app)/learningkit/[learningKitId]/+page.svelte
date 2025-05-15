@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Clock, Pencil, Trash } from 'lucide-svelte';
+	import { Clock, Pencil } from 'lucide-svelte';
 	import {
 		deleteLearningKit,
 		getLearningKitById,
@@ -38,11 +38,40 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			goto('/dashboard');
+			toaster.create({
+				description: $_('learningKit.delete.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to delete learning kit:', error);
+			toaster.create({
+				description: $_('learningKit.delete.error.description'),
+				type: 'error'
+			});
 		}
 	});
+
 	const publishLearningKitMutation = createMutation({
-		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse()
+		mutationFn: (id: string) => api(fetch).req(publishLearningKit, null, id).parse(),
+		onSuccess: () => {
+			invalidate(['latest-learning-kits-list']);
+			invalidate(['all-learning-kits-list']);
+			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningKit.publish.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to publish learning kit:', error);
+			toaster.create({
+				description: $_('learningKit.publish.error.description'),
+				type: 'error'
+			});
+		}
 	});
+
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
@@ -50,6 +79,17 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningKit.update.success.description'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Failed to update learning kit:', error);
+			toaster.create({
+				description: $_('learningKit.update.error.description'),
+				type: 'error'
+			});
 		}
 	});
 
@@ -76,7 +116,6 @@
 				.catch((err) => {
 					console.error('Failed to mark learning kit as opened:', err);
 					toaster.create({
-						title: $_('learningKit.error.markOpened'),
 						description: $_('error.description', { values: { status: 'unknown' } }),
 						type: 'error'
 					});
@@ -124,7 +163,16 @@
 							{/if}
 						</div>
 						<div class="flex h-10 gap-8">
-							<div class="flex gap-2">
+							<div class="mr-6 flex gap-2">
+								<button
+									class="btn preset-outlined-surface-500 h-full"
+									onclick={() =>
+										goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`, {
+											replaceState: true
+										})}
+								>
+									<Pencil size={20} />
+								</button>
 								<button
 									type="button"
 									class="btn preset-filled-primary-500 h-full"
@@ -135,23 +183,7 @@
 										? $_('learningKit.unpublish.text')
 										: $_('learningKit.publish.text')}
 								</button>
-								<button
-									type="button"
-									class="btn preset-outlined-surface-500 h-full"
-									onclick={() => goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`)}
-								>
-									<Pencil size={20} />
-								</button>
 							</div>
-							<button
-								onclick={() => {
-									showDeleteDialog = true;
-								}}
-								type="button"
-								class="btn preset-filled-error-500 h-full"
-							>
-								<Trash size={20} />
-							</button>
 						</div>
 					</div>
 					{#if $learningKitQuery.data?.description}
@@ -175,8 +207,10 @@
 
 	<ConfirmDialog
 		isOpen={showDeleteDialog}
-		title="Confirm Deletion"
-		message={`Are you sure you want to delete "${$learningKitQuery.data.name}"?`}
+		title={$_('learningKit.delete.confirmationTitle')}
+		message={$_('learningKit.delete.confirmationMessage', {
+			values: { name: $learningKitQuery.data.name }
+		})}
 		confirmText="Delete"
 		danger={true}
 		onConfirm={() => {
@@ -191,8 +225,12 @@
 	<ConfirmDialog
 		isOpen={showPublishDialog}
 		title={$learningKitQuery.data?.published
-			? $_('learningKit.unpublish.confirmationTitle')
-			: $_('learningKit.publish.confirmationTitle')}
+			? $_('learningKit.unpublish.confirmationTitle', {
+					values: { name: $learningKitQuery.data.name }
+				})
+			: $_('learningKit.publish.confirmationTitle', {
+					values: { name: $learningKitQuery.data.name }
+				})}
 		message={$learningKitQuery.data?.published
 			? $_('learningKit.unpublish.confirmationText', {
 					values: { name: $learningKitQuery.data.name }
@@ -211,10 +249,6 @@
 					data: { published: false }
 				});
 			} else {
-				$updateLearningKitMutation.mutate({
-					id: $learningKitQuery.data.uuid,
-					data: { published: true }
-				});
 				$publishLearningKitMutation.mutate(learningKitId);
 			}
 

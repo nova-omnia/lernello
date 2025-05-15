@@ -63,7 +63,6 @@
 		const textarea = editorRef;
 		if (!textarea) {
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('textEditor.error.editorNotAvailable'),
 				type: 'error'
 			});
@@ -86,7 +85,6 @@
 			restoreScrollPositionsAndFocus(result.newSelectionStart, result.newSelectionEnd);
 		} else {
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('textEditor.error.syntaxError'),
 				type: 'error'
 			});
@@ -121,7 +119,6 @@
 	const throwError = (message: string) => {
 		console.error('Error:', message);
 		toaster.create({
-			title: $_('common.error.title'),
 			description: message,
 			type: 'error'
 		});

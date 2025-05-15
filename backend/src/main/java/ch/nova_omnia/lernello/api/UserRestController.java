@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.nova_omnia.lernello.dto.request.user.ChangePasswordDataDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateTraineeDTO;
 import ch.nova_omnia.lernello.dto.request.user.CreateUserDTO;
 import ch.nova_omnia.lernello.dto.request.user.UpdateUserDTO;
 import ch.nova_omnia.lernello.dto.request.user.UserLocaleDTO;
 import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
-import ch.nova_omnia.lernello.dto.response.user.ParticipantUserDTO;
+import ch.nova_omnia.lernello.dto.response.user.TraineeUserDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserInfoDTO;
 import ch.nova_omnia.lernello.dto.response.user.UserResDTO;
-import ch.nova_omnia.lernello.mapper.user.ParticipantUserMapper;
+import ch.nova_omnia.lernello.mapper.user.TraineeUserMapper;
 import ch.nova_omnia.lernello.mapper.user.UserInfoMapper;
 import ch.nova_omnia.lernello.mapper.user.UserLocaleMapper;
 import ch.nova_omnia.lernello.mapper.user.UserMapper;
@@ -43,7 +43,7 @@ public class UserRestController {
     private final UserService userService;
     private final UserLocaleMapper userLocaleMapper;
     private final UserInfoMapper userInfoMapper;
-    private final ParticipantUserMapper participantUserMapper;
+    private final TraineeUserMapper traineeUserMapper;
     private final UserMapper userMapper;
     private final EmailService emailService;
 
@@ -58,14 +58,14 @@ public class UserRestController {
 
     @GetMapping("/trainees")
     @PreAuthorize("hasAuthority('SCOPE_user:read')")
-    public List<@Valid ParticipantUserDTO> getAllTrainees() {
-        return userService.findAllTrainees().stream().map(participantUserMapper::toDTO).toList();
+    public List<@Valid TraineeUserDTO> getAllTrainees() {
+        return userService.findAllTrainees().stream().map(traineeUserMapper::toDTO).toList();
     }
 
     @GetMapping("/instructors")
     @PreAuthorize("hasAuthority('SCOPE_user:read')")
-    public List<@Valid ParticipantUserDTO> getAllInstructors() {
-        return userService.findAllInstructors().stream().map(participantUserMapper::toDTO).toList();
+    public List<@Valid TraineeUserDTO> getAllInstructors() {
+        return userService.findAllInstructors().stream().map(traineeUserMapper::toDTO).toList();
     }
 
     @GetMapping("/info")
@@ -130,10 +130,10 @@ public class UserRestController {
 
     @PatchMapping("/trainee")
     @PreAuthorize("hasAuthority('SCOPE_user:write')")
-    public @Valid ParticipantUserDTO editTrainee(
-        @RequestBody @Valid CreateParticipantDTO traineeDetails
+    public @Valid TraineeUserDTO editTrainee(
+        @RequestBody @Valid CreateTraineeDTO traineeDetails
     ) {
         User trainee = userService.editTrainee(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname());
-        return participantUserMapper.toDTO(trainee);
+        return traineeUserMapper.toDTO(trainee);
     }
 }

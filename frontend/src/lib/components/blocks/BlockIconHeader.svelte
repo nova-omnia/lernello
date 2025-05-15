@@ -23,7 +23,6 @@
 	const onUpdateHandler = createDebounced((newName: string) => {
 		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('block.newName.danger'),
 				type: 'warning'
 			});

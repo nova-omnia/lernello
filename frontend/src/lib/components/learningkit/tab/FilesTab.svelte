@@ -10,6 +10,7 @@
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import FileItem from '$lib/components/learningkit/displays/FileItem.svelte';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
+	import { toaster } from '$lib/states/toasterState.svelte.js';
 
 	const invalidate = useQueryInvalidation();
 
@@ -32,6 +33,13 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+		},
+		onError: (error) => {
+			console.error('Error:', error);
+			toaster.create({
+				description: $_('learningKit.form.update.error.description'),
+				type: 'error'
+			});
 		}
 	});
 </script>
@@ -79,6 +87,10 @@
 					{file}
 					onRemoveFile={() => {
 						const updated = files.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
+						toaster.create({
+							description: $_('files.remove.success'),
+							type: 'success'
+						});
 
 						$updateLearningKitMutation.mutate({
 							id: learningKitId,

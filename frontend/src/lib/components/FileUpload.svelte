@@ -25,7 +25,6 @@
 			invalidate(['files-overview']);
 			invalidate(['files-list']);
 			toaster.create({
-				title: $_('files.upload.success'),
 				description: $_('files.upload.success.description'),
 				type: 'success'
 			});
@@ -33,7 +32,6 @@
 		onError: (error) => {
 			console.error('Error uploading file:', error);
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});
@@ -111,9 +109,8 @@
 			details.files.forEach((file) => {
 				file.errors.forEach((error) => {
 					toaster.create({
-						title: $_('files.upload.reject.title'),
 						description: $_('files.upload.reject.description', { values: { reason: error } }),
-						type: 'info'
+						type: 'error'
 					});
 				});
 			});
@@ -133,7 +130,7 @@
 		maxFiles={1024 * 1024 * 10}
 	>
 		<div class="flex h-10 gap-8">
-			<button class="btn preset-filled-primary-500 h-full">
+			<button class="btn preset-outlined-surface-500 h-fit">
 				<UploadIcon size={24} />
 				{$_('addNewFile')}
 			</button>

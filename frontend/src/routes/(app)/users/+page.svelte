@@ -41,6 +41,9 @@
 						</a>
 					</div>
 				</div>
+				<div class="flex w-full justify-between mt-4">
+					<p>{$_('statistics.instructor.noKits.description')}</p>
+				</div>
 			</div>
 			<Tabs value={group || tabGroup.instructors} onValueChange={(e) => handleTabChange(e)}>
 				{#snippet list()}

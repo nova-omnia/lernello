@@ -71,7 +71,7 @@
 			});
 		}
 	});
-	
+
 	const updateLearningKitMutation = createMutation({
 		mutationFn: ({ id, data }: { id: string; data: UpdateLearningKit }) =>
 			api(fetch).req(updateLearningKit, data, id).parse(),
@@ -163,7 +163,7 @@
 							{/if}
 						</div>
 						<div class="flex h-10 gap-8">
-							<div class="flex gap-2 mr-6">
+							<div class="mr-6 flex gap-2">
 								<button
 									type="button"
 									class="btn preset-filled-primary-500 h-full"
@@ -174,13 +174,12 @@
 										? $_('learningKit.unpublish.text')
 										: $_('learningKit.publish.text')}
 								</button>
-								<button
-									type="button"
+								<a
 									class="btn preset-outlined-surface-500 h-full"
-									onclick={() => goto(`/learningkit/${$learningKitQuery.data.uuid}/edit-form`)}
+									href ={`/learningkit/${$learningKitQuery.data.uuid}/edit-form`}
 								>
 									<Pencil size={20} />
-								</button>
+								</a>
 							</div>
 						</div>
 					</div>

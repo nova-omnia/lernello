@@ -25,6 +25,11 @@
 		onSuccess: () => {
 			invalidate(['files-overview']);
 			invalidate(['learning-kit']);
+
+			toaster.create({
+				description: $_('files.delete.success'),
+				type: 'success'
+			});
 		},
 		onError: () => {
 			toaster.create({

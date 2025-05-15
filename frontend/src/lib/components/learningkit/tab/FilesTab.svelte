@@ -87,6 +87,10 @@
 					{file}
 					onRemoveFile={() => {
 						const updated = files.filter((f) => f.uuid !== file.uuid).map((f) => f.uuid);
+						toaster.create({
+							description: $_('files.remove.success'),
+							type: 'success'
+						});
 
 						$updateLearningKitMutation.mutate({
 							id: learningKitId,

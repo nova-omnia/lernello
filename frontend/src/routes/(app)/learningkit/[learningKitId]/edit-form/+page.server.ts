@@ -1,7 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
-import { type Actions, error, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
 import { getLearningKitById, updateLearningKit } from '$lib/api/collections/learningKit';
 import { api } from '$lib/api/apiClient';
 import { UpdateLearningKitSchema } from '$lib/schemas/request/UpdateLearningKit';
@@ -34,10 +34,10 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const learningKit = await api(fetch)
+		await api(fetch)
 			.req(updateLearningKit, form.data, params.learningKitId)
 			.parse();
 
-		redirect(303, `/learningkit/${learningKit.uuid}`);
+		return { form, success: true };
 	})
 } satisfies Actions;

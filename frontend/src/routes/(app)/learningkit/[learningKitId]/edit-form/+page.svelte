@@ -23,12 +23,7 @@
 				description: $_('learningKit.form.update.success.description'),
 				type: 'success'
 			});
-		},
-		onUpdate() {
-			toaster.create({
-				description: $_('learningKit.form.update.loading.description'),
-				type: 'loading'
-			});
+			history.back();
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
@@ -109,9 +104,13 @@
 				</label>
 			</div>
 			<div class="flex justify-end gap-2">
-				<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}"
-					>{$_('common.cancel')}</a
-				>
+				<button class="btn preset-outlined-surface-500"
+					type="button"
+					onclick={() => {
+						history.back();
+					}}
+					>{$_('common.cancel')}
+			</button>
 				<button class="btn preset-filled-primary-500">{$_('learningKit.update')}</button>
 			</div>
 			<SuperDebug data={$form} display={dev} />

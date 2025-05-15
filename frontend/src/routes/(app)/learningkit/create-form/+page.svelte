@@ -23,12 +23,6 @@
 			});
 			history.back();
 		},
-		onUpdate() {
-			toaster.create({
-				title: $_('learningKit.form.create.loading.title'),
-				description: $_('learningKit.form.create.loading.description')
-			});
-		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({

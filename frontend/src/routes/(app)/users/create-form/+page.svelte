@@ -23,13 +23,6 @@
 			});
 			history.back();
 		},
-		onUpdate() {
-			toaster.create({
-				title: $_('user.form.create.loading.title'),
-				description: $_('user.form.create.loading.description'),
-				type: 'loading'
-			});
-		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({

@@ -23,8 +23,7 @@
 
 	const progressQuery = createQuery<LearningKitProgressRes[]>({
 		queryKey: ['learning-kit-trainees-progress-stats', learningKitId],
-		queryFn: () =>
-			api(fetch).req(getLearningKitProgressForAllTrainees, null, learningKitId).parse()
+		queryFn: () => api(fetch).req(getLearningKitProgressForAllTrainees, null, learningKitId).parse()
 	});
 
 	interface TraineeWithProgress {
@@ -114,9 +113,11 @@
 {:else if $kitQuery.data && $progressQuery.data}
 	<div class="space-y-6">
 		<section class="card p-4">
-			<h2 class="preset-typo-subtitle mb-4">{$_('statistics.kitOverview.title', {
-				values: { name: $kitQuery.data.name }
-			})}</h2>
+			<h2 class="preset-typo-subtitle mb-4">
+				{$_('statistics.kitOverview.title', {
+					values: { name: $kitQuery.data.name }
+				})}
+			</h2>
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<div class="bg-surface-100-800 flex items-center space-x-4 rounded-lg p-4">
 					<div class="bg-primary-500 rounded-full p-3 text-white">

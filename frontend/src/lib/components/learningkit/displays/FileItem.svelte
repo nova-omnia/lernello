@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { File , X as XIcon } from 'lucide-svelte';
+	import { File, X as XIcon } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import type { FileRes } from '$lib/schemas/response/FileRes';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
@@ -28,7 +28,7 @@
 
 <div class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4">
 	<div class="flex w-full max-w-sm items-center gap-4">
-		<File size={34}/>
+		<File size={34} />
 		<p class="text-black-700 ml-3 text-xs font-bold">{file.name}</p>
 	</div>
 

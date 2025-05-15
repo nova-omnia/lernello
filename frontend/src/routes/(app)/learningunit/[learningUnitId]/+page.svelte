@@ -75,9 +75,11 @@
 	});
 </script>
 
-<PageContainer title={$_('learningUnit.details', {
-							values: { name: data.learningUnit.name }
-						})}>
+<PageContainer
+	title={$_('learningUnit.details', {
+		values: { name: data.learningUnit.name }
+	})}
+>
 	<div class="-m-4">
 		<div
 			class="grid h-full grid-cols-[75%_25%]"

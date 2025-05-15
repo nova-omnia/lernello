@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Clock, Pencil, Trash } from 'lucide-svelte';
+	import { Clock, Pencil } from 'lucide-svelte';
 	import {
 		deleteLearningKit,
 		getLearningKitById,

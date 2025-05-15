@@ -69,8 +69,7 @@
 			></LearningUnitsTab>
 		</Tabs.Panel>
 		<Tabs.Panel value={tabs.trainees}>
-			<TraineesTab learningKitId={learningKit.uuid} trainees={learningKit.trainees}
-			></TraineesTab>
+			<TraineesTab learningKitId={learningKit.uuid} trainees={learningKit.trainees}></TraineesTab>
 		</Tabs.Panel>
 		<Tabs.Panel value={tabs.files}>
 			<FilesTab learningKitId={learningKit.uuid} files={learningKit.files ?? []} />

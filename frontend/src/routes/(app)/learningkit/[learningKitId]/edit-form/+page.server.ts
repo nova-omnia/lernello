@@ -34,9 +34,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		await api(fetch)
-			.req(updateLearningKit, form.data, params.learningKitId)
-			.parse();
+		await api(fetch).req(updateLearningKit, form.data, params.learningKitId).parse();
 
 		return { form, success: true };
 	})

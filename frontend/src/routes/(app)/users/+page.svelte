@@ -32,16 +32,13 @@
 						{$_('common.users')}
 					</h1>
 					<div class="flex h-10 gap-8">
-						<a
-							href="/users/create-form"
-							class="btn preset-outlined-surface-500 h-fit"
-						>
+						<a href="/users/create-form" class="btn preset-outlined-surface-500 h-fit">
 							<UserPlus size={24} />
 							{$_('user.create')}
 						</a>
 					</div>
 				</div>
-				<div class="flex w-full justify-between mt-4">
+				<div class="mt-4 flex w-full justify-between">
 					<p>{$_('statistics.instructor.noKits.description')}</p>
 				</div>
 			</div>

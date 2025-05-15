@@ -36,7 +36,7 @@
 
 {#snippet sidebarItem(label: string, href: string, Icon: typeof SvelteComponent<IconProps>)}
 	<a
-		class="card hover:preset-filled-surface-50-950 flex w-full items-center text-nowrap p-4"
+		class="card hover:preset-filled-surface-50-950 flex w-full items-center p-4 text-nowrap"
 		{href}
 		aria-label={label}
 	>
@@ -77,7 +77,7 @@
 		{/if}
 		{@render sidebarItem($_('sidebar.dashboard'), '/dashboard', LayoutDashboard)}
 		{@render sidebarItem($_('learningKits.title'), '/learningkits', Boxes)}
-		
+
 		{#if role === INSTRUCTOR_ROLE}
 			{@render sidebarItem($_('sidebar.statistics'), '/statistics', ChartLine)}
 			{#if sidebarState.isExpanded}

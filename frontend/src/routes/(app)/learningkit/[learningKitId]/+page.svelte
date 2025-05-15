@@ -223,8 +223,12 @@
 	<ConfirmDialog
 		isOpen={showPublishDialog}
 		title={$learningKitQuery.data?.published
-			? $_('learningKit.unpublish.confirmationTitle')
-			: $_('learningKit.publish.confirmationTitle')}
+			? $_('learningKit.unpublish.confirmationTitle', {
+					values: { name: $learningKitQuery.data.name }
+				})
+			: $_('learningKit.publish.confirmationTitle', {
+					values: { name: $learningKitQuery.data.name }
+				})}
 		message={$learningKitQuery.data?.published
 			? $_('learningKit.unpublish.confirmationText', {
 					values: { name: $learningKitQuery.data.name }

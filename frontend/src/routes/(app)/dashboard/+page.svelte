@@ -9,7 +9,7 @@
 	import { ChevronRight } from 'lucide-svelte';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import LearningKitItem from '$lib/components/learningkit/LearningKitItem.svelte';
-	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
+	import { INSTRUCTOR_ROLE, TRAINEE_ROLE } from '$lib/schemas/response/UserInfo';
 	import LearningKitsStatisticsOverview from '$lib/components/statistics/LearningKitStatisticsOverview.svelte';
 	import { type LearningKitPage } from '$lib/schemas/response/LearningKitRes';
 
@@ -49,12 +49,30 @@
 					<ErrorIllustration>{$_('learningKit.error.loadList')}</ErrorIllustration>
 				{:else}
 					{#each $kitsQuery.data.content.slice(0, 5) as kit (kit.uuid)}
-						<LearningKitItem
-							title={kit.name}
-							uuid={kit.uuid}
-							role={data.userInfo.role}
-							published={kit.published}
-						/>
+						<div
+							title={data.userInfo.role === TRAINEE_ROLE &&
+							kit.deadlineDate &&
+							new Date(kit.deadlineDate) < new Date()
+								? $_('learningKit.expired')
+								: ''}
+						>
+							<div
+								class={`transition-opacity duration-300 ${
+									data.userInfo.role === TRAINEE_ROLE &&
+									kit.deadlineDate &&
+									new Date(kit.deadlineDate) < new Date()
+										? 'pointer-events-none cursor-not-allowed opacity-50'
+										: ''
+								}`}
+							>
+								<LearningKitItem
+									title={kit.name}
+									uuid={kit.uuid}
+									role={data.userInfo.role}
+									published={kit.published}
+								/>
+							</div>
+						</div>
 					{/each}
 				{/if}
 				{#if data.userInfo.role === INSTRUCTOR_ROLE}

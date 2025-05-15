@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Trash2, CheckCircle2 } from 'lucide-svelte'; // Added CheckCircle2
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
-	import { _, t } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient.js';
 	import { deleteLearningKit } from '$lib/api/collections/learningKit.js';

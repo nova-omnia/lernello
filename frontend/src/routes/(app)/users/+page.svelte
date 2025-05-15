@@ -6,7 +6,7 @@
 	import InstructorsOverviewTab from '$lib/components/users/InstructorsOverviewTab.svelte';
 	import { goto } from '$app/navigation';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
-	import { error, redirect } from '@sveltejs/kit';
+	import { error } from '@sveltejs/kit';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	const tabGroup = {

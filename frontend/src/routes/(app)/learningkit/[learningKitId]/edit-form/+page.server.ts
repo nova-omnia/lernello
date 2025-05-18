@@ -17,7 +17,6 @@ export const load = async ({ fetch, params }) => {
 		{
 			name: learningKit.name ?? '',
 			description: learningKit.description ?? '',
-			context: learningKit.context ?? '',
 			deadlineDate: learningKit.deadlineDate ?? null
 		},
 		zod(UpdateLearningKitSchema)

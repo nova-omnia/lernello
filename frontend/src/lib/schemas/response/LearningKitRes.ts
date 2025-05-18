@@ -16,7 +16,6 @@ export const LearningKitResSchema = z.object({
 		})
 		.nullable(),
 	published: z.boolean(),
-	context: z.string().nullable(),
 	trainees: z.array(TraineeUserSchema),
 	files: z.array(FileResSchema).nullable(),
 	averageProgress: z.number(),

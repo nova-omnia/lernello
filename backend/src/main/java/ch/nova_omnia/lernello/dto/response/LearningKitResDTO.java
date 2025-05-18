@@ -16,7 +16,6 @@ public record LearningKitResDTO(
                                 String description,
                                 ZonedDateTime deadlineDate,
                                 boolean published,
-                                String context,
                                 List<TraineeUserDTO> trainees,
                                 List<FileResDTO> files,
                                 @NotNull int averageProgress,

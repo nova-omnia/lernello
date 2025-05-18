@@ -72,21 +72,6 @@
 				</label>
 
 				<label class="label">
-					<span class="label-text">{$_('common.context')} <i>{$_('form.optional')}</i></span>
-					<textarea
-						name="context"
-						bind:value={$form.context}
-						class="textarea preset-filled-surface-100-900 min-h-24"
-						placeholder={$_('common.additionalContext')}
-						aria-invalid={$errors.context ? 'true' : undefined}
-						{...$constraints.context}
-					></textarea>
-					{#if $errors.context}
-						<p class="text-error-500">{$errors.context}</p>
-					{/if}
-				</label>
-
-				<label class="label">
 					<span class="label-text">{$_('form.deadlineLabel')} <i>{$_('form.optional')}</i></span>
 					<input
 						type="datetime-local"

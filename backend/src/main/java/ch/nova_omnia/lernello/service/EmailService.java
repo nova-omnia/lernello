@@ -58,6 +58,11 @@ public class EmailService {
         }
     }
 
+    /**
+     * Sends an email with new login data to the user.
+     *
+     * @param user The user to whom the email will be sent.
+     */
     public void sendNewLoginData(User user) {
         try {
             String plainPassword = userService.generateRandomPassword();

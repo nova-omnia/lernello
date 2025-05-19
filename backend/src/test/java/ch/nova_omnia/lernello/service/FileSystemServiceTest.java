@@ -133,4 +133,71 @@ class FileSystemServiceTest {
 
         verify(fileRepo, times(1)).deleteById(fileId);
     }
+
+    /**
+         * Tests if all files are returned correctly.
+         */
+        @Test
+        void findAll_shouldReturnAllFiles() {
+            List<File> files = List.of(new File("file1.pdf"), new File("file2.pdf"));
+            when(fileRepo.findAll()).thenReturn(files);
+
+            List<File> result = fileService.findAll();
+
+            assertThat(result).isEqualTo(files);
+        }
+
+        /**
+         * Tests if files are returned correctly by their IDs.
+         */
+        @Test
+        void findAllByIds_shouldReturnFilesByIds() {
+            UUID id1 = UUID.randomUUID();
+            UUID id2 = UUID.randomUUID();
+            List<File> files = List.of(new File("file1.pdf"), new File("file2.pdf"));
+            when(fileRepo.findAllById(List.of(id1, id2))).thenReturn(files);
+
+            List<File> result = fileService.findAllByIds(List.of(id1, id2));
+
+            assertThat(result).isEqualTo(files);
+        }
+
+        /**
+         * Tests if null is returned when the input list of IDs is null.
+         */
+        @Test
+        void findAllByIds_shouldReturnNullIfInputIsNull() {
+            List<File> result = fileService.findAllByIds(null);
+
+            assertThat(result).isNull();
+        }
+
+        /**
+         * Tests if a file is returned correctly by its ID.
+         */
+        @Test
+        void findById_shouldReturnFileById() {
+            UUID fileId = UUID.randomUUID();
+            File file = new File("file.pdf");
+            file.setUuid(fileId);
+            when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
+
+            Optional<File> result = fileService.findById(fileId);
+
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo(file);
+        }
+
+        /**
+         * Tests if an empty optional is returned when the file is not found by its ID.
+         */
+        @Test
+        void findById_shouldReturnEmptyIfFileNotFound() {
+            UUID fileId = UUID.randomUUID();
+            when(fileRepo.findById(fileId)).thenReturn(Optional.empty());
+
+            Optional<File> result = fileService.findById(fileId);
+
+            assertThat(result).isEmpty();
+        }
 }

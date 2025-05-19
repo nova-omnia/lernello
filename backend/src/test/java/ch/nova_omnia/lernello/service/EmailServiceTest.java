@@ -13,33 +13,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
 
     @Mock
     private JavaMailSender mailSender;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private UserRepository userRepo;
-    @Mock
-    private UserService userService;
+    @Mock private PasswordEncoder passwordEncoder;
+    @Mock private UserRepository userRepo;
+    @Mock private UserService userService;
 
     @InjectMocks
     private EmailService emailService;
@@ -68,7 +59,11 @@ class EmailServiceTest {
         senderField.set(emailService, "mocked-sender@example.com");
     }
 
-
+    /**
+     * Tests if the email is sent correctly with the right recipient and subject.
+     *
+     * @throws Exception if an error occurs while sending the email
+     */
     @Test
     void sendLearningKitInvitation_shouldGenerateAndSavePasswordForNewUser() throws Exception {
         String generatedPlainPwd = "TempPass123!";
@@ -97,6 +92,11 @@ class EmailServiceTest {
         }));
     }
 
+    /**
+     * Tests if the email is sent correctly without generating a new password for an existing user.
+     *
+     * @throws Exception if an error occurs while sending the email
+     */
     @Test
     void sendLearningKitInvitation_shouldNotOverwritePasswordForUserWhoAlreadyChangedIt() throws Exception {
         testUser.setChangedPassword(true);
@@ -109,6 +109,11 @@ class EmailServiceTest {
         verify(userRepo, never()).save(any());
     }
 
+    /**
+     * Tests if an exception is thrown when the email cannot be sent.
+     *
+     * @throws Exception if an error occurs while sending the email
+     */
     @Test
     void sendLearningKitInvitation_onEmailFailure_shouldThrowRuntimeException() {
         doThrow(new RuntimeException("SMTP error")).when(mailSender).send(any(MimeMessage.class));

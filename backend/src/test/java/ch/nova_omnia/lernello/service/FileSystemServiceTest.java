@@ -4,10 +4,6 @@ import ch.nova_omnia.lernello.model.data.File;
 import ch.nova_omnia.lernello.repository.FileRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.service.file.FileSystemService;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +22,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 @ExtendWith(MockitoExtension.class)
 class FileSystemServiceTest {
@@ -46,35 +48,55 @@ class FileSystemServiceTest {
 
     @BeforeEach
     void setup() {
-        // Point FileSystemService to our temp directory
         ReflectionTestUtils.setField(fileService, "storagePath", tempStorage.toString());
     }
 
+    /**
+     * Tests if a file is saved correctly and the UUID is set.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     void save_shouldResolveDuplicateNames() throws IOException {
         String originalName = "x.pdf";
         String duplicateName = "x (1).pdf";
-        // Stub findByName to simulate name collision then uniqueness
         File existing = new File(originalName);
         when(fileRepo.findByName(originalName)).thenReturn(Optional.of(existing));
         when(fileRepo.findByName(duplicateName)).thenReturn(Optional.empty());
-        // Stub save to assign UUID and return the entity
         when(fileRepo.save(any(File.class))).thenAnswer(inv -> {
             File f = inv.getArgument(0);
             f.setUuid(UUID.randomUUID());
             return f;
         });
 
-        // Act: save a mock upload
         File saved = fileService.save(
             new MockMultipartFile("file", originalName, "application/pdf", "test".getBytes())
         );
 
-        // Assert: name was adjusted and file exists on disk
         assertThat(saved.getName()).isEqualTo(duplicateName);
         assertThat(Files.exists(tempStorage.resolve(saved.getUuid().toString()))).isTrue();
     }
 
+    /**
+     * Tests that if a file is deleted but not found in the repository, an exception is thrown.
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    @Test
+    void deleteById_shouldThrowIfNotFound() {
+        UUID missingId = UUID.randomUUID();
+        when(fileRepo.findById(missingId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> fileService.deleteById(missingId))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("not found");
+    }
+
+    /**
+     * Tests if the extracted text from a PDF file is correct.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     void extractTextFromFiles_shouldReturnConcatenatedText() throws IOException {
         UUID fileId = UUID.randomUUID();
@@ -82,7 +104,6 @@ class FileSystemServiceTest {
         entity.setUuid(fileId);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(entity));
 
-        // Create a simple PDF with known text
         java.io.File pdfFile = tempStorage.resolve(fileId.toString()).toFile();
         PDDocument doc = new PDDocument();
         PDPage page = new PDPage();
@@ -97,10 +118,23 @@ class FileSystemServiceTest {
         doc.save(pdfFile);
         doc.close();
 
-        // Act
         String text = fileService.extractTextFromFiles(List.of(fileId));
 
-        // Assert
         assertThat(text).contains("Hello Test");
+    }
+
+    /**
+     * Tests if a file is deleted correctly when it exists.
+     */
+    @Test
+    void deleteById_shouldDeleteFileIfExists() {
+        UUID fileId = UUID.randomUUID();
+        File file = new File("test.pdf");
+        file.setUuid(fileId);
+        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
+
+        fileService.deleteById(fileId);
+
+        verify(fileRepo, times(1)).deleteById(fileId);
     }
 }

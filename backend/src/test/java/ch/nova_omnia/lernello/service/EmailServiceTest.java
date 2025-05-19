@@ -1,11 +1,9 @@
-package ch.nova_omnia.lernello.service.test;
+package ch.nova_omnia.lernello.service;
 
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.service.EmailService;
-import ch.nova_omnia.lernello.service.UserService;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,24 +13,33 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
 
     @Mock
     private JavaMailSender mailSender;
-    @Mock private PasswordEncoder passwordEncoder;
-    @Mock private UserRepository userRepo;
-    @Mock private UserService userService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private UserRepository userRepo;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private EmailService emailService;
@@ -112,4 +119,3 @@ class EmailServiceTest {
         verify(userRepo, never()).save(any());
     }
 }
-

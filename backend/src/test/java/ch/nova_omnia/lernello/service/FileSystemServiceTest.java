@@ -38,7 +38,7 @@ class FileSystemServiceTest {
     private FileRepository fileRepo;
 
     @Mock
-    private LearningKitRepository kitRepo;
+    private LearningKitRepository learningKitRepo;
 
     @InjectMocks
     private FileSystemService fileService;
@@ -53,11 +53,9 @@ class FileSystemServiceTest {
 
     /**
      * Tests if a file is saved correctly and the UUID is set.
-     *
-     * @throws IOException if an I/O error occurs
      */
     @Test
-    void save_shouldResolveDuplicateNames() throws IOException {
+    void save_shouldResolveDuplicateNames() {
         String originalName = "x.pdf";
         String duplicateName = "x (1).pdf";
         File existing = new File(originalName);
@@ -79,8 +77,6 @@ class FileSystemServiceTest {
 
     /**
      * Tests that if a file is deleted but not found in the repository, an exception is thrown.
-     *
-     * @throws IOException if an I/O error occurs
      */
     @Test
     void deleteById_shouldThrowIfNotFound() {

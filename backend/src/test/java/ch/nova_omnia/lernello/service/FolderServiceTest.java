@@ -1,136 +1,97 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.File;
-import ch.nova_omnia.lernello.repository.FileRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.service.file.FileSystemService;
-import org.junit.jupiter.api.BeforeEach;
+import ch.nova_omnia.lernello.model.data.Folder;
+import ch.nova_omnia.lernello.repository.FolderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 @ExtendWith(MockitoExtension.class)
 class FolderServiceTest {
 
     @Mock
-    private FileRepository fileRepo;
-
-    @Mock
-    private LearningKitRepository learningKitRepo;
+    private FolderRepository folderRepository;
 
     @InjectMocks
-    private FileSystemService fileService;
+    private FolderService service;
 
-    @TempDir
-    Path tempStorage;
+    /**
+     * Test that findAll returns all folders from the repository
+     */
+    @Test
+    void shouldFindAllFolders() {
+        List<Folder> folders = List.of(new Folder(), new Folder());
+        when(folderRepository.findAll()).thenReturn(folders);
 
-    @BeforeEach
-    void setup() {
-        ReflectionTestUtils.setField(fileService, "storagePath", tempStorage.toString());
+        List<Folder> result = service.findAll();
+
+        assertEquals(folders, result);
+        verify(folderRepository).findAll();
     }
 
     /**
-     * Tests if a file is saved correctly and the UUID is set.
+     * Test that findById returns a folder when present
      */
     @Test
-    void save_shouldResolveDuplicateNames() {
-        String originalName = "x.pdf";
-        String duplicateName = "x (1).pdf";
-        File existing = new File(originalName);
-        when(fileRepo.findByName(originalName)).thenReturn(Optional.of(existing));
-        when(fileRepo.findByName(duplicateName)).thenReturn(Optional.empty());
-        when(fileRepo.save(any(File.class))).thenAnswer(inv -> {
-            File f = inv.getArgument(0);
-            f.setUuid(UUID.randomUUID());
-            return f;
-        });
+    void shouldFindById() {
+        UUID id = UUID.randomUUID();
+        Folder folder = new Folder();
+        when(folderRepository.findById(id)).thenReturn(Optional.of(folder));
 
-        File saved = fileService.save(
-            new MockMultipartFile("file", originalName, "application/pdf", "test".getBytes())
-        );
+        Optional<Folder> result = service.findById(id);
 
-        assertThat(saved.getName()).isEqualTo(duplicateName);
-        assertThat(Files.exists(tempStorage.resolve(saved.getUuid().toString()))).isTrue();
+        assertTrue(result.isPresent());
+        assertSame(folder, result.get());
+        verify(folderRepository).findById(id);
     }
 
     /**
-     * Tests that if a file is deleted but not found in the repository, an exception is thrown.
+     * Test that findById returns empty when folder is not found
      */
     @Test
-    void deleteById_shouldThrowIfNotFound() {
-        UUID missingId = UUID.randomUUID();
-        when(fileRepo.findById(missingId)).thenReturn(Optional.empty());
+    void shouldReturnEmptyWhenFindByIdMissing() {
+        UUID id = UUID.randomUUID();
+        when(folderRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> fileService.deleteById(missingId))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("not found");
+        Optional<Folder> result = service.findById(id);
+
+        assertFalse(result.isPresent());
+        verify(folderRepository).findById(id);
     }
 
     /**
-     * Tests if the extracted text from a PDF file is correct.
-     *
-     * @throws IOException if an I/O error occurs
+     * Test that save delegates to the repository and returns the saved folder
      */
     @Test
-    void extractTextFromFiles_shouldReturnConcatenatedText() throws IOException {
-        UUID fileId = UUID.randomUUID();
-        File entity = new File("pdf.pdf");
-        entity.setUuid(fileId);
-        when(fileRepo.findById(fileId)).thenReturn(Optional.of(entity));
+    void shouldSaveFolder() {
+        Folder folder = new Folder();
+        when(folderRepository.save(folder)).thenReturn(folder);
 
-        java.io.File pdfFile = tempStorage.resolve(fileId.toString()).toFile();
-        PDDocument doc = new PDDocument();
-        PDPage page = new PDPage();
-        doc.addPage(page);
-        PDPageContentStream cs = new PDPageContentStream(doc, page);
-        cs.beginText();
-        cs.setFont(PDType1Font.HELVETICA, 12);
-        cs.newLineAtOffset(100, 700);
-        cs.showText("Hello Test");
-        cs.endText();
-        cs.close();
-        doc.save(pdfFile);
-        doc.close();
+        Folder result = service.save(folder);
 
-        String text = fileService.extractTextFromFiles(List.of(fileId));
-
-        assertThat(text).contains("Hello Test");
+        assertSame(folder, result);
+        verify(folderRepository).save(folder);
     }
 
     /**
-     * Tests if a file is deleted correctly when it exists.
+     * Test that deleteById delegates to the repository deleteById
      */
     @Test
-    void deleteById_shouldDeleteFileIfExists() {
-        UUID fileId = UUID.randomUUID();
-        File file = new File("test.pdf");
-        file.setUuid(fileId);
-        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
+    void shouldDeleteFolderById() {
+        UUID id = UUID.randomUUID();
 
-        fileService.deleteById(fileId);
+        service.deleteById(id);
 
-        verify(fileRepo, times(1)).deleteById(fileId);
+        verify(folderRepository).deleteById(id);
     }
 }
+

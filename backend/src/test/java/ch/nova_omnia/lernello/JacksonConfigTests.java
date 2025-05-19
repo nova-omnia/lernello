@@ -1,19 +1,23 @@
 package ch.nova_omnia.lernello;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import ch.nova_omnia.lernello.mapper.example.EntityEx;
+import ch.nova_omnia.lernello.mapper.example.EntityMapper;
+import ch.nova_omnia.lernello.mapper.example.EntityUpdateDTO;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ch.nova_omnia.lernello.mapper.example.EntityEx;
-import ch.nova_omnia.lernello.mapper.example.EntityMapper;
-import ch.nova_omnia.lernello.mapper.example.EntityUpdateDTO;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * Tests for the JacksonConfig class.
+ * <p>
+ * Please shut down the application before running these tests, as they will automatically start the application.
+ */
 @SpringBootTest
 public class JacksonConfigTests {
 

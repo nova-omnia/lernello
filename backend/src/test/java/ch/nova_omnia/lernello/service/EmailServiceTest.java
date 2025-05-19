@@ -123,4 +123,35 @@ class EmailServiceTest {
         assertThat(ex.getMessage()).contains("Failed to send email");
         verify(userRepo, never()).save(any());
     }
+
+    /**
+     * Tests if the email with new login data is sent correctly and the user's password is updated.
+     */
+    @Test
+    void sendNewLoginData_shouldGenerateAndSaveNewPassword() {
+        String generatedPlainPwd = "NewTempPass123!";
+        when(userService.generateRandomPassword()).thenReturn(generatedPlainPwd);
+        when(passwordEncoder.encode(any())).thenAnswer(inv -> "ENCODED_" + inv.getArgument(0));
+        doNothing().when(mailSender).send(any(MimeMessage.class));
+
+        emailService.sendNewLoginData(testUser);
+
+        verify(userService).generateRandomPassword();
+        verify(passwordEncoder).encode(generatedPlainPwd);
+        assertThat(testUser.isChangedPassword()).isFalse();
+        assertThat(testUser.getPassword()).isEqualTo("ENCODED_" + generatedPlainPwd);
+        verify(userRepo).save(testUser);
+        verify(mailSender).send((MimeMessage) argThat(mime -> {
+            try {
+                MimeMessage mm = (MimeMessage) mime;
+                MimeMessageHelper helper = new MimeMessageHelper(mm);
+                String to = helper.getMimeMessage().getAllRecipients()[0].toString();
+                String subject = helper.getMimeMessage().getSubject();
+                return to.equals(testUser.getUsername())
+                    && subject.contains("New Login Data");
+            } catch (Exception e) {
+                return false;
+            }
+        }));
+    }
 }

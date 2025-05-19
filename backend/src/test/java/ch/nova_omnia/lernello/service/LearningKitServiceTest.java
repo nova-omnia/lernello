@@ -183,4 +183,20 @@ class LearningKitServiceTest {
 
         assertDoesNotThrow(() -> service.reorderLearningUnits(kit, new String[]{"a", "b"}));
     }
+
+    /**
+     * Test that findById returns the correct LearningKit when present
+     */
+    @Test
+    void shouldReturnLearningKitById() {
+        UUID kitId = UUID.randomUUID();
+        LearningKit kit = new LearningKit();
+        kit.setUuid(kitId);
+        when(learningKitRepository.findById(kitId)).thenReturn(Optional.of(kit));
+
+        Optional<LearningKit> result = service.findById(kitId);
+
+        assertTrue(result.isPresent());
+        assertEquals(kit, result.get());
+    }
 }

@@ -82,7 +82,10 @@ public class LearningKitRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid LearningKitResDTO getLearningKitById(@Valid @PathVariable UUID id) {
-        return learningKitService.findById(id).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+
+        LearningKit learningKit = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitService.updateLearningKitStatistics(learningKit);
+        return learningKitMapper.toDTO(learningKit);
     }
 
     @PatchMapping("/{id}")

@@ -5,7 +5,6 @@ import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,10 +14,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LearningKitServiceTest {
@@ -69,17 +77,6 @@ class LearningKitServiceTest {
         Page<LearningKit> result = service.getList(Pageable.unpaged(), adminId);
 
         assertEquals(kits, result.getContent());
-    }
-
-    /**
-     * Test that findById throws EntityNotFoundException when kit is not found
-     */
-    @Test
-    void shouldThrowWhenFindingNonexistentById() {
-        UUID missingId = UUID.randomUUID();
-        when(learningKitRepository.findById(missingId)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> service.findById(missingId));
     }
 
     /**

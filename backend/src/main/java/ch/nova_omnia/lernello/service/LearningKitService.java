@@ -1,15 +1,5 @@
 package ch.nova_omnia.lernello.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.progress.LearningKitProgress;
 import ch.nova_omnia.lernello.model.data.user.Role;
@@ -18,6 +8,15 @@ import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -36,8 +35,6 @@ public class LearningKitService {
     }
 
     public Optional<LearningKit> findById(UUID id) {
-        updateLearningKitAverageProgress(learningKitRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LearningKit not found")));
-        updateLearningKitCompletionRate(learningKitRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LearningKit not found")));
         return learningKitRepository.findById(id);
     }
 
@@ -89,11 +86,16 @@ public class LearningKitService {
     }
 
     public void reorderLearningUnits(LearningKit learningKit, String[] learningUnitIds) {
-    //todo
+        //todo
+    }
+
+    public void updateLearningKitStatistics(LearningKit learningKit) {
+        updateLearningKitAverageProgress(learningKit);
+        updateLearningKitCompletionRate(learningKit);
     }
 
     private void updateLearningKitAverageProgress(LearningKit learningKit) {
-        List<LearningKitProgress> kitProgresses= progressService.getLearningKitProgressForAllTrainees(learningKit.getUuid());
+        List<LearningKitProgress> kitProgresses = progressService.getLearningKitProgressForAllTrainees(learningKit.getUuid());
         if (kitProgresses != null) {
             int totalProgress = 0;
             int count = 0;

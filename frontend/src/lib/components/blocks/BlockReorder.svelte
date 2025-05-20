@@ -6,6 +6,8 @@
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { initializeInstructorDnd } from '$lib/states/dndService';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
+	import { CheckCircle, Loader2 } from 'lucide-svelte';
+	import { _ } from 'svelte-i18n';
 
 	let { language, role } = $props();
 
@@ -61,6 +63,19 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
+		<button
+			type="button"
+			class="btn preset-outlined-surface-500 w-full mb-8"
+		>
+			{#if blockActionState.queue.length !== 0}
+				<Loader2 class="h-5 w-5 animate-spin" />
+				<span>{$_('block.saving')}</span>
+			{:else}
+				<CheckCircle class="h-5 w-5 text-green-600" />
+				<span>{$_('block.saved')}</span>
+			{/if}
+		</button>
+
 		{#if role === INSTRUCTOR_ROLE}
 			{#each blocksSnapshot as block (block.uuid)}
 				<div class="block" animate:flip={{ duration: 200 }}>

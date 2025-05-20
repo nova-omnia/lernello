@@ -18,6 +18,8 @@
 	"block.name": "Block Name",
 	"block.newName.danger": "Block Name has to be between 3 and 40 characters",
 	"block.questionBlock": "Question",
+	"block.saving": "Saving...",
+	"block.saved": "Saved",
 	"block.theoryBlock": "Theory",
 	"block.typeTheAnswer": "Type the answer",
 	"block.typeYourAnswer": "Type your answer",

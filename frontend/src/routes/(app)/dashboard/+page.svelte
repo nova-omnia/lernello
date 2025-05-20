@@ -70,7 +70,7 @@
 									uuid={kit.uuid}
 									role={data.userInfo.role}
 									published={kit.published}
-									deadlineDate = {kit.deadlineDate}
+									deadlineDate={kit.deadlineDate}
 								/>
 							</div>
 						</div>

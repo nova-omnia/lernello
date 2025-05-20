@@ -140,6 +140,8 @@
 	"learningKit.error.loadList": "Failed to load Learning Kits",
 	"learningKit.error.loadSingle": "Failed to load Learning Kit",
 	"learningKit.error.markOpened": "Failed to mark Learning Kit as opened",
+	"learningKit.expired": "This learning kit is no longer available. The deadline has passed.",
+	"learningKit.expired.short": "Learning Kit Closed",
 	"learningKit.form.create.error.description": "Failed to create Learning Kit",
 	"learningKit.form.create.error.title": "Creation Failed",
 	"learningKit.form.create.loading.description": "Please wait while the Learning Kit is being created...",

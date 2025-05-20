@@ -63,10 +63,7 @@
 		onconsider={handleSortOnConsider}
 		onfinalize={handleSortOnFinalize}
 	>
-		<button
-			type="button"
-			class="btn preset-outlined-surface-500 w-full mb-8"
-		>
+		<button type="button" class="btn preset-outlined-surface-500 mb-8 w-full">
 			{#if blockActionState.queue.length !== 0}
 				<Loader2 class="h-5 w-5 animate-spin" />
 				<span>{$_('block.saving')}</span>

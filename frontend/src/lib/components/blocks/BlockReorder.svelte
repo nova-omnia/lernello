@@ -4,7 +4,7 @@
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
-	import { CheckCircle, Loader2, GripVertical } from 'lucide-svelte';
+	import { CheckCircle, Loader2 } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 
 	let { language, role } = $props();

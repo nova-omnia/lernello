@@ -19,10 +19,12 @@
 		uuid: string;
 		role: RoleType;
 		published: boolean;
+		deadlineDate?: string | null;
 	}
 
-	const { title, uuid, role, published }: LearningKitProps = $props();
+	const { title, uuid, role, published, deadlineDate }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
+	let isExpired = $derived(deadlineDate && new Date(deadlineDate) < new Date());
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
@@ -77,15 +79,15 @@
 	<div></div>
 {:else}
 	<a
-		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 border p-4 text-center overflow-ellipsis {cardCompletedClass}"
+		class="text-surface-950-50 card hover:preset-filled-surface-100-900 relative flex h-36 w-full max-w-52 flex-col items-center justify-center space-y-2 overflow-ellipsis border p-4 text-center {cardCompletedClass}"
 		href="/learningkit/{uuid}?tab=learningUnits"
 	>
 		{#if role === INSTRUCTOR_ROLE}
-			<div class="absolute top-2 left-2">
+			<div class="absolute left-2 top-2">
 				<PublishedStatusIndicator {published} />
 			</div>
 			<button
-				class="absolute top-0 right-0 z-10 flex gap-2 p-2"
+				class="absolute right-0 top-0 z-10 flex gap-2 p-2"
 				onclick={(e) => {
 					e.preventDefault();
 					showDeleteDialog = true;
@@ -94,9 +96,9 @@
 				<Trash2 class="h-4 w-4 text-red-500" />
 			</button>
 		{/if}
-		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data}
+		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data && !isExpired}
 			{#if isCompleted}
-				<div class="absolute top-2 left-2">
+				<div class="absolute left-2 top-2">
 					<CheckCircle2 class="h-6 w-6 text-green-500" />
 				</div>
 			{/if}
@@ -110,6 +112,11 @@
 			</div>
 		{/if}
 		<p class="w-48 truncate">{title}</p>
+		{#if role === TRAINEE_ROLE && isExpired}
+			<p class="mt-2 text-xs text-red-500">
+				{$_('learningKit.expired.short')}
+			</p>
+		{/if}
 	</a>
 {/if}
 

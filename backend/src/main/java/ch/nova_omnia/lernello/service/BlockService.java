@@ -164,11 +164,11 @@ public class BlockService {
         }
 
         if (updateAction.question() != null) {
-            if (block instanceof QuestionBlock || block instanceof TranslatedBlock) {
+            if (block instanceof QuestionBlock) {
                 QuestionBlock questionBlock = (QuestionBlock) block;
                 questionBlock.setQuestion(updateAction.question());
                 questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
-            } else if (block instanceof MultipleChoiceBlock || block instanceof TranslatedBlock) {
+            } else if (block instanceof MultipleChoiceBlock) {
                 MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
                 mcBlock.setQuestion(updateAction.question());
                 mcBlock.setPossibleAnswers(updateAction.possibleAnswers());

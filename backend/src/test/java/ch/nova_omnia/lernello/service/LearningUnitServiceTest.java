@@ -7,6 +7,7 @@ import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
@@ -40,6 +41,8 @@ class LearningUnitServiceTest {
     private BlockRepository blockRepository;
     @Mock
     private AIBlockService aiBlockService;
+    @Mock
+    private BlockProgressRepository blockProgressRepository;
     @InjectMocks
     private LearningUnitService service;
 
@@ -97,8 +100,10 @@ class LearningUnitServiceTest {
         UUID kitId = UUID.randomUUID();
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
-        LearningUnit lu1 = new LearningUnit(); lu1.setUuid(id1);
-        LearningUnit lu2 = new LearningUnit(); lu2.setUuid(id2);
+        LearningUnit lu1 = new LearningUnit();
+        lu1.setUuid(id1);
+        LearningUnit lu2 = new LearningUnit();
+        lu2.setUuid(id2);
         when(learningUnitRepository.findLearningUnitAsc(kitId)).thenReturn(List.of(lu1, lu2));
         UpdateLearningUnitOrderDTO dto = mock(UpdateLearningUnitOrderDTO.class);
         when(dto.learningUnitUuidsInOrder()).thenReturn(List.of(id2, id1));
@@ -121,7 +126,8 @@ class LearningUnitServiceTest {
     void shouldThrowWhenUpdatingPositionWithInvalidId() {
         UUID kitId = UUID.randomUUID();
         UUID missingId = UUID.randomUUID();
-        LearningUnit lu = new LearningUnit(); lu.setUuid(UUID.randomUUID());
+        LearningUnit lu = new LearningUnit();
+        lu.setUuid(UUID.randomUUID());
         when(learningUnitRepository.findLearningUnitAsc(kitId)).thenReturn(List.of(lu));
         UpdateLearningUnitOrderDTO dto = mock(UpdateLearningUnitOrderDTO.class);
         when(dto.learningUnitUuidsInOrder()).thenReturn(List.of(missingId));
@@ -152,8 +158,7 @@ class LearningUnitServiceTest {
     void shouldThrowOnRenameWhenNameInvalid() {
         UUID id = UUID.randomUUID();
         assertAll(
-            () -> assertThrows(IllegalArgumentException.class, () -> service.renameLearningUnit(id, null)),
-            () -> assertThrows(IllegalArgumentException.class, () -> service.renameLearningUnit(id, "  "))
+                () -> assertThrows(IllegalArgumentException.class, () -> service.renameLearningUnit(id, null)), () -> assertThrows(IllegalArgumentException.class, () -> service.renameLearningUnit(id, "  "))
         );
     }
 
@@ -168,7 +173,8 @@ class LearningUnitServiceTest {
         Block old1 = new TheoryBlock();
         Block old2 = new TheoryBlock();
         unit.setBlocks(new ArrayList<>(List.of(old1, old2)));
-        TranslatedBlock tb1 = new TranslatedBlock(); TranslatedBlock tb2 = new TranslatedBlock();
+        TranslatedBlock tb1 = new TranslatedBlock();
+        TranslatedBlock tb2 = new TranslatedBlock();
         when(learningUnitRepository.findById(unitId)).thenReturn(Optional.of(unit));
         when(translatedBlockRepository.findByOriginalBlockIn(List.of(old1, old2))).thenReturn(List.of(tb1, tb2));
         List<UUID> fileIds = List.of(UUID.randomUUID());

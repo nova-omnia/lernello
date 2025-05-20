@@ -40,7 +40,7 @@
 	}
 </script>
 
-<div class="preset-filled-surface-50-950 mt-5 space-y-4 overflow-y-auto p-3">
+<div class="preset-filled-surface-50-950 mt-0 space-y-4 overflow-y-auto p-3">
 	<button
 		type="button"
 		class="btn preset-outlined-surface-500 pointer-events-none mb-8 w-full cursor-default"

@@ -40,6 +40,13 @@
 			newIndex: newBlockIdx
 		});
 	}
+
+	function scrollToBlock(blockId: string) {
+		const element = document.getElementById(`block-${blockId}`);
+		if (element) {
+			element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	}
 </script>
 
 <div class="preset-filled-surface-50-950 mt-5 space-y-4 overflow-y-auto p-3">
@@ -57,7 +64,12 @@
 		{#if role === INSTRUCTOR_ROLE}
 			{#each blocksSnapshot as block (block.uuid)}
 				<div class="block" animate:flip={{ duration: 200 }}>
-					<BlockReorderItem {block} role={INSTRUCTOR_ROLE} {language} />
+					<BlockReorderItem
+						{block}
+						role={INSTRUCTOR_ROLE}
+						{language}
+						scrollToBlock={() => scrollToBlock(block.uuid)}
+					/>
 				</div>
 			{/each}
 		{/if}

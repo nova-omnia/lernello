@@ -19,10 +19,12 @@
 		uuid: string;
 		role: RoleType;
 		published: boolean;
+		deadlineDate?: string | null;
 	}
 
-	const { title, uuid, role, published }: LearningKitProps = $props();
+	const { title, uuid, role, published, deadlineDate }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
+	let isExpired = $derived(deadlineDate && new Date(deadlineDate) < new Date());
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
@@ -94,7 +96,7 @@
 				<Trash2 class="h-4 w-4 text-red-500" />
 			</button>
 		{/if}
-		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data}
+		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data && !isExpired}
 			{#if isCompleted}
 				<div class="absolute top-2 left-2">
 					<CheckCircle2 class="h-6 w-6 text-green-500" />
@@ -110,6 +112,11 @@
 			</div>
 		{/if}
 		<p class="w-48 truncate">{title}</p>
+		{#if role === TRAINEE_ROLE && isExpired}
+			<p class="mt-2 text-xs text-red-500">
+				{$_('learningKit.expired.short')}
+			</p>
+		{/if}
 	</a>
 {/if}
 

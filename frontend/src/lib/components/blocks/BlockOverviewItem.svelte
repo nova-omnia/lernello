@@ -69,14 +69,20 @@
 </script>
 
 {#if role === INSTRUCTOR_ROLE}
-	<div
-		class="card bg-surface-100-900 border-surface-200-800 flex items-center gap-1 border p-2 shadow transition-all duration-200"
+	<button
+		type="button"
+		onclick={() => {
+			if (scrollToBlock) {
+				scrollToBlock();
+			}
+		}}
+		class="card bg-surface-100-900 border-surface-200-800 hover:bg-surface-300-700 flex w-full cursor-pointer items-center gap-2 border p-2 text-left shadow transition-all duration-200"
 	>
 		<div use:dragHandle aria-label={`drag-handle for ${block.name}`}>
 			<GripVertical class="text-surface-400-600 h-6 w-6" />
 		</div>
 		<BlockIconHeader {block} role={TRAINEE_ROLE} {language} />
-	</div>
+	</button>
 {:else if role === TRAINEE_ROLE}
 	<button
 		type="button"

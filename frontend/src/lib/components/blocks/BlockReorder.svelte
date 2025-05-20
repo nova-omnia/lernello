@@ -59,7 +59,10 @@
 			use:dndzone={{
 				items: blocks,
 				flipDurationMs: 200,
-				dropTargetStyle: { outline: '1px dashed oklch(45.77% 0.07 211.76deg)', borderRadius: '.5rem' }
+				dropTargetStyle: {
+					outline: '1px dashed oklch(45.77% 0.07 211.76deg)',
+					borderRadius: '.5rem'
+				}
 			}}
 			onconsider={handleReorder}
 			onfinalize={handleReorder}

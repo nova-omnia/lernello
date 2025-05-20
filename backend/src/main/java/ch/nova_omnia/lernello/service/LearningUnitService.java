@@ -14,6 +14,7 @@ import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
@@ -31,6 +32,7 @@ public class LearningUnitService {
     private final TranslatedBlockRepository translatedBlockRepository;
     private final BlockRepository blockRepository;
     private final AIBlockService aiBlockService;
+    private final BlockProgressRepository blockProgressRepository;
 
     @Transactional
     public LearningUnit createLearningUnit(LearningUnit learningUnit, UUID learningKitId) {
@@ -83,6 +85,7 @@ public class LearningUnitService {
 
         List<Block> oldBlocks = new ArrayList<>(learningUnit.getBlocks());
         List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlockIn(oldBlocks);
+        blockProgressRepository.deleteByBlockIn(oldBlocks);
         translatedBlockRepository.deleteAll(translations);
 
         learningUnit.getBlocks().clear();

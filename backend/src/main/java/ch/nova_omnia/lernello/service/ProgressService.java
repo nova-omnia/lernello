@@ -59,8 +59,7 @@ public class ProgressService {
     public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
         updateLearningKitProgressPercentage(
-            getOrCreateLearningKitProgress(user, learningKitRepository.findById(dto.learningKitId())
-                .orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()))));
+                getOrCreateLearningKitProgress(user, learningKitRepository.findById(dto.learningKitId()).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()))));
         LearningKit learningKit = learningKitRepository.findById(dto.learningKitId()).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
 
         LearningKitProgress progress = getOrCreateLearningKitProgress(user, learningKit);
@@ -75,8 +74,7 @@ public class ProgressService {
     @Transactional
     public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId())
-            .orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
+        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId()).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
 
         LearningKit learningKit = learningUnit.getLearningKit();
         if (learningKit == null) {
@@ -129,6 +127,9 @@ public class ProgressService {
         }
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
+        if (block instanceof TranslatedBlock translatedBlock && block.getType().equals(BlockType.MULTIPLE_CHOICE)) {
+            isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(translatedBlock.getCorrectAnswers()));
+        }
 
         if (blockProgress instanceof MultipleChoiceBlockProgress mcProgress) {
             mcProgress.setIsCorrect(isCorrect);

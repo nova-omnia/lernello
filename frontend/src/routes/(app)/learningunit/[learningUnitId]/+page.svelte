@@ -93,7 +93,9 @@
 				onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
 			/>
 			{#if data.userInfo.role === INSTRUCTOR_ROLE}
-				<BlockReorder {language} role={data.userInfo.role} />
+				<div class="sticky top-30 h-fit self-start">
+					<BlockReorder {language} role={data.userInfo.role} />
+				</div>
 			{/if}
 		</div>
 	</div>

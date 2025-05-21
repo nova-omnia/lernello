@@ -144,7 +144,7 @@ public class EmailService {
                     %s
 
                     Deadline: %s
-                    Context : %s
+                    Description : %s
 
                     Open the kit → %s%s
                 """.formatted(user.getUsername(), kit.getName(), kit.getDescription(), kit.getDeadlineDate(), "https://lernello.vercel.app/learningkit/" + kit.getUuid(), pwdLine);

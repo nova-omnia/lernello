@@ -211,7 +211,7 @@
 		message={$_('learningKit.delete.confirmationMessage', {
 			values: { name: $learningKitQuery.data.name }
 		})}
-		confirmText="Delete"
+		confirmText={$_('common.delete')}
 		danger={true}
 		onConfirm={() => {
 			$deleteLearningKitMutation.mutate($learningKitQuery.data.uuid);

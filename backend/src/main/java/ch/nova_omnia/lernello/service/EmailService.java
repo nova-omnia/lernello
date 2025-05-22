@@ -125,7 +125,6 @@ public class EmailService {
                     <p style="font-size:15px;">%s</p>
                     <table style="margin:20px 0;">
                       <tr><td><strong>Deadline&nbsp;</strong></td><td>%s</td></tr>
-                      <tr><td><strong>Context&nbsp;</strong></td><td>%s</td></tr>
                     </table>
                     <p>
                       <a href="%s" style="background:#2563eb; color:#ffffff; padding:12px 24px;
@@ -149,7 +148,6 @@ public class EmailService {
                     %s
 
                     Deadline: %s
-                    Description : %s
 
                     Open the kit → %s%s
                 """.formatted(user.getUsername(), kit.getName(), kit.getDescription(), kit.getDeadlineDate(), "https://lernello.vercel.app/learningkit/" + kit.getUuid(), pwdLine);

@@ -10,12 +10,11 @@ import jakarta.validation.constraints.Size;
 
 
 public record UpdateLearningKitDTO(
-    @Size(min = 3, max = 40) String name,
-    @Size(max = 200) JsonNullable<String> description,
-    JsonNullable<ZonedDateTime> deadlineDate,
-    @Size(max = 200) JsonNullable<String> context,
-    boolean published,
-    List<UUID> files,
-    List<UUID> trainees
+                                   @Size(min = 3, max = 40) String name,
+                                   @Size(max = 200) JsonNullable<String> description,
+                                   JsonNullable<ZonedDateTime> deadlineDate,
+                                   boolean published,
+                                   List<UUID> files,
+                                   List<UUID> trainees
 ) {
 }

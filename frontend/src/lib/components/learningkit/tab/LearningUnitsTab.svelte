@@ -112,7 +112,6 @@
 	<div class="flex w-full justify-between gap-4">
 		<div>
 			<h2 class="preset-typo-subtitle">{$_('learningKit.learningUnits')}</h2>
-			<p>{$_('learningKit.learningUnit.description')}</p>
 		</div>
 		{#if role === INSTRUCTOR_ROLE}
 			<a

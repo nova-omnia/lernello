@@ -17,6 +17,9 @@ public enum AIPromptTemplate {
             IMPORTANT: Respond only with pure JSON in the following format:
             { "content": "..." }
 
+            IMPORTANT:
+            - integrate the user's personal prompt or intention: '%s',
+            - adapt the tone and complexity based on the specified difficulty: '%s'
             """),
 
     MULTIPLE_CHOICE("""
@@ -31,6 +34,10 @@ public enum AIPromptTemplate {
 
             - Ensure that the question is not longer than 200 characters and the possibleAnswers and correctAnswers are not longer than 100 characters each.
             - The content must be written in **English**, even if the input is in a different language.
+
+            IMPORTANT:
+            - integrate the user's personal prompt or intention: '%s',
+            - adapt the tone and complexity based on the specified difficulty: '%s'
             """),
 
     QUESTION_BLOCK("""
@@ -44,6 +51,10 @@ public enum AIPromptTemplate {
 
             - Ensure that both the question and the expectedAnswer are not longer than 200 characters each.
             - The content must be written in **English**, even if the input is in a different language.
+
+            IMPORTANT:
+            - integrate the user's personal prompt or intention: '%s',
+            - adapt the tone and complexity based on the specified difficulty: '%s'
             """),
 
     TOPIC_EXTRACTION("""

@@ -68,7 +68,7 @@
 				<option value="" disabled selected hidden>
 					{$_('dialog.difficulty.placeholder')}
 				</option>
-				{#each difficultyOptions as option}
+				{#each difficultyOptions as option (option.value)}
 					<option value={option.value}>{option.label}</option>
 				{/each}
 			</select>

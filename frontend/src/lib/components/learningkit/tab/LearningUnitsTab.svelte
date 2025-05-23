@@ -89,8 +89,19 @@
 	});
 
 	const generateLearningUnitMutation = createMutation({
-		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
-			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
+		mutationFn: ({
+			id,
+			files,
+			prompt,
+			difficulty,
+			options
+		}: {
+			id: string;
+			files: string[];
+			prompt: string;
+			difficulty: string;
+			options: { theory: boolean; questions: boolean };
+		}) => api(fetch).req(generateLearningUnit, { fileIds: files, prompt, difficulty, includeTheory: options.theory, includeQuestions: options.questions }, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
@@ -143,10 +154,13 @@
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
 					}}
-					onGenerateLearningUnit={(files) => {
+					onGenerateLearningUnit={(files, prompt, difficulty, options) => {
 						$generateLearningUnitMutation.mutate({
 							id: learningUnit.uuid,
-							files
+							files,
+							prompt,
+							difficulty,
+							options
 						});
 					}}
 					{role}

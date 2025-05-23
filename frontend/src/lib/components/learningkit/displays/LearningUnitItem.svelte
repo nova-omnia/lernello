@@ -17,7 +17,12 @@
 	interface LearningUnitProps {
 		learningUnit: LearningUnitRes;
 		onDeleteLearningUnit: () => void;
-		onGenerateLearningUnit: (files: string[]) => void;
+		onGenerateLearningUnit: (
+			files: string[],
+			prompt: string,
+			difficulty: string,
+			options: { theory: boolean; questions: boolean }
+		) => void;
 		role: RoleType;
 		isLoading: boolean;
 		invalidateLearningKitQuery: () => void;
@@ -182,7 +187,7 @@
 					<AlignLeft size={32} />
 					{#if role === TRAINEE_ROLE && isCompleted}
 						<CheckCircle2
-							class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
+							class="bg-surface-100-900 absolute -right-1 -top-1 h-4 w-4 rounded-full text-green-500"
 						/>
 					{/if}
 				</div>
@@ -225,8 +230,8 @@
 <GenerateLearningUnitModal
 	bind:isOpen={showGenerationDialog}
 	isLoading={false}
-	onConfirm={(files) => {
-		onGenerateLearningUnit(files);
+	onConfirm={(files, prompt, difficulty, options) => {
+		onGenerateLearningUnit(files, prompt, difficulty, options);
 		showGenerationDialog = false;
 	}}
 	onCancel={() => {

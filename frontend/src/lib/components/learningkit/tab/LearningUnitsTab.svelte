@@ -101,7 +101,20 @@
 			prompt: string;
 			difficulty: string;
 			options: { theory: boolean; questions: boolean };
-		}) => api(fetch).req(generateLearningUnit, { fileIds: files, prompt, difficulty, includeTheory: options.theory, includeQuestions: options.questions }, id).parse(),
+		}) =>
+			api(fetch)
+				.req(
+					generateLearningUnit,
+					{
+						fileIds: files,
+						prompt,
+						difficulty,
+						includeTheory: options.theory,
+						includeQuestions: options.questions
+					},
+					id
+				)
+				.parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({

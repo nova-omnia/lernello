@@ -61,7 +61,10 @@
 				class="input w-full"
 			/>
 
-			<select  bind:value={difficulty} class="input w-full bg-surface-200 text-surface-900 dark:bg-surface-800 dark:text-surface-100 border border-surface-300 dark:border-surface-600 rounded">
+			<select
+				bind:value={difficulty}
+				class="input bg-surface-200 text-surface-900 dark:bg-surface-800 dark:text-surface-100 border-surface-300 dark:border-surface-600 w-full rounded border"
+			>
 				<option value="" disabled selected hidden>
 					{$_('dialog.difficulty.placeholder')}
 				</option>
@@ -97,7 +100,7 @@
 
 			{#if selectedFiles.length > 0}
 				<div class="mt-1">
-					<div class="max-h-55 flex flex-col gap-0.5 overflow-y-auto">
+					<div class="flex max-h-55 flex-col gap-0.5 overflow-y-auto">
 						{#each selectedFiles as file (file.uuid)}
 							<FileItem
 								file={{ uuid: file.uuid, name: file.label }}

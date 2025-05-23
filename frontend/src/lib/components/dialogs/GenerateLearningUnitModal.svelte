@@ -61,7 +61,7 @@
 				class="input w-full"
 			/>
 
-			<select bind:value={difficulty} class="input w-full">
+			<select  bind:value={difficulty} class="input w-full bg-surface-200 text-surface-900 dark:bg-surface-800 dark:text-surface-100 border border-surface-300 dark:border-surface-600 rounded">
 				<option value="" disabled selected hidden>
 					{$_('dialog.difficulty.placeholder')}
 				</option>

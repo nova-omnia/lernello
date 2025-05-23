@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -80,7 +81,7 @@ public class LearningUnitService {
     }
 
     @Transactional
-    public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
+    public LearningUnit generateLearningUnitWithAI(GenerateLearningUnitDTO generateLearningUnitDTO, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
 
         List<Block> oldBlocks = new ArrayList<>(learningUnit.getBlocks());
@@ -91,7 +92,7 @@ public class LearningUnitService {
         learningUnit.getBlocks().clear();
         blockRepository.deleteAll(oldBlocks);
 
-        List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
+        List<Block> blocks = aiBlockService.generateBlocksAI(generateLearningUnitDTO);
 
         for (Block block : blocks) {
             block.setLearningUnit(learningUnit);

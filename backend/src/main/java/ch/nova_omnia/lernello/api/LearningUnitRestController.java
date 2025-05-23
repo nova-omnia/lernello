@@ -84,7 +84,7 @@ public class LearningUnitRestController {
     @PostMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
     public @Valid LearningUnitResDTO generateLearningUnit(@PathVariable UUID id, @RequestBody GenerateLearningUnitDTO generateLearningUnitDTO) {
-        LearningUnit learningUnit = learningUnitService.generateLearningUnitWithAI(generateLearningUnitDTO.fileIds(), id);
+        LearningUnit learningUnit = learningUnitService.generateLearningUnitWithAI(generateLearningUnitDTO, id);
         return learningUnitMapper.toDTO(learningUnit);
     }
 

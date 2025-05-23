@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello.service;
 
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
@@ -178,15 +179,16 @@ class LearningUnitServiceTest {
         when(learningUnitRepository.findById(unitId)).thenReturn(Optional.of(unit));
         when(translatedBlockRepository.findByOriginalBlockIn(List.of(old1, old2))).thenReturn(List.of(tb1, tb2));
         List<UUID> fileIds = List.of(UUID.randomUUID());
-        when(aiBlockService.generateBlocksAI(fileIds)).thenReturn(List.of(new TheoryBlock(), new TheoryBlock()));
+        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(fileIds, "", "", true, true);
+        when(aiBlockService.generateBlocksAI(generateLearningUnitDTO)).thenReturn(List.of(new TheoryBlock(), new TheoryBlock()));
         when(learningUnitRepository.save(unit)).thenReturn(unit);
 
-        LearningUnit result = service.generateLearningUnitWithAI(fileIds, unitId);
+        LearningUnit result = service.generateLearningUnitWithAI(generateLearningUnitDTO, unitId);
 
         assertEquals(2, result.getBlocks().size());
         verify(translatedBlockRepository).deleteAll(List.of(tb1, tb2));
         verify(blockRepository).deleteAll(List.of(old1, old2));
-        verify(aiBlockService).generateBlocksAI(fileIds);
+        verify(aiBlockService).generateBlocksAI(generateLearningUnitDTO);
         verify(learningUnitRepository).save(unit);
     }
 
@@ -198,7 +200,8 @@ class LearningUnitServiceTest {
         UUID unitId = UUID.randomUUID();
         when(learningUnitRepository.findById(unitId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.generateLearningUnitWithAI(List.of(), unitId));
+        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(List.of(), "", "", true, true);
+        assertThrows(IllegalArgumentException.class, () -> service.generateLearningUnitWithAI(generateLearningUnitDTO, unitId));
     }
 
     /**

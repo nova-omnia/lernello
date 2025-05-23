@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
 
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.BlockLanguage;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
@@ -159,11 +160,11 @@ public class AIBlockService {
     }
 
     @Transactional
-    public List<Block> generateBlocksAI(List<UUID> fileIds) {
+    public List<Block> generateBlocksAI(GenerateLearningUnitDTO generateLearningUnitDTO) {
         List<Block> blocks = new ArrayList<>();
         ConcurrentHashMap<String, List<Block>> topicBlocksMap = new ConcurrentHashMap<>();
 
-        extractTopicsFromFiles(fileIds, topicBlocksMap);
+        extractTopicsFromFiles(generateLearningUnitDTO, topicBlocksMap);
 
         List<Block> orderedBlocks = new ArrayList<>();
         topicBlocksMap.forEach((_, topicBlocks) -> orderedBlocks.addAll(topicBlocks));
@@ -176,17 +177,17 @@ public class AIBlockService {
         return blocks;
     }
 
-    private void extractTopicsFromFiles(List<UUID> fileIds, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
-        fileIds.parallelStream().forEach(fileId -> {
+    private void extractTopicsFromFiles(GenerateLearningUnitDTO generateLearningUnitDTO, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
+        generateLearningUnitDTO.fileIds().parallelStream().forEach(fileId -> {
             String context = fileService.extractTextFromFile(fileId);
             String prompt = AIPromptTemplate.TOPIC_EXTRACTION.format(context);
             String aiResponse = aiClient.sendPrompt(prompt);
             JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
-            generateBlocksFromTopics(jsonNode, topicBlocksMap);
+            generateBlocksFromTopics(jsonNode, topicBlocksMap, generateLearningUnitDTO);
         });
     }
 
-    private void generateBlocksFromTopics(JsonNode jsonNode, ConcurrentHashMap<String, List<Block>> topicBlocksMap) {
+    private void generateBlocksFromTopics(JsonNode jsonNode, ConcurrentHashMap<String, List<Block>> topicBlocksMap, GenerateLearningUnitDTO generateLearningUnitDTO) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         jsonNode.fields().forEachRemaining(entry -> {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
@@ -194,26 +195,36 @@ public class AIBlockService {
                 String topicContent = entry.getValue().asText();
 
                 topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());
-                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle), topicTitle);
+                createBlocksForTopic(topicContent, topicBlocksMap.get(topicTitle), topicTitle, generateLearningUnitDTO);
             }, executor);
             futures.add(future);
         });
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
-    private void createBlocksForTopic(String content, List<Block> topicBlocks, String blockName) {
+    private void createBlocksForTopic(String content, List<Block> topicBlocks, String blockName, GenerateLearningUnitDTO generateLearningUnitDTO) {
         if (content == null || content.isBlank()) return;
 
         try {
             List<CompletableFuture<Block>> futures = new ArrayList<>();
-            futures.add(CompletableFuture.supplyAsync(() -> generateTheoryBlockFromTopic(content, blockName), executor));
-            futures.add(CompletableFuture.supplyAsync(() -> {
-                if (Math.random() < 0.5) {
-                    return generateQuestionBlockAIFromTopic(content, blockName);
-                } else {
-                    return generateMultipleChoiceBlockAIFromTopic(content, blockName);
-                }
-            }, executor));
+
+            if (generateLearningUnitDTO.includeTheory()) {
+                futures.add(CompletableFuture.supplyAsync(() -> generateTheoryBlockFromTopic(
+                        content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
+            }
+
+            if (generateLearningUnitDTO.includeQuestions()) {
+                futures.add(CompletableFuture.supplyAsync(() -> {
+                    if (Math.random() < 0.5) {
+                        return generateQuestionBlockAIFromTopic(
+                                content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt());
+                    } else {
+                        return generateMultipleChoiceBlockAIFromTopic(
+                                content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt());
+                    }
+                }, executor));
+            }
+
             List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();
             topicBlocks.addAll(blocks);
         } catch (Exception e) {
@@ -221,10 +232,10 @@ public class AIBlockService {
         }
     }
 
-    private TheoryBlock generateTheoryBlockFromTopic(String topic, String topicName) {
+    private TheoryBlock generateTheoryBlockFromTopic(String topic, String topicName, String prompt, String difficulty) {
         TheoryBlock block = new TheoryBlock();
-        String prompt = AIPromptTemplate.THEORY_BLOCK.format("", topic);
-        String aiResponse = aiClient.sendPrompt(prompt);
+        String promptToSend = AIPromptTemplate.THEORY_BLOCK.format(topicName, topic, prompt, difficulty);
+        String aiResponse = aiClient.sendPrompt(promptToSend);
         JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock for topic");
         block.setContent(jsonNode.get("content").asText());
         block.setName(topicName);
@@ -234,9 +245,9 @@ public class AIBlockService {
         return block;
     }
 
-    private QuestionBlock generateQuestionBlockAIFromTopic(String topic, String topicName) {
-        String prompt = AIPromptTemplate.QUESTION_BLOCK.format(topic);
-        String aiResponse = aiClient.sendPrompt(prompt);
+    private QuestionBlock generateQuestionBlockAIFromTopic(String topic, String topicName, String prompt, String difficulty) {
+        String promptToSend = AIPromptTemplate.QUESTION_BLOCK.format(topic, prompt, difficulty);
+        String aiResponse = aiClient.sendPrompt(promptToSend);
         QuestionBlock questionBlock = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock from topic");
         questionBlock.setName(topicName);
         questionBlock.setType(BlockType.QUESTION);
@@ -245,9 +256,9 @@ public class AIBlockService {
         return questionBlock;
     }
 
-    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic, String topicName) {
-        String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(topic);
-        String aiResponse = aiClient.sendPrompt(prompt);
+    private MultipleChoiceBlock generateMultipleChoiceBlockAIFromTopic(String topic, String topicName, String prompt, String difficulty) {
+        String promptToSend = AIPromptTemplate.MULTIPLE_CHOICE.format(topic, prompt, difficulty);
+        String aiResponse = aiClient.sendPrompt(promptToSend);
         MultipleChoiceBlock mcBlock = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock from topic");
         mcBlock.setName(topicName);
         mcBlock.setType(BlockType.MULTIPLE_CHOICE);

@@ -17,6 +17,7 @@
 		showProgress?: boolean;
 		progressPercentage?: number;
 		isCompleted?: boolean;
+		canEdit: boolean;
 	}
 
 	const invalidate = useQueryInvalidation();
@@ -26,7 +27,8 @@
 		onRemoveUser,
 		showProgress = false,
 		progressPercentage,
-		isCompleted
+		isCompleted,
+		canEdit = true
 	}: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
@@ -64,14 +66,18 @@
 	class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4 {showProgress &&
 	isCompleted
 		? 'border-l-4 border-green-500'
-		: 'border-surface-100-900 border-l-4'}"
+		: 'border-surface-100-900 border-l-4'} {canEdit
+		? ''
+		: 'cursor-not-allowed select-none opacity-50'}"
+	title={!canEdit ? $_('users.overview.cannot_edit') : ''}
+	aria-disabled={!canEdit}
 >
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
 		<div class="relative">
 			<Avatar name="{user.surname} {user.name}" classes="h-10 w-10" />
 			{#if showProgress && isCompleted}
 				<CheckCircle2
-					class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
+					class="bg-surface-100-900 absolute -right-1 -top-1 h-4 w-4 rounded-full text-green-500"
 				/>
 			{/if}
 		</div>
@@ -94,7 +100,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="flex gap-2">
+		<div class="flex gap-2 {canEdit ? '' : 'pointer-events-none'}">
 			{#if isUsersView}
 				<a href={`/users/${user.uuid}/edit-form`} class="btn preset-outlined-surface-500">
 					{$_('common.edit')}

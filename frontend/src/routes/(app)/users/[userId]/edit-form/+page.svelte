@@ -8,8 +8,9 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
-	const invalidate = useQueryInvalidation();
 
+	const invalidate = useQueryInvalidation();
+	
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
 			invalidate([

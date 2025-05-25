@@ -7,6 +7,9 @@
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
+	import { page } from '$app/state';
+
+	let { instructorUuid } = $props();
 
 	const invalidate = useQueryInvalidation();
 
@@ -47,11 +50,12 @@
 		{:else if $instructorsQuery.status === 'error'}
 			<ErrorIllustration>{$_('trainees.error.loadList')}</ErrorIllustration>
 		{:else}
-			{#each $instructorsQuery.data ?? [] as trainee (trainee.uuid)}
+			{#each $instructorsQuery.data ?? [] as instructor (instructor.uuid)}
 				<UserItem
 					isUsersView={true}
-					user={trainee}
-					onRemoveUser={() => $deleteInstructorMutation.mutate(trainee.uuid)}
+					user={instructor}
+					onRemoveUser={() => $deleteInstructorMutation.mutate(instructor.uuid)}
+					canEdit={instructor.uuid !== instructorUuid}
 				/>
 			{/each}
 		{/if}

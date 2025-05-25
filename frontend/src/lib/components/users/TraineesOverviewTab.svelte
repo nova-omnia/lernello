@@ -12,7 +12,9 @@
 
 	const traineesQuery = createQuery({
 		queryKey: ['trainees-overview-list'],
-		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
+		queryFn: () => api(fetch).req(getAllTrainees, null).parse(),
+		staleTime: 0,
+		refetchOnMount: true
 	});
 
 	const deleteTraineeMutation = createMutation({

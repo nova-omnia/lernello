@@ -44,7 +44,6 @@ public class UserService {
         }
         removeInstructorFromLearningKits(user, existingUser);
 
-        existingUser.setUsername(user.getUsername());
         existingUser.setName(user.getName());
         existingUser.setSurname(user.getSurname());
         existingUser.setRole(user.getRole());

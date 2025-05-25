@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { Role } from '$lib/schemas/response/UserInfo';
 
 export const UpdateUserSchema = z.object({
-	username: z.string().email().nonempty(),
 	name: z
 		.string()
 		.min(3, { message: 'Name must be at least 3 characters' })

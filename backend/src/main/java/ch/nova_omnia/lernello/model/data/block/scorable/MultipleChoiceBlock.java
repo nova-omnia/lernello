@@ -11,8 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,20 +21,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MultipleChoiceBlock extends ScorableBlock {
 
-    @NotBlank
     @Column(name = "question", nullable = true)
     private String question;
 
     @ElementCollection
     @CollectionTable(name = "multiple_choice_possible_answers", joinColumns = @JoinColumn(name = "block_id"))
     @Column(name = "possible_answer")
-    @NotEmpty
     private List<String> possibleAnswers = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "multiple_choice_correct_answers", joinColumns = @JoinColumn(name = "block_id"))
     @Column(name = "correct_answer")
-    @NotEmpty
     private List<String> correctAnswers = new ArrayList<>();
 
     public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question, List<String> possibleAnswers, List<String> correctAnswers) {

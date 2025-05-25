@@ -22,6 +22,7 @@
 				description: $_('user.form.edit.success.description'),
 				type: 'success'
 			});
+			window.history.back();
 		},
 		onError(error) {
 			toaster.create({
@@ -99,9 +100,13 @@
 		</div>
 
 		<div class="flex justify-end gap-2">
-			<a class="btn preset-outlined-surface-500" href="/users">
+			<button
+				type="button"
+				class="btn preset-outlined-surface-500"
+				onclick={() => window.history.back()}
+			>
 				{$_('common.cancel')}
-			</a>
+			</button>
 			<button class="btn preset-filled-primary-500">{$_('common.save')}</button>
 		</div>
 

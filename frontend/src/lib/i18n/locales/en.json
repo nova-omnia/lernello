@@ -114,6 +114,7 @@
 	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.uploading": "Uploading...",
 	"files.upload.uploading.description": "File is being uploaded",
+	"files.upload.error.description": "Failed to upload file",
 	"form.confirmPasswordLabel": "Confirm Password",
 	"form.confirmPasswordPlaceholder": "confirm password",
 	"form.deadlineLabel": "Deadline",

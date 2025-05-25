@@ -59,7 +59,7 @@
 				{/snippet}
 				{#snippet content()}
 					<Tabs.Panel value={tabGroup.instructors}>
-						<InstructorsOverviewTab instructorUuid={data.userInfo.uuid} ></InstructorsOverviewTab>
+						<InstructorsOverviewTab instructorUuid={data.userInfo.uuid}></InstructorsOverviewTab>
 					</Tabs.Panel>
 					<Tabs.Panel value={tabGroup.trainees}>
 						<TraineesOverviewTab></TraineesOverviewTab>

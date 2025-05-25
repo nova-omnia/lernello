@@ -17,7 +17,7 @@
 		showProgress?: boolean;
 		progressPercentage?: number;
 		isCompleted?: boolean;
-		canEdit: boolean;
+		canEdit?: boolean;
 	}
 
 	const invalidate = useQueryInvalidation();
@@ -68,7 +68,7 @@
 		? 'border-l-4 border-green-500'
 		: 'border-surface-100-900 border-l-4'} {canEdit
 		? ''
-		: 'cursor-not-allowed select-none opacity-50'}"
+		: 'cursor-not-allowed opacity-50 select-none'}"
 	title={!canEdit ? $_('users.overview.cannot_edit') : ''}
 	aria-disabled={!canEdit}
 >
@@ -77,7 +77,7 @@
 			<Avatar name="{user.surname} {user.name}" classes="h-10 w-10" />
 			{#if showProgress && isCompleted}
 				<CheckCircle2
-					class="bg-surface-100-900 absolute -right-1 -top-1 h-4 w-4 rounded-full text-green-500"
+					class="bg-surface-100-900 absolute -top-1 -right-1 h-4 w-4 rounded-full text-green-500"
 				/>
 			{/if}
 		</div>

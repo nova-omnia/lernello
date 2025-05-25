@@ -10,7 +10,7 @@
 	let { data } = $props();
 
 	const invalidate = useQueryInvalidation();
-	
+
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
 			invalidate([

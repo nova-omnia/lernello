@@ -7,7 +7,6 @@
 	import ErrorIllustration from '$lib/components/ErrorIllustration.svelte';
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
-	import { page } from '$app/state';
 
 	let { instructorUuid } = $props();
 

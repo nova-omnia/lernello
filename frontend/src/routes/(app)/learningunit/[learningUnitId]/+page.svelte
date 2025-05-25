@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { api } from '$lib/api/apiClient.js';
-	import { isApiErrorResponse } from '$lib/api/apiError.js';
 	import { applyBlockActions, getLearningUnitById } from '$lib/api/collections/learningUnit.js';
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
@@ -53,8 +52,7 @@
 							return block;
 						})
 					);
-				} catch (error) {
-					const status = isApiErrorResponse(error) ? error.status : 'save';
+				} catch {
 					toaster.create({
 						description: $_('block.newName.danger'),
 						type: 'warning'

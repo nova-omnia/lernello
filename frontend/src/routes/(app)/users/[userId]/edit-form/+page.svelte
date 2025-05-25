@@ -8,28 +8,22 @@
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 
 	let { data } = $props();
-
 	const invalidate = useQueryInvalidation();
 
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onResult() {
-			invalidate(['instructors-overview-list']);
-			invalidate(['trainees-overview-list']);
-			invalidate(['trainees-list']);
-			// TODO does not invalidate
-			invalidate(['learning-kit']);
+			invalidate([
+				'trainees-list',
+				'instructors-overview-list',
+				'trainees-overview-list',
+				'learning-kit'
+			]);
 			toaster.create({
 				description: $_('user.form.edit.success.description'),
 				type: 'success'
 			});
 		},
-		onUpdate() {
-			toaster.create({
-				description: $_('user.form.edit.loading.description')
-			});
-		},
 		onError(error) {
-			console.error('Error:', error.result.error);
 			toaster.create({
 				description: $_('user.form.edit.error.description', {
 					values: { status: error.result.status }
@@ -43,21 +37,17 @@
 <PageContainer title={$_('user.form.edit.title')} centered={true}>
 	<form method="POST" use:enhance action="?/update" class="space-y-4">
 		<div class="space-y-6">
-			<label class="label">
-				<span class="label-text">{$_('common.email')} *</span>
+			<label class="label" title={$_('user.form.edit.emailLocked')}>
+				<span class="label-text">{$_('common.email')}</span>
 				<input
 					type="email"
-					class="input preset-filled-surface-100-900"
-					name="username"
-					placeholder={$_('common.email')}
-					aria-invalid={$errors.username ? 'true' : undefined}
-					bind:value={$form.username}
-					{...$constraints.username}
+					class="input preset-filled-surface-100-900 cursor-not-allowed"
+					value={data.username}
+					readonly
+					disabled
 				/>
-				{#if $errors.username}
-					<p class="text-error-500">{$errors.username}</p>
-				{/if}
 			</label>
+
 			<label class="label">
 				<span class="label-text">{$_('common.name')} *</span>
 				<input
@@ -73,6 +63,7 @@
 					<p class="text-error-500">{$errors.name}</p>
 				{/if}
 			</label>
+
 			<label class="label">
 				<span class="label-text">{$_('common.surname')} *</span>
 				<input
@@ -88,6 +79,7 @@
 					<p class="text-error-500">{$errors.surname}</p>
 				{/if}
 			</label>
+
 			<label class="label">
 				<span class="label-text">{$_('common.role')} *</span>
 				<select
@@ -105,12 +97,14 @@
 				{/if}
 			</label>
 		</div>
+
 		<div class="flex justify-end gap-2">
 			<a class="btn preset-outlined-surface-500" href="/users">
 				{$_('common.cancel')}
 			</a>
 			<button class="btn preset-filled-primary-500">{$_('common.save')}</button>
 		</div>
+
 		<SuperDebug data={$form} display={dev} />
 	</form>
 </PageContainer>

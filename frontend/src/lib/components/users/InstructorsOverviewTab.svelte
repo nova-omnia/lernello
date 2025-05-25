@@ -12,7 +12,9 @@
 
 	const instructorsQuery = createQuery({
 		queryKey: ['instructors-overview-list'],
-		queryFn: () => api(fetch).req(getAllInstructors, null).parse()
+		queryFn: () => api(fetch).req(getAllInstructors, null).parse(),
+		staleTime: 0,
+		refetchOnMount: true
 	});
 
 	const deleteInstructorMutation = createMutation({

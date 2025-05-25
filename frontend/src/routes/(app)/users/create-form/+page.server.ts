@@ -3,7 +3,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
 import { type Actions, fail } from '@sveltejs/kit';
 import { api } from '$lib/api/apiClient';
-import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
+import { CreateUserSchema } from '$lib/schemas/request/user/CreateUser';
 import { createUser } from '$lib/api/collections/user';
 
 export const load = async () => {

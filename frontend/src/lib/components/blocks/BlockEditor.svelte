@@ -34,7 +34,7 @@
 	let selectedLanguage: string = $state(localeToLanguageValue[get(locale) ?? 'en']);
 </script>
 
-<div class="preset-filled-surface-50-950 border-surface-100-900 border-r p-4">
+<div class="preset-filled-surface-50-950 border-surface-100-900 border-r pr-4">
 	<div
 		class="min-w-[120px]"
 		role="presentation"
@@ -53,13 +53,12 @@
 			}}
 		/>
 	</div>
-	<div class="space-y-2">
-		<BlockSelectPopover index={-1} {learningUnitId} />
-		{#each blockActionState.blocks as block, index (block.uuid)}
-			<div id={`block-${block.uuid}`} animate:flip={{ duration: 200 }} class="space-y-2">
-				<BlockItem {block} {role} language={selectedLanguage} />
-				<BlockSelectPopover {index} {learningUnitId} />
-			</div>
-		{/each}
-	</div>
+
+	<BlockSelectPopover index={-1} {learningUnitId} />
+	{#each blockActionState.blocks as block, index (block.uuid)}
+		<div id={`block-${block.uuid}`} animate:flip={{ duration: 200 }} class="space-y-2">
+			<BlockItem {block} {role} language={selectedLanguage} />
+			<BlockSelectPopover {index} {learningUnitId} />
+		</div>
+	{/each}
 </div>

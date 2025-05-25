@@ -4,7 +4,7 @@ import { handleApiError } from '$lib/api/apiError';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { loadUserInfo, parseRedirectTo, requireLogin } from '$lib/server/auth';
-import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
+import { ChangePasswordDataSchema } from '$lib/schemas/request/user/ChangePasswordData';
 import { changePassword } from '$lib/api/collections/user';
 import { api } from '$lib/api/apiClient.js';
 

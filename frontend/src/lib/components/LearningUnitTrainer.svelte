@@ -40,7 +40,7 @@
 
 <div class="grid h-full grid-cols-[75%_25%]">
 	<div
-		class="preset-filled-surface-50-950 border-surface-100-900 m-0 space-y-4 overflow-y-auto border-r p-4"
+		class="preset-filled-surface-50-950 border-surface-100-900 space-y-4 overflow-y-auto border-r pr-4"
 	>
 		<div
 			class="min-w-[120px]"
@@ -70,8 +70,8 @@
 		{/if}
 	</div>
 	{#if blockActionState.blocks.length > 0}
-		<div class="sticky top-20 h-fit self-start">
-			<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
+		<div class="sticky top-1 h-fit self-start">
+			<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto pl-4">
 				{#each blockActionState.blocks as block (block.uuid)}
 					<BlockOverviewItem
 						{block}

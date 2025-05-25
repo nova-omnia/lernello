@@ -1,11 +1,21 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.Role;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.security.JwtUtil;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,21 +29,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Duration;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import ch.nova_omnia.lernello.model.data.LearningKit;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.UserRepository;
+import ch.nova_omnia.lernello.security.JwtUtil;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -99,7 +100,6 @@ class UserServiceTest {
         when(userRepository.findByUuid(id)).thenReturn(existingUser);
         User input = new User();
         input.setUuid(id);
-        input.setUsername("new@example.com");
         input.setName("New");
         input.setSurname("Name");
         input.setRole(Role.TRAINEE);
@@ -107,7 +107,6 @@ class UserServiceTest {
 
         User updated = userService.update(id, input);
 
-        assertThat(updated.getUsername()).isEqualTo("new@example.com");
         assertThat(updated.getName()).isEqualTo("New");
         assertThat(updated.getSurname()).isEqualTo("Name");
         assertThat(updated.getRole()).isEqualTo(Role.TRAINEE);

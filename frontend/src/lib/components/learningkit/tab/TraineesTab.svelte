@@ -23,7 +23,9 @@
 
 	const availableTraineesQuery = createQuery({
 		queryKey: ['trainees-list'],
-		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
+		queryFn: () => api(fetch).req(getAllTrainees, null).parse(),
+		staleTime: 0,
+		refetchOnMount: true
 	});
 
 	const updateLearningKitMutation = createMutation({

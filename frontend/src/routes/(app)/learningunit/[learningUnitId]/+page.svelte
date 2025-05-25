@@ -9,6 +9,7 @@
 	import { _, locale } from 'svelte-i18n';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo.js';
 	import { get } from 'svelte/store';
+	import ToggleViewButton from '$lib/components/ToggleViewButton.svelte';
 
 	let { data } = $props();
 
@@ -78,23 +79,22 @@
 		values: { name: data.learningUnit.name }
 	})}
 >
-	<div class="-m-4">
-		<div
-			class="grid h-full grid-cols-[75%_25%]"
-			class:pointer-events-none={dataLoading}
-			class:opacity-50={dataLoading}
-			class:cursor-not-allowed={dataLoading}
-		>
-			<BlockEditor
-				learningUnitId={data.learningUnitId}
-				role={data.userInfo.role}
-				onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
-			/>
-			{#if data.userInfo.role === INSTRUCTOR_ROLE}
-				<div class="sticky top-0 h-fit self-start">
-					<BlockReorder {language} role={data.userInfo.role} />
-				</div>
-			{/if}
-		</div>
+	<ToggleViewButton />
+	<div
+		class="grid h-full grid-cols-[75%_25%]"
+		class:pointer-events-none={dataLoading}
+		class:opacity-50={dataLoading}
+		class:cursor-not-allowed={dataLoading}
+	>
+		<BlockEditor
+			learningUnitId={data.learningUnitId}
+			role={data.userInfo.role}
+			onLanguageSelect={(selectedLanguage: string) => (language = selectedLanguage)}
+		/>
+		{#if data.userInfo.role === INSTRUCTOR_ROLE}
+			<div class="sticky top-1 h-fit self-start">
+				<BlockReorder {language} role={data.userInfo.role} />
+			</div>
+		{/if}
 	</div>
 </PageContainer>

@@ -56,8 +56,8 @@
 				} catch (error) {
 					const status = isApiErrorResponse(error) ? error.status : 'save';
 					toaster.create({
-						description: `Failed to save learning unit. (${status})`,
-						type: 'error'
+						description: $_('block.newName.danger'),
+						type: 'warning'
 					});
 					dataLoading = true;
 					const refetchedData = await api(fetch)

@@ -5,5 +5,6 @@ export const GenerateAILearningUnitSchema = z.object({
 	prompt: z.string().optional(),
 	difficulty: z.string().optional(),
 	includeTheory: z.boolean(),
-	includeQuestions: z.boolean()
+	includeQuestions: z.boolean(),
+	includeMultipleChoice: z.boolean()
 });

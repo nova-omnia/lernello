@@ -21,7 +21,7 @@
 			files: string[],
 			prompt: string,
 			difficulty: string,
-			options: { theory: boolean; questions: boolean }
+			options: { theory: boolean; questions: boolean, multipleChoice: boolean }
 		) => void;
 		role: RoleType;
 		isLoading: boolean;

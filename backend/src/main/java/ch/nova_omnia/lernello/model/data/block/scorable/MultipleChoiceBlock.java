@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MultipleChoiceBlock extends ScorableBlock {
 
+    @Lob
     @Column(name = "question", nullable = true)
     private String question;
 
@@ -41,8 +43,7 @@ public class MultipleChoiceBlock extends ScorableBlock {
         this.correctAnswers = correctAnswers;
     }
 
-    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question,
-            List<String> possibleAnswers, List<String> correctAnswers, int maxScore) {
+    public MultipleChoiceBlock(String name, int position, LearningUnit learningUnit, String question, List<String> possibleAnswers, List<String> correctAnswers, int maxScore) {
         super(MULTIPLE_CHOICE, name, position, learningUnit, maxScore);
         this.question = question;
         this.possibleAnswers = possibleAnswers;

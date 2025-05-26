@@ -100,7 +100,7 @@
 			files: string[];
 			prompt: string;
 			difficulty: string;
-			options: { theory: boolean; questions: boolean };
+			options: { theory: boolean; questions: boolean, multipleChoice: boolean };
 		}) =>
 			api(fetch)
 				.req(
@@ -110,7 +110,8 @@
 						prompt,
 						difficulty,
 						includeTheory: options.theory,
-						includeQuestions: options.questions
+						includeQuestions: options.questions,
+						includeMultipleChoice: options.multipleChoice
 					},
 					id
 				)

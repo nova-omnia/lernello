@@ -8,6 +8,7 @@ public record GenerateLearningUnitDTO(
                                       String prompt,
                                       String difficulty,
                                       boolean includeTheory,
-                                      boolean includeQuestions
+                                      boolean includeQuestions,
+                                      boolean includeMultipleChoice
 ) {
 }

@@ -15,7 +15,7 @@
 			files: string[],
 			prompt: string,
 			difficulty: string,
-			options: { theory: boolean; questions: boolean }
+			options: { theory: boolean; questions: boolean, multipleChoice: boolean }
 		) => void;
 		onCancel: () => void;
 	}
@@ -25,6 +25,7 @@
 	let difficulty = $state('');
 	let includeTheory = $state(true);
 	let includeQuestions = $state(true);
+	let includeMultipleChoice = $state(true);
 
 	const difficultyOptions = [
 		{ value: 'easy', label: $_('dialog.difficulty.easy') },
@@ -86,6 +87,11 @@
 					<input type="checkbox" bind:checked={includeQuestions} class="checkbox" />
 					<span>{$_('block.questionBlock')}</span>
 				</label>
+
+				<label class="flex items-center gap-2">
+					<input type="checkbox" bind:checked={includeMultipleChoice} class="checkbox" />
+					<span>{$_('block.multipleChoiceQuiz')}</span>
+				</label>
 			</div>
 
 			<MultiSelect
@@ -127,6 +133,7 @@
 				{$_('common.cancel')}
 			</button>
 			<button
+				disabled={!includeMultipleChoice && !includeQuestions && !includeTheory}
 				type="button"
 				class="btn preset-filled-primary-500"
 				onclick={() =>
@@ -134,7 +141,7 @@
 						selectedFiles.map((f) => f.uuid),
 						personalPrompt,
 						difficulty,
-						{ theory: includeTheory, questions: includeQuestions }
+						{ theory: includeTheory, questions: includeQuestions, multipleChoice: includeMultipleChoice }
 					)}
 			>
 				{$_('common.generate')}

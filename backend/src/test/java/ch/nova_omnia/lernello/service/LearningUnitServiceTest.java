@@ -179,7 +179,7 @@ class LearningUnitServiceTest {
         when(learningUnitRepository.findById(unitId)).thenReturn(Optional.of(unit));
         when(translatedBlockRepository.findByOriginalBlockIn(List.of(old1, old2))).thenReturn(List.of(tb1, tb2));
         List<UUID> fileIds = List.of(UUID.randomUUID());
-        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(fileIds, "", "", true, true);
+        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(fileIds, "", "", true, true, true);
         when(aiBlockService.generateBlocksAI(generateLearningUnitDTO)).thenReturn(List.of(new TheoryBlock(), new TheoryBlock()));
         when(learningUnitRepository.save(unit)).thenReturn(unit);
 
@@ -200,7 +200,7 @@ class LearningUnitServiceTest {
         UUID unitId = UUID.randomUUID();
         when(learningUnitRepository.findById(unitId)).thenReturn(Optional.empty());
 
-        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(List.of(), "", "", true, true);
+        GenerateLearningUnitDTO generateLearningUnitDTO = new GenerateLearningUnitDTO(List.of(), "", "", true, true, true);
         assertThrows(IllegalArgumentException.class, () -> service.generateLearningUnitWithAI(generateLearningUnitDTO, unitId));
     }
 

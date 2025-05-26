@@ -214,15 +214,13 @@ public class AIBlockService {
             }
 
             if (generateLearningUnitDTO.includeQuestions()) {
-                futures.add(CompletableFuture.supplyAsync(() -> {
-                    if (Math.random() < 0.5) {
-                        return generateQuestionBlockAIFromTopic(
-                                content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt());
-                    } else {
-                        return generateMultipleChoiceBlockAIFromTopic(
-                                content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt());
-                    }
-                }, executor));
+                futures.add(CompletableFuture.supplyAsync(() -> generateQuestionBlockAIFromTopic(
+                        content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
+            }
+
+            if (generateLearningUnitDTO.includeMultipleChoice()) {
+                futures.add(CompletableFuture.supplyAsync(() -> generateMultipleChoiceBlockAIFromTopic(
+                        content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
             }
 
             List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();

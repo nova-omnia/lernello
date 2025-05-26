@@ -86,7 +86,7 @@
 	"dashboard.title": "Dashboard",
 	"dialog.action.message": "Are you sure you want to proceed?",
 	"dialog.action.title": "Confirm Action",
-	"dialog.blockType.label": "Choose type of generated content:",
+	"dialog.blockType.label": "Choose type of generated content (required)",
 	"dialog.cancelButton": "Cancel",
 	"dialog.closeButton": "Close",
 	"dialog.creationWizardTitle": "Creation Wizard",

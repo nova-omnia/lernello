@@ -40,10 +40,10 @@
 	}
 </script>
 
-<div class="preset-filled-surface-50-950 mt-0 space-y-4 overflow-y-auto p-3">
+<div class="preset-filled-surface-50-950 mt-0 space-y-4 overflow-y-auto pl-4">
 	<button
 		type="button"
-		class="btn preset-outlined-surface-500 pointer-events-none mb-8 w-full cursor-default"
+		class="btn preset-outlined-surface-500 pointer-events-none mb-6 w-full cursor-default"
 	>
 		{#if blockActionState.queue.length !== 0}
 			<Loader2 class="h-5 w-5 animate-spin" />

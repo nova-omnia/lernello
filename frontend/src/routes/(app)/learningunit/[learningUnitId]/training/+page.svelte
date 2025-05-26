@@ -4,10 +4,11 @@
 	import LearningUnitTrainingContainer from '$lib/components/LearningUnitTrainer.svelte';
 	import { blockActionState } from '$lib/states/blockActionState.svelte.js';
 	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
-	import { TRAINEE_ROLE, type UserInfo } from '$lib/schemas/response/UserInfo.js';
+	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type UserInfo } from '$lib/schemas/response/UserInfo.js';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import type { LearningUnitProgressRes } from '$lib/schemas/response/progress/LearningUnitProgressResSchema';
 	import type { LearningUnitRes } from '$lib/schemas/response/LearningUnitRes';
+	import ToggleViewButton from '$lib/components/ToggleViewButton.svelte';
 
 	interface PageDataFromServer {
 		learningUnitId: string;
@@ -40,6 +41,13 @@
 	});
 </script>
 
-<PageContainer title={$_('learningUnit.trainingTitle')}>
+<PageContainer
+	title={$_('learningUnit.details', {
+		values: { name: data.learningUnit.name }
+	})}
+>
+	{#if data.userInfo?.role === INSTRUCTOR_ROLE}
+		<ToggleViewButton />
+	{/if}
 	<LearningUnitTrainingContainer {role} />
 </PageContainer>

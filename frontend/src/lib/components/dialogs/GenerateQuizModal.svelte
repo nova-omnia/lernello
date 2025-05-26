@@ -46,7 +46,7 @@
 			<button
 				class="btn preset-filled-primary-500"
 				disabled={isLoading}
-				onclick={() => onConfirm(selectedBlockId)}>{$_('common.save')}</button
+				onclick={() => onConfirm(selectedBlockId)}>{$_('common.generate')}</button
 			>
 		</div>
 	{/snippet}

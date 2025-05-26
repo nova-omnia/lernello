@@ -1,14 +1,14 @@
 import { GenericSuccessSchema } from '$lib/schemas/response/GenericSuccess';
 import { TraineeUserSchema } from '$lib/schemas/response/TraineeUser';
 import { createEndpoint } from '../createEndpoint';
-import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
+import { ChangePasswordDataSchema } from '$lib/schemas/request/user/ChangePasswordData';
 import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
-import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
-import { CreateTraineeUserSchema } from '$lib/schemas/request/CreateTraineeUser';
-import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
+import { UserLocaleSchema } from '$lib/schemas/request/user/UserLocale';
+import { CreateTraineeUserSchema } from '$lib/schemas/request/user/CreateTraineeUser';
+import { CreateUserSchema } from '$lib/schemas/request/user/CreateUser';
 import { UserResSchema } from '$lib/schemas/response/UserResSchema';
-import { UpdateUserSchema } from '$lib/schemas/request/UpdateUser';
+import { UpdateUserSchema } from '$lib/schemas/request/user/UpdateUser';
 
 const REQUEST_MAPPING = '/api/user';
 

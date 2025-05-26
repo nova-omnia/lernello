@@ -17,6 +17,7 @@
 		showProgress?: boolean;
 		progressPercentage?: number;
 		isCompleted?: boolean;
+		canEdit?: boolean;
 	}
 
 	const invalidate = useQueryInvalidation();
@@ -26,7 +27,8 @@
 		onRemoveUser,
 		showProgress = false,
 		progressPercentage,
-		isCompleted
+		isCompleted,
+		canEdit = true
 	}: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
@@ -64,7 +66,11 @@
 	class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4 {showProgress &&
 	isCompleted
 		? 'border-l-4 border-green-500'
-		: 'border-surface-100-900 border-l-4'}"
+		: 'border-surface-100-900 border-l-4'} {canEdit
+		? ''
+		: 'cursor-not-allowed opacity-50 select-none'}"
+	title={!canEdit ? $_('users.overview.cannot_edit') : ''}
+	aria-disabled={!canEdit}
 >
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
 		<div class="relative">
@@ -94,7 +100,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="flex gap-2">
+		<div class="flex gap-2 {canEdit ? '' : 'pointer-events-none'}">
 			{#if isUsersView}
 				<a href={`/users/${user.uuid}/edit-form`} class="btn preset-outlined-surface-500">
 					{$_('common.edit')}

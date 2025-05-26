@@ -8,8 +8,7 @@ import jakarta.validation.constraints.NotNull;
 public record UpdateBlockNameActionDTO(
                                        @NotNull BlockActionType type,
                                        @NotNull String blockId,
-                                       @NotBlank String newName,
-                                       @NotNull String language
+                                       @NotBlank String newName
 ) implements BlockActionDTO {
     public UpdateBlockNameActionDTO {
         type = UPDATE_BLOCK_NAME;

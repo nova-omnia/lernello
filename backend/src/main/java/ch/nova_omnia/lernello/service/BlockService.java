@@ -260,7 +260,17 @@ public class BlockService {
         }
 
         Block block = blockRepository.findById(UUID.fromString(updateNameAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
-        block.setName(updateNameAction.newName());
+
+        Block original = block instanceof TranslatedBlock ? ((TranslatedBlock) block).getOriginalBlock() : block;
+        original.setName(aiBlockService.translateContentWithAI("ENGLISH", updateNameAction.newName()));
+
+        List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+        for (TranslatedBlock internalTranslatedBlock : translations) {
+            internalTranslatedBlock.setName(aiBlockService.translateContentWithAI(internalTranslatedBlock.getLanguage().name(), updateNameAction.newName()));
+        }
+
+        blockRepository.save(original);
+        translatedBlockRepository.saveAll(translations);
     }
 
     private List<BlockActionDTO> filterCorrelatedActions(List<BlockActionDTO> actions) {

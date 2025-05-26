@@ -47,8 +47,8 @@
 <div class="relative inline-block w-full" bind:this={container}>
 	<button
 		type="button"
-		onclick={() => open = !open}
-		class="preset-filled-surface-50-950 border-surface-200-800 flex h-10 w-full items-center justify-between rounded-md border py-2 pl-3 pr-3 text-left focus:outline-none"
+		onclick={() => (open = !open)}
+		class="preset-filled-surface-50-950 border-surface-200-800 flex h-10 w-full items-center justify-between rounded-md border py-2 pr-3 pl-3 text-left focus:outline-none"
 	>
 		<span class="truncate">
 			{#if selected}

@@ -89,7 +89,7 @@
 			onclick={() => handleToggle()}
 			class="input card preset-filled-surface-50-950 border-surface-300-700 w-fill py-3 pr-10"
 		/>
-		<span class="absolute right-3 top-1/2 -translate-y-1/2" style="pointer-events: none;">
+		<span class="absolute top-1/2 right-3 -translate-y-1/2" style="pointer-events: none;">
 			{#if open}
 				<ChevronUp size={20} />
 			{:else}

@@ -29,7 +29,6 @@
 			<a href="/learningkits" class="preset-typo-subtitle-navigation flex w-fit items-center">
 				{#if $kitsQuery.status === 'success'}
 					<h2>
-						<!-- @ts-expect-error: dynamic params are not typed -->
 						{$_('dashboard.allLearningKits', {
 							values: {
 								total: $kitsQuery.data.totalElements

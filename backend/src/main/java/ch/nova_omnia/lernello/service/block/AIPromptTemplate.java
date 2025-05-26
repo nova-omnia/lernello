@@ -75,7 +75,7 @@ public enum AIPromptTemplate {
             - Respond with clean, readable English only.
             - The content must be written in **English**, even if the input is in a different language.
             - IMPORTANT: Respond only with pure JSON
-            - IMPORTANT: The topic title must be a single, standalone word, no spaces, hyphens, or special characters.
+            - IMPORTANT: The topic title must be a single English word. No compound words, no multiple capital letters, no spaces, hyphens, underscores, or special characters.
             - The format must match exactly the following structure:
 
             {

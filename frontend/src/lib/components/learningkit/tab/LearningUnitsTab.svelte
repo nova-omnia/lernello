@@ -100,7 +100,7 @@
 			files: string[];
 			prompt: string;
 			difficulty: string;
-			options: { theory: boolean; questions: boolean, multipleChoice: boolean };
+			options: { theory: boolean; questions: boolean; multipleChoice: boolean };
 		}) =>
 			api(fetch)
 				.req(

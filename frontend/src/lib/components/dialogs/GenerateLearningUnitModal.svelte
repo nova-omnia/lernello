@@ -15,7 +15,7 @@
 			files: string[],
 			prompt: string,
 			difficulty: string,
-			options: { theory: boolean; questions: boolean, multipleChoice: boolean }
+			options: { theory: boolean; questions: boolean; multipleChoice: boolean }
 		) => void;
 		onCancel: () => void;
 	}
@@ -141,7 +141,11 @@
 						selectedFiles.map((f) => f.uuid),
 						personalPrompt,
 						difficulty,
-						{ theory: includeTheory, questions: includeQuestions, multipleChoice: includeMultipleChoice }
+						{
+							theory: includeTheory,
+							questions: includeQuestions,
+							multipleChoice: includeMultipleChoice
+						}
 					)}
 			>
 				{$_('common.generate')}

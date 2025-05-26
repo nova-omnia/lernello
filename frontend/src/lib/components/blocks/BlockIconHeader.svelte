@@ -78,7 +78,7 @@
 
 	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block}/>
+			<BlockAiGenerationButton {block} />
 		</div>
 	{/if}
 </div>

@@ -32,7 +32,8 @@
 			queueBlockAction({
 				type: ActionType.Enum.UPDATE_BLOCK_NAME,
 				blockId: block.uuid,
-				newName: newName
+				newName: newName,
+				language
 			});
 		}
 	}, 500);
@@ -78,7 +79,7 @@
 
 	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block} />
+			<BlockAiGenerationButton {block} {language} />
 		</div>
 	{/if}
 </div>

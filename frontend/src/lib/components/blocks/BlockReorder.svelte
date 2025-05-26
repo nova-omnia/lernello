@@ -29,7 +29,8 @@
 			queueBlockAction({
 				type: 'REORDER_BLOCK',
 				blockId: info.id,
-				newIndex
+				newIndex,
+				language
 			});
 		}
 	}

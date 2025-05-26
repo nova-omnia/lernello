@@ -21,8 +21,9 @@
 	interface BlockSelectPopoverProps {
 		index: number;
 		learningUnitId: string;
+		language: string;
 	}
-	const { index, learningUnitId }: BlockSelectPopoverProps = $props();
+	const { index, learningUnitId, language }: BlockSelectPopoverProps = $props();
 	let insertIndex = $derived(index + 1);
 
 	// State
@@ -71,7 +72,8 @@
 				position: insertIndex,
 				learningUnitId: learningUnitId,
 				content: ''
-			}
+			},
+			language
 		};
 		const parsedAction = AddBlockActionSchema.parse(actionData);
 		queueBlockAction(parsedAction);
@@ -90,7 +92,8 @@
 				question: 'placeholder question?',
 				possibleAnswers: ['A', 'B'],
 				correctAnswers: ['A']
-			}
+			},
+			language
 		};
 		const parsedAction = AddBlockActionSchema.parse(actionData);
 		queueBlockAction(parsedAction);
@@ -108,7 +111,8 @@
 				learningUnitId: learningUnitId,
 				question: 'placeholder question?',
 				expectedAnswer: 'placeholder answer'
-			}
+			},
+			language
 		};
 		const parsedAction = AddBlockActionSchema.parse(actionData);
 		queueBlockAction(parsedAction);

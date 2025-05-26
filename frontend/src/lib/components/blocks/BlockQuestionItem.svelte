@@ -78,7 +78,8 @@
 				type: 'UPDATE_BLOCK',
 				blockId,
 				question: currentQuestion,
-				expectedAnswer: currentExpectedAnswer
+				expectedAnswer: currentExpectedAnswer,
+				language
 			});
 		}
 	}, 500);

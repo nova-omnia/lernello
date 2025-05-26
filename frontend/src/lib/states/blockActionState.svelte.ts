@@ -163,7 +163,8 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 					name: action.data.name,
 					position: action.data.position,
 					content: action.data.content || ''
-				}
+				},
+				language: action.language
 			};
 		} else if (action.data.type === BlockType.Enum.MULTIPLE_CHOICE) {
 			parsedAction = {
@@ -177,7 +178,8 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 					question: action.data.question || 'placeholder question',
 					possibleAnswers: action.data.possibleAnswers || [],
 					correctAnswers: action.data.correctAnswers || []
-				}
+				},
+				language: action.language
 			};
 		} else if (action.data.type === BlockType.Enum.QUESTION) {
 			parsedAction = {
@@ -190,7 +192,8 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 					position: action.data.position,
 					question: action.data.question || 'placeholder question',
 					expectedAnswer: action.data.expectedAnswer || 'placeholder answer'
-				}
+				},
+				language: action.language
 			};
 		} else {
 			throw new Error('Unsupported block type.');
@@ -199,7 +202,8 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 		parsedAction = {
 			type: ActionType.Enum.REORDER_BLOCK,
 			blockId: action.blockId,
-			newIndex: action.newIndex
+			newIndex: action.newIndex,
+			language: action.language
 		};
 	} else if (action.type === ActionType.Enum.UPDATE_BLOCK) {
 		parsedAction = {
@@ -209,13 +213,15 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 			...(action.question !== undefined && { question: action.question }),
 			...(action.expectedAnswer !== undefined && { expectedAnswer: action.expectedAnswer }),
 			...(action.possibleAnswers !== undefined && { possibleAnswers: action.possibleAnswers }),
-			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers })
+			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers }),
+			language: action.language
 		};
 	} else if (action.type === ActionType.Enum.UPDATE_BLOCK_NAME) {
 		parsedAction = {
 			type: ActionType.Enum.UPDATE_BLOCK_NAME,
 			blockId: action.blockId,
-			newName: action.newName
+			newName: action.newName,
+			language: action.language
 		};
 	} else {
 		parsedAction = action;

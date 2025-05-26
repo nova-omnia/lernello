@@ -18,9 +18,10 @@
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
+		language: string;
 	}
 
-	const { block }: BlockAiGenerationButtonProps = $props();
+	const { block, language }: BlockAiGenerationButtonProps = $props();
 
 	let theoryBlocks: BlockRes[] = $derived(
 		blockActionState.blocks.filter((b) => b.type === THEORY_BLOCK_TYPE)
@@ -36,7 +37,8 @@
 				blockId: block.uuid,
 				question: data.question,
 				possibleAnswers: data.possibleAnswers,
-				correctAnswers: data.correctAnswers
+				correctAnswers: data.correctAnswers,
+				language
 			});
 			toaster.create({
 				description: $_('multipleChoiceBlock.success.description'),
@@ -67,7 +69,8 @@
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
 				question: data.question,
-				expectedAnswer: data.expectedAnswer
+				expectedAnswer: data.expectedAnswer,
+				language
 			});
 			toaster.create({
 				description: $_('questionBlock.success.description'),
@@ -97,7 +100,8 @@
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
-				content: data.content
+				content: data.content,
+				language
 			});
 			toaster.create({
 				description: $_('theoryBlock.success.description'),

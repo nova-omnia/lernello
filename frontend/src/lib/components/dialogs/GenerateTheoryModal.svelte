@@ -73,11 +73,7 @@
 		</div>
 
 		<footer class="flex justify-end gap-3 pt-2">
-			<button
-				type="button"
-				class="btn preset-tonal-surface"
-				onclick={onCancel}
-			>
+			<button type="button" class="btn preset-tonal-surface" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
 			<button

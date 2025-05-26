@@ -18,7 +18,7 @@
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
-		isGenerationLoading: (isLoading: boolean) => void; 
+		isGenerationLoading: (isLoading: boolean) => void;
 	}
 
 	const { block, isGenerationLoading }: BlockAiGenerationButtonProps = $props();

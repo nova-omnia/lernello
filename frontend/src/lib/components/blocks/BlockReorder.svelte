@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action';
 	import BlockReorderItem from '$lib/components/blocks/BlockOverviewItem.svelte';
-	import { blockActionState, isBlockSaving, queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import {
+		blockActionState,
+		isBlockSaving,
+		queueBlockAction
+	} from '$lib/states/blockActionState.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { CheckCircle, Loader2 } from 'lucide-svelte';

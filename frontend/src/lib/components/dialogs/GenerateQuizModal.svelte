@@ -9,8 +9,7 @@
 		theoryBlocks: { id: string; title: string }[];
 	}
 
-	const { isOpen, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps =
-		$props();
+	const { isOpen, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps = $props();
 
 	let selectedBlockId = $state<string>('');
 </script>
@@ -41,9 +40,8 @@
 					selectedBlockId = '';
 				}}>{$_('common.cancel')}</button
 			>
-			<button
-				class="btn preset-filled-primary-500"
-				onclick={() => onConfirm(selectedBlockId)}>{$_('common.generate')}</button
+			<button class="btn preset-filled-primary-500" onclick={() => onConfirm(selectedBlockId)}
+				>{$_('common.generate')}</button
 			>
 		</div>
 	{/snippet}

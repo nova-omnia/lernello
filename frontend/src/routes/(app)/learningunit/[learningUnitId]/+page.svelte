@@ -3,7 +3,11 @@
 	import { applyBlockActions, getLearningUnitById } from '$lib/api/collections/learningUnit.js';
 	import BlockEditor from '$lib/components/blocks/BlockEditor.svelte';
 	import BlockReorder from '$lib/components/blocks/BlockReorder.svelte';
-	import { addBlockActionListener, blockActionState, isBlockSaving } from '$lib/states/blockActionState.svelte';
+	import {
+		addBlockActionListener,
+		blockActionState,
+		isBlockSaving
+	} from '$lib/states/blockActionState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import PageContainer from '$lib/components/layout/PageContainer.svelte';
 	import { _, locale } from 'svelte-i18n';

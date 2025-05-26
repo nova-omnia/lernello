@@ -202,8 +202,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 		parsedAction = {
 			type: ActionType.Enum.REORDER_BLOCK,
 			blockId: action.blockId,
-			newIndex: action.newIndex,
-			language: action.language
+			newIndex: action.newIndex
 		};
 	} else if (action.type === ActionType.Enum.UPDATE_BLOCK) {
 		parsedAction = {

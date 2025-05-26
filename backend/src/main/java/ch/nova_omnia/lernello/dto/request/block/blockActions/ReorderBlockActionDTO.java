@@ -9,8 +9,7 @@ import jakarta.validation.constraints.NotNull;
 public record ReorderBlockActionDTO(
                                     @NotNull BlockActionType type,
                                     @NotBlank String blockId,
-                                    @NotNull @Min(0) int newIndex,
-                                    @NotNull String language
+                                    @NotNull @Min(0) int newIndex
 ) implements BlockActionDTO {
     public ReorderBlockActionDTO {
         type = REORDER_BLOCK;

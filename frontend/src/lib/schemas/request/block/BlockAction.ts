@@ -31,8 +31,7 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 
 export const ReorderBlockActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal('REORDER_BLOCK'),
-	newIndex: z.number().min(-1),
-	language: z.string()
+	newIndex: z.number().min(-1)
 });
 
 export const RemoveBlockActionSchema = BaseBlockActionSchema.extend({

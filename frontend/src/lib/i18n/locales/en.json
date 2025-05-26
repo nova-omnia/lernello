@@ -120,6 +120,7 @@
 	"files.upload.success.description": "File uploaded successfully",
 	"files.upload.uploading": "Uploading...",
 	"files.upload.uploading.description": "File is being uploaded",
+	"files.upload.error.description": "Failed to upload file",
 	"form.confirmPasswordLabel": "Confirm Password",
 	"form.confirmPasswordPlaceholder": "confirm password",
 	"form.deadlineLabel": "Deadline",
@@ -194,6 +195,8 @@
 	"learningKits.title": "Learning Kits",
 	"learningUnit.create": "Create Learning Unit",
 	"learningUnit.createTitle": "Create a new Learning Unit",
+	"learningUnit.delete.title": "Delete Learning Unit",
+	"learningUnit.delete_message": "Are you sure you want to delete this Learning Unit? This action cannot be undone.",
 	"learningUnit.delete.error": "Deletion Failed",
 	"learningUnit.delete.errorDescription": "Failed to delete Learning Unit",
 	"learningUnit.delete.isDeleting": "Deleting Learning Unit",
@@ -324,5 +327,7 @@
 	"user.form.edit.title": "Edit User",
 	"users.overview.reset.error": "Failed to reset password",
 	"users.overview.reset.loading": "Resetting password...",
-	"users.overview.reset.success": "User password reset successfully"
+	"users.overview.reset.success": "User password reset successfully",
+	"users.overview.cannot_edit": "The current logged in user cannot be edited",
+	"user.form.edit.emailLocked": "Email is locked and cannot be changed"
 }

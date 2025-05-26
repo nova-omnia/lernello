@@ -1,4 +1,4 @@
-import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
+import { UserLoginSchema } from '$lib/schemas/request/user/UserLogin';
 import { LoggedInUserSchema } from '$lib/schemas/response/LoggedInUser';
 import { createEndpoint } from '../createEndpoint';
 

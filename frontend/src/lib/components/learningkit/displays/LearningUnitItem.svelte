@@ -216,8 +216,8 @@
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}
-	title={$_('blocks.delete_title')}
-	message={$_('blocks.delete_message')}
+	title={$_('learningUnit.delete.title')}
+	message={$_('learningUnit.delete_message')}
 	confirmText={$_('common.delete')}
 	cancelText={$_('common.cancel')}
 	danger={true}

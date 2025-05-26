@@ -32,7 +32,7 @@
 		onError: (error) => {
 			console.error('Error uploading file:', error);
 			toaster.create({
-				description: $_('error.description', { values: { status: 'unknown' } }),
+				description: $_('files.upload.error.description'),
 				type: 'error'
 			});
 		}
@@ -127,7 +127,7 @@
 		onApiReady={(api) => {
 			fileApi = api;
 		}}
-		maxFiles={1024 * 1024 * 10}
+		maxFiles={1024 * 1024 * 1000}
 	>
 		<div class="flex h-10 gap-8">
 			<button class="btn preset-outlined-surface-500 h-fit">

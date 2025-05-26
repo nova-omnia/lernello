@@ -4,7 +4,7 @@ import { ApiError, handleApiError } from '$lib/api/apiError';
 import { message, setError, superValidate, type Infer } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { isLoggedIn, parseRedirectTo } from '$lib/server/auth';
-import { UserLoginSchema } from '$lib/schemas/request/UserLogin';
+import { UserLoginSchema } from '$lib/schemas/request/user/UserLogin';
 import { signin } from '$lib/api/collections/auth';
 import type { LoggedInUser } from '$lib/schemas/response/LoggedInUser';
 import { api } from '$lib/api/apiClient.js';

@@ -44,8 +44,7 @@ export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
 	question: z.string().optional(),
 	expectedAnswer: z.string().optional(),
 	possibleAnswers: z.array(z.string()).optional(),
-	correctAnswers: z.array(z.string()).optional(),
-	language: z.string()
+	correctAnswers: z.array(z.string()).optional()
 });
 
 export const UpdateBlockNameActionSchema = BaseBlockActionSchema.extend({

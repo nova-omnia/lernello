@@ -212,8 +212,7 @@ export function queueBlockAction(action: BlockActionWithQuickAdd | UpdateBlockAc
 			...(action.question !== undefined && { question: action.question }),
 			...(action.expectedAnswer !== undefined && { expectedAnswer: action.expectedAnswer }),
 			...(action.possibleAnswers !== undefined && { possibleAnswers: action.possibleAnswers }),
-			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers }),
-			language: action.language
+			...(action.correctAnswers !== undefined && { correctAnswers: action.correctAnswers })
 		};
 	} else if (action.type === ActionType.Enum.UPDATE_BLOCK_NAME) {
 		parsedAction = {

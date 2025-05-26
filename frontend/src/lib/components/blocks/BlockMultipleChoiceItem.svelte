@@ -105,8 +105,7 @@
 				blockId,
 				question: currentQuestion,
 				possibleAnswers: newPossibleAnswers,
-				correctAnswers: newCorrectAnswers,
-				language
+				correctAnswers: newCorrectAnswers
 			});
 		}
 	}, 500);

@@ -37,8 +37,7 @@
 				blockId: block.uuid,
 				question: data.question,
 				possibleAnswers: data.possibleAnswers,
-				correctAnswers: data.correctAnswers,
-				language
+				correctAnswers: data.correctAnswers
 			});
 			toaster.create({
 				description: $_('multipleChoiceBlock.success.description'),
@@ -69,8 +68,7 @@
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
 				question: data.question,
-				expectedAnswer: data.expectedAnswer,
-				language
+				expectedAnswer: data.expectedAnswer
 			});
 			toaster.create({
 				description: $_('questionBlock.success.description'),
@@ -100,8 +98,7 @@
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
-				content: data.content,
-				language
+				content: data.content
 			});
 			toaster.create({
 				description: $_('theoryBlock.success.description'),

@@ -16,8 +16,7 @@ public record UpdateBlockActionDTO(
                                    List<String> possibleAnswers,
                                    List<String> correctAnswers,
                                    String expectedAnswer,
-                                   @Valid UpdateBlockDTO data,
-                                   @NotNull String language
+                                   @Valid UpdateBlockDTO data
 ) implements BlockActionDTO {
     public UpdateBlockActionDTO {
         type = UPDATE_BLOCK;

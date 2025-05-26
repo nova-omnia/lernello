@@ -37,8 +37,7 @@
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId,
-				content: newContent,
-				language
+				content: newContent
 			});
 			lastContent = newContent;
 		}

@@ -301,27 +301,14 @@ public class ProgressService {
     }
 
     private BlockProgress getOrCreateBlockProgress(User user, Block block, LearningUnitProgress unitProgress) {
-        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), block.getUuid()).orElseGet(() -> {
-            BlockProgress newBlockProgress = switch (block) {
-                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) block, unitProgress);
-                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) block, unitProgress);
-                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) block, unitProgress);
-                case TranslatedBlock translatedBlock -> {
-                    if (translatedBlock.getType() == BlockType.THEORY) {
-                        yield new TheoryBlockProgress(user, (TheoryBlock) translatedBlock.getOriginalBlock(), unitProgress);
-                    }
+        final Block originalBlock = (block instanceof TranslatedBlock translatedBlock) ? translatedBlock.getOriginalBlock() : block;
 
-                    if (translatedBlock.getType() == BlockType.MULTIPLE_CHOICE) {
-                        yield new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) translatedBlock.getOriginalBlock(), unitProgress);
-                    }
-
-                    if (translatedBlock.getType() == BlockType.QUESTION) {
-                        yield new QuestionBlockProgress(user, (QuestionBlock) translatedBlock.getOriginalBlock(), unitProgress);
-                    }
-
-                    throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
-                }
-                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
+        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), originalBlock.getUuid()).orElseGet(() -> {
+            BlockProgress newBlockProgress = switch (originalBlock) {
+                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) originalBlock, unitProgress);
+                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) originalBlock, unitProgress);
+                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) originalBlock, unitProgress);
+                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + originalBlock.getName());
             };
             unitProgress.addBlockProgress(newBlockProgress);
             return blockProgressRepository.save(newBlockProgress);

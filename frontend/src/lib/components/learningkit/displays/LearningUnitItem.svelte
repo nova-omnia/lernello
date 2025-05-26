@@ -17,7 +17,12 @@
 	interface LearningUnitProps {
 		learningUnit: LearningUnitRes;
 		onDeleteLearningUnit: () => void;
-		onGenerateLearningUnit: (files: string[]) => void;
+		onGenerateLearningUnit: (
+			files: string[],
+			prompt: string,
+			difficulty: string,
+			options: { theory: boolean; questions: boolean; multipleChoice: boolean }
+		) => void;
 		role: RoleType;
 		isLoading: boolean;
 		invalidateLearningKitQuery: () => void;
@@ -225,8 +230,8 @@
 <GenerateLearningUnitModal
 	bind:isOpen={showGenerationDialog}
 	isLoading={false}
-	onConfirm={(files) => {
-		onGenerateLearningUnit(files);
+	onConfirm={(files, prompt, difficulty, options) => {
+		onGenerateLearningUnit(files, prompt, difficulty, options);
 		showGenerationDialog = false;
 	}}
 	onCancel={() => {

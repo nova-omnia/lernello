@@ -213,14 +213,20 @@ public class AIBlockService {
                         content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
             }
 
-            if (generateLearningUnitDTO.includeQuestions()) {
-                futures.add(CompletableFuture.supplyAsync(() -> generateQuestionBlockAIFromTopic(
-                        content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
-            }
+            if (generateLearningUnitDTO.includeQuestions() && generateLearningUnitDTO.includeMultipleChoice()) {
+                futures.add(CompletableFuture.supplyAsync(() -> {
+                    return (Math.random() < 0.5) ? generateQuestionBlockAIFromTopic(content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()) : generateMultipleChoiceBlockAIFromTopic(content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt());
+                }, executor));
+            } else {
+                if (generateLearningUnitDTO.includeQuestions()) {
+                    futures.add(CompletableFuture.supplyAsync(
+                            () -> generateQuestionBlockAIFromTopic(content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
+                }
 
-            if (generateLearningUnitDTO.includeMultipleChoice()) {
-                futures.add(CompletableFuture.supplyAsync(() -> generateMultipleChoiceBlockAIFromTopic(
-                        content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
+                if (generateLearningUnitDTO.includeMultipleChoice()) {
+                    futures.add(CompletableFuture.supplyAsync(
+                            () -> generateMultipleChoiceBlockAIFromTopic(content, blockName, generateLearningUnitDTO.difficulty(), generateLearningUnitDTO.prompt()), executor));
+                }
             }
 
             List<Block> blocks = futures.stream().map(CompletableFuture::join).toList();

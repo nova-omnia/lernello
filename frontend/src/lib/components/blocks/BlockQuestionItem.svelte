@@ -50,11 +50,11 @@
 	});
 
 	let currentQuestion = $derived(
-		block.translatedContents.find((content) => content.language == language)?.question ??
+		block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question
 	);
 	let currentExpectedAnswer = $derived(
-		block.translatedContents.find((content) => content.language == language)?.expectedAnswer ??
+		block.translatedContents?.find((content) => content.language == language)?.expectedAnswer ??
 			block.expectedAnswer
 	);
 
@@ -63,15 +63,15 @@
 	let isCorrect = $state<boolean | null>(null);
 
 	let blockId: string = $derived(
-		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+		block.translatedContents?.find((content) => content.language == language)?.id ?? block.uuid
 	);
 
 	const onUpdateHandler = createDebounced(() => {
 		let localBlockQuestion =
-			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question;
 		let localExpectedAnswer =
-			block.translatedContents.find((content) => content.language == language)?.expectedAnswer ??
+			block.translatedContents?.find((content) => content.language == language)?.expectedAnswer ??
 			block.expectedAnswer;
 		if (currentQuestion !== localBlockQuestion || currentExpectedAnswer !== localExpectedAnswer) {
 			queueBlockAction({

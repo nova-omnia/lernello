@@ -59,18 +59,18 @@
 	type Answer = { value: string; isCorrect: boolean };
 
 	let currentQuestion = $derived(
-		block.translatedContents.find((content) => content.language == language)?.question ??
+		block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question
 	);
 	let currentAnswers = $derived<Answer[]>(
 		(
-			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.possibleAnswers ??
 			block.possibleAnswers
 		).map(
 			(answer): Answer => ({
 				value: answer,
 				isCorrect: (
-					block.translatedContents.find((content) => content.language == language)
+					block.translatedContents?.find((content) => content.language == language)
 						?.correctAnswers ?? block.correctAnswers
 				).includes(answer)
 			})
@@ -78,7 +78,7 @@
 	);
 
 	let blockId: string = $derived(
-		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+		block.translatedContents?.find((content) => content.language == language)?.id ?? block.uuid
 	);
 
 	const onUpdateHandler = createDebounced(() => {
@@ -87,13 +87,13 @@
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
 		let localQuestion =
-			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question;
 		let localPossibleAnswers =
-			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.possibleAnswers ??
 			block.possibleAnswers;
 		let localCorrectAnswers =
-			block.translatedContents.find((content) => content.language == language)?.correctAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.correctAnswers ??
 			block.correctAnswers;
 		if (
 			currentQuestion !== localQuestion ||

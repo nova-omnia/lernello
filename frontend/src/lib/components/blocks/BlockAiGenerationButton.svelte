@@ -2,7 +2,7 @@
 	import { THEORY_BLOCK_TYPE, type BlockRes } from '$lib/schemas/response/BlockRes';
 	import GenerateQuizModal from '$lib/components/dialogs/GenerateQuizModal.svelte';
 	import GenerateTheoryModal from '$lib/components/dialogs/GenerateTheoryModal.svelte';
-	import { _, isLoading } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import { Sparkles } from 'lucide-svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';

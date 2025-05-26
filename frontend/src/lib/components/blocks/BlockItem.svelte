@@ -11,11 +11,7 @@
 	import BlockIconHeader from './BlockIconHeader.svelte';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { Loader2, X } from 'lucide-svelte';
-	import {
-		blockActionState,
-		isBlockSaving,
-		queueBlockAction
-	} from '$lib/states/blockActionState.svelte';
+	import { isBlockSaving, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { RoleType } from '$lib/schemas/response/UserInfo';
 

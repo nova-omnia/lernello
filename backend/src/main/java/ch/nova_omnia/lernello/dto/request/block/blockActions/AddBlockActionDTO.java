@@ -11,7 +11,8 @@ public record AddBlockActionDTO(
                                 @NotNull BlockActionType type,
                                 @Min(0) Integer index,
                                 @NotNull String blockId,
-                                @NotNull @Valid CreateBlockDTO data
+                                @NotNull @Valid CreateBlockDTO data,
+                                @NotNull String language
 ) implements BlockActionDTO {
     public AddBlockActionDTO {
         type = ADD_BLOCK;

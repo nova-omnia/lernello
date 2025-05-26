@@ -25,12 +25,14 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 		CreateTheoryBlockSchema,
 		CreateMultipleChoiceBlockSchema,
 		CreateQuestionBlockSchema
-	])
+	]),
+	language: z.string()
 });
 
 export const ReorderBlockActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal('REORDER_BLOCK'),
-	newIndex: z.number().min(-1)
+	newIndex: z.number().min(-1),
+	language: z.string()
 });
 
 export const RemoveBlockActionSchema = BaseBlockActionSchema.extend({
@@ -43,12 +45,14 @@ export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
 	question: z.string().optional(),
 	expectedAnswer: z.string().optional(),
 	possibleAnswers: z.array(z.string()).optional(),
-	correctAnswers: z.array(z.string()).optional()
+	correctAnswers: z.array(z.string()).optional(),
+	language: z.string()
 });
 
 export const UpdateBlockNameActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal(ActionType.Enum.UPDATE_BLOCK_NAME),
-	newName: z.string().min(3).max(40)
+	newName: z.string().min(3).max(40),
+	language: z.string()
 });
 
 export const UpdateLearningUnitNameActionSchema = z.object({

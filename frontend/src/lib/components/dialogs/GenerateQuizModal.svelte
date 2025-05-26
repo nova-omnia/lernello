@@ -3,14 +3,13 @@
 	import { _ } from 'svelte-i18n';
 
 	interface MultipleChoiceModalProps {
-		isLoading: boolean;
 		isOpen: boolean;
 		onConfirm: (selectedBlockId: string) => void;
 		onCancel: () => void;
 		theoryBlocks: { id: string; title: string }[];
 	}
 
-	const { isLoading, isOpen, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps =
+	const { isOpen, onConfirm, onCancel, theoryBlocks }: MultipleChoiceModalProps =
 		$props();
 
 	let selectedBlockId = $state<string>('');
@@ -37,7 +36,6 @@
 		<div class="flex justify-end space-x-2">
 			<button
 				class="btn preset-tonal-surface"
-				disabled={isLoading}
 				onclick={() => {
 					onCancel();
 					selectedBlockId = '';
@@ -45,7 +43,6 @@
 			>
 			<button
 				class="btn preset-filled-primary-500"
-				disabled={isLoading}
 				onclick={() => onConfirm(selectedBlockId)}>{$_('common.generate')}</button
 			>
 		</div>

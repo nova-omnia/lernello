@@ -40,7 +40,7 @@ public class AIBlockService {
     public TheoryBlock generateTheoryBlockAI(UUID blockId, List<UUID> fileIds, String topic) {
         TheoryBlock block = (TheoryBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
         String context = fileService.extractTextFromFiles(fileIds);
-        String prompt = AIPromptTemplate.THEORY_BLOCK.format(context, topic);
+        String prompt = AIPromptTemplate.THEORY_BLOCK.format(context, topic, "", "");
         String aiResponse = aiClient.sendPrompt(prompt);
 
         JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI TheoryBlock");
@@ -57,7 +57,7 @@ public class AIBlockService {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
 
-        String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(theoryBlock.getContent());
+        String prompt = AIPromptTemplate.MULTIPLE_CHOICE.format(theoryBlock.getContent(), "", "");
         String aiResponse = aiClient.sendPrompt(prompt);
 
         MultipleChoiceBlock generated = parseJson(aiResponse, MultipleChoiceBlock.class, "Failed to parse AI MultipleChoiceBlock");
@@ -75,7 +75,7 @@ public class AIBlockService {
         TheoryBlock theoryBlock = (TheoryBlock) blockRepository.findById(theoryBlockId).orElseThrow(() -> new RuntimeException("Block not found: " + theoryBlockId));
         QuestionBlock questionBlock = (QuestionBlock) blockRepository.findById(blockId).orElseThrow(() -> new RuntimeException("Block not found: " + blockId));
 
-        String prompt = AIPromptTemplate.QUESTION_BLOCK.format(theoryBlock.getContent());
+        String prompt = AIPromptTemplate.QUESTION_BLOCK.format(theoryBlock.getContent(), "", "");
         String aiResponse = aiClient.sendPrompt(prompt);
 
         QuestionBlock generated = parseJson(aiResponse, QuestionBlock.class, "Failed to parse AI QuestionBlock");

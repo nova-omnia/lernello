@@ -241,7 +241,7 @@
 	"multipleChoice.success.description": "Multiple Choice Block generated successfully",
 	"multipleChoiceBlock.error.description": "Failed to generate Multiple Choice Block",
 	"multipleChoiceBlock.error.title": "Multiple Choice Block failed",
-	"multipleChoiceBlock.loading.description": "Failed to generate Multiple Choice Block",
+	"multipleChoiceBlock.loading.description": "Generating Multiple Choice Block",
 	"multipleChoiceBlock.loading.title": "Multiple Choice Block failed",
 	"multipleChoiceBlock.success.title": "Multiple Choice Block generated",
 	"questionBlock.error.description": "Failed to generate Question Block",

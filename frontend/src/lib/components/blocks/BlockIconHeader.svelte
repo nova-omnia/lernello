@@ -13,10 +13,11 @@
 		block: BlockRes;
 		role: RoleType;
 		language: string;
+		isGenerationLoading: (isLoading: boolean) => void;
 	}
-	const { block, role, language }: BlockIconHeaderProps = $props();
+	const { block, role, language, isGenerationLoading }: BlockIconHeaderProps = $props();
 	const blockName = $derived(
-		block.translatedContents.find((content) => content.language === language)?.name ?? block.name
+		block?.translatedContents?.find((content) => content.language === language)?.name ?? block.name
 	);
 	let name = $derived(blockName);
 
@@ -78,7 +79,7 @@
 
 	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block} />
+			<BlockAiGenerationButton {block} isGenerationLoading={isGenerationLoading}/>
 		</div>
 	{/if}
 </div>

@@ -43,7 +43,7 @@
 				type: 'success'
 			});
 		},
-		onError(error, variables, context) {
+		onError() {
 			toaster.create({
 				description: $_('multipleChoiceBlock.error.description'),
 				type: 'error'
@@ -73,7 +73,7 @@
 				type: 'success'
 			});
 		},
-		onError(error, variables, context) {
+		onError() {
 			toaster.create({
 				description: $_('questionBlock.error.description'),
 				type: 'error'
@@ -102,7 +102,7 @@
 				type: 'success'
 			});
 		},
-		onError(error, variables, context) {
+		onError() {
 			toaster.create({
 				description: $_('theoryBlock.error.description'),
 				type: 'error'

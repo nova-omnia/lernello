@@ -244,7 +244,7 @@
 	"multipleChoiceBlock.loading.description": "Failed to generate Multiple Choice Block",
 	"multipleChoiceBlock.loading.title": "Multiple Choice Block failed",
 	"multipleChoiceBlock.success.title": "Multiple Choice Block generated",
-  "multipleChoiceBlock.success.description": "Multiple Choice Block generated successfully",
+	"multipleChoiceBlock.success.description": "Multiple Choice Block generated successfully",
 	"questionBlock.error.description": "Failed to generate Question Block",
 	"questionBlock.error.title": "Question Block failed",
 	"questionBlock.loading.description": "Generating Question Block...",

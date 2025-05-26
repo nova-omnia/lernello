@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action';
 	import BlockReorderItem from '$lib/components/blocks/BlockOverviewItem.svelte';
-	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { blockActionState, isBlockSaving, queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import type { BlockRes } from '$lib/schemas/response/BlockRes';
 	import { INSTRUCTOR_ROLE } from '$lib/schemas/response/UserInfo';
 	import { CheckCircle, Loader2 } from 'lucide-svelte';
@@ -45,7 +45,7 @@
 		type="button"
 		class="btn preset-outlined-surface-500 pointer-events-none mb-6 w-full cursor-default"
 	>
-		{#if blockActionState.queue.length !== 0}
+		{#if $isBlockSaving}
 			<Loader2 class="h-5 w-5 animate-spin" />
 			<span>{$_('block.saving')}</span>
 		{:else}

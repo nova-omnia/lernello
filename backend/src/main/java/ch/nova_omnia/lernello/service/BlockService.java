@@ -16,6 +16,8 @@ import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.TranslatedBlockRepository;
 import ch.nova_omnia.lernello.service.block.AIBlockService;
+import jakarta.persistence.LockTimeoutException;
+import jakarta.persistence.PessimisticLockException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +44,24 @@ public class BlockService {
     private final Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
     @Transactional
-    public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
+    public Map<String, UUID> applyBlockActions(UUID id, List<BlockActionDTO> actions) {
+        int maxRetries = 3;
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                return doApplyBlockActions(id, actions);
+            } catch (PessimisticLockException | LockTimeoutException e) {
+                if (attempt == maxRetries) throw e;
+                try {
+                    Thread.sleep(100L * attempt);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+        throw new IllegalStateException("Unreachable");
+    }
+
+    @Transactional
+    public Map<String, UUID> doApplyBlockActions(UUID id, List<BlockActionDTO> actions) throws IllegalArgumentException {
         actions = filterCorrelatedActions(actions);
 
         LearningUnit learningUnit = learningUnitRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with ID: " + id));
@@ -183,6 +202,10 @@ public class BlockService {
             throw new IllegalArgumentException("Block ID cannot be null");
         }
 
+        if (!isValidUUID(updateAction.blockId())) {
+            return;
+        }
+
         Block block = blockRepository.findById(UUID.fromString(updateAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
 
         if (updateAction.content() != null) {
@@ -190,12 +213,25 @@ public class BlockService {
                 TheoryBlock original = (block instanceof TheoryBlock) ? (TheoryBlock) block : (TheoryBlock) ((TranslatedBlock) block).getOriginalBlock();
                 String newContent = updateAction.content();
 
-                original.setContent(aiBlockService.translateContentWithAI("ENGLISH", newContent));
+                if (block instanceof TheoryBlock theoryBlock) {
+                    theoryBlock.setContent(newContent);
+                } else {
+                    original.setContent(aiBlockService.translateContentWithAI("ENGLISH", newContent));
+                }
+
                 if (updateAction.data() != null) {
                     original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateTheoryBlockDTO) updateAction.data()).name()));
                 }
 
                 List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                if (block instanceof TranslatedBlock translatedBlock) {
+                    translations.removeIf(translation -> translation.getLanguage() == translatedBlock.getLanguage());
+                    translatedBlock.setContent(newContent);
+                    if (updateAction.data() != null) {
+                        translatedBlock.setName(((UpdateTheoryBlockDTO) updateAction.data()).name());
+                    }
+                }
+
                 for (TranslatedBlock translatedBlock : translations) {
                     String translated = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), newContent);
                     translatedBlock.setContent(translated);
@@ -216,14 +252,29 @@ public class BlockService {
             if (block instanceof QuestionBlock || (block instanceof TranslatedBlock && block.getType().equals(BlockType.QUESTION))) {
                 QuestionBlock original = (block instanceof QuestionBlock) ? (QuestionBlock) block : (QuestionBlock) ((TranslatedBlock) block).getOriginalBlock();
 
-                original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
-                original.setExpectedAnswer(aiBlockService.translateContentWithAI("ENGLISH", updateAction.expectedAnswer()));
+                if (block instanceof QuestionBlock questionBlock) {
+                    questionBlock.setQuestion(updateAction.question());
+                    questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
+                } else {
+                    original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
+                    original.setExpectedAnswer(aiBlockService.translateContentWithAI("ENGLISH", updateAction.expectedAnswer()));
+                }
 
                 if (updateAction.data() != null) {
                     original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateQuestionBlockDTO) updateAction.data()).name()));
                 }
 
                 List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                if (block instanceof TranslatedBlock translatedBlock) {
+                    translations.removeIf(translation -> translation.getLanguage() == translatedBlock.getLanguage());
+                    translatedBlock.setQuestion(updateAction.question());
+                    translatedBlock.setExpectedAnswer(updateAction.expectedAnswer());
+
+                    if (updateAction.data() != null) {
+                        translatedBlock.setName(((UpdateQuestionBlockDTO) updateAction.data()).name());
+                    }
+                }
+
                 for (TranslatedBlock translatedBlock : translations) {
                     String translatedQuestion = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.question());
                     String translatedExpectedAnswer = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.expectedAnswer());
@@ -241,15 +292,32 @@ public class BlockService {
                 if (block instanceof MultipleChoiceBlock || (block instanceof TranslatedBlock && block.getType().equals(BlockType.MULTIPLE_CHOICE))) {
                     MultipleChoiceBlock original = (block instanceof MultipleChoiceBlock) ? (MultipleChoiceBlock) block : (MultipleChoiceBlock) ((TranslatedBlock) block).getOriginalBlock();
 
-                    original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
-                    original.setPossibleAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.possibleAnswers()));
-                    original.setCorrectAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.correctAnswers()));
+                    if (block instanceof MultipleChoiceBlock multipleChoiceBlock) {
+                        multipleChoiceBlock.setQuestion(updateAction.question());
+                        multipleChoiceBlock.setPossibleAnswers(updateAction.possibleAnswers());
+                        multipleChoiceBlock.setCorrectAnswers(updateAction.correctAnswers());
+                    } else {
+                        original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
+                        original.setPossibleAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.possibleAnswers()));
+                        original.setCorrectAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.correctAnswers()));
+                    }
 
                     if (updateAction.data() != null) {
                         original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
                     }
 
                     List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                    if (block instanceof TranslatedBlock translatedBlock) {
+                        translations.removeIf(translation -> translation.getLanguage() == translatedBlock.getLanguage());
+                        translatedBlock.setQuestion(updateAction.question());
+                        translatedBlock.setPossibleAnswers(updateAction.possibleAnswers());
+                        translatedBlock.setCorrectAnswers(updateAction.correctAnswers());
+
+                        if (updateAction.data() != null) {
+                            translatedBlock.setName(((UpdateMultipleChoiceBlockDTO) updateAction.data()).name());
+                        }
+                    }
+
                     for (TranslatedBlock translatedBlock : translations) {
                         String translatedQuestion = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.question());
                         List<String> translatedPossibleAnswers = aiBlockService.translateListWithAI(translatedBlock.getLanguage().name(), updateAction.possibleAnswers());
@@ -269,6 +337,16 @@ public class BlockService {
                 } else {
                     throw new IllegalArgumentException("Unsupported block type for question update");
                 }
+        }
+    }
+
+    public static boolean isValidUUID(String str) {
+        if (str == null) return false;
+        try {
+            UUID.fromString(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 

@@ -6,6 +6,9 @@ import {
 	type UpdateBlockAction
 } from '$lib/schemas/request/block/BlockAction';
 import { BlockType } from '$lib/schemas/request/block/CreateBlock';
+import { writable } from 'svelte/store';
+
+export const isBlockSaving = writable(true);
 
 let currTempId = 0;
 function getTempId() {

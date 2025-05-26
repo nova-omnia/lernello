@@ -67,6 +67,7 @@
 				},
 				async () => {
 					try {
+						await new Promise((resolve) => setTimeout(resolve, 1000));
 						const refetched = await api(fetch)
 							.req(getLearningUnitById, null, data.learningUnitId)
 							.parse();

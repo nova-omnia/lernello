@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.nova_omnia.lernello.model.data.block.Block;
+import ch.nova_omnia.lernello.model.data.block.BlockLanguage;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
@@ -73,20 +74,24 @@ public class BlockService {
         Block block = null;
         CreateBlockDTO createBlockDTO = addAction.data();
 
-        block = switch (createBlockDTO) {
-            case CreateTheoryBlockDTO theoryBlockDTO -> new TheoryBlock(
-                    theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content()
-            );
-            case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> new MultipleChoiceBlock(
-                    multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers()
-            );
-            case CreateQuestionBlockDTO questionBlockDTO -> new QuestionBlock(
-                    questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer()
-            );
+        switch (createBlockDTO) {
+            case CreateTheoryBlockDTO theoryBlockDTO -> {
+                block = new TheoryBlock(theoryBlockDTO.name(), theoryBlockDTO.position(), learningUnit, theoryBlockDTO.content());
+                blockRepository.save(block);
+                addTranslatedBlocks(theoryBlockDTO.content(), "", "", List.of(), List.of(), block, learningUnit, theoryBlockDTO.position(), BlockType.THEORY, theoryBlockDTO.name());
+            }
+            case CreateMultipleChoiceBlockDTO multipleChoiceBlockDTO -> {
+                block = new MultipleChoiceBlock(multipleChoiceBlockDTO.name(), multipleChoiceBlockDTO.position(), learningUnit, multipleChoiceBlockDTO.question(), multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers());
+                blockRepository.save(block);
+                addTranslatedBlocks("", multipleChoiceBlockDTO.question(), "", multipleChoiceBlockDTO.possibleAnswers(), multipleChoiceBlockDTO.correctAnswers(), block, learningUnit, multipleChoiceBlockDTO.position(), BlockType.MULTIPLE_CHOICE, multipleChoiceBlockDTO.name());
+            }
+            case CreateQuestionBlockDTO questionBlockDTO -> {
+                block = new QuestionBlock(questionBlockDTO.name(), questionBlockDTO.position(), learningUnit, questionBlockDTO.question(), questionBlockDTO.expectedAnswer());
+                blockRepository.save(block);
+                addTranslatedBlocks("", questionBlockDTO.question(), questionBlockDTO.expectedAnswer(), List.of(), List.of(), block, learningUnit, questionBlockDTO.position(), BlockType.QUESTION, questionBlockDTO.name());
+            }
             case null, default -> throw new IllegalArgumentException("Unknown block type: " + addAction.type());
-        };
-
-        blockRepository.save(block);
+        }
 
         if (addAction.index() != null && addAction.index() >= 0 && addAction.index() <= learningUnit.getBlocks().size() + 1) {
             int insertionIndex = addAction.index();
@@ -100,6 +105,28 @@ public class BlockService {
         } else {
             throw new RuntimeException("addAction.blockId() is null, which is unexpected for new blocks needing temp ID mapping.");
         }
+    }
+
+    private void addTranslatedBlocks(String content, String question, String expectedAnswer, List<String> possibleAnswers, List<String> correctAnswers, Block originalBlock, LearningUnit learningUnit, int position, BlockType type, String name) {
+        List<TranslatedBlock> translatedBlocks = new ArrayList<TranslatedBlock>();
+
+        for (BlockLanguage language : BlockLanguage.values()) {
+            TranslatedBlock translatedBlock = new TranslatedBlock();
+            translatedBlock.setContent(content);
+            translatedBlock.setCorrectAnswers(correctAnswers);
+            translatedBlock.setExpectedAnswer(expectedAnswer);
+            translatedBlock.setLanguage(language);
+            translatedBlock.setLearningUnit(learningUnit);
+            translatedBlock.setName(name);
+            translatedBlock.setOriginalBlock(originalBlock);
+            translatedBlock.setPosition(position);
+            translatedBlock.setPossibleAnswers(possibleAnswers);
+            translatedBlock.setQuestion(question);
+            translatedBlock.setType(type);
+
+            translatedBlocks.add(translatedBlock);
+        }
+        blockRepository.saveAll(translatedBlocks);
     }
 
     private void removeBlock(LearningUnit learningUnit, RemoveBlockActionDTO removeAction) {
@@ -144,7 +171,6 @@ public class BlockService {
             blocks.add(blockToMove);
         }
     }
-
 
     private void updateBlock(LearningUnit learningUnit, UpdateBlockActionDTO updateAction) {
         if (updateAction.blockId() == null) {

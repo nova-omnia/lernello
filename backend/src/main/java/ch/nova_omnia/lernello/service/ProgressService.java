@@ -306,6 +306,21 @@ public class ProgressService {
                 case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) block, unitProgress);
                 case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) block, unitProgress);
                 case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) block, unitProgress);
+                case TranslatedBlock translatedBlock -> {
+                    if (translatedBlock.getType() == BlockType.THEORY) {
+                        yield new TheoryBlockProgress(user, (TheoryBlock) translatedBlock.getOriginalBlock(), unitProgress);
+                    }
+
+                    if (translatedBlock.getType() == BlockType.MULTIPLE_CHOICE) {
+                        yield new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) translatedBlock.getOriginalBlock(), unitProgress);
+                    }
+
+                    if (translatedBlock.getType() == BlockType.QUESTION) {
+                        yield new QuestionBlockProgress(user, (QuestionBlock) translatedBlock.getOriginalBlock(), unitProgress);
+                    }
+
+                    throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
+                }
                 default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
             };
             unitProgress.addBlockProgress(newBlockProgress);

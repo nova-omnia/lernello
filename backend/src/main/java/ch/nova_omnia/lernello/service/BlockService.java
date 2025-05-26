@@ -8,11 +8,15 @@ import ch.nova_omnia.lernello.dto.request.block.create.CreateMultipleChoiceBlock
 import ch.nova_omnia.lernello.dto.request.block.create.CreateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.create.CreateTheoryBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateMultipleChoiceBlockDTO;
+import ch.nova_omnia.lernello.dto.request.block.update.UpdateQuestionBlockDTO;
 import ch.nova_omnia.lernello.dto.request.block.update.UpdateTheoryBlockDTO;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
 import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitRepository;
+import ch.nova_omnia.lernello.repository.TranslatedBlockRepository;
+import ch.nova_omnia.lernello.service.block.AIBlockService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,8 @@ public class BlockService {
     private final BlockRepository blockRepository;
     private final BlockProgressRepository blockProgressRepository;
     private final LearningUnitRepository learningUnitRepository;
+    private final TranslatedBlockRepository translatedBlockRepository;
+    private final AIBlockService aiBlockService;
 
     private final Map<String, UUID> temporaryKeyMap = new HashMap<>();
 
@@ -180,68 +186,71 @@ public class BlockService {
         Block block = blockRepository.findById(UUID.fromString(updateAction.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found"));
 
         if (updateAction.content() != null) {
-            if (block instanceof TheoryBlock theoryBlock) {
-                theoryBlock.setContent(updateAction.content());
-            } else if (block instanceof TranslatedBlock translatedBlock && block.getType().equals(BlockType.THEORY)) {
-                translatedBlock.setContent(updateAction.content());
+            if (block instanceof TheoryBlock || (block instanceof TranslatedBlock && block.getType().equals(BlockType.THEORY))) {
+                TheoryBlock original = (block instanceof TheoryBlock) ? (TheoryBlock) block : (TheoryBlock) ((TranslatedBlock) block).getOriginalBlock();
+                String newContent = updateAction.content();
+
+                original.setContent(aiBlockService.translateContentWithAI("ENGLISH", newContent));
+                original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+
+                List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                for (TranslatedBlock translatedBlock : translations) {
+                    String translated = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), newContent);
+                    translatedBlock.setContent(translated);
+                    translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+                }
+
+                blockRepository.save(original);
+                translatedBlockRepository.saveAll(translations);
             } else {
                 throw new IllegalArgumentException("Content updates only supported for theory blocks");
             }
         }
 
         if (updateAction.question() != null) {
-            if (block instanceof QuestionBlock) {
-                QuestionBlock questionBlock = (QuestionBlock) block;
-                questionBlock.setQuestion(updateAction.question());
-                questionBlock.setExpectedAnswer(updateAction.expectedAnswer());
-            } else if (block instanceof MultipleChoiceBlock) {
-                MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
-                mcBlock.setQuestion(updateAction.question());
-                mcBlock.setPossibleAnswers(updateAction.possibleAnswers());
-                mcBlock.setCorrectAnswers(updateAction.correctAnswers());
-            } else if (block instanceof TranslatedBlock translated) {
-                if (translated.getType() == BlockType.QUESTION) {
-                    translated.setQuestion(updateAction.question());
-                    translated.setExpectedAnswer(updateAction.expectedAnswer());
-                } else if (translated.getType() == BlockType.MULTIPLE_CHOICE) {
-                    translated.setQuestion(updateAction.question());
-                    translated.setPossibleAnswers(updateAction.possibleAnswers());
-                    translated.setCorrectAnswers(updateAction.correctAnswers());
+            if (block instanceof QuestionBlock || (block instanceof TranslatedBlock && block.getType().equals(BlockType.QUESTION))) {
+                QuestionBlock original = (block instanceof QuestionBlock) ? (QuestionBlock) block : (QuestionBlock) ((TranslatedBlock) block).getOriginalBlock();
+
+                original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
+                original.setExpectedAnswer(aiBlockService.translateContentWithAI("ENGLISH", updateAction.expectedAnswer()));
+                original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+
+                List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                for (TranslatedBlock translatedBlock : translations) {
+                    String translatedQuestion = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.question());
+                    String translatedExpectedAnswer = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.expectedAnswer());
+                    translatedBlock.setQuestion(translatedQuestion);
+                    translatedBlock.setExpectedAnswer(translatedExpectedAnswer);
+                    translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+                }
+
+                blockRepository.save(original);
+                translatedBlockRepository.saveAll(translations);
+            } else
+                if (block instanceof MultipleChoiceBlock || (block instanceof TranslatedBlock && block.getType().equals(BlockType.MULTIPLE_CHOICE))) {
+                    MultipleChoiceBlock original = (block instanceof MultipleChoiceBlock) ? (MultipleChoiceBlock) block : (MultipleChoiceBlock) ((TranslatedBlock) block).getOriginalBlock();
+
+                    original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
+                    original.setPossibleAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.possibleAnswers()));
+                    original.setCorrectAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.correctAnswers()));
+                    original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+
+                    List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
+                    for (TranslatedBlock translatedBlock : translations) {
+                        String translatedQuestion = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.question());
+                        List<String> translatedPossibleAnswers = aiBlockService.translateListWithAI(translatedBlock.getLanguage().name(), updateAction.possibleAnswers());
+                        List<String> translatedCorrectAnswers = aiBlockService.translateListWithAI(translatedBlock.getLanguage().name(), updateAction.correctAnswers());
+                        translatedBlock.setQuestion(translatedQuestion);
+                        translatedBlock.setPossibleAnswers(translatedPossibleAnswers);
+                        translatedBlock.setCorrectAnswers(translatedCorrectAnswers);
+                        translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+                    }
+
+                    blockRepository.save(original);
+                    translatedBlockRepository.saveAll(translations);
                 } else {
-                    throw new IllegalArgumentException("TranslatedBlock has unsupported type for question update: " + translated.getType());
+                    throw new IllegalArgumentException("Unsupported block type for question update");
                 }
-            }
-        }
-
-
-        if (updateAction.data() != null) {
-            switch (updateAction.data()) {
-                case UpdateTheoryBlockDTO theoryBlockDTO -> {
-                    TheoryBlock theoryBlock = (TheoryBlock) block;
-                    if (theoryBlockDTO.name() != null) {
-                        theoryBlock.setName(theoryBlockDTO.name());
-                    }
-                    if (theoryBlockDTO.content() != null) {
-                        theoryBlock.setContent(theoryBlockDTO.content());
-                    }
-                }
-                case UpdateMultipleChoiceBlockDTO mcBlockDTO -> {
-                    MultipleChoiceBlock mcBlock = (MultipleChoiceBlock) block;
-                    if (mcBlockDTO.name() != null) {
-                        mcBlock.setName(mcBlockDTO.name());
-                    }
-                    if (mcBlockDTO.question() != null) {
-                        mcBlock.setQuestion(mcBlockDTO.question());
-                    }
-                    if (mcBlockDTO.possibleAnswers() != null) {
-                        mcBlock.setPossibleAnswers(mcBlockDTO.possibleAnswers());
-                    }
-                    if (mcBlockDTO.correctAnswers() != null) {
-                        mcBlock.setCorrectAnswers(mcBlockDTO.correctAnswers());
-                    }
-                }
-                case null, default -> throw new IllegalArgumentException("Unknown block type in update");
-            }
         }
     }
 

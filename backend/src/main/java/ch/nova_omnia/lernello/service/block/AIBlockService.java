@@ -97,6 +97,18 @@ public class AIBlockService {
         return isCorrect;
     }
 
+    public String translateContentWithAI(String language, String content) {
+        String prompt = AIPromptTemplate.TRANSLATION.format(language, content);
+        String result = aiClient.sendPrompt(prompt);
+        return result;
+    }
+
+    public List<String> translateListWithAI(String language, List<String> listOfContents) {
+        List<String> translatedList = new ArrayList<>();
+        listOfContents.forEach(content -> translatedList.add(translateContentWithAI(language, content)));
+        return translatedList;
+    }
+
     private void generateTranslationsParallel(Block block, String content) {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (BlockLanguage lang : BlockLanguage.values()) {

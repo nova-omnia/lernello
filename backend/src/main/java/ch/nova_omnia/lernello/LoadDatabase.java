@@ -60,7 +60,7 @@ public class LoadDatabase {
         LearningUnit learningUnit = new LearningUnit("Learning Unit 1", learningKit);
 
         CreateTheoryBlockDTO createTheoryBlockDTO1 = new CreateTheoryBlockDTO(THEORY, "Theory Block 0", 0, theoryBlockContent);
-        AddBlockActionDTO addBlockActionDTO = new AddBlockActionDTO(BlockActionType.ADD_BLOCK, 0, "tempid:0", createTheoryBlockDTO1, "ENGLISH");
+        AddBlockActionDTO addBlockActionDTO = new AddBlockActionDTO(BlockActionType.ADD_BLOCK, 0, "tempid:0", createTheoryBlockDTO1);
         List<BlockActionDTO> actions = List.of(addBlockActionDTO);
 
         return (_) -> {

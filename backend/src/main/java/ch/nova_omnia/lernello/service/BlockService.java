@@ -191,13 +191,18 @@ public class BlockService {
                 String newContent = updateAction.content();
 
                 original.setContent(aiBlockService.translateContentWithAI("ENGLISH", newContent));
-                original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+                if (updateAction.data() != null) {
+                    original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+                }
 
                 List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
                 for (TranslatedBlock translatedBlock : translations) {
                     String translated = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), newContent);
                     translatedBlock.setContent(translated);
-                    translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+
+                    if (updateAction.data() != null) {
+                        translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateTheoryBlockDTO) updateAction.data()).name()));
+                    }
                 }
 
                 blockRepository.save(original);
@@ -213,7 +218,10 @@ public class BlockService {
 
                 original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
                 original.setExpectedAnswer(aiBlockService.translateContentWithAI("ENGLISH", updateAction.expectedAnswer()));
-                original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+
+                if (updateAction.data() != null) {
+                    original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+                }
 
                 List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
                 for (TranslatedBlock translatedBlock : translations) {
@@ -221,7 +229,10 @@ public class BlockService {
                     String translatedExpectedAnswer = aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), updateAction.expectedAnswer());
                     translatedBlock.setQuestion(translatedQuestion);
                     translatedBlock.setExpectedAnswer(translatedExpectedAnswer);
-                    translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+
+                    if (updateAction.data() != null) {
+                        translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateQuestionBlockDTO) updateAction.data()).name()));
+                    }
                 }
 
                 blockRepository.save(original);
@@ -233,7 +244,10 @@ public class BlockService {
                     original.setQuestion(aiBlockService.translateContentWithAI("ENGLISH", updateAction.question()));
                     original.setPossibleAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.possibleAnswers()));
                     original.setCorrectAnswers(aiBlockService.translateListWithAI("ENGLISH", updateAction.correctAnswers()));
-                    original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+
+                    if (updateAction.data() != null) {
+                        original.setName(aiBlockService.translateContentWithAI("ENGLISH", ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+                    }
 
                     List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlock(original);
                     for (TranslatedBlock translatedBlock : translations) {
@@ -243,8 +257,12 @@ public class BlockService {
                         translatedBlock.setQuestion(translatedQuestion);
                         translatedBlock.setPossibleAnswers(translatedPossibleAnswers);
                         translatedBlock.setCorrectAnswers(translatedCorrectAnswers);
-                        translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+
+                        if (updateAction.data() != null) {
+                            translatedBlock.setName(aiBlockService.translateContentWithAI(translatedBlock.getLanguage().name(), ((UpdateMultipleChoiceBlockDTO) updateAction.data()).name()));
+                        }
                     }
+
 
                     blockRepository.save(original);
                     translatedBlockRepository.saveAll(translations);

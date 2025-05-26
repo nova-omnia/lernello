@@ -18,10 +18,9 @@
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
-		language: string;
 	}
 
-	const { block, language }: BlockAiGenerationButtonProps = $props();
+	const { block }: BlockAiGenerationButtonProps = $props();
 
 	let theoryBlocks: BlockRes[] = $derived(
 		blockActionState.blocks.filter((b) => b.type === THEORY_BLOCK_TYPE)

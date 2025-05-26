@@ -25,8 +25,7 @@ export const AddBlockActionSchema = BaseBlockActionSchema.extend({
 		CreateTheoryBlockSchema,
 		CreateMultipleChoiceBlockSchema,
 		CreateQuestionBlockSchema
-	]),
-	language: z.string()
+	])
 });
 
 export const ReorderBlockActionSchema = BaseBlockActionSchema.extend({
@@ -49,8 +48,7 @@ export const UpdateBlockActionSchema = BaseBlockActionSchema.extend({
 
 export const UpdateBlockNameActionSchema = BaseBlockActionSchema.extend({
 	type: z.literal(ActionType.Enum.UPDATE_BLOCK_NAME),
-	newName: z.string().min(3).max(40),
-	language: z.string()
+	newName: z.string().min(3).max(40)
 });
 
 export const UpdateLearningUnitNameActionSchema = z.object({

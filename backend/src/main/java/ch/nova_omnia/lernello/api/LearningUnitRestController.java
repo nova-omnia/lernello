@@ -7,6 +7,7 @@ import java.util.UUID;
 import ch.nova_omnia.lernello.service.BlockService;
 import ch.nova_omnia.lernello.dto.request.block.update.RenameLearningUnitDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ch.nova_omnia.lernello.dto.request.CreateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
+import ch.nova_omnia.lernello.dto.request.JobStatusDTO;
 import ch.nova_omnia.lernello.dto.request.block.blockActions.BlockActionDTO;
 import ch.nova_omnia.lernello.dto.response.LearningUnitResDTO;
 import ch.nova_omnia.lernello.mapper.LearningUnitMapper;
@@ -41,6 +43,7 @@ public class LearningUnitRestController {
     private final LearningUnitMapper learningUnitMapper;
     private final TemporaryKeyMapper temporaryKeyMapper;
     private final BlockService blockService;
+    private final AsyncJobService asyncJobService;
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_learningUnit:read')")
@@ -88,4 +91,22 @@ public class LearningUnitRestController {
         return learningUnitMapper.toDTO(learningUnit);
     }
 
+    @PostMapping("/{id}/generate-async")
+    @PreAuthorize("hasAuthority('SCOPE_learningUnit:write')")
+    public ResponseEntity<Map<String, String>> triggerAsyncGeneration(
+                                                                      @PathVariable UUID id, @Valid @RequestBody GenerateLearningUnitDTO dto
+    ) {
+        String jobId = asyncJobService.startLearningUnitGeneration(id, dto);
+        return ResponseEntity.accepted().body(Map.of("jobId", jobId));
+    }
+
+    @GetMapping("/generation-status/{jobId}")
+    public JobStatusDTO getJobStatus(@PathVariable String jobId) {
+        return asyncJobService.getStatus(jobId);
+    }
+
+    @GetMapping("/active-job/{unitId}")
+    public ResponseEntity<Map<String, String>> getActiveJobId(@PathVariable UUID unitId) {
+        return asyncJobService.getJobIdForUnit(unitId).map(jobId -> ResponseEntity.ok(Map.of("jobId", jobId))).orElse(ResponseEntity.noContent().build());
+    }
 }

@@ -1,7 +1,5 @@
 package ch.nova_omnia.lernello;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class LoadDatabase {
-    private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
-
     private final PasswordEncoder encoder;
 
     @Bean
@@ -34,8 +30,12 @@ public class LoadDatabase {
 
         User max = new User("max.sebastian@bluewin.ch", "Max", "Sebastian", encoder.encode("password"), null, Role.TRAINEE);
         max.setChangedPassword(true);
+
         User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, Role.TRAINEE);
         bruno.setChangedPassword(true);
+
+        User johanna = new User("zubj@zhaw.ch", "Johanna", "Decurtins", encoder.encode("password"), null, Role.INSTRUCTOR);
+        johanna.setChangedPassword(true);
 
         return (_) -> {
             userRepository.save(frodo);

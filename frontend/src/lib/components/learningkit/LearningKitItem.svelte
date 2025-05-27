@@ -10,6 +10,7 @@
 	import { INSTRUCTOR_ROLE, TRAINEE_ROLE, type RoleType } from '$lib/schemas/response/UserInfo';
 	import { getLearningKitProgress } from '$lib/api/collections/progress';
 	import PublishedStatusIndicator from '$lib/components/learningkit/displays/PublishedStatusIndicator.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	const invalidate = useQueryInvalidation();
 
@@ -18,15 +19,27 @@
 		uuid: string;
 		role: RoleType;
 		published: boolean;
+		deadlineDate?: string | null;
 	}
 
-	const { title, uuid, role, published }: LearningKitProps = $props();
+	const { title, uuid, role, published, deadlineDate }: LearningKitProps = $props();
 	let showDeleteDialog = $state(false);
+	let isExpired = $derived(deadlineDate && new Date(deadlineDate) < new Date());
 
 	const deleteKitMutation = createMutation({
 		onSuccess: () => {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
+			toaster.create({
+				description: $_('learningKit.delete.success.description'),
+				type: 'success'
+			});
+		},
+		onError: () => {
+			toaster.create({
+				description: $_('learningKit.delete.error.description'),
+				type: 'error'
+			});
 		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});
@@ -39,6 +52,14 @@
 
 	function handleConfirmDelete() {
 		if (!uuid) return;
+		if (published) {
+			toaster.create({
+				description: $_('learningKit.delete.error.published'),
+				type: 'warning'
+			});
+			showDeleteDialog = false;
+			return;
+		}
 		$deleteKitMutation.mutate(uuid);
 		showDeleteDialog = false;
 	}
@@ -89,7 +110,7 @@
 				<Trash2 class="h-4 w-4 text-red-500" />
 			</button>
 		{/if}
-		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data}
+		{#if role === TRAINEE_ROLE && $kitProgressQuery.isSuccess && $kitProgressQuery.data && !isExpired}
 			{#if isCompleted}
 				<div class="absolute top-2 left-2">
 					<CheckCircle2 class="h-6 w-6 text-green-500" />
@@ -105,6 +126,11 @@
 			</div>
 		{/if}
 		<p class="w-48 truncate">{title}</p>
+		{#if role === TRAINEE_ROLE && isExpired}
+			<p class="mt-2 text-xs text-red-500">
+				{$_('learningKit.expired.short')}
+			</p>
+		{/if}
 	</a>
 {/if}
 

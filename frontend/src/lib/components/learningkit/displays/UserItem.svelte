@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Avatar, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
-	import type { ParticipantUser } from '$lib/schemas/response/ParticipantUser';
+	import type { TraineeUser } from '$lib/schemas/response/TraineeUser';
 	import ConfirmDialog from '$lib/components/dialogs/ConfirmDialog.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
@@ -11,12 +11,13 @@
 	import { CheckCircle2 } from 'lucide-svelte';
 
 	interface UserItemProps {
-		user: ParticipantUser;
+		user: TraineeUser;
 		isUsersView?: boolean;
 		onRemoveUser: () => void;
 		showProgress?: boolean;
 		progressPercentage?: number;
 		isCompleted?: boolean;
+		canEdit?: boolean;
 	}
 
 	const invalidate = useQueryInvalidation();
@@ -26,7 +27,8 @@
 		onRemoveUser,
 		showProgress = false,
 		progressPercentage,
-		isCompleted
+		isCompleted,
+		canEdit = true
 	}: UserItemProps = $props();
 
 	let showDeleteDialog = $state(false);
@@ -34,24 +36,15 @@
 
 	const resetUserPasswordMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(resetUserPasswordAPI, null, id).parse(),
-		onMutate: () => {
-			toaster.create({
-				title: $_('common.loading'),
-				description: $_('files.upload.uploading.description'),
-				type: 'info'
-			});
-		},
 		onSuccess: () => {
 			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.success'),
 				description: $_('users.overview.reset.loading'),
 				type: 'success'
 			});
 		},
 		onError: () => {
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('users.overview.reset.error'),
 				type: 'error'
 			});
@@ -73,7 +66,11 @@
 	class="card preset-filled-surface-100-900 flex w-full items-center justify-between p-4 {showProgress &&
 	isCompleted
 		? 'border-l-4 border-green-500'
-		: 'border-surface-100-900 border-l-4'}"
+		: 'border-surface-100-900 border-l-4'} {canEdit
+		? ''
+		: 'cursor-not-allowed opacity-50 select-none'}"
+	title={!canEdit ? $_('users.overview.cannot_edit') : ''}
+	aria-disabled={!canEdit}
 >
 	<div class="flex w-full max-w-sm items-center gap-4 truncate">
 		<div class="relative">
@@ -103,7 +100,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="flex gap-2">
+		<div class="flex gap-2 {canEdit ? '' : 'pointer-events-none'}">
 			{#if isUsersView}
 				<a href={`/users/${user.uuid}/edit-form`} class="btn preset-outlined-surface-500">
 					{$_('common.edit')}

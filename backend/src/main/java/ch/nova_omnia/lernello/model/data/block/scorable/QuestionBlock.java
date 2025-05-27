@@ -5,7 +5,7 @@ import static ch.nova_omnia.lernello.model.data.block.BlockType.QUESTION;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Lob;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,11 +16,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuestionBlock extends ScorableBlock {
 
-    @NotBlank
+    @Lob
     @Column(name = "question", nullable = true)
     private String question;
 
-    @NotBlank
     @Column(name = "expected_answer", nullable = true)
     private String expectedAnswer;
 
@@ -30,8 +29,7 @@ public class QuestionBlock extends ScorableBlock {
         this.expectedAnswer = expectedAnswer;
     }
 
-    public QuestionBlock(String name, int position, LearningUnit learningUnit, String question,
-            String expectedAnswer, int maxScore) {
+    public QuestionBlock(String name, int position, LearningUnit learningUnit, String question, String expectedAnswer, int maxScore) {
         super(QUESTION, name, position, learningUnit, maxScore);
         this.question = question;
         this.expectedAnswer = expectedAnswer;

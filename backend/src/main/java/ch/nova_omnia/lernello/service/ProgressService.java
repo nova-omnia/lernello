@@ -1,32 +1,46 @@
 package ch.nova_omnia.lernello.service;
 
-import ch.nova_omnia.lernello.dto.request.progress.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import ch.nova_omnia.lernello.dto.request.progress.CheckMultipleChoiceAnswerDTO;
+import ch.nova_omnia.lernello.dto.request.progress.CheckQuestionAnswerDTO;
+import ch.nova_omnia.lernello.dto.request.progress.LearningKitOpened;
+import ch.nova_omnia.lernello.dto.request.progress.LearningUnitOpenedDTO;
+import ch.nova_omnia.lernello.dto.request.progress.TheoryBlockViewedDTO;
 import ch.nova_omnia.lernello.dto.response.progress.MultipleChoiceAnswerValidationResDTO;
 import ch.nova_omnia.lernello.dto.response.progress.QuestionAnswerValidationResDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.BlockType;
-import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
-import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.MultipleChoiceBlock;
+import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningKitProgress;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.BlockProgress;
+import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.scorable.MultipleChoiceBlockProgress;
 import ch.nova_omnia.lernello.model.data.progress.block.scorable.QuestionBlockProgress;
-import ch.nova_omnia.lernello.model.data.progress.block.TheoryBlockProgress;
 import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.*;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
+import ch.nova_omnia.lernello.repository.BlockRepository;
+import ch.nova_omnia.lernello.repository.LearningKitProgressRepository;
+import ch.nova_omnia.lernello.repository.LearningKitRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
+import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.service.block.AIBlockService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import java.time.ZonedDateTime;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +58,9 @@ public class ProgressService {
     @Transactional
     public LearningKitProgress markLearningKitOpened(LearningKitOpened dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningKit learningKit = learningKitRepository.findById(UUID.fromString(dto.learningKitId())).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
+        updateLearningKitProgressPercentage(
+                getOrCreateLearningKitProgress(user, learningKitRepository.findById(dto.learningKitId()).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()))));
+        LearningKit learningKit = learningKitRepository.findById(dto.learningKitId()).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + dto.learningKitId()));
 
         LearningKitProgress progress = getOrCreateLearningKitProgress(user, learningKit);
         if (!progress.isOpened()) {
@@ -58,7 +74,7 @@ public class ProgressService {
     @Transactional
     public LearningUnitProgress markLearningUnitOpened(LearningUnitOpenedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        LearningUnit learningUnit = learningUnitRepository.findById(UUID.fromString(dto.learningUnitId())).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
+        LearningUnit learningUnit = learningUnitRepository.findById(dto.learningUnitId()).orElseThrow(() -> new IllegalArgumentException("LearningUnit not found with id: " + dto.learningUnitId()));
 
         LearningKit learningKit = learningUnit.getLearningKit();
         if (learningKit == null) {
@@ -78,16 +94,15 @@ public class ProgressService {
         unitProgress.setLastOpenedAt(ZonedDateTime.now());
 
         updateLearningUnitProgressPercentage(unitProgress);
-        if (unitProgress.getLearningKitProgress() != null) {
-            updateLearningKitProgressPercentage(unitProgress.getLearningKitProgress());
-        }
+        updateLearningKitProgressPercentage(kitProgress);
+
         return unitProgress;
     }
 
     @Transactional
     public MultipleChoiceAnswerValidationResDTO checkMultipleChoiceAnswer(CheckMultipleChoiceAnswerDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(UUID.fromString(dto.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+        Block block = blockRepository.findById(dto.blockId()).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         MultipleChoiceBlock mcBlock;
         if (!(block instanceof MultipleChoiceBlock)) {
@@ -112,6 +127,14 @@ public class ProgressService {
         }
 
         boolean isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(mcBlock.getCorrectAnswers()));
+        if (block instanceof TranslatedBlock translatedBlock && block.getType().equals(BlockType.MULTIPLE_CHOICE)) {
+            isCorrect = new HashSet<>(dto.answers()).equals(new HashSet<>(translatedBlock.getCorrectAnswers()));
+        }
+
+        if (blockProgress instanceof MultipleChoiceBlockProgress mcProgress) {
+            mcProgress.setIsCorrect(isCorrect);
+            mcProgress.setLastAnswers(new ArrayList<>(dto.answers()));
+        }
 
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
@@ -150,6 +173,11 @@ public class ProgressService {
 
         boolean isCorrect = aiBlockService.checkQuestionAnswerWithAI(dto.answer(), qBlock.getExpectedAnswer());
 
+        if (blockProgress instanceof QuestionBlockProgress qProgress) {
+            qProgress.setIsCorrect(isCorrect);
+            qProgress.setLastAnswer(dto.answer());
+        }
+
         blockProgressRepository.save(blockProgress);
         updateLearningUnitProgressPercentage(unitProgress);
         if (unitProgress.getLearningKitProgress() != null) {
@@ -161,7 +189,7 @@ public class ProgressService {
     @Transactional
     public TheoryBlockProgress markTheoryBlockViewed(TheoryBlockViewedDTO dto, UserDetails userDetails) {
         User user = userService.getUserFromUserDetails(userDetails);
-        Block block = blockRepository.findById(UUID.fromString(dto.blockId())).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
+        Block block = blockRepository.findById(dto.blockId()).orElseThrow(() -> new IllegalArgumentException("Block not found with id: " + dto.blockId()));
 
         TheoryBlock theoryBlock;
         if (!(block instanceof TheoryBlock)) {
@@ -190,7 +218,7 @@ public class ProgressService {
         BlockProgress blockProgress = getOrCreateBlockProgress(user, theoryBlock, unitProgress);
 
         if (blockProgress instanceof TheoryBlockProgress theoryBlockProgress) {
-            theoryBlockProgress.setViewed(true);
+            theoryBlockProgress.setIsViewed(true);
         }
 
         blockProgressRepository.save(blockProgress);
@@ -217,14 +245,14 @@ public class ProgressService {
     }
 
     @Transactional
-    public List<LearningKitProgress> getLearningKitProgressForAllParticipants(UUID learningKitId) {
+    public List<LearningKitProgress> getLearningKitProgressForAllTrainees(UUID learningKitId) {
         LearningKit learningKit = learningKitRepository.findById(learningKitId).orElseThrow(() -> new IllegalArgumentException("LearningKit not found with id: " + learningKitId));
 
-        List<User> participants = learningKit.getParticipants();
+        List<User> trainees = learningKit.getTrainees();
         List<LearningKitProgress> allProgresses = new ArrayList<>();
 
-        for (User participant : participants) {
-            LearningKitProgress progress = getOrCreateLearningKitProgress(participant, learningKit);
+        for (User trainee : trainees) {
+            LearningKitProgress progress = getOrCreateLearningKitProgress(trainee, learningKit);
             allProgresses.add(progress);
         }
         return allProgresses;
@@ -242,26 +270,45 @@ public class ProgressService {
 
     private LearningKitProgress getOrCreateLearningKitProgress(User user, LearningKit learningKit) {
         return learningKitProgressRepository.findByUser_UuidAndLearningKit_Uuid(user.getUuid(), learningKit.getUuid()).orElseGet(() -> {
-            LearningKitProgress newProgress = new LearningKitProgress(user, learningKit);
-            return learningKitProgressRepository.save(newProgress);
+            LearningKitProgress newKitProgress = new LearningKitProgress(user, learningKit);
+            LearningKitProgress savedKitProgress = learningKitProgressRepository.save(newKitProgress);
+
+            for (LearningUnit learningUnit : learningKit.getLearningUnits()) {
+                getOrCreateLearningUnitProgress(user, learningUnit, savedKitProgress);
+            }
+            return savedKitProgress;
         });
     }
 
     private LearningUnitProgress getOrCreateLearningUnitProgress(User user, LearningUnit learningUnit, LearningKitProgress kitProgress) {
         return learningUnitProgressRepository.findByUser_UuidAndLearningUnit_Uuid(user.getUuid(), learningUnit.getUuid()).orElseGet(() -> {
             LearningUnitProgress newProgress = new LearningUnitProgress(user, learningUnit);
-            kitProgress.addLearningUnitProgress(newProgress);
-            return learningUnitProgressRepository.save(newProgress);
+
+            if (kitProgress != null) {
+                newProgress.setLearningKitProgress(kitProgress);
+            }
+
+            LearningUnitProgress savedUnitProgress = learningUnitProgressRepository.save(newProgress);
+
+            for (Block block : learningUnit.getBlocks()) {
+                getOrCreateBlockProgress(user, block, savedUnitProgress);
+            }
+            if (kitProgress != null) {
+                kitProgress.addLearningUnitProgress(savedUnitProgress);
+            }
+            return savedUnitProgress;
         });
     }
 
     private BlockProgress getOrCreateBlockProgress(User user, Block block, LearningUnitProgress unitProgress) {
-        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), block.getUuid()).orElseGet(() -> {
-            BlockProgress newBlockProgress = switch (block) {
-                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) block, unitProgress);
-                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) block, unitProgress);
-                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) block, unitProgress);
-                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
+        final Block originalBlock = (block instanceof TranslatedBlock translatedBlock) ? translatedBlock.getOriginalBlock() : block;
+
+        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), originalBlock.getUuid()).orElseGet(() -> {
+            BlockProgress newBlockProgress = switch (originalBlock) {
+                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) originalBlock, unitProgress);
+                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) originalBlock, unitProgress);
+                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) originalBlock, unitProgress);
+                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + originalBlock.getName());
             };
             unitProgress.addBlockProgress(newBlockProgress);
             return blockProgressRepository.save(newBlockProgress);
@@ -363,7 +410,7 @@ public class ProgressService {
                 return lastAnswer != null && expectedAnswer != null && lastAnswer.equalsIgnoreCase(expectedAnswer);
             }
             case TheoryBlockProgress theoryBlockProgress -> {
-                return theoryBlockProgress.isViewed();
+                return theoryBlockProgress.getIsViewed();
             }
             default -> {
             }

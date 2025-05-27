@@ -17,7 +17,12 @@
 	interface LearningUnitProps {
 		learningUnit: LearningUnitRes;
 		onDeleteLearningUnit: () => void;
-		onGenerateLearningUnit: (files: string[]) => void;
+		onGenerateLearningUnit: (
+			files: string[],
+			prompt: string,
+			difficulty: string,
+			options: { theory: boolean; questions: boolean; multipleChoice: boolean }
+		) => void;
 		role: RoleType;
 		isLoading: boolean;
 		invalidateLearningKitQuery: () => void;
@@ -56,7 +61,6 @@
 	const onUpdateHandler = createDebounced(async (newName: string) => {
 		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('learningUnit.newName.danger'),
 				type: 'warning'
 			});
@@ -68,7 +72,6 @@
 		if (newName.trim() === '') {
 			name = learningUnit.name;
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('learningUnit.newName.empty'),
 				type: 'warning'
 			});
@@ -82,7 +85,6 @@
 				learningUnit.name = updatedLearningUnit.name;
 				name = updatedLearningUnit.name;
 				toaster.create({
-					title: $_('common.success.title'),
 					description: $_('learningUnit.rename.success'),
 					type: 'success'
 				});
@@ -90,7 +92,6 @@
 			} catch (error) {
 				console.error('Error:', error);
 				toaster.create({
-					title: $_('common.error.title'),
 					description: $_('learningUnit.rename.error'),
 					type: 'error'
 				});
@@ -144,7 +145,7 @@
 			</div>
 
 			{#if role === INSTRUCTOR_ROLE}
-				<div class="flex gap-2">
+				<div class="flex items-center gap-2">
 					<button
 						type="button"
 						onclick={(e) => {
@@ -215,8 +216,8 @@
 
 <ConfirmDialog
 	isOpen={showDeleteDialog}
-	title={$_('blocks.delete_title')}
-	message={$_('blocks.delete_message')}
+	title={$_('learningUnit.delete.title')}
+	message={$_('learningUnit.delete_message')}
 	confirmText={$_('common.delete')}
 	cancelText={$_('common.cancel')}
 	danger={true}
@@ -229,8 +230,8 @@
 <GenerateLearningUnitModal
 	bind:isOpen={showGenerationDialog}
 	isLoading={false}
-	onConfirm={(files) => {
-		onGenerateLearningUnit(files);
+	onConfirm={(files, prompt, difficulty, options) => {
+		onGenerateLearningUnit(files, prompt, difficulty, options);
 		showGenerationDialog = false;
 	}}
 	onCancel={() => {

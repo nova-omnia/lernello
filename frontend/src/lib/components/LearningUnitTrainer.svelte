@@ -3,6 +3,7 @@
 	import BlockItem from '$lib/components/blocks/BlockItem.svelte';
 	import type { RoleType } from '$lib/schemas/response/UserInfo.js';
 	import BlockOverviewItem from '$lib/components/blocks/BlockOverviewItem.svelte';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 	import Select from './select/Select.svelte';
 	import { _, locale } from 'svelte-i18n';
 	import { get } from 'svelte/store';
@@ -39,7 +40,7 @@
 
 <div class="grid h-full grid-cols-[75%_25%]">
 	<div
-		class="preset-filled-surface-50-950 border-surface-100-900 m-0 space-y-4 overflow-y-auto border-r p-4"
+		class="preset-filled-surface-50-950 border-surface-100-900 space-y-4 overflow-y-auto border-r pr-4"
 	>
 		<div
 			class="min-w-[120px]"
@@ -69,15 +70,18 @@
 		{/if}
 	</div>
 	{#if blockActionState.blocks.length > 0}
-		<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto p-4">
-			{#each blockActionState.blocks as block (block.uuid)}
-				<BlockOverviewItem
-					{block}
-					{role}
-					scrollToBlock={() => scrollToBlock(block.uuid)}
-					language={selectedLanguage}
-				/>
-			{/each}
+		<div class="sticky top-1 h-fit self-start">
+			<div class="preset-filled-surface-50-950 space-y-4 overflow-y-auto pl-4">
+				{#each blockActionState.blocks as block (block.uuid)}
+					<BlockOverviewItem
+						{block}
+						{role}
+						scrollToBlock={() => scrollToBlock(block.uuid)}
+						language={selectedLanguage}
+						progress={learningUnitProgressState.getBlockProgress(block.uuid)}
+					/>
+				{/each}
+			</div>
 		</div>
 	{/if}
 </div>

@@ -13,17 +13,17 @@
 		block: BlockRes;
 		role: RoleType;
 		language: string;
+		isGenerationLoading: (isLoading: boolean) => void;
 	}
-	const { block, role, language }: BlockIconHeaderProps = $props();
+	const { block, role, language, isGenerationLoading }: BlockIconHeaderProps = $props();
 	const blockName = $derived(
-		block.translatedContents.find((content) => content.language === language)?.name ?? block.name
+		block?.translatedContents?.find((content) => content.language === language)?.name ?? block.name
 	);
 	let name = $derived(blockName);
 
 	const onUpdateHandler = createDebounced((newName: string) => {
 		if ((newName.length < 3 || newName.length > 40) && newName.trim() !== '') {
 			toaster.create({
-				title: $_('common.warning.title'),
 				description: $_('block.newName.danger'),
 				type: 'warning'
 			});
@@ -79,7 +79,7 @@
 
 	{#if role === INSTRUCTOR_ROLE}
 		<div class="ml-auto">
-			<BlockAiGenerationButton {block} />
+			<BlockAiGenerationButton {block} {isGenerationLoading} />
 		</div>
 	{/if}
 </div>

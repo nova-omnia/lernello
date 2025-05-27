@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
-	import { Plus, Check, X, Trash } from 'lucide-svelte';
+	import { Plus, Check, X, Trash, RotateCcw } from 'lucide-svelte';
 	import { _ } from 'svelte-i18n';
 	import { queueBlockAction } from '$lib/states/blockActionState.svelte';
 	import { type BlockRes, MULTIPLE_CHOICE_BLOCK_TYPE } from '$lib/schemas/response/BlockRes';
@@ -9,9 +9,11 @@
 	import EditPreviewTabContainer from '$lib/components/blocks/EditPreviewTabContainer.svelte';
 	import { createMutation } from '@tanstack/svelte-query';
 	import type { CheckMultipleChoiceAnswer } from '$lib/schemas/request/progress/CheckMultipleChoiceAnswerSchema';
+	import type { MultipleChoiceBlockProgressRes } from '$lib/schemas/response/progress/BlockProgressResSchema';
 	import { checkMultipleChoiceAnswer } from '$lib/api/collections/progress';
 	import { toaster } from '$lib/states/toasterState.svelte';
 	import { api } from '$lib/api/apiClient';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 
 	interface BlockMultipleChoiceItemProps {
 		block: Extract<BlockRes, { type: typeof MULTIPLE_CHOICE_BLOCK_TYPE }>;
@@ -21,21 +23,54 @@
 
 	const { block, role, language }: BlockMultipleChoiceItemProps = $props();
 
+	let progress = $derived(
+		learningUnitProgressState.getBlockProgress(block.uuid) as
+			| MultipleChoiceBlockProgressRes
+			| undefined
+	);
+
+	$effect(() => {
+		if (role === 'TRAINEE' && progress) {
+			if (progress.lastAnswers && currentAnswers) {
+				const initialSelectedAnswers: number[] = [];
+				currentAnswers.forEach((answer, index) => {
+					if (progress?.lastAnswers?.includes(answer.value)) {
+						initialSelectedAnswers.push(index);
+					}
+				});
+				selectedAnswers = initialSelectedAnswers;
+			}
+
+			if (progress.lastAnswers && progress.lastAnswers.length > 0) {
+				isSubmitted = true;
+				submissionCorrect = progress.isCorrect ?? null;
+			} else {
+				isSubmitted = false;
+				submissionCorrect = null;
+				selectedAnswers = [];
+			}
+		} else if (role === 'TRAINEE' && !progress) {
+			selectedAnswers = [];
+			isSubmitted = false;
+			submissionCorrect = null;
+		}
+	});
+
 	type Answer = { value: string; isCorrect: boolean };
 
 	let currentQuestion = $derived(
-		block.translatedContents.find((content) => content.language == language)?.question ??
+		block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question
 	);
 	let currentAnswers = $derived<Answer[]>(
 		(
-			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.possibleAnswers ??
 			block.possibleAnswers
 		).map(
 			(answer): Answer => ({
 				value: answer,
 				isCorrect: (
-					block.translatedContents.find((content) => content.language == language)
+					block.translatedContents?.find((content) => content.language == language)
 						?.correctAnswers ?? block.correctAnswers
 				).includes(answer)
 			})
@@ -43,7 +78,7 @@
 	);
 
 	let blockId: string = $derived(
-		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+		block.translatedContents?.find((content) => content.language == language)?.id ?? block.uuid
 	);
 
 	const onUpdateHandler = createDebounced(() => {
@@ -52,13 +87,13 @@
 			.filter((answer: Answer) => answer.isCorrect)
 			.map((answer: Answer) => answer.value);
 		let localQuestion =
-			block.translatedContents.find((content) => content.language == language)?.question ??
+			block.translatedContents?.find((content) => content.language == language)?.question ??
 			block.question;
 		let localPossibleAnswers =
-			block.translatedContents.find((content) => content.language == language)?.possibleAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.possibleAnswers ??
 			block.possibleAnswers;
 		let localCorrectAnswers =
-			block.translatedContents.find((content) => content.language == language)?.correctAnswers ??
+			block.translatedContents?.find((content) => content.language == language)?.correctAnswers ??
 			block.correctAnswers;
 		if (
 			currentQuestion !== localQuestion ||
@@ -111,11 +146,16 @@
 		onSuccess: (data) => {
 			submissionCorrect = data.isCorrect;
 			isSubmitted = true;
+			const blockProgress = learningUnitProgressState.getBlockProgress(block.uuid);
+			learningUnitProgressState.updateBlockProgress(block.uuid, {
+				...blockProgress,
+				lastAnswers: selectedAnswers.map((index) => currentAnswers[index].value),
+				isCorrect: data.isCorrect
+			} as MultipleChoiceBlockProgressRes);
 		},
 		onError: (error) => {
 			console.error('Error checking multiple choice answer:', error);
 			toaster.create({
-				title: $_('block.error.checkAnswer'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});
@@ -201,41 +241,59 @@
 	{#snippet preview()}
 		<div class="space-y-4">
 			<div class="flex items-start justify-between gap-4">
-				<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
+				<div class="flex items-center gap-2">
+					<h3 class="text-lg font-semibold dark:text-gray-200">{currentQuestion}</h3>
+					{#if isSubmitted}
+						<button
+							type="button"
+							onclick={() => {
+								selectedAnswers = [];
+								isSubmitted = false;
+								submissionCorrect = null;
+							}}
+							class="btn bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+							title={$_('common.reset')}
+						>
+							<RotateCcw size={16} />
+						</button>
+					{/if}
+				</div>
 
-				{#if !isSubmitted}
-					<button
-						type="button"
-						onclick={handleSubmit}
-						disabled={selectedAnswers.length === 0 || $checkAnswerMutation.isPending}
-						class="btn preset-filled whitespace-nowrap"
-						title={$_('common.submit')}
-					>
-						{#if $checkAnswerMutation.isPending}
-							{$_('common.submitting')}...
-						{:else}
-							{$_('common.submit')}
-						{/if}
-					</button>
-				{:else}
-					<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
-						{#if submissionCorrect === true}
-							<span class="font-medium text-green-600 dark:text-green-400">
-								<Check class="mr-1 inline-block h-4 w-4" />
-								{$_('block.correctAnswer')}
-							</span>
-						{:else if submissionCorrect === false}
-							<span class="font-medium text-red-600 dark:text-red-400">
-								<X class="mr-1 inline-block h-4 w-4" />
-								{$_('block.incorrectAnswer')}
-							</span>
-						{:else}
-							<span class="font-medium text-gray-600 dark:text-gray-400">
-								{$_('block.feedbackUnavailable')}
-							</span>
-						{/if}
-					</div>
-				{/if}
+				<div>
+					{#if !isSubmitted}
+						<button
+							type="button"
+							onclick={handleSubmit}
+							disabled={selectedAnswers.length === 0 || $checkAnswerMutation.isPending}
+							class="btn preset-filled whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50"
+							title={$_('common.submit')}
+						>
+							{#if $checkAnswerMutation.isPending}
+								{$_('common.submitting')}...
+							{:else}
+								{$_('common.submit')}
+							{/if}
+						</button>
+					{:else if isSubmitted}
+						<div class="min-w-[80px] rounded-lg bg-gray-100 p-3 text-center dark:bg-gray-700">
+							{#if submissionCorrect === true}
+								<span class="font-medium text-green-600 dark:text-green-400">
+									<Check class="mr-1 inline-block h-4 w-4" />
+									{$_('block.correctAnswer')}
+								</span>
+							{:else if submissionCorrect === false}
+								<span class="font-medium text-red-600 dark:text-red-400">
+									<X class="mr-1 inline-block h-4 w-4" />
+									{$_('block.incorrectAnswer')}
+								</span>
+							{:else}
+								<span class="font-medium text-gray-600 dark:text-gray-400">
+									{$_('block.feedbackUnavailable')}
+								</span>
+							{/if}
+						</div>
+					{/if}
+				</div>
 			</div>
 
 			<div class="space-y-2">

@@ -2,7 +2,12 @@
 	import { _ } from 'svelte-i18n';
 	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '$lib/api/apiClient';
-	import { deleteLearningUnit, generateLearningUnit } from '$lib/api/collections/learningUnit';
+	import {
+		deleteLearningUnit,
+		generateLearningUnit,
+		getActiveJobId,
+		getGenerationStatus
+	} from '$lib/api/collections/learningUnit';
 	import { updateLearningUnitsOrder } from '$lib/api/collections/learningKit';
 	import { useQueryInvalidation } from '$lib/api/useQueryInvalidation';
 	import { type DndEvent, dragHandleZone, TRIGGERS } from 'svelte-dnd-action';
@@ -28,6 +33,7 @@
 
 	let learningUnitsSnapshot = $derived(learningUnits);
 	let currentlyDraggingId: string | null = null;
+	let loadingMap: Record<string, boolean> = $state({});
 
 	function handleSortOnConsider(e: CustomEvent<DndEvent<LearningUnitRes>>) {
 		learningUnitsSnapshot = e.detail.items;
@@ -56,6 +62,17 @@
 		},
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningUnit.reorder.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error reordering learning units:', error);
+			toaster.create({
+				description: $_('learningUnit.reorder.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
@@ -63,24 +80,104 @@
 		mutationFn: (id: string) => api(fetch).req(deleteLearningUnit, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningUnit.delete.successDescription'),
+				type: 'success'
+			});
+		},
+		onError: (error) => {
+			console.error('Error deleting learning unit:', error);
+			toaster.create({
+				description: $_('learningUnit.delete.errorDescription'),
+				type: 'error'
+			});
 		}
 	});
 
 	const generateLearningUnitMutation = createMutation({
-		onMutate: () => {
-			toaster.create({
-				title: $_('learningUnit.generate.isGenerating'),
-				type: 'info'
-			});
+		mutationFn: async ({
+			id,
+			files,
+			prompt,
+			difficulty,
+			options
+		}: {
+			id: string;
+			files: string[];
+			prompt: string;
+			difficulty: string;
+			options: { theory: boolean; questions: boolean; multipleChoice: boolean };
+		}) => {
+			loadingMap[id] = true;
+
+			try {
+				const { jobId } = await api(fetch)
+					.req(
+						generateLearningUnit,
+						{
+							fileIds: files,
+							prompt,
+							difficulty,
+							includeTheory: options.theory,
+							includeQuestions: options.questions,
+							includeMultipleChoice: options.multipleChoice
+						},
+						id
+					)
+					.parse();
+
+				await pollUntilJobDone(jobId);
+			} finally {
+				loadingMap[id] = false;
+			}
 		},
-		mutationFn: ({ id, files }: { id: string; files: string[] }) =>
-			api(fetch).req(generateLearningUnit, { fileIds: files }, id).parse(),
 		onSuccess: () => {
 			invalidate(['learning-kit', learningKitId]);
 			toaster.create({
-				title: $_('learningUnit.generate.generated'),
-				type: 'info'
+				description: $_('learningUnit.generate.generatedDescription'),
+				type: 'success'
 			});
+		},
+		onError: (error, variables, context) => {
+			console.error('Error generating learning unit:', error, variables, context);
+			toaster.create({
+				description: $_('learningUnit.generate.errorDescription'),
+				type: 'error'
+			});
+		}
+	});
+
+	async function pollUntilJobDone(jobId: string): Promise<void> {
+		let attempts = 0;
+		const maxAttempts = 300;
+		const delay = 200;
+
+		while (attempts < maxAttempts) {
+			const { status } = await api(fetch).req(getGenerationStatus, null, jobId).parse();
+			if (status === 'DONE') return;
+			if (status === 'FAILED') throw new Error('AI-Generation failed');
+			await new Promise((res) => setTimeout(res, delay));
+			attempts++;
+		}
+		throw new Error('AI-Generation timed out');
+	}
+
+	$effect(() => {
+		for (const unit of learningUnits) {
+			api(fetch)
+				.req(getActiveJobId, null, unit.uuid)
+				.parse()
+				.then((res) => {
+					if (res?.jobId) {
+						loadingMap[unit.uuid] = true;
+
+						pollUntilJobDone(res.jobId).finally(() => {
+							loadingMap[unit.uuid] = false;
+							invalidate(['learning-kit', learningKitId]);
+						});
+					}
+				})
+				.catch(() => {});
 		}
 	});
 </script>
@@ -89,7 +186,6 @@
 	<div class="flex w-full justify-between gap-4">
 		<div>
 			<h2 class="preset-typo-subtitle">{$_('learningKit.learningUnits')}</h2>
-			<p>{$_('learningKit.learningUnit.description')}</p>
 		</div>
 		{#if role === INSTRUCTOR_ROLE}
 			<a
@@ -115,16 +211,18 @@
 		{#each learningUnitsSnapshot as learningUnit (learningUnit.uuid)}
 			<div class="block" animate:flip={{ duration: 200 }}>
 				<LearningUnitItem
-					isLoading={$generateLearningUnitMutation.isPending &&
-						$generateLearningUnitMutation.variables.id === learningUnit.uuid}
+					isLoading={loadingMap[learningUnit.uuid] ?? false}
 					{learningUnit}
 					onDeleteLearningUnit={() => {
 						$deleteLearningUnitMutation.mutate(learningUnit.uuid);
 					}}
-					onGenerateLearningUnit={(files) => {
+					onGenerateLearningUnit={(files, prompt, difficulty, options) => {
 						$generateLearningUnitMutation.mutate({
 							id: learningUnit.uuid,
-							files
+							files,
+							prompt,
+							difficulty,
+							options
 						});
 					}}
 					{role}

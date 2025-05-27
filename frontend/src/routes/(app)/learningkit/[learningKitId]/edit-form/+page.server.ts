@@ -17,7 +17,6 @@ export const load = async ({ fetch, params }) => {
 		{
 			name: learningKit.name ?? '',
 			description: learningKit.description ?? '',
-			context: learningKit.context ?? '',
 			deadlineDate: learningKit.deadlineDate ?? null
 		},
 		zod(UpdateLearningKitSchema)
@@ -34,10 +33,8 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const learningKit = await api(fetch)
-			.req(updateLearningKit, form.data, params.learningKitId)
-			.parse();
+		await api(fetch).req(updateLearningKit, form.data, params.learningKitId).parse();
 
-		redirect(303, `/learningkit/${learningKit.uuid}`);
+		redirect(303, `/learningkit/${params.learningKitId}`);
 	})
 } satisfies Actions;

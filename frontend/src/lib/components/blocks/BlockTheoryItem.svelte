@@ -8,9 +8,11 @@
 	import { browser } from '$app/environment';
 	import { api } from '$lib/api/apiClient.js';
 	import { markTheoryBlockViewed } from '$lib/api/collections/progress.js';
+	import { learningUnitProgressState } from '$lib/states/LearningUnitProgressState.svelte';
 	import { toaster } from '$lib/states/toasterState.svelte.js';
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
+	import type { TheoryBlockProgressRes } from '$lib/schemas/response/progress/BlockProgressResSchema';
 
 	interface BlockTheoryItemProps {
 		block: Extract<BlockRes, { type: typeof THEORY_BLOCK_TYPE }>;
@@ -20,14 +22,14 @@
 
 	const { block, role, language }: BlockTheoryItemProps = $props();
 	let lastContent = $derived(
-		block.translatedContents.find((content) => content.language == language)?.content ??
+		block.translatedContents?.find((content) => content.language == language)?.content ??
 			block.content
 	);
 	let blockId: string = $derived(
-		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+		block.translatedContents?.find((content) => content.language == language)?.id ?? block.uuid
 	);
 	let element: HTMLDivElement | undefined = $state();
-	let viewed = $state(false); // Prevent multiple API calls
+	let viewed = $state(false);
 	let viewTimeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	const onUpdateHandler = createDebounced((newContent: string) => {
@@ -55,6 +57,12 @@
 							if (viewed) return;
 
 							viewed = true;
+
+							const blockProgress = learningUnitProgressState.getBlockProgress(block.uuid);
+							learningUnitProgressState.updateBlockProgress(block.uuid, {
+								...blockProgress,
+								isViewed: viewed
+							} as TheoryBlockProgressRes);
 							const fetchFn = typeof window !== 'undefined' ? window.fetch : undefined;
 							if (!fetchFn) return;
 
@@ -64,11 +72,15 @@
 								.catch((err) => {
 									console.error(`Failed to mark theory block ${blockId} as viewed:`, err);
 									toaster.create({
-										title: $_('common.error.title'),
 										description: $_('error.description', { values: { status: 'unknown' } }),
 										type: 'error'
 									});
 									viewed = false;
+									const rollbackProgress = learningUnitProgressState.getBlockProgress(block.uuid);
+									learningUnitProgressState.updateBlockProgress(block.uuid, {
+										...rollbackProgress,
+										isViewed: viewed
+									} as TheoryBlockProgressRes);
 								});
 							observer.unobserve(entry.target);
 						}, 3000);
@@ -96,7 +108,7 @@
 
 <div bind:this={element}>
 	<TextEditor
-		content={block.translatedContents.find((content) => content.language == language)?.content ??
+		content={block.translatedContents?.find((content) => content.language == language)?.content ??
 			block.content}
 		onUpdate={onUpdateHandler}
 		{role}

@@ -1,7 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { handleApiError } from '$lib/api/apiError';
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import { CreateLearningUnitSchema } from '$lib/schemas/request/CreateLearningUnit';
 import { createLearningUnit } from '$lib/api/collections/learningUnit';
 import { api } from '$lib/api/apiClient';
@@ -22,6 +22,6 @@ export const actions = {
 
 		await api(fetch).req(createLearningUnit, form.data).parse();
 
-		return redirect(303, `/learningkit/${form.data.learningKitId}?tab=learningUnits`);
+		return { success: true, form };
 	})
 } satisfies Actions;

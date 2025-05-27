@@ -2,6 +2,10 @@ package ch.nova_omnia.lernello.model.data.block;
 
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
@@ -38,7 +42,8 @@ public class TranslatedBlock extends Block {
     @ElementCollection
     private List<String> correctAnswers;
 
-    @ManyToOne()
-    @JoinColumn(name = "original_block_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "original_block_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Block originalBlock;
 }

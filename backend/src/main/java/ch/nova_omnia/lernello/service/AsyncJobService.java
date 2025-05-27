@@ -1,16 +1,19 @@
-package ch.nova_omnia.lernello.api;
-
-import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
-import ch.nova_omnia.lernello.dto.request.JobStatusDTO;
-import ch.nova_omnia.lernello.service.LearningUnitService;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+package ch.nova_omnia.lernello.service;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.springframework.stereotype.Service;
+
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
+import ch.nova_omnia.lernello.dto.request.JobStatusDTO;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

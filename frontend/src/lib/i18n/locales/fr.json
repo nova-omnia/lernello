@@ -330,5 +330,6 @@
 	"users.overview.reset.success": "Mot de passe utilisateur réinitialisé avec succès",
 	"user.form.edit.emailLocked": "Le courrier électronique est verrouillé et ne peut pas être modifié",
 	"user.remove.success": "L'utilisateur a supprimé avec succès",
-	"users.overview.cannot_edit": "L'utilisateur connecté actuel ne peut pas être modifié"
+	"users.overview.cannot_edit": "L'utilisateur connecté actuel ne peut pas être modifié",
+	"learningKit.delete.error.published": "Un kit d'apprentissage publié ne peut pas être supprimé"
 }

@@ -330,5 +330,6 @@
 	"users.overview.reset.success": "Password utente reimpostata con successo",
 	"user.form.edit.emailLocked": "L'e -mail è bloccata e non può essere modificata",
 	"user.remove.success": "L'utente rimosso correttamente",
-	"users.overview.cannot_edit": "L'attuale utente ha registrato non può essere modificato"
+	"users.overview.cannot_edit": "L'attuale utente ha registrato non può essere modificato",
+	"learningKit.delete.error.published": "Un kit di apprendimento pubblicato non può essere eliminato"
 }

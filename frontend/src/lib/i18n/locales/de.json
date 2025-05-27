@@ -330,5 +330,6 @@
 	"users.overview.reset.loading": "Passwort wird zurückgesetzt...",
 	"users.overview.reset.success": "Benutzerpasswort erfolgreich zurückgesetzt",
 	"users.overview.cannot_edit": "Der aktuell angemeldete Benutzer kann nicht bearbeitet werden",
-	"user.form.edit.emailLocked": "E-Mail ist gesperrt und kann nicht geändert werden"
+	"user.form.edit.emailLocked": "E-Mail ist gesperrt und kann nicht geändert werden",
+	"learningKit.delete.error.published": "Ein veröffentlichtes Lernkit kann nicht gelöscht werden"
 }

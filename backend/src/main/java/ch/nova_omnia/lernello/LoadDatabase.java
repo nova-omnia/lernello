@@ -7,14 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ch.nova_omnia.lernello.model.data.user.Role;
 import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.repository.FileRepository;
-import ch.nova_omnia.lernello.repository.FolderRepository;
-import ch.nova_omnia.lernello.repository.LearningKitRepository;
-import ch.nova_omnia.lernello.repository.LearningUnitRepository;
 import ch.nova_omnia.lernello.repository.UserRepository;
-import ch.nova_omnia.lernello.service.BlockService;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import ch.nova_omnia.lernello.service.LearningUnitService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -23,7 +16,7 @@ public class LoadDatabase {
     private final PasswordEncoder encoder;
 
     @Bean
-    CommandLineRunner initDatabase(FolderRepository folderRepository, UserRepository userRepository, LearningKitRepository learningKitRepository, LearningUnitRepository learningUnitRepository, FileRepository fileRepository, LearningKitService learningKitService, LearningUnitService learningUnitService, BlockService blockService) {
+    CommandLineRunner initDatabase(UserRepository userRepository) {
 
         User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
@@ -41,6 +34,7 @@ public class LoadDatabase {
             userRepository.save(frodo);
             userRepository.save(max);
             userRepository.save(bruno);
+            userRepository.save(johanna);
         };
     }
 }

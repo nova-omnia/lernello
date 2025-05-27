@@ -21,6 +21,7 @@
 		mutationFn: (id: string) => api(fetch).req(deleteUser, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['trainees-overview-list']);
+			invalidate(['learning-kit']);
 			toaster.create({
 				description: $_('trainees.overview.delete.success'),
 				type: 'success'

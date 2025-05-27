@@ -39,13 +39,16 @@
 				correctAnswers: data.correctAnswers
 			});
 			toaster.create({
-				description: $_('multipleChoiceBlock.success.description'),
+				description: $_('multipleChoice.success.description'),
 				type: 'success'
 			});
 			isGenerationLoading(false);
 		},
-		onError(error, variables, context) {
-			console.error('Error generating multiple choice block:', error, variables, context);
+		onError() {
+			toaster.create({
+				description: $_('multipleChoiceBlock.error.description'),
+				type: 'error'
+			});
 			isGenerationLoading(false);
 		},
 		onMutate: () => {
@@ -74,9 +77,13 @@
 			});
 			isGenerationLoading(false);
 		},
-		onError(error, variables, context) {
-			console.error('Error generating question block:', error, variables, context);
+		onError() {
+			toaster.create({
+				description: $_('questionBlock.error.description'),
+				type: 'error'
+			});
 			isGenerationLoading(false);
+
 		},
 		onMutate: () => {
 			toaster.create({
@@ -103,8 +110,11 @@
 			});
 			isGenerationLoading(false);
 		},
-		onError(error, variables, context) {
-			console.error('Error generating theory block:', error, variables, context);
+		onError() {
+			toaster.create({
+				description: $_('theoryBlock.error.description'),
+				type: 'error'
+			});
 			isGenerationLoading(false);
 		},
 		onMutate: () => {

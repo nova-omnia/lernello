@@ -10,7 +10,6 @@
 
 	interface GenerateTheoryModalProps {
 		isOpen: boolean;
-		isLoading: boolean;
 		onConfirm: (topic: string, files: string[]) => void;
 	}
 
@@ -22,7 +21,7 @@
 		queryFn: () => api(fetch).req(getAllFiles, null).parse()
 	});
 
-	let { isLoading, isOpen = $bindable(), onConfirm }: GenerateTheoryModalProps = $props();
+	let { isOpen = $bindable(), onConfirm }: GenerateTheoryModalProps = $props();
 
 	const onCancel = () => {
 		isOpen = false;
@@ -74,16 +73,10 @@
 		</div>
 
 		<footer class="flex justify-end gap-3 pt-2">
-			<button
-				disabled={isLoading}
-				type="button"
-				class="btn preset-tonal-surface"
-				onclick={onCancel}
-			>
+			<button type="button" class="btn preset-tonal-surface" onclick={onCancel}>
 				{$_('common.cancel')}
 			</button>
 			<button
-				disabled={isLoading}
 				type="button"
 				class="btn preset-filled-primary-500"
 				onclick={() =>

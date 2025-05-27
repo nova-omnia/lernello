@@ -22,11 +22,11 @@
 
 	const { block, role, language }: BlockTheoryItemProps = $props();
 	let lastContent = $derived(
-		block.translatedContents.find((content) => content.language == language)?.content ??
+		block.translatedContents?.find((content) => content.language == language)?.content ??
 			block.content
 	);
 	let blockId: string = $derived(
-		block.translatedContents.find((content) => content.language == language)?.id ?? block.uuid
+		block.translatedContents?.find((content) => content.language == language)?.id ?? block.uuid
 	);
 	let element: HTMLDivElement | undefined = $state();
 	let viewed = $state(false);
@@ -108,7 +108,7 @@
 
 <div bind:this={element}>
 	<TextEditor
-		content={block.translatedContents.find((content) => content.language == language)?.content ??
+		content={block.translatedContents?.find((content) => content.language == language)?.content ??
 			block.content}
 		onUpdate={onUpdateHandler}
 		{role}

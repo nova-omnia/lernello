@@ -301,12 +301,14 @@ public class ProgressService {
     }
 
     private BlockProgress getOrCreateBlockProgress(User user, Block block, LearningUnitProgress unitProgress) {
-        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), block.getUuid()).orElseGet(() -> {
-            BlockProgress newBlockProgress = switch (block) {
-                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) block, unitProgress);
-                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) block, unitProgress);
-                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) block, unitProgress);
-                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + block.getName());
+        final Block originalBlock = (block instanceof TranslatedBlock translatedBlock) ? translatedBlock.getOriginalBlock() : block;
+
+        return blockProgressRepository.findByUser_UuidAndBlock_Uuid(user.getUuid(), originalBlock.getUuid()).orElseGet(() -> {
+            BlockProgress newBlockProgress = switch (originalBlock) {
+                case TheoryBlock _ -> new TheoryBlockProgress(user, (TheoryBlock) originalBlock, unitProgress);
+                case MultipleChoiceBlock _ -> new MultipleChoiceBlockProgress(user, (MultipleChoiceBlock) originalBlock, unitProgress);
+                case QuestionBlock _ -> new QuestionBlockProgress(user, (QuestionBlock) originalBlock, unitProgress);
+                default -> throw new IllegalArgumentException("Unsupported block type for progress tracking: " + originalBlock.getName());
             };
             unitProgress.addBlockProgress(newBlockProgress);
             return blockProgressRepository.save(newBlockProgress);

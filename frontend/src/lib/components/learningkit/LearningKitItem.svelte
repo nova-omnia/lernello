@@ -35,6 +35,12 @@
 				type: 'success'
 			});
 		},
+		onError: () => {
+			toaster.create({
+				description: $_('learningKit.delete.error.description'),
+				type: 'error'
+			});
+		},
 		mutationFn: (kitId: string) => api(fetch).req(deleteLearningKit, null, kitId).parse()
 	});
 

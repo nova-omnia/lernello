@@ -330,5 +330,6 @@
 	"users.overview.reset.loading": "Resetting password...",
 	"users.overview.reset.success": "User password reset successfully",
 	"users.overview.cannot_edit": "The current logged in user cannot be edited",
-	"user.form.edit.emailLocked": "Email is locked and cannot be changed"
+	"user.form.edit.emailLocked": "Email is locked and cannot be changed",
+	"learningKit.delete.error.published": "A published Learning Kit can't be deleted"
 }

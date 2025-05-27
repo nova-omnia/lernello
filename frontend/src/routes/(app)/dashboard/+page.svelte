@@ -37,7 +37,7 @@
 					</h2>
 				{:else}
 					<h2>
-						{$_('dashboard.allLearningKits', { values: { count: NaN, total: NaN } })}
+						{$_('dashboard.allLearningKits', { values: { total: NaN } })}
 					</h2>
 				{/if}
 				<ChevronRight size={24} />

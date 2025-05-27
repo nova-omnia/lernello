@@ -83,7 +83,6 @@
 				type: 'error'
 			});
 			isGenerationLoading(false);
-
 		},
 		onMutate: () => {
 			toaster.create({

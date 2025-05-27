@@ -52,6 +52,14 @@
 
 	function handleConfirmDelete() {
 		if (!uuid) return;
+		if (published) {
+			toaster.create({
+				description: $_('learningKit.delete.error.published'),
+				type: 'warning'
+			});
+			showDeleteDialog = false;
+			return;
+		}
 		$deleteKitMutation.mutate(uuid);
 		showDeleteDialog = false;
 	}

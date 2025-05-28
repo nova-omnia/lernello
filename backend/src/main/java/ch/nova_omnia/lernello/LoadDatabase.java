@@ -38,6 +38,7 @@ public class LoadDatabase {
             userRepository.save(max);
             userRepository.save(bruno);
             userRepository.save(johanna);
+            userRepository.save(liebhart);
         };
     }
 }

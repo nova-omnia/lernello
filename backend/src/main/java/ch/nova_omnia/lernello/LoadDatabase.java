@@ -21,6 +21,9 @@ public class LoadDatabase {
         User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
 
+        User liebhart = new User("lieh.zhaw.ch", "Liebhart", "Daniel", encoder.encode("password"), null, Role.INSTRUCTOR);
+        liebhart.setChangedPassword(true);
+
         User max = new User("max.sebastian@bluewin.ch", "Max", "Sebastian", encoder.encode("password"), null, Role.TRAINEE);
         max.setChangedPassword(true);
 

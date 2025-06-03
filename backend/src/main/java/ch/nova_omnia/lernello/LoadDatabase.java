@@ -34,11 +34,11 @@ public class LoadDatabase {
         johanna.setChangedPassword(true);
 
         return (_) -> {
-            userRepository.save(frodo);
-            userRepository.save(max);
-            userRepository.save(bruno);
-            userRepository.save(johanna);
-            userRepository.save(liebhart);
+            if (!userRepository.existsByUsername(frodo.getUsername())) userRepository.save(frodo);
+            if (!userRepository.existsByUsername(max.getUsername())) userRepository.save(max);
+            if (!userRepository.existsByUsername(bruno.getUsername())) userRepository.save(bruno);
+            if (!userRepository.existsByUsername(johanna.getUsername())) userRepository.save(johanna);
+            if (!userRepository.existsByUsername(liebhart.getUsername())) userRepository.save(liebhart);
         };
     }
 }

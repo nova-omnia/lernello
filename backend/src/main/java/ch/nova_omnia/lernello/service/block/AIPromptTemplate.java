@@ -13,6 +13,13 @@ public enum AIPromptTemplate {
             - maintain a logical flow and structure: e.g., introduction → explanation → example → use case,
             - ensure that the explanation is **self-contained** and understandable without needing to refer to the original text,
             - be written in **clear, readable English**, even if the input content is in a different language.
+            - never repeat or nest backticks inside each other (` ``` ``` ` is invalid),
+            - avoid malformed Markdown such as incomplete or excessive backtick sequences.
+
+            IMPORTANT: Use only plain ASCII and UTF-8 characters.
+            - Do not use typographic punctuation like ‘ ’ “ ” or em-dashes (—).
+            - Use standard ASCII alternatives: ' " - etc.
+            - Omit or replace any character that cannot be safely encoded as UTF-8.
 
             Content:
             %s
@@ -94,10 +101,17 @@ public enum AIPromptTemplate {
             Your task is to extract **specific, detailed, and well-separated** topics from the given content that are suitable for e-learning or educational purposes.
 
             Each topic must have:
-            - a unique string title (as the JSON key),
+            - a unique string word (as the JSON key),
             - and the corresponding full text (as the JSON value),
             - with an emphasis on **specific**, **detail-rich** information (e.g., definitions, examples, formulas, names of methods, historical facts, key concepts, step-by-step explanations),
             - not just general summaries or chapter names.
+
+            **JSON keys requirements (JSON keys):**
+            - The key must be a real English dictionary word (not a phrase, not a compound word, not a brand or abbreviation)
+            - It must contain only letters a–z.
+            - VERY IMPORTANT: The key length must be between 1 and 20 characters. When generating count the characters and if the key does not follow this rule, create another one.
+            - The key must still be specific and meaningful (e.g., `bios`, `boot`, `sockets`, `timers`, `virtualization`, `hashing`, `encryption`, `sorting`, etc.).
+            - keys that do not follow these rules must be automatically discarded and replaced.
 
             Guidelines:
             - You must estimate the content length based on character or word count.
@@ -116,15 +130,10 @@ public enum AIPromptTemplate {
             - The content must be written in **English**, even if the input is in a different language.
             - Only respond with pure JSON.
 
-            Output Format:
-            Each topic title must be:
-            - a **single lowercase English word**,
-            - no compound words, no spaces, hyphens, underscores, or special characters.
-
             Use this exact structure:
             {
-                "topic1_title": "topic1_text",
-                "topic2_title": "topic2_text",
+                "key": "topic1_text",
+                "key": "topic2_text",
                 ...
             }
 
@@ -146,8 +155,8 @@ public enum AIPromptTemplate {
             6. The output must still allow the following structure exactly:
 
             {
-                "topic1_title": "topic1_text",
-                "topic2_title": "topic2_text",
+                "key": "topic1_text",
+                "key": "topic2_text",
                 ...
             }
 

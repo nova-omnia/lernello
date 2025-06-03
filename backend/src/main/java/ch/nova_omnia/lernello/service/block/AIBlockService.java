@@ -193,7 +193,9 @@ public class AIBlockService {
         generateLearningUnitDTO.fileIds().parallelStream().forEach(fileId -> {
             String context = fileService.extractTextFromFile(fileId);
             String prompt = AIPromptTemplate.TOPIC_EXTRACTION.format(context);
-            String aiResponse = aiClient.sendPrompt(prompt);
+            String improvedPrompt = AIPromptTemplate.PROMPT_OPTIMIZER.format(prompt);
+            String aiImprovedPrompt = aiClient.sendPrompt(improvedPrompt);
+            String aiResponse = aiClient.sendPrompt(aiImprovedPrompt + "Content: " + context);
             JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
             generateBlocksFromTopics(jsonNode, topicBlocksMap, generateLearningUnitDTO);
         });
@@ -204,6 +206,7 @@ public class AIBlockService {
         jsonNode.fields().forEachRemaining(entry -> {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 String topicTitle = entry.getKey();
+                System.out.println(topicTitle);
                 String topicContent = entry.getValue().asText();
 
                 topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());

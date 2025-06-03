@@ -206,7 +206,6 @@ public class AIBlockService {
         jsonNode.fields().forEachRemaining(entry -> {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 String topicTitle = entry.getKey();
-                System.out.println(topicTitle);
                 String topicContent = entry.getValue().asText();
 
                 topicBlocksMap.putIfAbsent(topicTitle, new ArrayList<>());

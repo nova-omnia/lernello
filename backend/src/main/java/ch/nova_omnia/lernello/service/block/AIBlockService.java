@@ -193,8 +193,23 @@ public class AIBlockService {
         generateLearningUnitDTO.fileIds().parallelStream().forEach(fileId -> {
             String context = fileService.extractTextFromFile(fileId);
             String prompt = AIPromptTemplate.TOPIC_EXTRACTION.format(context);
-            String aiResponse = aiClient.sendPrompt(prompt);
-            JsonNode jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
+            String improvedPrompt = AIPromptTemplate.PROMPT_OPTIMIZER.format(prompt);
+            String aiImprovedPrompt = aiClient.sendPrompt(improvedPrompt);
+
+            int maxRetries = 3;
+            JsonNode jsonNode = null;
+            for (int i = 0; i < maxRetries; i++) {
+                String aiResponse = aiClient.sendPrompt(aiImprovedPrompt + " Content: " + context);
+
+                try {
+                    jsonNode = parseJsonTree(aiResponse, "Failed to parse AI topics");
+                    break;
+                } catch (Exception e) {
+                    if (i == maxRetries - 1) {
+                        throw new RuntimeException("All attempts failed to parse AI response", e);
+                    }
+                }
+            }
             generateBlocksFromTopics(jsonNode, topicBlocksMap, generateLearningUnitDTO);
         });
     }

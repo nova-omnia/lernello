@@ -149,8 +149,8 @@
 
 	async function pollUntilJobDone(jobId: string): Promise<void> {
 		let attempts = 0;
-		const maxAttempts = 300;
-		const delay = 200;
+		const maxAttempts = 5000;
+		const delay = 500;
 
 		while (attempts < maxAttempts) {
 			const { status } = await api(fetch).req(getGenerationStatus, null, jobId).parse();

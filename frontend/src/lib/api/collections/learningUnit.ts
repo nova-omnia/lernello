@@ -75,13 +75,42 @@ export const createLearningUnit = createEndpoint({
 
 export const generateLearningUnit = createEndpoint({
 	method: 'POST',
-	getPath: (id: string) => `${REQUEST_MAPPING}/${id}`,
+	getPath: (id: string) => `${REQUEST_MAPPING}/${id}/generate-async`,
 	response: {
-		schema: LearningUnitResSchema,
+		schema: z.object({ jobId: z.string() }),
 		defaultValidate: true
 	},
 	payload: {
 		schema: GenerateAILearningUnitSchema,
+		defaultValidate: false
+	}
+});
+
+export const getGenerationStatus = createEndpoint({
+	method: 'GET',
+	getPath: (jobId: string) => `${REQUEST_MAPPING}/generation-status/${jobId}`,
+	response: {
+		schema: z.object({
+			status: z.enum(['PENDING', 'IN_PROGRESS', 'DONE', 'FAILED']),
+			message: z.string().nullable().optional()
+		}),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
+		defaultValidate: false
+	}
+});
+
+export const getActiveJobId = createEndpoint({
+	method: 'GET',
+	getPath: (unitId: string) => `${REQUEST_MAPPING}/active-job/${unitId}`,
+	response: {
+		schema: z.object({ jobId: z.string() }),
+		defaultValidate: true
+	},
+	payload: {
+		schema: z.null(),
 		defaultValidate: false
 	}
 });

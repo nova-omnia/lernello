@@ -17,12 +17,14 @@
 		onResult() {
 			invalidate(['learning-kit', learningKitId]);
 			invalidate(['trainees-list']);
+			history.back();
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				description: $_('trainee.form.create.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}

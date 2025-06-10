@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import { Plus, User } from 'lucide-svelte';
+	import { UserPlus, User } from 'lucide-svelte';
 	import TraineesOverviewTab from '$lib/components/users/TraineesOverviewTab.svelte';
 	import InstructorsOverviewTab from '$lib/components/users/InstructorsOverviewTab.svelte';
 	import { goto } from '$app/navigation';
@@ -32,15 +32,14 @@
 						{$_('common.users')}
 					</h1>
 					<div class="flex h-10 gap-8">
-						<button
-							type="button"
-							class="btn preset-filled-primary-500 h-full"
-							onclick={() => goto(`/users/create-form`)}
-						>
-							<Plus size={24} />
+						<a href="/users/create-form" class="btn preset-outlined-surface-500 h-fit">
+							<UserPlus size={24} />
 							{$_('user.create')}
-						</button>
+						</a>
 					</div>
+				</div>
+				<div class="mt-4 flex w-full justify-between">
+					<p>{$_('statistics.instructor.noKits.description')}</p>
 				</div>
 			</div>
 			<Tabs value={group || tabGroup.instructors} onValueChange={(e) => handleTabChange(e)}>
@@ -60,7 +59,7 @@
 				{/snippet}
 				{#snippet content()}
 					<Tabs.Panel value={tabGroup.instructors}>
-						<InstructorsOverviewTab></InstructorsOverviewTab>
+						<InstructorsOverviewTab instructorUuid={data.userInfo.uuid}></InstructorsOverviewTab>
 					</Tabs.Panel>
 					<Tabs.Panel value={tabGroup.trainees}>
 						<TraineesOverviewTab></TraineesOverviewTab>

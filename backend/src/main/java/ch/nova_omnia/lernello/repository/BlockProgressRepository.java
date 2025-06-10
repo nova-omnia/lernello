@@ -13,7 +13,12 @@ import java.util.UUID;
 @Repository
 public interface BlockProgressRepository extends JpaRepository<BlockProgress, UUID> {
     Optional<BlockProgress> findByUserAndBlock(User user, Block block);
+
     Optional<BlockProgress> findByUser_UuidAndBlock_Uuid(UUID userId, UUID blockId);
+
     List<BlockProgress> findByBlock_Uuid(UUID blockId);
+
     List<BlockProgress> findByLearningUnitProgress_Uuid(UUID learningUnitProgressUuid);
+
+    void deleteByBlockIn(List<Block> blocks);
 }

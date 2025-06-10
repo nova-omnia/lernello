@@ -8,11 +8,15 @@
 	import { _ } from 'svelte-i18n';
 	import { toaster } from '$lib/states/toasterState.svelte';
 
+	let { instructorUuid } = $props();
+
 	const invalidate = useQueryInvalidation();
 
 	const instructorsQuery = createQuery({
 		queryKey: ['instructors-overview-list'],
-		queryFn: () => api(fetch).req(getAllInstructors, null).parse()
+		queryFn: () => api(fetch).req(getAllInstructors, null).parse(),
+		staleTime: 0,
+		refetchOnMount: true
 	});
 
 	const deleteInstructorMutation = createMutation({
@@ -20,7 +24,6 @@
 		onSuccess: () => {
 			invalidate(['instructors-overview-list']);
 			toaster.create({
-				title: $_('common.success.title'),
 				description: $_('instructors.overview.delete.success'),
 				type: 'success'
 			});
@@ -28,7 +31,6 @@
 		onError: (error) => {
 			console.error('Error deleting instructor:', error);
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});
@@ -36,7 +38,7 @@
 	});
 </script>
 
-<div class="flex w-full flex-col gap-4 p-4">
+<div class="flex w-full flex-col gap-4">
 	<div class="flex flex-col gap-1">
 		{#if $instructorsQuery.status === 'pending'}
 			{#each Array(3)}
@@ -47,11 +49,12 @@
 		{:else if $instructorsQuery.status === 'error'}
 			<ErrorIllustration>{$_('trainees.error.loadList')}</ErrorIllustration>
 		{:else}
-			{#each $instructorsQuery.data ?? [] as trainee (trainee.uuid)}
+			{#each $instructorsQuery.data ?? [] as instructor (instructor.uuid)}
 				<UserItem
 					isUsersView={true}
-					user={trainee}
-					onRemoveUser={() => $deleteInstructorMutation.mutate(trainee.uuid)}
+					user={instructor}
+					onRemoveUser={() => $deleteInstructorMutation.mutate(instructor.uuid)}
+					canEdit={instructor.uuid !== instructorUuid}
 				/>
 			{/each}
 		{/if}

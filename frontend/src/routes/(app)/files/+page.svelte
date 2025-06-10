@@ -26,14 +26,12 @@
 			invalidate(['files-overview']);
 			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.success.title'),
 				description: $_('files.delete.success'),
 				type: 'success'
 			});
 		},
 		onError: () => {
 			toaster.create({
-				title: $_('common.error'),
 				description: $_('files.delete.error'),
 				type: 'error'
 			});

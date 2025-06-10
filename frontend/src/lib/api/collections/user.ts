@@ -1,14 +1,14 @@
 import { GenericSuccessSchema } from '$lib/schemas/response/GenericSuccess';
-import { ParticipantUserSchema } from '$lib/schemas/response/ParticipantUser';
+import { TraineeUserSchema } from '$lib/schemas/response/TraineeUser';
 import { createEndpoint } from '../createEndpoint';
-import { ChangePasswordDataSchema } from '$lib/schemas/request/ChangePasswordData';
+import { ChangePasswordDataSchema } from '$lib/schemas/request/user/ChangePasswordData';
 import { z } from 'zod';
 import { UserInfoSchema } from '$lib/schemas/response/UserInfo';
-import { UserLocaleSchema } from '$lib/schemas/request/UserLocale';
-import { CreateParticipantUserSchema } from '$lib/schemas/request/CreateParticipantUser';
-import { CreateUserSchema } from '$lib/schemas/request/CreateUser';
+import { UserLocaleSchema } from '$lib/schemas/request/user/UserLocale';
+import { CreateTraineeUserSchema } from '$lib/schemas/request/user/CreateTraineeUser';
+import { CreateUserSchema } from '$lib/schemas/request/user/CreateUser';
 import { UserResSchema } from '$lib/schemas/response/UserResSchema';
-import { UpdateUserSchema } from '$lib/schemas/request/UpdateUser';
+import { UpdateUserSchema } from '$lib/schemas/request/user/UpdateUser';
 
 const REQUEST_MAPPING = '/api/user';
 
@@ -29,7 +29,7 @@ export const getAllInstructors = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}/instructors`,
 	response: {
-		schema: ParticipantUserSchema.array(),
+		schema: TraineeUserSchema.array(),
 		defaultValidate: true
 	},
 	payload: {
@@ -42,7 +42,7 @@ export const getAllTrainees = createEndpoint({
 	method: 'GET',
 	getPath: () => `${REQUEST_MAPPING}/trainees`,
 	response: {
-		schema: ParticipantUserSchema.array(),
+		schema: TraineeUserSchema.array(),
 		defaultValidate: true
 	},
 	payload: {
@@ -146,11 +146,11 @@ export const editTrainee = createEndpoint({
 	method: 'PATCH',
 	getPath: () => `${REQUEST_MAPPING}/trainee`,
 	response: {
-		schema: ParticipantUserSchema,
+		schema: TraineeUserSchema,
 		defaultValidate: true
 	},
 	payload: {
-		schema: CreateParticipantUserSchema,
+		schema: CreateTraineeUserSchema,
 		defaultValidate: false
 	}
 });

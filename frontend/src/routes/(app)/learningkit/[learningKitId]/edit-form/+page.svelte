@@ -19,12 +19,17 @@
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
 			invalidate(['learning-kit', learningKitId]);
+			toaster.create({
+				description: $_('learningKit.form.update.success.description'),
+				type: 'success'
+			});
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				description: $_('learningKit.form.update.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}
@@ -67,21 +72,6 @@
 				</label>
 
 				<label class="label">
-					<span class="label-text">{$_('common.context')} <i>{$_('form.optional')}</i></span>
-					<textarea
-						name="context"
-						bind:value={$form.context}
-						class="textarea preset-filled-surface-100-900 min-h-24"
-						placeholder={$_('common.additionalContext')}
-						aria-invalid={$errors.context ? 'true' : undefined}
-						{...$constraints.context}
-					></textarea>
-					{#if $errors.context}
-						<p class="text-error-500">{$errors.context}</p>
-					{/if}
-				</label>
-
-				<label class="label">
 					<span class="label-text">{$_('form.deadlineLabel')} <i>{$_('form.optional')}</i></span>
 					<input
 						type="datetime-local"
@@ -99,8 +89,8 @@
 			</div>
 			<div class="flex justify-end gap-2">
 				<a class="btn preset-outlined-surface-500" href="/learningkit/{learningKitId}"
-					>{$_('common.cancel')}</a
-				>
+					>{$_('common.cancel')}
+				</a>
 				<button class="btn preset-filled-primary-500">{$_('learningKit.update')}</button>
 			</div>
 			<SuperDebug data={$form} display={dev} />

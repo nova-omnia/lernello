@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateBlockNameActionDTO(
-        @NotNull BlockActionType type,
-        @NotNull String blockId,
-        @NotBlank String newName
+                                       @NotNull BlockActionType type,
+                                       @NotNull String blockId,
+                                       @NotBlank String newName
 ) implements BlockActionDTO {
     public UpdateBlockNameActionDTO {
         type = UPDATE_BLOCK_NAME;

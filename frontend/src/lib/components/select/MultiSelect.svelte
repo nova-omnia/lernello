@@ -1,7 +1,7 @@
-<!--MultiSelect.svelte-->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import { ChevronDown, ChevronUp, Check } from 'lucide-svelte';
 
 	interface Option {
 		uuid: string;
@@ -59,6 +59,16 @@
 		}
 	}
 
+	function handleToggle() {
+		if (document.activeElement === inputRef && open) {
+			open = false;
+			inputRef?.blur();
+			searchValue = '';
+		} else if (!open) {
+			open = true;
+		}
+	}
+
 	onMount(() => {
 		window.addEventListener('click', handleClickOutside);
 		window.addEventListener('keydown', handleKeydown);
@@ -70,14 +80,23 @@
 </script>
 
 <div class="relative inline-block w-full" bind:this={container}>
-	<input
-		type="text"
-		placeholder={placeHolder()}
-		bind:value={searchValue}
-		bind:this={inputRef}
-		onclick={() => (open = true)}
-		class="input card preset-filled-surface-50-950 border-surface-300-700 w-fill py-3"
-	/>
+	<div class="relative w-full">
+		<input
+			type="text"
+			placeholder={placeHolder()}
+			bind:value={searchValue}
+			bind:this={inputRef}
+			onclick={() => handleToggle()}
+			class="input card preset-filled-surface-50-950 border-surface-300-700 w-fill py-3 pr-10"
+		/>
+		<span class="absolute top-1/2 right-3 -translate-y-1/2" style="pointer-events: none;">
+			{#if open}
+				<ChevronUp size={20} />
+			{:else}
+				<ChevronDown size={20} />
+			{/if}
+		</span>
+	</div>
 
 	{#if open}
 		<div class="card bg-surface-50-950 border-surface-500 absolute z-10 mt-1 w-full border">
@@ -90,9 +109,14 @@
 							class="card hover:preset-filled-primary-50-950 flex w-full items-center justify-between p-3 text-left"
 							class:preset-filled-surface-100-900={isSelected(option.uuid)}
 						>
-							<div class="grid w-full grid-cols-[400px_auto] items-center">
-								<p>{option.label.split('|')[0]}</p>
-								<p>{option.label.split('|')[1]}</p>
+							<div class="grid w-full grid-cols-[1fr_auto] items-center gap-4">
+								<div class="truncate">
+									<p>{option.label.split('|')[0]}</p>
+									<p class="text-muted-foreground text-xs">{option.label.split('|')[1]}</p>
+								</div>
+								{#if isSelected(option.uuid)}
+									<Check size={16} class="text-primary-900-100 flex-shrink-0" />
+								{/if}
 							</div>
 						</button>
 					</li>

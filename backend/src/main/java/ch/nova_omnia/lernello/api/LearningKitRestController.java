@@ -1,10 +1,23 @@
 package ch.nova_omnia.lernello.api;
 
-import java.util.List;
-import java.util.UUID;
-
+import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
+import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
+import ch.nova_omnia.lernello.dto.request.user.CreateTraineeDTO;
+import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
+import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
+import ch.nova_omnia.lernello.mapper.LearningKitMapper;
+import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.progress.LearningKitProgress;
+import ch.nova_omnia.lernello.model.data.user.Role;
+import ch.nova_omnia.lernello.model.data.user.User;
 import ch.nova_omnia.lernello.repository.LearningKitProgressRepository;
+import ch.nova_omnia.lernello.service.CustomUserDetailsService;
+import ch.nova_omnia.lernello.service.LearningKitService;
+import ch.nova_omnia.lernello.service.LearningUnitService;
+import ch.nova_omnia.lernello.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,22 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import ch.nova_omnia.lernello.dto.request.CreateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.UpdateLearningKitDTO;
-import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
-import ch.nova_omnia.lernello.dto.request.user.CreateParticipantDTO;
-import ch.nova_omnia.lernello.dto.response.LearningKitResDTO;
-import ch.nova_omnia.lernello.dto.response.user.GenericSuccessDTO;
-import ch.nova_omnia.lernello.mapper.LearningKitMapper;
-import ch.nova_omnia.lernello.model.data.LearningKit;
-import ch.nova_omnia.lernello.model.data.user.Role;
-import ch.nova_omnia.lernello.model.data.user.User;
-import ch.nova_omnia.lernello.service.CustomUserDetailsService;
-import ch.nova_omnia.lernello.service.LearningKitService;
-import ch.nova_omnia.lernello.service.LearningUnitService;
-import ch.nova_omnia.lernello.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/learning-kits")
@@ -83,22 +82,26 @@ public class LearningKitRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:read')")
     public @Valid LearningKitResDTO getLearningKitById(@Valid @PathVariable UUID id) {
-        return learningKitService.findById(id).map(learningKitMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+
+        LearningKit learningKit = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitService.updateLearningKitStatistics(learningKit);
+        return learningKitMapper.toDTO(learningKit);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid LearningKitResDTO updateLearningKit(@Valid @RequestBody UpdateLearningKitDTO updateLearningKit, @PathVariable UUID id) {
         LearningKit destination = learningKitService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Learning Kit not found"));
+        learningKitService.updateLearningKitStatistics(destination);
         learningKitMapper.update(updateLearningKit, destination);
         LearningKit savedEntity = learningKitService.save(destination);
         return learningKitMapper.toDTO(savedEntity);
     }
 
-    @DeleteMapping("/participants/{kitId}")
+    @DeleteMapping("/trainees/{kitId}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
-    public UUID removeParticipantFromKit(@PathVariable UUID kitId, @RequestBody UUID userId) {
-        learningKitService.removeParticipant(kitId, userId);
+    public UUID removeTraineeFromKit(@PathVariable UUID kitId, @RequestBody UUID userId) {
+        learningKitService.removeTrainee(kitId, userId);
         return kitId;
     }
 
@@ -112,7 +115,7 @@ public class LearningKitRestController {
     @PostMapping("/trainee/{id}")
     @PreAuthorize("hasAuthority('SCOPE_kits:write')")
     public @Valid UUID addTrainee(
-                                  @PathVariable UUID id, @RequestBody @Valid CreateParticipantDTO traineeDetails
+        @PathVariable UUID id, @RequestBody @Valid CreateTraineeDTO traineeDetails
     ) {
         User trainee = userService.createUser(traineeDetails.username(), traineeDetails.name(), traineeDetails.surname(), Role.TRAINEE);
         learningKitService.saveTraineeInKit(id, trainee);

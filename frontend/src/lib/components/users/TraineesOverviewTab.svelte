@@ -12,15 +12,17 @@
 
 	const traineesQuery = createQuery({
 		queryKey: ['trainees-overview-list'],
-		queryFn: () => api(fetch).req(getAllTrainees, null).parse()
+		queryFn: () => api(fetch).req(getAllTrainees, null).parse(),
+		staleTime: 0,
+		refetchOnMount: true
 	});
 
 	const deleteTraineeMutation = createMutation({
 		mutationFn: (id: string) => api(fetch).req(deleteUser, null, id).parse(),
 		onSuccess: () => {
 			invalidate(['trainees-overview-list']);
+			invalidate(['learning-kit']);
 			toaster.create({
-				title: $_('common.success.title'),
 				description: $_('trainees.overview.delete.success'),
 				type: 'success'
 			});
@@ -28,7 +30,6 @@
 		onError: (error) => {
 			console.error('Error deleting trainee:', error);
 			toaster.create({
-				title: $_('common.error.title'),
 				description: $_('error.description', { values: { status: 'unknown' } }),
 				type: 'error'
 			});
@@ -36,7 +37,7 @@
 	});
 </script>
 
-<div class="flex w-full flex-col gap-4 p-4">
+<div class="flex w-full flex-col gap-4">
 	<div class="flex flex-col gap-1">
 		{#if $traineesQuery.status === 'pending'}
 			{#each Array(3)}

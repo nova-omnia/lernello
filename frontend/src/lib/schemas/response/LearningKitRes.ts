@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LearningUnitResSchema } from '$lib/schemas/response/LearningUnitRes';
-import { ParticipantUserSchema } from './ParticipantUser';
+import { TraineeUserSchema } from './TraineeUser';
 import { FileResSchema } from './FileRes';
 import { PageMetaSchema } from '$lib/schemas/response/PageMeta';
 
@@ -16,8 +16,7 @@ export const LearningKitResSchema = z.object({
 		})
 		.nullable(),
 	published: z.boolean(),
-	context: z.string().nullable(),
-	participants: z.array(ParticipantUserSchema),
+	trainees: z.array(TraineeUserSchema),
 	files: z.array(FileResSchema).nullable(),
 	averageProgress: z.number(),
 	completionRate: z.number()

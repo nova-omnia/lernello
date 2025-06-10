@@ -8,12 +8,14 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.nova_omnia.lernello.dto.request.GenerateLearningUnitDTO;
 import ch.nova_omnia.lernello.dto.request.UpdateLearningUnitOrderDTO;
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
 import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.TranslatedBlock;
 import ch.nova_omnia.lernello.model.data.progress.LearningUnitProgress;
+import ch.nova_omnia.lernello.repository.BlockProgressRepository;
 import ch.nova_omnia.lernello.repository.BlockRepository;
 import ch.nova_omnia.lernello.repository.LearningKitRepository;
 import ch.nova_omnia.lernello.repository.LearningUnitProgressRepository;
@@ -31,6 +33,7 @@ public class LearningUnitService {
     private final TranslatedBlockRepository translatedBlockRepository;
     private final BlockRepository blockRepository;
     private final AIBlockService aiBlockService;
+    private final BlockProgressRepository blockProgressRepository;
 
     @Transactional
     public LearningUnit createLearningUnit(LearningUnit learningUnit, UUID learningKitId) {
@@ -78,17 +81,18 @@ public class LearningUnitService {
     }
 
     @Transactional
-    public LearningUnit generateLearningUnitWithAI(List<UUID> fileIds, UUID learningUnitId) {
+    public LearningUnit generateLearningUnitWithAI(GenerateLearningUnitDTO generateLearningUnitDTO, UUID learningUnitId) {
         LearningUnit learningUnit = getLearningUnit(learningUnitId);
 
         List<Block> oldBlocks = new ArrayList<>(learningUnit.getBlocks());
         List<TranslatedBlock> translations = translatedBlockRepository.findByOriginalBlockIn(oldBlocks);
+        blockProgressRepository.deleteByBlockIn(oldBlocks);
         translatedBlockRepository.deleteAll(translations);
 
         learningUnit.getBlocks().clear();
         blockRepository.deleteAll(oldBlocks);
 
-        List<Block> blocks = aiBlockService.generateBlocksAI(fileIds);
+        List<Block> blocks = aiBlockService.generateBlocksAI(generateLearningUnitDTO);
 
         for (Block block : blocks) {
             block.setLearningUnit(learningUnit);

@@ -14,12 +14,14 @@
 	import type { GeneratedAIQuestionBlock } from '$lib/schemas/request/block/GeneratedAIQuestionBlock';
 	import type { GenerateAITheoryBlock } from '$lib/schemas/request/block/GenerateAITheoryBlock';
 	import { blockActionState, queueBlockAction } from '$lib/states/blockActionState.svelte';
+	import { toaster } from '$lib/states/toasterState.svelte';
 
 	interface BlockAiGenerationButtonProps {
 		block: BlockRes;
+		isGenerationLoading: (isLoading: boolean) => void;
 	}
 
-	const { block }: BlockAiGenerationButtonProps = $props();
+	const { block, isGenerationLoading }: BlockAiGenerationButtonProps = $props();
 
 	let theoryBlocks: BlockRes[] = $derived(
 		blockActionState.blocks.filter((b) => b.type === THEORY_BLOCK_TYPE)
@@ -29,7 +31,6 @@
 
 	const generateMultipleChoiceMutation = createMutation({
 		onSuccess: (data) => {
-			showCreationDialog = false;
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
@@ -37,9 +38,26 @@
 				possibleAnswers: data.possibleAnswers,
 				correctAnswers: data.correctAnswers
 			});
+			toaster.create({
+				description: $_('multipleChoice.success.description'),
+				type: 'success'
+			});
+			isGenerationLoading(false);
 		},
-		onError(error, variables, context) {
-			console.error('Error generating multiple choice block:', error, variables, context);
+		onError() {
+			toaster.create({
+				description: $_('multipleChoiceBlock.error.description'),
+				type: 'error'
+			});
+			isGenerationLoading(false);
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('multipleChoiceBlock.loading.description'),
+				type: 'loading'
+			});
+			isGenerationLoading(true);
+			showCreationDialog = false;
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
 			api(fetch).req(generatedAIMultipleChoiceBlock, payload).parse()
@@ -47,13 +65,32 @@
 
 	const generateQuestionMutation = createMutation({
 		onSuccess: (data) => {
-			showCreationDialog = false;
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
 				question: data.question,
 				expectedAnswer: data.expectedAnswer
 			});
+			toaster.create({
+				description: $_('questionBlock.success.description'),
+				type: 'success'
+			});
+			isGenerationLoading(false);
+		},
+		onError() {
+			toaster.create({
+				description: $_('questionBlock.error.description'),
+				type: 'error'
+			});
+			isGenerationLoading(false);
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('questionBlock.loading.description'),
+				type: 'loading'
+			});
+			isGenerationLoading(true);
+			showCreationDialog = false;
 		},
 		mutationFn: (payload: GeneratedAIQuestionBlock) =>
 			api(fetch).req(generatedAIQuestionBlock, payload).parse()
@@ -61,12 +98,31 @@
 
 	const generateTheoryMutation = createMutation({
 		onSuccess: (data) => {
-			showCreationDialog = false;
 			queueBlockAction({
 				type: 'UPDATE_BLOCK',
 				blockId: block.uuid,
 				content: data.content
 			});
+			toaster.create({
+				description: $_('theoryBlock.success.description'),
+				type: 'success'
+			});
+			isGenerationLoading(false);
+		},
+		onError() {
+			toaster.create({
+				description: $_('theoryBlock.error.description'),
+				type: 'error'
+			});
+			isGenerationLoading(false);
+		},
+		onMutate: () => {
+			toaster.create({
+				description: $_('theoryBlock.loading.description'),
+				type: 'loading'
+			});
+			isGenerationLoading(true);
+			showCreationDialog = false;
 		},
 		mutationFn: (payload: GenerateAITheoryBlock) =>
 			api(fetch).req(generateAITheoryBlock, payload).parse()
@@ -88,7 +144,6 @@
 
 {#if block.type === 'MULTIPLE_CHOICE'}
 	<GenerateQuizModal
-		isLoading={$generateMultipleChoiceMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId) => {
 			$generateMultipleChoiceMutation.mutate({
@@ -104,7 +159,6 @@
 	/>
 {:else if block.type === 'THEORY'}
 	<GenerateTheoryModal
-		isLoading={$generateTheoryMutation.isPending}
 		bind:isOpen={showCreationDialog}
 		onConfirm={(topic, files) => {
 			$generateTheoryMutation.mutate({
@@ -116,7 +170,6 @@
 	/>
 {:else if block.type === 'QUESTION'}
 	<GenerateQuizModal
-		isLoading={$generateQuestionMutation.isPending}
 		isOpen={showCreationDialog}
 		onConfirm={(selectedBlockId: string) => {
 			$generateQuestionMutation.mutate({

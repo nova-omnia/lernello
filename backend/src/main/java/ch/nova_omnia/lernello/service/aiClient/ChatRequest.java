@@ -14,7 +14,7 @@ public class ChatRequest {
     private final double frequency_penalty = 0.6;
 
     public ChatRequest(String prompt) {
-        this.model = "gpt-4o";
+        this.model = "gpt-4.1-mini";
         this.messages = List.of(Map.of("role", "user", "content", prompt));
     }
 

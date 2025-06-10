@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 public class TheoryBlockProgress extends BlockProgress {
 
     @Column(name = "is_viewed")
-    private boolean isViewed = false;
+    private Boolean isViewed = false;
 
     public TheoryBlockProgress(User user, TheoryBlock block, LearningUnitProgress unitProgress) {
         super(user, block, unitProgress);
     }
 
-    public TheoryBlockProgress(User user, TheoryBlock block, boolean isViewed, LearningUnitProgress unitProgress) {
+    public TheoryBlockProgress(User user, TheoryBlock block, Boolean isViewed, LearningUnitProgress unitProgress) {
         super(user, block, unitProgress);
         this.isViewed = isViewed;
     }

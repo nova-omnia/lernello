@@ -27,7 +27,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
-    implementation("org.mapstruct:mapstruct:1.5.2.Final")
+    implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("org.projectlombok:lombok:1.18.36")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
@@ -38,9 +38,9 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.mockito")
-    }   
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.5.0")
 }
 
 dependencyManagement {

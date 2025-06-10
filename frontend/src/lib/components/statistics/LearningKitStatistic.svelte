@@ -7,7 +7,7 @@
 	import { api } from '$lib/api/apiClient';
 	import { getLearningKitById } from '$lib/api/collections/learningKit';
 	import type { LearningKitProgressRes } from '$lib/schemas/response/progress/LearningKitProgressResSchema';
-	import { getLearningKitProgressForAllParticipants } from '$lib/api/collections/progress';
+	import { getLearningKitProgressForAllTrainees } from '$lib/api/collections/progress';
 	import { _ } from 'svelte-i18n';
 
 	interface LearningKitStatisticsProps {
@@ -22,12 +22,11 @@
 	});
 
 	const progressQuery = createQuery<LearningKitProgressRes[]>({
-		queryKey: ['learning-kit-participants-progress-stats', learningKitId],
-		queryFn: () =>
-			api(fetch).req(getLearningKitProgressForAllParticipants, null, learningKitId).parse()
+		queryKey: ['learning-kit-trainees-progress-stats', learningKitId],
+		queryFn: () => api(fetch).req(getLearningKitProgressForAllTrainees, null, learningKitId).parse()
 	});
 
-	interface ParticipantWithProgress {
+	interface TraineeWithProgress {
 		userId: string;
 		uuid: string;
 		username: string;
@@ -43,40 +42,40 @@
 	let sortField: SortField = $state('name');
 	let sortDirection: SortDirection = $state('asc');
 
-	let participantsWithProgress = $derived.by(() => {
+	let traineesWithProgress = $derived.by(() => {
 		if ($kitQuery.isSuccess && $kitQuery.data && $progressQuery.isSuccess && $progressQuery.data) {
 			const kit = $kitQuery.data;
 			const progresses = $progressQuery.data;
 
-			const enrichedParticipants =
-				kit.participants?.map((p) => {
-					const participantProgress = progresses.find((prog) => prog.userId === p.uuid);
+			const enrichedTrainees =
+				kit.trainees?.map((p) => {
+					const traineeProgress = progresses.find((prog) => prog.userId === p.uuid);
 					return {
 						userId: p.uuid,
 						uuid: p.uuid,
 						username: p.username,
 						name: p.name,
 						surname: p.surname,
-						progressPercentage: participantProgress?.progressPercentage ?? 0,
-						isCompleted: participantProgress?.isCompleted ?? false
-					} as ParticipantWithProgress;
+						progressPercentage: traineeProgress?.progressPercentage ?? 0,
+						isCompleted: traineeProgress?.isCompleted ?? false
+					} as TraineeWithProgress;
 				}) ?? [];
 
-			let sortedParticipants = [...enrichedParticipants];
+			let sortedTrainees = [...enrichedTrainees];
 			if (sortField === 'name') {
-				sortedParticipants.sort((a, b) => {
+				sortedTrainees.sort((a, b) => {
 					const nameA = `${a.name} ${a.surname}`.toLowerCase().trim();
 					const nameB = `${b.name} ${b.surname}`.toLowerCase().trim();
 					return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
 				});
 			} else if (sortField === 'progress') {
-				sortedParticipants.sort((a, b) => {
+				sortedTrainees.sort((a, b) => {
 					return sortDirection === 'asc'
 						? a.progressPercentage - b.progressPercentage
 						: b.progressPercentage - a.progressPercentage;
 				});
 			}
-			return sortedParticipants;
+			return sortedTrainees;
 		}
 		return [];
 	});
@@ -113,8 +112,12 @@
 	</ErrorIllustration>
 {:else if $kitQuery.data && $progressQuery.data}
 	<div class="space-y-6">
-		<section class="card p-6">
-			<h2 class="preset-typo-subtitle mb-4">{$_('statistics.kitOverview.title')}</h2>
+		<section class="card p-4">
+			<h2 class="preset-typo-subtitle mb-4">
+				{$_('statistics.kitOverview.title', {
+					values: { name: $kitQuery.data.name }
+				})}
+			</h2>
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<div class="bg-surface-100-800 flex items-center space-x-4 rounded-lg p-4">
 					<div class="bg-primary-500 rounded-full p-3 text-white">
@@ -141,7 +144,7 @@
 
 		<section class="card p-6">
 			<div class="mb-4 flex items-center justify-between">
-				<h2 class="preset-typo-subtitle">{$_('statistics.participants.title')}</h2>
+				<h2 class="preset-typo-subtitle">{$_('statistics.trainees.title')}</h2>
 				<div class="flex space-x-2">
 					<button class="btn preset-tonal-surface btn-sm" onclick={() => toggleSort('name')}>
 						<span>{$_('common.name')}</span>
@@ -158,25 +161,25 @@
 				</div>
 			</div>
 
-			{#if participantsWithProgress.length === 0}
+			{#if traineesWithProgress.length === 0}
 				<p class="text-surface-500-400 text-center">
-					{$_('statistics.participants.none')}
+					{$_('statistics.trainees.none')}
 				</p>
 			{:else}
 				<ul class="space-y-3">
-					{#each participantsWithProgress as participant (participant.userId)}
+					{#each traineesWithProgress as trainee (trainee.userId)}
 						<UserItem
-							user={participant}
+							user={trainee}
 							onRemoveUser={() => {
 								console.warn(
 									'onRemoveUser triggered on statistics page for user:',
-									participant.username
+									trainee.username
 								);
 							}}
 							isUsersView={false}
 							showProgress={true}
-							progressPercentage={participant.progressPercentage}
-							isCompleted={participant.isCompleted}
+							progressPercentage={trainee.progressPercentage}
+							isCompleted={trainee.isCompleted}
 						/>
 					{/each}
 				</ul>

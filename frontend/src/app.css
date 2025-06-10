@@ -11,9 +11,8 @@
 @plugin '@tailwindcss/forms';
 @plugin "@tailwindcss/typography";
 
-/* @custom-variant dark (&:where(.dark, .dark *)); */
-
-@layer base {
+@custom-variant dark (&:where(.dark, .dark *));
+*/ @layer base {
 	html,
 	body {
 		@apply h-full;

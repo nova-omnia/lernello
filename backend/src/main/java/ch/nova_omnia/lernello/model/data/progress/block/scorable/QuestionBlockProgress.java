@@ -23,13 +23,13 @@ public class QuestionBlockProgress extends ScorableBlockProgress {
     @Column(name = "last_answer", columnDefinition = "TEXT", nullable = true)
     private String lastAnswer;
 
-    public QuestionBlockProgress(User user, QuestionBlock block, String lastAnswer, LearningUnitProgress unitProgress) {
-        super(user, block, unitProgress);
+    public QuestionBlockProgress(User user, QuestionBlock block, String lastAnswer, LearningUnitProgress unitProgress, Boolean isCorrect) {
+        super(user, block, unitProgress, isCorrect);
         this.lastAnswer = lastAnswer;
     }
 
-    public QuestionBlockProgress(User user, QuestionBlock block, Integer scoreReached, String lastAnswer, LearningUnitProgress unitProgress) {
-        super(user, block, unitProgress);
+    public QuestionBlockProgress(User user, QuestionBlock block, String lastAnswer, LearningUnitProgress unitProgress, Integer scoreReached, Boolean isCorrect) {
+        super(user, block, unitProgress, isCorrect);
         this.scoreReached = scoreReached;
         this.lastAnswer = lastAnswer;
     }

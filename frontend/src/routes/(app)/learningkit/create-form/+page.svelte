@@ -16,12 +16,18 @@
 		onResult() {
 			invalidate(['latest-learning-kits-list']);
 			invalidate(['all-learning-kits-list']);
+			toaster.create({
+				description: $_('learningKit.form.create.success.description'),
+				type: 'success'
+			});
+			history.back();
 		},
 		onError(error) {
 			console.error('Error:', error.result.error);
 			toaster.create({
-				title: $_('common.error.title'),
-				description: $_('error.description', { values: { status: error.result.status } }),
+				description: $_('learningKit.form.create.error.description', {
+					values: { status: error.result.status }
+				}),
 				type: 'error'
 			});
 		}
@@ -60,21 +66,6 @@
 					></textarea>
 					{#if $errors.description}
 						<p class="text-error-500">{$errors.description}</p>
-					{/if}
-				</label>
-
-				<label class="label">
-					<span class="label-text">{$_('common.context')} <i>{$_('form.optional')}</i></span>
-					<textarea
-						name="context"
-						bind:value={$form.context}
-						class="textarea preset-filled-surface-100-900 min-h-24"
-						placeholder={$_('common.additionalContext')}
-						aria-invalid={$errors.context ? 'true' : undefined}
-						{...$constraints.context}
-					></textarea>
-					{#if $errors.context}
-						<p class="text-error-500">{$errors.context}</p>
 					{/if}
 				</label>
 

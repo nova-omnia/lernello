@@ -23,6 +23,9 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, LearningKitRepository learningKitRepository) {
 
+        User johanna = new User("zubj@zhaw.ch", "Johanna", "Decurtins", encoder.encode("password"), null, Role.INSTRUCTOR);
+        johanna.setChangedPassword(true);
+
         User frodo = new User("frodo@gmail.com", "Frodo", "Baggins", encoder.encode("password"), null, Role.INSTRUCTOR);
         frodo.setChangedPassword(true);
 
@@ -34,9 +37,6 @@ public class LoadDatabase {
 
         User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, Role.TRAINEE);
         bruno.setChangedPassword(true);
-
-        User johanna = new User("zubj@zhaw.ch", "Johanna", "Decurtins", encoder.encode("password"), null, Role.TRAINEE);
-        johanna.setChangedPassword(true);
 
         User sara = new User("sara@gmail.com", "Sara", "Mueller", encoder.encode("password"), null, Role.TRAINEE);
         sara.setChangedPassword(true);

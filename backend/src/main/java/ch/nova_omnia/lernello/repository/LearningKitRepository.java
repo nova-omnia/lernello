@@ -23,6 +23,4 @@ public interface LearningKitRepository extends JpaRepository<LearningKit, UUID> 
     List<LearningKit> findAllByTraineesContains(User user);
 
     List<LearningKit> findAllByFilesContains(File file);
-
-    Optional<LearningKit> findByName(String name);
 }

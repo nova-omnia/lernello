@@ -35,8 +35,35 @@ public class LoadDatabase {
         User bruno = new User("bruno.frisch@gmail.com", "Bruno", "Frisch", encoder.encode("password"), null, Role.TRAINEE);
         bruno.setChangedPassword(true);
 
-        User johanna = new User("zubj@zhaw.ch", "Johanna", "Decurtins", encoder.encode("password"), null, Role.INSTRUCTOR);
+        User johanna = new User("zubj@zhaw.ch", "Johanna", "Decurtins", encoder.encode("password"), null, Role.TRAINEE);
         johanna.setChangedPassword(true);
+
+        User sara = new User("sara@gmail.com", "Sara", "Mueller", encoder.encode("password"), null, Role.TRAINEE);
+        sara.setChangedPassword(true);
+
+        User thomas = new User("thomas@gmail.com", "Thomas", "Weber", encoder.encode("password"), null, Role.TRAINEE);
+        thomas.setChangedPassword(true);
+
+        User lisa = new User("lisa@gmail.com", "Lisa", "Schmidt", encoder.encode("password"), null, Role.TRAINEE);
+        lisa.setChangedPassword(true);
+
+        User michael = new User("michael@gmail.com", "Michael", "Wagner", encoder.encode("password"), null, Role.TRAINEE);
+        michael.setChangedPassword(true);
+
+        User anna = new User("anna@gmail.com", "Anna", "Fischer", encoder.encode("password"), null, Role.TRAINEE);
+        anna.setChangedPassword(true);
+
+        User david = new User("david@gmail.com", "David", "Bauer", encoder.encode("password"), null, Role.TRAINEE);
+        david.setChangedPassword(true);
+
+        User julia = new User("julia@gmail.com", "Julia", "Hoffmann", encoder.encode("password"), null, Role.TRAINEE);
+        julia.setChangedPassword(true);
+
+        User peter = new User("peter@gmail.com", "Peter", "Koch", encoder.encode("password"), null, Role.TRAINEE);
+        peter.setChangedPassword(true);
+
+        User dante = new User("dante@gmail.com", "Dante", "Alighieri", encoder.encode("password"), null, Role.TRAINEE);
+        dante.setChangedPassword(true);
 
         return (_) -> {
             if (!userRepository.existsByUsername(frodo.getUsername())) userRepository.save(frodo);
@@ -44,12 +71,19 @@ public class LoadDatabase {
             if (!userRepository.existsByUsername(bruno.getUsername())) userRepository.save(bruno);
             if (!userRepository.existsByUsername(johanna.getUsername())) userRepository.save(johanna);
             if (!userRepository.existsByUsername(liebhart.getUsername())) userRepository.save(liebhart);
+            if (!userRepository.existsByUsername(sara.getUsername())) userRepository.save(sara);
+            if (!userRepository.existsByUsername(thomas.getUsername())) userRepository.save(thomas);
+            if (!userRepository.existsByUsername(lisa.getUsername())) userRepository.save(lisa);
+            if (!userRepository.existsByUsername(michael.getUsername())) userRepository.save(michael);
+            if (!userRepository.existsByUsername(anna.getUsername())) userRepository.save(anna);
+            if (!userRepository.existsByUsername(david.getUsername())) userRepository.save(david);
+            if (!userRepository.existsByUsername(julia.getUsername())) userRepository.save(julia);
+            if (!userRepository.existsByUsername(peter.getUsername())) userRepository.save(peter);
+            if (!userRepository.existsByUsername(dante.getUsername())) userRepository.save(dante);
 
-            String kitName = "Premade";
-            learningKitRepository.findByName(kitName).ifPresent(learningKitRepository::delete);
 
             LearningKit premadeKit = new LearningKit();
-            premadeKit.setName(kitName);
+            premadeKit.setName("Premade Kit");
             premadeKit.setDescription( "test descrition" );
 
             LearningUnit premadeUnit = new LearningUnit("Erste Lerneinheit", premadeKit);

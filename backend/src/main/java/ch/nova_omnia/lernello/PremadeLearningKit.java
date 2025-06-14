@@ -68,9 +68,9 @@ public class PremadeLearningKit {
     public static final String Answer3 = "Das System kann Abflussmengen von 5 bis 900 l/s regeln. Für Abwasser ist eine Mindestabflussmenge von 10 l/s vorgesehen.";
     public static final String Answer4 = "Die Steuergenauigkeit des Drosselsystems beträgt ±3,5%. Bei Abflussmengen von unter 35 l/s erreicht die Steuergenauigkeit sogar ±1,0 l/s.";
     public static final String Answer5 = "Das Drosselsystem wird aus Edelstahl 1.4301 (V2A) oder 1.4571 (V4A) hergestellt. Die Führungen bestehen aus Kunststoff.";
-    public static final String Answer6 = "Die Montage wird durch die Monteure der Abwasser Wild Armaturen AG vorgenommen. Der Anschluss der Drossel erfolgt mit Flanschen, und die Installation kann mit oder ohne Umgehungsleitung erfolgen.";
+    public static final String Answer6 = "Der Einbau des Drosselsystems erfolgt in einem bauseits vorbereiteten Schacht durch Monteure der Abwasser Wild Armaturen AG. Der Anschluss geschieht über Flansche und kann mit oder ohne Umgehungsleitung umgesetzt werden.";
     public static final String Answer7 = "Es handelt sich um eine Schwimmerdrossel vom Typ WSD. Dieses System wird von der Abwasser Wild Armaturen AG angeboten.";
     public static final String Answer8 = "Die Schachtabmessungen betragen, abhängig von den Leistungsdaten der Drossel, ca. 2,5 x 2 x 1,8 Meter (Länge x Breite x Höhe).";
-    public static final String Answer9 = "Zu- und Ablaufleitung (DN1, DN2) sowie der gewünschte Werkstoff. Ein Anlageplan sollte ebenfalls beigefügt werden.";
+    public static final String Answer9 = "Für Drosselsystem-Anfragen: Max. Einstauhöhe (h max), Trockenwetterabfluss (Q), Sollabflussmenge (Qab), Einstauhöhen (Zu-/Ablauf), Leitungsdurchmesser (DN1, DN2), Werkstoff und Anlageplan sind notwendig";
     public static final String Answer10 = "Die Dimensionierung und hydraulische Auslegung des Drosselsystems erfolgen gemäss Kundenangaben.";
 }

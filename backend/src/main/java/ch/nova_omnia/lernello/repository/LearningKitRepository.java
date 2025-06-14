@@ -1,6 +1,7 @@
 package ch.nova_omnia.lernello.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface LearningKitRepository extends JpaRepository<LearningKit, UUID> 
     List<LearningKit> findAllByTraineesContains(User user);
 
     List<LearningKit> findAllByFilesContains(File file);
+
+    Optional<LearningKit> findByName(String name);
 }

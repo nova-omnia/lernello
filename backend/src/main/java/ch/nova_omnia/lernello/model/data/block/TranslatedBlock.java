@@ -42,8 +42,23 @@ public class TranslatedBlock extends Block {
     @ElementCollection
     private List<String> correctAnswers;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "original_block_id", nullable = true)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Block originalBlock;
+
+    public TranslatedBlock(BlockLanguage language, String content, Block originalBlock, String name) {
+        super(originalBlock.getType(), name, originalBlock.getPosition(), originalBlock.getLearningUnit());
+        this.language = language;
+        this.content = content;
+        this.originalBlock = originalBlock;
+    }
+
+    public TranslatedBlock(BlockLanguage language, String question, String expectedAnswer, Block originalBlock, String name) {
+        super(originalBlock.getType(), name, originalBlock.getPosition(), originalBlock.getLearningUnit());
+        this.language = language;
+        this.question = question;
+        this.expectedAnswer = expectedAnswer;
+        this.originalBlock = originalBlock;
+    }
 }

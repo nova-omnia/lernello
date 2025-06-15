@@ -1,7 +1,6 @@
 package ch.nova_omnia.lernello.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;

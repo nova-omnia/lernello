@@ -69,44 +69,64 @@ public class LoadDatabase {
         dante.setChangedPassword(true);
 
         return (_) -> {
-            if (!userRepository.existsByUsername(frodo.getUsername())) userRepository.save(frodo);
-            if (!userRepository.existsByUsername(max.getUsername())) userRepository.save(max);
-            if (!userRepository.existsByUsername(bruno.getUsername())) userRepository.save(bruno);
-            if (!userRepository.existsByUsername(johanna.getUsername())) userRepository.save(johanna);
-            if (!userRepository.existsByUsername(liebhart.getUsername())) userRepository.save(liebhart);
-            if (!userRepository.existsByUsername(sara.getUsername())) userRepository.save(sara);
-            if (!userRepository.existsByUsername(thomas.getUsername())) userRepository.save(thomas);
-            if (!userRepository.existsByUsername(lisa.getUsername())) userRepository.save(lisa);
-            if (!userRepository.existsByUsername(michael.getUsername())) userRepository.save(michael);
-            if (!userRepository.existsByUsername(anna.getUsername())) userRepository.save(anna);
-            if (!userRepository.existsByUsername(david.getUsername())) userRepository.save(david);
-            if (!userRepository.existsByUsername(julia.getUsername())) userRepository.save(julia);
-            if (!userRepository.existsByUsername(peter.getUsername())) userRepository.save(peter);
-            if (!userRepository.existsByUsername(dante.getUsername())) userRepository.save(dante);
-
+            if (!userRepository.existsByUsername(frodo.getUsername()))
+                userRepository.save(frodo);
+            if (!userRepository.existsByUsername(max.getUsername()))
+                userRepository.save(max);
+            if (!userRepository.existsByUsername(bruno.getUsername()))
+                userRepository.save(bruno);
+            if (!userRepository.existsByUsername(johanna.getUsername()))
+                userRepository.save(johanna);
+            if (!userRepository.existsByUsername(liebhart.getUsername()))
+                userRepository.save(liebhart);
+            if (!userRepository.existsByUsername(sara.getUsername()))
+                userRepository.save(sara);
+            if (!userRepository.existsByUsername(thomas.getUsername()))
+                userRepository.save(thomas);
+            if (!userRepository.existsByUsername(lisa.getUsername()))
+                userRepository.save(lisa);
+            if (!userRepository.existsByUsername(michael.getUsername()))
+                userRepository.save(michael);
+            if (!userRepository.existsByUsername(anna.getUsername()))
+                userRepository.save(anna);
+            if (!userRepository.existsByUsername(david.getUsername()))
+                userRepository.save(david);
+            if (!userRepository.existsByUsername(julia.getUsername()))
+                userRepository.save(julia);
+            if (!userRepository.existsByUsername(peter.getUsername()))
+                userRepository.save(peter);
+            if (!userRepository.existsByUsername(dante.getUsername()))
+                userRepository.save(dante);
 
             LearningKit premadeKit = new LearningKit();
-            premadeKit.setName("Premade Kit");
-            premadeKit.setDescription( "test descrition" );
+            premadeKit.setName("Ausrüstung");
+            premadeKit.setDescription("In dieser Lerneinheit geht es um die Schacht- und Beckenausruestung, " + "die in der Bergbauindustrie verwendet wird.");
 
-            LearningUnit premadeUnit = new LearningUnit("Erste Lerneinheit", premadeKit);
+            LearningUnit premadeUnit = new LearningUnit("Schwimmerdrossel Typ WSD", premadeKit);
             List<LearningUnit> learningUnits = premadeKit.getLearningUnits();
             learningUnits.add(premadeUnit);
 
-            TheoryBlock theory1 = new TheoryBlock("Theory 1",1,premadeUnit,PremadeLearningKit.Theory1);
-            TheoryBlock theory2 = new TheoryBlock("Theory 2",2,premadeUnit,PremadeLearningKit.Theory2);
-            TheoryBlock theory3 = new TheoryBlock("Theory 3",3,premadeUnit,PremadeLearningKit.Theory3);
-            TheoryBlock theory4 = new TheoryBlock("Theory 4",4,premadeUnit,PremadeLearningKit.Theory4);
-            QuestionBlock question1 = new QuestionBlock("Frage 1", 5, premadeUnit, PremadeLearningKit.Question1, PremadeLearningKit.Answer1);
-            QuestionBlock question2 = new QuestionBlock("Frage 2", 6, premadeUnit, PremadeLearningKit.Question2, PremadeLearningKit.Answer2);
-            QuestionBlock question3 = new QuestionBlock("Frage 3", 7, premadeUnit, PremadeLearningKit.Question3, PremadeLearningKit.Answer3);
-            QuestionBlock question4 = new QuestionBlock("Frage 4", 8, premadeUnit, PremadeLearningKit.Question4, PremadeLearningKit.Answer4);
-            QuestionBlock question5 = new QuestionBlock("Frage 5", 9, premadeUnit, PremadeLearningKit.Question5, PremadeLearningKit.Answer5);
-            QuestionBlock question6 = new QuestionBlock("Frage 6", 10, premadeUnit, PremadeLearningKit.Question6, PremadeLearningKit.Answer6);
-            QuestionBlock question7 = new QuestionBlock("Frage 7", 11, premadeUnit, PremadeLearningKit.Question7, PremadeLearningKit.Answer7);
-            QuestionBlock question8 = new QuestionBlock("Frage 8", 12, premadeUnit, PremadeLearningKit.Question8, PremadeLearningKit.Answer8);
-            QuestionBlock question9 = new QuestionBlock("Frage 9", 13, premadeUnit, PremadeLearningKit.Question9, PremadeLearningKit.Answer9);
-            QuestionBlock question10 = new QuestionBlock("Frage 10", 14, premadeUnit, PremadeLearningKit.Question10, PremadeLearningKit.Answer10);
+            // Theorie 1: Hauptkomponenten
+            TheoryBlock theory1 = new TheoryBlock(PreMadeLearningKitEn.Theory1_en_Title, 1, premadeUnit, PreMadeLearningKitEn.Theory1_en);
+            QuestionBlock question2 = new QuestionBlock(PreMadeLearningKitEn.Question2_en_Title, 2, premadeUnit, PreMadeLearningKitEn.Question2_en, PreMadeLearningKitEn.Answer2_en);
+
+            // Theorie 2: Funktion und Genauigkeit
+            TheoryBlock theory2 = new TheoryBlock(PreMadeLearningKitEn.Theory2_en_Title, 3, premadeUnit, PreMadeLearningKitEn.Theory2_en);
+            QuestionBlock question3 = new QuestionBlock(PreMadeLearningKitEn.Question3_en_Title, 4, premadeUnit, PreMadeLearningKitEn.Question3_en, PreMadeLearningKitEn.Answer3_en);
+            QuestionBlock question4 = new QuestionBlock(PreMadeLearningKitEn.Question4_en_Title, 5, premadeUnit, PreMadeLearningKitEn.Question4_en, PreMadeLearningKitEn.Answer4_en);
+            QuestionBlock question9 = new QuestionBlock(PreMadeLearningKitEn.Question9_en_Title, 6, premadeUnit, PreMadeLearningKitEn.Question9_en, PreMadeLearningKitEn.Answer9_en);
+            QuestionBlock question10 = new QuestionBlock(PreMadeLearningKitEn.Question10_en_Title, 7, premadeUnit, PreMadeLearningKitEn.Question10_en, PreMadeLearningKitEn.Answer10_en);
+
+            // Theorie 3: Einbau und Zweck
+            TheoryBlock theory3 = new TheoryBlock(PreMadeLearningKitEn.Theory3_en_Title, 8, premadeUnit, PreMadeLearningKitEn.Theory3_en);
+            QuestionBlock question1 = new QuestionBlock(PreMadeLearningKitEn.Question1_en_Title, 9, premadeUnit, PreMadeLearningKitEn.Question1_en, PreMadeLearningKitEn.Answer1_en);
+            QuestionBlock question6 = new QuestionBlock(PreMadeLearningKitEn.Question6_en_Title, 10, premadeUnit, PreMadeLearningKitEn.Question6_en, PreMadeLearningKitEn.Answer6_en);
+            QuestionBlock question7 = new QuestionBlock(PreMadeLearningKitEn.Question7_en_Title, 11, premadeUnit, PreMadeLearningKitEn.Question7_en, PreMadeLearningKitEn.Answer7_en);
+
+            // Theorie 4: Genauigkeit und Material
+            TheoryBlock theory4 = new TheoryBlock(PreMadeLearningKitEn.Theory4_en_Title, 12, premadeUnit, PreMadeLearningKitEn.Theory4_en);
+            QuestionBlock question5 = new QuestionBlock(PreMadeLearningKitEn.Question5_en_Title, 13, premadeUnit, PreMadeLearningKitEn.Question5_en, PreMadeLearningKitEn.Answer5_en);
+            QuestionBlock question8 = new QuestionBlock(PreMadeLearningKitEn.Question8_en_Title, 14, premadeUnit, PreMadeLearningKitEn.Question8_en, PreMadeLearningKitEn.Answer8_en);
 
             List<Block> blocks = premadeUnit.getBlocks();
             blocks.add(theory1);

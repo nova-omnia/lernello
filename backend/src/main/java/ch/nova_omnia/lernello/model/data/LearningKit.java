@@ -76,7 +76,7 @@ public class LearningKit {
 
     @OneToMany(mappedBy = "learningKit", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("position ASC")
-    public List<LearningUnit> learningUnits = new ArrayList<>(); //TODO: back to private after Presentation
+    private List<LearningUnit> learningUnits = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

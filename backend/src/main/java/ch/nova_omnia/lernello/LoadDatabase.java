@@ -1,5 +1,7 @@
 package ch.nova_omnia.lernello;
 
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ch.nova_omnia.lernello.model.data.LearningKit;
 import ch.nova_omnia.lernello.model.data.LearningUnit;
+import ch.nova_omnia.lernello.model.data.block.Block;
 import ch.nova_omnia.lernello.model.data.block.TheoryBlock;
 import ch.nova_omnia.lernello.model.data.block.scorable.QuestionBlock;
 import ch.nova_omnia.lernello.model.data.user.Role;
@@ -87,7 +90,8 @@ public class LoadDatabase {
             premadeKit.setDescription( "test descrition" );
 
             LearningUnit premadeUnit = new LearningUnit("Erste Lerneinheit", premadeKit);
-            premadeKit.learningUnits.add(premadeUnit);
+            List<LearningUnit> learningUnits = premadeKit.getLearningUnits();
+            learningUnits.add(premadeUnit);
 
             TheoryBlock theory1 = new TheoryBlock("Theory 1",1,premadeUnit,PremadeLearningKit.Theory1);
             TheoryBlock theory2 = new TheoryBlock("Theory 2",2,premadeUnit,PremadeLearningKit.Theory2);
@@ -104,20 +108,21 @@ public class LoadDatabase {
             QuestionBlock question9 = new QuestionBlock("Frage 9", 13, premadeUnit, PremadeLearningKit.Question9, PremadeLearningKit.Answer9);
             QuestionBlock question10 = new QuestionBlock("Frage 10", 14, premadeUnit, PremadeLearningKit.Question10, PremadeLearningKit.Answer10);
 
-            premadeUnit.blocks.add(theory1);
-            premadeUnit.blocks.add(theory2);
-            premadeUnit.blocks.add(theory3);
-            premadeUnit.blocks.add(theory4);
-            premadeUnit.blocks.add(question1);
-            premadeUnit.blocks.add(question2);
-            premadeUnit.blocks.add(question3);
-            premadeUnit.blocks.add(question4);
-            premadeUnit.blocks.add(question5);
-            premadeUnit.blocks.add(question6);
-            premadeUnit.blocks.add(question7);
-            premadeUnit.blocks.add(question8);
-            premadeUnit.blocks.add(question9);
-            premadeUnit.blocks.add(question10);
+            List<Block> blocks = premadeUnit.getBlocks();
+            blocks.add(theory1);
+            blocks.add(theory2);
+            blocks.add(theory3);
+            blocks.add(theory4);
+            blocks.add(question1);
+            blocks.add(question2);
+            blocks.add(question3);
+            blocks.add(question4);
+            blocks.add(question5);
+            blocks.add(question6);
+            blocks.add(question7);
+            blocks.add(question8);
+            blocks.add(question9);
+            blocks.add(question10);
 
             learningKitRepository.save(premadeKit);
         };

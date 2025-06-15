@@ -56,7 +56,7 @@ public class LearningUnit {
 
     @OneToMany(mappedBy = "learningUnit", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("position ASC")
-    public List<Block> blocks = new ArrayList<>(); //TODO: back to private after Presentation
+    private List<Block> blocks = new ArrayList<>();
 
     public LearningUnit(String name, LearningKit learningKit) {
         this.name = name;

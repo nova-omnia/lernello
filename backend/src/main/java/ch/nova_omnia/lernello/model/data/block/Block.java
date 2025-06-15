@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
@@ -37,9 +38,10 @@ public abstract class Block {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 
+    @Lob
     @NotBlank
     @Column(name = "name")
-    @Size(min = 3, max = 40)
+    @Size(min = 3, max = 100)
     private String name;
 
     @Min(0)

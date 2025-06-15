@@ -61,7 +61,7 @@
 			{#if role === INSTRUCTOR_ROLE}
 				<label class="label">
 					<input
-						class="input -m-1 p-1 font-medium"
+						class="input -m-1 w-150 p-1 font-medium"
 						type="text"
 						placeholder={$_('block.name')}
 						bind:value={name}

@@ -2,10 +2,10 @@ package ch.nova_omnia.lernello;
 
 public class PreMadeLearningKitFr {
     // Titres pour les contenus théoriques
-    public static final String Theory1_fr_Title = "Composants principaux d’un système de régulation";
-    public static final String Theory2_fr_Title = "Fonctionnement et précision de régulation du système";
-    public static final String Theory3_fr_Title = "Montage et but du régulateur de type WSD";
-    public static final String Theory4_fr_Title = "Précision de contrôle et choix des matériaux";
+    public static final String Theory1_fr_Title = "Composants principaux";
+    public static final String Theory2_fr_Title = "Fonctionnement et précision";
+    public static final String Theory3_fr_Title = "Montage et but du régulateur";
+    public static final String Theory4_fr_Title = "Précision de contrôle et choix";
 
     // Contenus théoriques
     public static final String Theory1_fr = """
@@ -59,14 +59,14 @@ public class PreMadeLearningKitFr {
 
     // Titres pour les questions
     public static final String Question1_fr_Title = "But du système de régulation";
-    public static final String Question2_fr_Title = "Composants du système";
+    public static final String Question2_fr_Title = "Composants";
     public static final String Question3_fr_Title = "Débits réglables et minimum requis";
-    public static final String Question4_fr_Title = "Précision de contrôle du système";
+    public static final String Question4_fr_Title = "Précision de contrôle";
     public static final String Question5_fr_Title = "Matériaux utilisés";
-    public static final String Question6_fr_Title = "Installation et montage du système";
+    public static final String Question6_fr_Title = "Installation et montage";
     public static final String Question7_fr_Title = "Type et fournisseur du régulateur";
     public static final String Question8_fr_Title = "Dimensions recommandées du regard";
-    public static final String Question9_fr_Title = "Données techniques requises pour la demande";
+    public static final String Question9_fr_Title = "Données techniques requises";
     public static final String Question10_fr_Title = "Dimensionnement et conception hydraulique";
 
     // Questions

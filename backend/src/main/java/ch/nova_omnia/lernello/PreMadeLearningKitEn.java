@@ -3,9 +3,9 @@ package ch.nova_omnia.lernello;
 public class PreMadeLearningKitEn {
     // Titles for theory content
     public static final String Theory1_en_Title = "Main Components of a Throttle System";
-    public static final String Theory2_en_Title = "Functionality and Control Accuracy of the Throttle System";
-    public static final String Theory3_en_Title = "Installation and Purpose of the Throttle Type WSD";
-    public static final String Theory4_en_Title = "Control Accuracy and Material Selection of the Throttle System";
+    public static final String Theory2_en_Title = "Functionality and Control Accuracy";
+    public static final String Theory3_en_Title = "Installation and Purpose";
+    public static final String Theory4_en_Title = "Control Accuracy and Material Selection";
 
     // Theory content
     public static final String Theory1_en = """
@@ -57,16 +57,16 @@ public class PreMadeLearningKitEn {
         """;
 
     // Titles for questions
-    public static final String Question1_en_Title = "Purpose of the Throttle System";
-    public static final String Question2_en_Title = "Components of the Throttle System";
-    public static final String Question3_en_Title = "Controllable and Minimum Flow Rates";
-    public static final String Question4_en_Title = "Control Accuracy of the System";
+    public static final String Question1_en_Title = "Purpose";
+    public static final String Question2_en_Title = "Components";
+    public static final String Question3_en_Title = "Controllable & Minimum Flow Rates";
+    public static final String Question4_en_Title = "Control Accuracy";
     public static final String Question5_en_Title = "Materials Used";
-    public static final String Question6_en_Title = "Installation and Mounting of the Throttle";
-    public static final String Question7_en_Title = "Type and Supplier of the Throttle";
+    public static final String Question6_en_Title = "Installation & Mounting";
+    public static final String Question7_en_Title = "Type & Supplier";
     public static final String Question8_en_Title = "Recommended Shaft Dimensions";
-    public static final String Question9_en_Title = "Required Technical Data for Inquiries";
-    public static final String Question10_en_Title = "Sizing and Hydraulic Design";
+    public static final String Question9_en_Title = "Required Technical Data";
+    public static final String Question10_en_Title = "Sizing & Hydraulic Design";
 
     // Questions
     public static final String Question1_en = "What is the primary purpose of the throttle system?";

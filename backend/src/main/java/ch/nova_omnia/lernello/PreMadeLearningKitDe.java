@@ -3,9 +3,9 @@ package ch.nova_omnia.lernello;
 public class PreMadeLearningKitDe {
     // Titel für Theorie-Inhalte
     public static final String Theory1_de_Title = "Hauptbestandteile eines Drosselsystems";
-    public static final String Theory2_de_Title = "Funktionsweise und Regelgenauigkeit des Drosselsystems";
-    public static final String Theory3_de_Title = "Montage und Einsatzzweck der Drossel Typ WSD";
-    public static final String Theory4_de_Title = "Steuergenauigkeit und Materialauswahl des Drosselsystems";
+    public static final String Theory2_de_Title = "Funktionsweise und Regelgenauigkeit";
+    public static final String Theory3_de_Title = "Montage und Einsatzzweck";
+    public static final String Theory4_de_Title = "Steuergenauigkeit und Materialauswahl";
 
     // Theorie-Inhalte
     public static final String Theory1_de = """
@@ -56,16 +56,16 @@ public class PreMadeLearningKitDe {
             Die Auswahl des Werkstoffs kann bei Anfragen und Bestellungen angegeben werden.
             """;
     // Titel für Fragen
-    public static final String Question1_de_Title = "Einsatzzweck des Drosselsystems";
-    public static final String Question2_de_Title = "Bestandteile des Drosselsystems";
-    public static final String Question3_de_Title = "Regelbare und Mindestabflussmengen";
-    public static final String Question4_de_Title = "Steuergenauigkeit des Systems";
+    public static final String Question1_de_Title = "Einsatzzweck";
+    public static final String Question2_de_Title = "Bestandteile";
+    public static final String Question3_de_Title = "Regelbare & Mindestabflussmengen";
+    public static final String Question4_de_Title = "Steuergenauigkeit";
     public static final String Question5_de_Title = "Verwendete Materialien";
-    public static final String Question6_de_Title = "Einbau und Montage der Drossel";
-    public static final String Question7_de_Title = "Typ und Anbieter der Drossel";
+    public static final String Question6_de_Title = "Einbau & Montage";
+    public static final String Question7_de_Title = "Typ & Anbieter";
     public static final String Question8_de_Title = "Empfohlene Schachtabmessungen";
-    public static final String Question9_de_Title = "Erforderliche technische Angaben bei Anfragen";
-    public static final String Question10_de_Title = "Dimensionierung und hydraulische Auslegung";
+    public static final String Question9_de_Title = "Erforderliche technische Angaben";
+    public static final String Question10_de_Title = "Dimensionierung & hydraulische Auslegung";
 
     // Fragen
     public static final String Question1_de = "Wofür ist das Drosselsystem primär vorgesehen?";

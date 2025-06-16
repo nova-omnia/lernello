@@ -3,9 +3,9 @@ package ch.nova_omnia.lernello;
 public class PreMadeLearningKitIt {
     // Titoli dei contenuti teorici
     public static final String Theory1_it_Title = "Componenti principali di un sistema di strozzatura";
-    public static final String Theory2_it_Title = "Funzionamento e precisione di regolazione del sistema di strozzatura";
-    public static final String Theory3_it_Title = "Montaggio e scopo della strozzatura tipo WSD";
-    public static final String Theory4_it_Title = "Precisione di controllo e scelta dei materiali del sistema di strozzatura";
+    public static final String Theory2_it_Title = "Funzionamento e precisione ";
+    public static final String Theory3_it_Title = "Montaggio e scopo";
+    public static final String Theory4_it_Title = "Precisione di controllo e scelta dei materiali";
 
     // Contenuti teorici
     public static final String Theory1_it = """
@@ -58,13 +58,13 @@ public class PreMadeLearningKitIt {
             """;
 
     // Titoli delle domande
-    public static final String Question1_it_Title = "Scopo del sistema di strozzatura";
-    public static final String Question2_it_Title = "Componenti del sistema di strozzatura";
+    public static final String Question1_it_Title = "Scopo del sistema";
+    public static final String Question2_it_Title = "Componenti del sistema";
     public static final String Question3_it_Title = "Portate regolabili e portata minima";
-    public static final String Question4_it_Title = "Precisione di controllo del sistema";
+    public static final String Question4_it_Title = "Precisione di controllo";
     public static final String Question5_it_Title = "Materiali utilizzati";
-    public static final String Question6_it_Title = "Installazione e montaggio della strozzatura";
-    public static final String Question7_it_Title = "Tipo e fornitore della strozzatura";
+    public static final String Question6_it_Title = "Installazione e montaggio";
+    public static final String Question7_it_Title = "Tipo e fornitore";
     public static final String Question8_it_Title = "Dimensioni consigliate del pozzetto";
     public static final String Question9_it_Title = "Dati tecnici necessari per la richiesta";
     public static final String Question10_it_Title = "Progettazione e dimensionamento idraulico";

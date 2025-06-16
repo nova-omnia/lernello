@@ -2,7 +2,7 @@ package ch.nova_omnia.lernello;
 
 public class PreMadeLearningKitIt {
     // Titoli dei contenuti teorici
-    public static final String Theory1_it_Title = "Componenti principali di un sistema di strozzatura";
+    public static final String Theory1_it_Title = "Componenti principali";
     public static final String Theory2_it_Title = "Funzionamento e precisione ";
     public static final String Theory3_it_Title = "Montaggio e scopo";
     public static final String Theory4_it_Title = "Precisione di controllo e scelta dei materiali";

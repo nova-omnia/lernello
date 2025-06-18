@@ -20,6 +20,7 @@ public class QuestionBlock extends ScorableBlock {
     @Column(name = "question", nullable = true)
     private String question;
 
+    @Lob
     @Column(name = "expected_answer", nullable = true)
     private String expectedAnswer;
 

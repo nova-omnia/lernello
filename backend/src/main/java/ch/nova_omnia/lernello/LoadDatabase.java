@@ -1,5 +1,6 @@
 package ch.nova_omnia.lernello;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -104,6 +105,20 @@ public class LoadDatabase {
             LearningKit premadeKit = new LearningKit();
             premadeKit.setName("Ausrüstung");
             premadeKit.setDescription("In dieser Lerneinheit geht es um die Schacht- und Beckenausruestung, die in der Bergbauindustrie verwendet wird.");
+            premadeKit.setPublished(true);
+            
+            List<User> trainees = new ArrayList<User>();
+            trainees.add(dante);
+            trainees.add(peter);
+            trainees.add(julia);
+            trainees.add(david);
+            trainees.add(anna);
+            trainees.add(michael);
+            trainees.add(lisa);
+            trainees.add(thomas);
+            trainees.add(sara);
+
+            premadeKit.setTrainees(trainees);
 
             LearningUnit premadeUnit = new LearningUnit("Schwimmerdrossel Typ WSD", premadeKit);
             List<LearningUnit> learningUnits = premadeKit.getLearningUnits();
